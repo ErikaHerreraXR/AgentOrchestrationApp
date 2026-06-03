@@ -1716,6 +1716,9 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
       <p>All agents executed. Guardian QA has reviewed every step. Your project documentation is ready.</p>
       <div class="complete-actions">
         <button class="btn btn-primary btn-lg" onclick="goHome()">Start New Project</button>
+        <a href="client-portal.html" class="btn btn-lg" style="background:linear-gradient(135deg,var(--accent),var(--accent-d));color:#080E1A;font-weight:700;box-shadow:0 6px 20px rgba(34,211,238,0.35);text-decoration:none">
+          ⚡ Open Client Portal →
+        </a>
         <button class="btn btn-outline-green btn-lg" onclick="downloadReport()">↓ Download Report</button>
       </div>
     </div>
@@ -2924,14 +2927,21 @@ function startWorkflow() {
 
   state.brief = {
     client, project, deliverable,
-    deadline: document.getElementById('f-deadline').value.trim() || 'TBD',
+    deadline:    document.getElementById('f-deadline').value.trim()    || 'TBD',
     goal,
-    audience: document.getElementById('f-audience').value.trim() || 'TBD',
-    budget: document.getElementById('f-budget').value.trim() || 'TBD',
-    tone: document.getElementById('f-tone').value.trim() || 'TBD',
+    audience:    document.getElementById('f-audience').value.trim()    || 'TBD',
+    budget:      document.getElementById('f-budget').value.trim()      || 'TBD',
+    tone:        document.getElementById('f-tone').value.trim()        || 'TBD',
     constraints: document.getElementById('f-constraints').value.trim() || 'None specified',
-    risks: document.getElementById('f-risks').value.trim() || 'None specified',
+    risks:       document.getElementById('f-risks').value.trim()       || 'None specified',
+    // ── Portal bridge: template ID so the portal loads the right agent team ──
+    template:    state.template ? state.template.id : 'consulting',
   };
+
+  // Save to localStorage so client-portal.html picks it up automatically
+  try {
+    localStorage.setItem('pi-client-brief', JSON.stringify(state.brief));
+  } catch(e) {}
 
   renderWorkflow();
   showScreen('workflow');

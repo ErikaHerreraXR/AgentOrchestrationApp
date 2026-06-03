@@ -276,7 +276,7 @@ a{color:inherit;text-decoration:none}
 .ov-stat-n{font-family:var(--fh);font-size:38px;font-weight:800;color:var(--ink);letter-spacing:-2px;line-height:1;margin-bottom:4px}
 .ov-stat-l{font-size:12px;color:var(--muted);font-weight:400;line-height:1.4}
 
-.ov-agents{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
+.ov-agents{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:24px}
 @media(max-width:700px){.ov-agents{grid-template-columns:1fr}}
 .ov-agent-card{
   background:var(--card);border:1px solid var(--bw);border-radius:20px;
@@ -617,7 +617,10 @@ a{color:inherit;text-decoration:none}
           <div class="ov-stat"><div class="ov-stat-n" id="stat-docs" style="color:var(--warm)">0</div><div class="ov-stat-l">Documents</div></div>
           <div class="ov-stat"><div class="ov-stat-n" id="stat-prog" style="color:var(--sage)">0%</div><div class="ov-stat-l">Goal Progress</div></div>
         </div>
-        <div style="font-family:var(--fm);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Your AI Agent Team</div>
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+        <span>Your AI Agent Team</span>
+        <a href="index.html" style="font-size:10px;font-weight:500;color:var(--teal-d);text-decoration:none;letter-spacing:0;text-transform:none;font-family:var(--fb)">&#9998; Edit workflow brief</a>
+      </div>
         <div class="ov-agents" id="ov-agents"><div style="text-align:center;padding:32px;color:var(--muted);font-size:14px">Set up your brief to activate your agent team.</div></div>
       </div>
 
@@ -797,274 +800,74 @@ var DEMO_USERS = {
 var TNAMES = {consulting:'Strategy Consulting',product:'Product Design',marketing:'Marketing Campaign',compliance:'Compliance Program',realestate:'Real Estate Development',interior:'Interior Design',airbnb:'Airbnb / STR Hosting'};
 var COLORS = ['teal','warm','coral','sage','violet','warm','teal','coral'];
 var ROSTER_DEFS = {
-  consulting:[{id:'discovery',ico:'&#128269;',name:'Discovery Agent',tag:'Stakeholder Mapping',desc:'Maps stakeholders, frames the real problem, and defines success criteria before any solution design.'},{id:'research',ico:'&#128200;',name:'Research &amp; Insights',tag:'Market Intelligence',desc:'Synthesizes market data, competitive landscape, and customer insights into decision-ready findings.'},{id:'strategy',ico:'&#129517;',name:'Strategy Agent',tag:'Options &amp; Recommendation',desc:'Builds 3 distinct strategic paths with rigorous analysis and a clear recommendation.'},{id:'financial',ico:'&#128201;',name:'Financial Modeling',tag:'ROI &amp; Business Case',desc:'Models costs, benefits, ROI, and sensitivity analysis ready for board or investor review.'},{id:'change',ico:'&#128260;',name:'Change Management',tag:'Adoption Planning',desc:'Designs stakeholder engagement, communications plan, and adoption milestones.'},{id:'presentation',ico:'&#127912;',name:'Presentation Agent',tag:'Executive Narrative',desc:'Structures the story arc, slide outline, and executive summary for any audience.'},{id:'implementation',ico:'&#128197;',name:'Implementation Planner',tag:'Workstreams &amp; RACI',desc:'Turns strategy into an executable plan with milestones, risk register, and accountability.'},{id:'comms',ico:'&#128221;',name:'Client Comms Agent',tag:'Status &amp; Decisions',desc:'Produces meeting notes, decision logs, and status updates for every client touchpoint.'}],
-  product:[{id:'research',ico:'&#128300;',name:'Research Agent',tag:'User Insights',desc:'Conducts user research, builds personas, and maps the current-state journey.'},{id:'ux',ico:'&#128204;',name:'UX Strategy Agent',tag:'Information Architecture',desc:'Defines the IA, user flows, and feature prioritization before any design begins.'},{id:'wireframe',ico:'&#128208;',name:'Wireframe Agent',tag:'Structural Design',desc:'Produces lo-fi layouts, interaction patterns, and the clickable prototype brief.'},{id:'visual',ico:'&#128396;',name:'Visual Design Agent',tag:'Design System &amp; Screens',desc:'Creates the full design system and hi-fi screens your engineers build from.'},{id:'content',ico:'&#9999;',name:'Content &amp; Copy Agent',tag:'UX Writing',desc:'Writes every label, error, empty state, and CTA in the brand voice.'},{id:'handoff',ico:'&#129309;',name:'Handoff Agent',tag:'Developer Specs',desc:'Produces developer specs, redlines, assets, and an accessibility audit.'},{id:'testing',ico:'&#129514;',name:'Usability Testing Agent',tag:'Validation &amp; Findings',desc:'Plans and runs user tests, then delivers prioritized design recommendations.'}],
-  marketing:[{id:'brand',ico:'&#127991;',name:'Brand Strategy Agent',tag:'Positioning &amp; Messaging',desc:'Builds the positioning statement, messaging hierarchy, and brand voice guide.'},{id:'creative',ico:'&#128161;',name:'Creative Director',tag:'Campaign Concept',desc:'Develops 3 distinct campaign concepts and produces the approved creative brief.'},{id:'copy',ico:'&#129354;',name:'Copywriting Agent',tag:'Headlines &amp; Emails',desc:'Writes all copy &mdash; headlines, body text, email sequences, and CTAs.'},{id:'media',ico:'&#128225;',name:'Paid Media Agent',tag:'Platform &amp; Budget Strategy',desc:'Designs the media plan &mdash; platforms, audiences, budget, and KPI targets.'},{id:'content',ico:'&#128240;',name:'Content Agent',tag:'SEO &amp; Editorial Calendar',desc:'Builds the 90-day content calendar, keyword strategy, and article briefs.'},{id:'analytics',ico:'&#128201;',name:'Analytics Agent',tag:'Tracking &amp; Attribution',desc:'Designs the KPI framework, tracking plan, and reporting templates.'},{id:'production',ico:'&#128640;',name:'Production Agent',tag:'Asset Specs &amp; Launch',desc:'Manages asset specs, QA checklist, and the signed launch sign-off.'}],
-  compliance:[{id:'regulatory',ico:'&#128218;',name:'Regulatory Research',tag:'Applicable Law Mapping',desc:'Maps every regulation, jurisdiction, and enforcement trend for your business.'},{id:'risk',ico:'&#9888;',name:'Risk Assessment Agent',tag:'Risk Register &amp; Gaps',desc:'Scores every compliance risk and identifies gaps requiring immediate action.'},{id:'policy',ico:'&#128203;',name:'Policy Drafting Agent',tag:'Policies &amp; Code of Conduct',desc:'Writes clear, enforceable policies and SOPs in plain language.'},{id:'training',ico:'&#127891;',name:'Training Agent',tag:'Curriculum &amp; LMS',desc:'Designs compliance training from curriculum through e-learning delivery.'},{id:'audit',ico:'&#128270;',name:'Audit &amp; Monitoring',tag:'Control Testing',desc:'Builds the audit plan, control testing checklist, and monitoring metrics.'},{id:'incident',ico:'&#128680;',name:'Incident Response Agent',tag:'Playbooks &amp; Notifications',desc:'Creates incident classification frameworks, playbooks, and notification timelines.'},{id:'reporting',ico:'&#128202;',name:'Compliance Reporting',tag:'Board Reports',desc:'Produces board compliance reports, dashboards, and regulator submissions.'}],
-  realestate:[{id:'market',ico:'&#128205;',name:'Market Research Agent',tag:'Comps &amp; Absorption',desc:'Pulls comparable sales, calculates absorption rates, and produces a site viability scorecard.'},{id:'underwriting',ico:'&#128201;',name:'Underwriting Agent',tag:'Pro Forma &amp; IRR',desc:'Builds the development budget, revenue model, return metrics, and sensitivity analysis.'},{id:'entitlements',ico:'&#127963;',name:'Entitlements Agent',tag:'Zoning &amp; Permits',desc:'Maps the full entitlement path, flags political risk, and tracks every permit milestone.'},{id:'architecture',ico:'&#128208;',name:'Design Brief Agent',tag:'Building Program',desc:'Defines the building program, unit mix, amenity brief, and design standards.'},{id:'construction',ico:'&#127959;',name:'Construction Mgmt Agent',tag:'GC &amp; Schedule',desc:'Structures the GC bid package, contract terms, draw process, and schedule reporting.'},{id:'leasing',ico:'&#128273;',name:'Sales &amp; Leasing Agent',tag:'Pricing &amp; Velocity',desc:'Builds the pricing matrix, leasing velocity plan, broker strategy, and marketing brief.'},{id:'propmanagement',ico:'&#127962;',name:'Property Mgmt Agent',tag:'Operations &amp; NOI',desc:'Writes the operations manual, annual budget, vendor contracts, and NOI optimization plan.'},{id:'finance',ico:'&#127974;',name:'Finance &amp; Capital Agent',tag:'Capital Stack &amp; Investors',desc:'Structures the capital stack, lender package, investor deck, and equity waterfall model.'}],
-  interior:[{id:'discovery',ico:'&#128269;',name:'Client Discovery Agent',tag:'Design Brief',desc:'Uncovers the authentic vision, lifestyle requirements, and budget reality.'},{id:'concept',ico:'&#128161;',name:'Concept &amp; Creative Agent',tag:'Concept &amp; Mood Board',desc:'Develops 2 distinct design concepts with color story and curated mood board.'},{id:'space',ico:'&#128207;',name:'Space Planning Agent',tag:'Floor Plan &amp; Layout',desc:'Produces scaled floor plans with furniture placement and traffic flow.'},{id:'materials',ico:'&#127912;',name:'Material &amp; Finish Agent',tag:'Finish Schedule',desc:'Specifies every surface with exact product references contractors can price from.'},{id:'procurement',ico:'&#128705;',name:'Procurement Agent',tag:'FF&amp;E &amp; Purchase Orders',desc:'Manages furniture from specification through purchase orders and delivery.'},{id:'lighting',ico:'&#128161;',name:'Lighting Design Agent',tag:'3-Layer Lighting Plan',desc:'Designs ambient, task, and accent lighting with fixture specs and dimmer matching.'},{id:'styling',ico:'&#127807;',name:'Styling &amp; Accessories Agent',tag:'Art &amp; Final Layer',desc:'Curates art, soft furnishings, and produces the photoshoot shot list.'},{id:'installation',ico:'&#128295;',name:'Trade Coordination Agent',tag:'Contractor Schedule',desc:'Manages all trades in sequence, runs site visits, and delivers the closeout package.'}],
-  airbnb:[{id:'revenue',ico:'&#128200;',name:'Market &amp; Revenue Agent',tag:'Pricing Strategy',desc:'Analyzes comps, sets ADR and pricing architecture, and projects annual revenue.'},{id:'listing',ico:'&#11088;',name:'Listing Optimisation Agent',tag:'Title &amp; Description',desc:'Writes the optimized title, description, and amenity checklist to maximize conversion.'},{id:'guestexperience',ico:'&#129309;',name:'Guest Experience Agent',tag:'Welcome Guide &amp; Messages',desc:'Designs the end-to-end guest experience to earn 5 stars every time.'},{id:'setup',ico:'&#127968;',name:'Property Setup Agent',tag:'Amenity Audit &amp; Staging',desc:'Audits amenities, sets linen par levels, and writes the photography staging guide.'},{id:'operations',ico:'&#9881;',name:'Operations Agent',tag:'Turnover Checklist',desc:'Builds the room-by-room turnover checklist, maintenance schedule, and vendor directory.'},{id:'communication',ico:'&#128172;',name:'Guest Comms Agent',tag:'Message Templates',desc:'Writes the full 15-template message library and sets up the automation schedule.'},{id:'reviews',ico:'&#11088;',name:'Review &amp; Reputation Agent',tag:'Superhost Tracker',desc:'Sets up the Superhost metric tracker and writes review responses.'},{id:'finance',ico:'&#128184;',name:'Finance &amp; Reporting Agent',tag:'P&amp;L &amp; Tax Prep',desc:'Builds the monthly P&L structure, expense tracker, and annual tax prep file.'}]
+  consulting:[
+    {id:'discovery',    ico:'&#128269;', name:'Discovery Agent',       tag:'Stakeholder Mapping',        desc:'Maps every stakeholder, frames the real problem, and defines measurable success criteria before any solution design begins.'},
+    {id:'research',     ico:'&#128200;', name:'Research &amp; Insights',tag:'Market Intelligence',         desc:'Synthesizes market data, competitive landscape, and customer insights into decision-ready findings with clear implications.'},
+    {id:'strategy',     ico:'&#129517;', name:'Strategy Agent',         tag:'Options &amp; Recommendation',desc:'Builds 3 genuinely distinct strategic paths with rigorous pros/cons analysis and a clear, evidence-backed recommendation.'},
+    {id:'financial',    ico:'&#128201;', name:'Financial Modeling',     tag:'ROI &amp; Business Case',     desc:'Models costs, benefits, ROI, IRR, and sensitivity analysis — ready for board or investor review.'},
+    {id:'change',       ico:'&#128260;', name:'Change Management',      tag:'Adoption Planning',           desc:'Designs stakeholder engagement, communications plan, and measurable adoption milestones.'},
+    {id:'presentation', ico:'&#127912;', name:'Presentation Agent',     tag:'Executive Narrative',         desc:'Structures the story arc, slide-by-slide outline, and stand-alone executive summary for any audience.'},
+    {id:'implementation',ico:'&#128197;',name:'Implementation Planner', tag:'Workstreams &amp; RACI',      desc:'Turns the approved strategy into an executable plan with milestones, risk register, and clear accountability.'},
+    {id:'comms',        ico:'&#128221;', name:'Client Comms Agent',     tag:'Status &amp; Decisions',      desc:'Produces meeting notes, decision logs, and status updates that keep every stakeholder aligned.'}
+  ],
+  product:[
+    {id:'research',     ico:'&#128300;', name:'Research Agent',         tag:'User Insights',               desc:'Conducts user research, builds evidence-based personas, and maps the current-state journey.'},
+    {id:'ux',           ico:'&#128204;', name:'UX Strategy Agent',      tag:'Information Architecture',    desc:'Defines the IA, user flows, North Star experience, and feature prioritization before any design begins.'},
+    {id:'wireframe',    ico:'&#128208;', name:'Wireframe Agent',        tag:'Structural Design',           desc:'Produces lo-fi layouts, interaction patterns, and the prototype brief that unlocks design.'},
+    {id:'visual',       ico:'&#128396;', name:'Visual Design Agent',    tag:'Design System &amp; Screens', desc:'Creates the full design system — tokens, components, hi-fi screens — that your engineers build from.'},
+    {id:'content',      ico:'&#9999;',   name:'Content &amp; Copy Agent',tag:'UX Writing',                 desc:'Writes every label, error state, empty state, and CTA — in the brand voice, for every scenario.'},
+    {id:'handoff',      ico:'&#129309;', name:'Handoff Agent',          tag:'Developer Specs',             desc:'Produces developer specs, redlines, assets, and a WCAG accessibility audit — zero ambiguity.'},
+    {id:'testing',      ico:'&#129514;', name:'Usability Testing Agent',tag:'Validation &amp; Findings',   desc:'Plans and runs moderated user tests, then delivers prioritized, specific design recommendations.'}
+  ],
+  marketing:[
+    {id:'brand',        ico:'&#127991;', name:'Brand Strategy Agent',   tag:'Positioning &amp; Messaging', desc:'Builds the positioning statement, messaging hierarchy, and brand voice guide that makes everything more effective.'},
+    {id:'creative',     ico:'&#128161;', name:'Creative Director',      tag:'Campaign Concept',            desc:'Develops 3 distinct campaign concepts and produces the approved creative brief with art direction.'},
+    {id:'copy',         ico:'&#129354;', name:'Copywriting Agent',      tag:'Headlines &amp; Emails',      desc:'Writes all copy — headlines (A/B/C), body text, CTAs, and 5-email sequences — ready to use.'},
+    {id:'media',        ico:'&#128225;', name:'Paid Media Agent',       tag:'Platform &amp; Budget Strategy',desc:'Designs the media plan: platforms, audience targeting, budget allocation, and KPI targets.'},
+    {id:'content',      ico:'&#128240;', name:'Content Agent',          tag:'SEO &amp; Editorial Calendar',desc:'Builds the 90-day content calendar, keyword strategy, and full article briefs with unique angles.'},
+    {id:'analytics',    ico:'&#128201;', name:'Analytics Agent',        tag:'Tracking &amp; Attribution',  desc:'Designs the KPI framework, tracking plan, attribution model, and reporting templates.'},
+    {id:'production',   ico:'&#128640;', name:'Production Agent',       tag:'Asset Specs &amp; Launch',    desc:'Manages asset specs, QA checklist, and the signed launch-readiness sign-off.'}
+  ],
+  compliance:[
+    {id:'regulatory',   ico:'&#128218;', name:'Regulatory Research',    tag:'Applicable Law Mapping',      desc:'Maps every regulation, jurisdiction, and enforcement trend that applies to your business.'},
+    {id:'risk',         ico:'&#9888;',   name:'Risk Assessment Agent',  tag:'Risk Register &amp; Gaps',    desc:'Scores every compliance risk and identifies control gaps requiring immediate remediation.'},
+    {id:'policy',       ico:'&#128203;', name:'Policy Drafting Agent',  tag:'Policies &amp; Code of Conduct',desc:'Writes clear, enforceable policies and SOPs in plain language the people who must follow them can use.'},
+    {id:'training',     ico:'&#127891;', name:'Training Agent',         tag:'Curriculum &amp; LMS',        desc:'Designs compliance training from needs assessment through e-learning delivery and certification.'},
+    {id:'audit',        ico:'&#128270;', name:'Audit &amp; Monitoring', tag:'Control Testing',             desc:'Builds the annual audit plan, control testing checklists, and continuous monitoring metrics.'},
+    {id:'incident',     ico:'&#128680;', name:'Incident Response Agent',tag:'Playbooks &amp; Notifications',desc:'Creates incident classification frameworks, response playbooks, and regulatory notification timelines.'},
+    {id:'reporting',    ico:'&#128202;', name:'Compliance Reporting',   tag:'Board Reports',               desc:'Produces board compliance reports, management dashboards, and regulator submission templates.'}
+  ],
+  realestate:[
+    {id:'market',       ico:'&#128205;', name:'Market Research Agent',  tag:'Comps &amp; Absorption',      desc:'Pulls comparable sales, calculates absorption rates, and produces a site viability scorecard.'},
+    {id:'underwriting', ico:'&#128201;', name:'Underwriting Agent',     tag:'Pro Forma &amp; IRR',         desc:'Builds the development budget, revenue model, return metrics, and sensitivity analysis.'},
+    {id:'entitlements', ico:'&#127963;', name:'Entitlements Agent',     tag:'Zoning &amp; Permits',        desc:'Maps the full entitlement path, flags political risk, and tracks every permit milestone.'},
+    {id:'architecture', ico:'&#128208;', name:'Design Brief Agent',     tag:'Building Program',            desc:'Defines the building program, unit mix, amenity brief, and design standards for the architect.'},
+    {id:'construction', ico:'&#127959;', name:'Construction Mgmt Agent',tag:'GC &amp; Schedule',           desc:'Structures the GC bid package, contract terms, draw process, and schedule reporting.'},
+    {id:'leasing',      ico:'&#128273;', name:'Sales &amp; Leasing Agent',tag:'Pricing &amp; Velocity',   desc:'Builds the pricing matrix, leasing velocity plan, broker strategy, and marketing brief.'},
+    {id:'propmanagement',ico:'&#127962;',name:'Property Mgmt Agent',   tag:'Operations &amp; NOI',         desc:'Writes the operations manual, annual budget, vendor contracts, and NOI optimization plan.'},
+    {id:'finance',      ico:'&#127974;', name:'Finance &amp; Capital Agent',tag:'Capital Stack &amp; Investors',desc:'Structures the capital stack, lender package, investor deck, and equity waterfall model.'}
+  ],
+  interior:[
+    {id:'discovery',    ico:'&#128269;', name:'Client Discovery Agent', tag:'Design Brief',                desc:'Uncovers the authentic vision, lifestyle requirements, and budget reality before any selections.'},
+    {id:'concept',      ico:'&#128161;', name:'Concept &amp; Creative Agent',tag:'Concept &amp; Mood Board',desc:'Develops 2 distinct design concepts with color story, materials palette, and curated mood board.'},
+    {id:'space',        ico:'&#128207;', name:'Space Planning Agent',   tag:'Floor Plan &amp; Layout',     desc:'Produces scaled floor plans with furniture placement, traffic flow, and delivery access notes.'},
+    {id:'materials',    ico:'&#127912;', name:'Material &amp; Finish Agent',tag:'Finish Schedule',         desc:'Specifies every surface with exact product references contractors can price and install from.'},
+    {id:'procurement',  ico:'&#128705;', name:'Procurement Agent',      tag:'FF&amp;E &amp; Purchase Orders',desc:'Manages furniture from specification through purchase orders, lead times, and white-glove delivery.'},
+    {id:'lighting',     ico:'&#128161;', name:'Lighting Design Agent',  tag:'3-Layer Lighting Plan',       desc:'Designs ambient, task, and accent lighting with fixture specs, dimmer matching, and electrician coordination.'},
+    {id:'styling',      ico:'&#127807;', name:'Styling &amp; Accessories Agent',tag:'Art &amp; Final Layer',desc:'Curates art, soft furnishings, objects, and produces the photoshoot shot list.'},
+    {id:'installation', ico:'&#128295;', name:'Trade Coordination Agent',tag:'Contractor Schedule',        desc:'Manages all trades in sequence, runs site visits, and delivers the client closeout package.'}
+  ],
+  airbnb:[
+    {id:'revenue',      ico:'&#128200;', name:'Market &amp; Revenue Agent',tag:'Pricing Strategy',        desc:'Analyzes comps, sets ADR and pricing architecture, and projects annual revenue with scenarios.'},
+    {id:'listing',      ico:'&#11088;',  name:'Listing Optimisation Agent',tag:'Title &amp; Description', desc:'Writes the search-optimized title, description, and amenity checklist to maximize conversion.'},
+    {id:'guestexperience',ico:'&#129309;',name:'Guest Experience Agent',tag:'Welcome Guide &amp; Messages',desc:'Designs the end-to-end guest experience — pre-arrival to post-checkout — to earn 5 stars every time.'},
+    {id:'setup',        ico:'&#127968;', name:'Property Setup Agent',   tag:'Amenity Audit &amp; Staging', desc:'Audits amenities, sets linen par levels, and writes the photography staging guide.'},
+    {id:'operations',   ico:'&#9881;',   name:'Operations Agent',       tag:'Turnover Checklist',          desc:'Builds the room-by-room turnover checklist, maintenance schedule, and vendor directory.'},
+    {id:'communication',ico:'&#128172;', name:'Guest Comms Agent',      tag:'Message Templates',           desc:'Writes the full 15-template message library and sets up the automated message schedule.'},
+    {id:'reviews',      ico:'&#11088;',  name:'Review &amp; Reputation Agent',tag:'Superhost Tracker',   desc:'Sets up the Superhost metric tracker and writes review response templates for all scenarios.'},
+    {id:'finance',      ico:'&#128184;', name:'Finance &amp; Reporting Agent',tag:'P&amp;L &amp; Tax Prep',desc:'Builds the monthly P&L structure, expense tracker, and annual tax preparation file.'}
+  ]
 };
-
-// ── MASTER PROMPT LIBRARY (categories per agent) ─────────────────────────────
-// PLACEHOLDER_REPLACED
-
-var MASTER_PROMPT_LIBRARY = {};
-// ── Prompt library will be populated here (add prompts per agent) ──
-var AGENT_QR = {};
-
-// ── STATE ────────────────────────────────────────────────────
-var S = {
-  user: null,
-  client: {},
-  agents: [],
-  tasks: [],
-  docs: [],
-  goals: [],
-  agentState: {},
-  currentAgent: null,
-  voiceAgentId: null,
-  recognition: null,
-  oaiKey: localStorage.getItem('pi-oai-key') || '',
-};
-
-// ── LOGIN ────────────────────────────────────────────────────
-document.getElementById('login-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-
-function doLogin(){
-  var email = document.getElementById('login-email').value.trim().toLowerCase();
-  var pass  = document.getElementById('login-pass').value;
-  var err   = document.getElementById('login-err');
-  err.classList.remove('show');
-
-  var user = DEMO_USERS[email];
-  if(user && user.pass === pass){
-    S.user = Object.assign({email:email}, user);
-    enterDash();
-  } else {
-    err.classList.add('show');
-    document.getElementById('login-pass').value = '';
-  }
-}
-
-function enterDash(){
-  var login = document.getElementById('page-login');
-  var dash  = document.getElementById('page-dash');
-  login.classList.add('fade-out');
-  setTimeout(function(){
-    login.style.display = 'none';
-    dash.classList.add('active');
-    initDash();
-  }, 400);
-}
-
-function doLogout(){
-  var dash  = document.getElementById('page-dash');
-  var login = document.getElementById('page-login');
-  dash.classList.remove('active');
-  login.style.display = 'flex';
-  login.classList.remove('fade-out');
-  document.getElementById('login-email').value = '';
-  document.getElementById('login-pass').value  = '';
-  S.user = null;
-  // Clear chat histories
-  S.agentState = {};
-  document.getElementById('agent-panels').innerHTML = '';
-  document.getElementById('sb-agents').innerHTML = '';
-  document.getElementById('ov-agents').innerHTML = '';
-}
-
-// ── INIT DASH ────────────────────────────────────────────────
-function initDash(){
-  // Load brief
-  var brief = null;
-  try{ brief = JSON.parse(localStorage.getItem('pi-client-brief') || 'null'); }catch(e){}
-
-  if(brief && brief.client){ activatePortal(brief); }
-  else{ openSetup(); }
-}
-
-// ── PORTAL ACTIVATION ────────────────────────────────────────
-function activatePortal(brief){
-  S.client = brief;
-  S.agents = (ROSTER_DEFS[brief.template] || ROSTER_DEFS.consulting).map(function(a, i){
-    return Object.assign({}, a, { color: ROSTER_COLORS[i % ROSTER_COLORS.length], status:'ready' });
-  });
-  S.goals = [
-    { text: brief.goal || 'Primary project goal', pct: 0 },
-    { text: 'Agent tasks completed', pct: 0 },
-    { text: 'Deliverables produced', pct: 0 },
-  ];
-  // Clear previous agent states
-  S.agentState = {};
-  S.agents.forEach(function(a){ S.agentState[a.id] = { hist:[], busy:false, init:false }; });
-
-  // Nav
-  document.getElementById('welcome-name').textContent = S.user ? S.user.name : 'Client';
-  document.getElementById('topbar-avatar').textContent = S.user ? S.user.initials : 'PI';
-  document.getElementById('sb-client-name').textContent = brief.client;
-  document.getElementById('sb-client-plan').textContent = (TNAMES[brief.template]||brief.template) + ' · Active';
-
-  // Welcome
-  document.getElementById('welcome-sub').textContent = 'Your ' + (TNAMES[brief.template]||brief.template) + ' agent system is active. ' + S.agents.length + ' specialists ready.';
-  document.getElementById('stat-agents').textContent = S.agents.length;
-
-  buildSidebar();
-  buildAgentCards();
-  buildAgentPanels();
-  buildAgentSelect();
-  buildReports();
-  buildSidebarGoals();
-
-  // Init first agent after short delay
-  if(S.agents.length){ setTimeout(function(){ initAgent(S.agents[0].id); }, 500); }
-}
-
-// ── SIDEBAR ──────────────────────────────────────────────────
-function buildSidebar(){
-  var el = document.getElementById('sb-agents');
-  el.innerHTML = '';
-  S.agents.forEach(function(a,i){
-    var div = document.createElement('div');
-    div.className = 'sb-item';
-    div.setAttribute('data-agent', a.id);
-    div.innerHTML = '<span class="sb-item-icon">'+a.ico+'</span><span class="sb-item-label">'+a.name+'</span>';
-    div.addEventListener('click', (function(id){ return function(){ showAgentPanel(id, div); }; })(a.id));
-    el.appendChild(div);
-  });
-}
-
-function showAgentPanel(agentId, sbEl){
-  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.sb-item').forEach(function(i){ i.classList.remove('active'); });
-  var panel = document.getElementById('panel-agent-'+agentId);
-  if(panel) panel.classList.add('active');
-  if(sbEl) sbEl.classList.add('active');
-  var agent = S.agents.find(function(a){ return a.id===agentId; });
-  if(agent){ document.getElementById('topbar-title').textContent = agent.name; }
-  S.currentAgent = agentId;
-  if(!S.agentState[agentId] || !S.agentState[agentId].init) initAgent(agentId);
-}
-
-
-function buildSidebarGoals(){
-  var html = '<div class="sb-goal"><span class="sb-goal-label">Goal Progress</span>';
-  S.goals.forEach(function(g){
-    html += '<div class="sb-goal-item">' +
-      '<div class="sb-goal-text">'+g.text+'</div>' +
-      '<div class="sb-goal-bar"><div class="sb-goal-fill" style="width:'+g.pct+'%"></div></div>' +
-      '<div class="sb-goal-pct">'+g.pct+'% complete</div>' +
-      '</div>';
-  });
-  html += '</div>';
-  document.getElementById('sb-goals').innerHTML = html;
-}
-
-// ── OVERVIEW AGENT CARDS ──────────────────────────────────────
-function buildAgentCards(){
-  var el = document.getElementById('ov-agents');
-  el.innerHTML = '';
-  var colorBgs = { teal:'rgba(46,184,168,.06)', warm:'rgba(212,146,10,.06)', coral:'rgba(232,88,72,.06)', sage:'rgba(74,152,112,.06)', violet:'rgba(112,64,184,.06)' };
-  var colorIco = { teal:'rgba(46,184,168,.12)', warm:'rgba(212,146,10,.10)', coral:'rgba(232,88,72,.10)', sage:'rgba(74,152,112,.10)', violet:'rgba(112,64,184,.10)' };
-  S.agents.slice(0,8).forEach(function(a){
-    var div = document.createElement('div');
-    div.className = 'ov-agent-card agent-'+a.color;
-    div.innerHTML =
-      '<div class="ov-agent-top">' +
-        '<div class="ov-agent-ico" style="background:'+(colorIco[a.color]||colorIco.teal)+'">'+a.ico+'</div>' +
-        '<div><div class="ov-agent-name">'+a.name+'</div><div class="ov-agent-tag">'+a.tag+'</div></div>' +
-      '</div>' +
-      '<div class="ov-agent-desc">'+a.desc+'</div>' +
-      '<button class="ov-agent-launch">Open Agent →</button>';
-    div.addEventListener('click', (function(id){ return function(){ showAgentPanel(id, document.querySelector('[data-agent="'+id+'"]')); }; })(a.id));
-    el.appendChild(div);
-  });
-}
-
-
-function buildAgentPanels(){
-  var colorBgs    = { teal:'rgba(46,184,168,.06)', warm:'rgba(212,146,10,.06)', coral:'rgba(232,88,72,.06)', sage:'rgba(74,152,112,.06)', violet:'rgba(112,64,184,.06)' };
-  var colorBorders= { teal:'rgba(46,184,168,.2)',  warm:'rgba(212,146,10,.2)', coral:'rgba(232,88,72,.2)',  sage:'rgba(74,152,112,.2)',  violet:'rgba(112,64,184,.2)'  };
-  var colorIco    = { teal:'rgba(46,184,168,.12)', warm:'rgba(212,146,10,.1)', coral:'rgba(232,88,72,.1)',  sage:'rgba(74,152,112,.1)',  violet:'rgba(112,64,184,.1)'  };
-  var container = document.getElementById('agent-panels');
-  container.innerHTML = '';
-  S.agents.forEach(function(a){
-    var bg  = colorBgs[a.color]     || colorBgs.teal;
-    var bor = colorBorders[a.color] || colorBorders.teal;
-    var ico = colorIco[a.color]     || colorIco.teal;
-    var div = document.createElement('div');
-    div.className = 'panel';
-    div.id = 'panel-agent-'+a.id;
-    div.innerHTML =
-      '<div class="agent-chat-layout">' +
-        '<div class="agent-header" style="background:'+bg+';border-color:'+bor+'">' +
-          '<div class="agent-header-ico" style="background:'+ico+'">'+a.ico+'</div>' +
-          '<div><div class="agent-header-name">'+a.name+'</div><div class="agent-header-desc">'+a.tag+' · Product Imagination</div></div>' +
-          '<div class="agent-status-dot"></div>' +
-          '<button class="lib-btn" data-lib="'+a.id+'">&#128218; Prompt Library</button>' +
-        '</div>' +
-        '<div class="chat-window" id="chat-'+a.id+'"></div>' +
-        '<div class="qr-row" id="qr-'+a.id+'"></div>' +
-        '<div class="chat-input-row">' +
-          '<textarea class="chat-inp" id="inp-'+a.id+'" placeholder="Ask '+a.name+' anything…" rows="1"></textarea>' +
-          '<button class="chat-voice-btn" title="Voice input" data-voice="'+a.id+'">&#127897;&#65039;</button>' +
-          '<button class="chat-send" data-send="'+a.id+'"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>' +
-        '</div>' +
-      '</div>';
-    container.appendChild(div);
-    // Wire events after inserting
-    (function(id){
-      var ta = div.querySelector('#inp-'+id);
-      if(ta){
-        ta.addEventListener('keydown', function(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();agentSend(id);} });
-        ta.addEventListener('input', function(){ autoH(this); });
-      }
-      var vbtn = div.querySelector('[data-voice="'+id+'"]');
-      if(vbtn) vbtn.addEventListener('click', function(){ openVoice(id); });
-      var lbtn = div.querySelector('[data-lib="'+id+'"]');
-      if(lbtn) lbtn.addEventListener('click', function(e){ e.stopPropagation(); openLibrary(id); });
-      var sbtn = div.querySelector('[data-send="'+id+'"]');
-      if(sbtn) sbtn.addEventListener('click', function(){ agentSend(id); });
-    })(a.id);
-  });
-}
-
-
-function buildAgentSelect(){
-  var sel = document.getElementById('task-agent-sel');
-  sel.innerHTML = '<option value="">— Choose agent —</option>';
-  S.agents.forEach(function(a){
-    var o = document.createElement('option'); o.value=a.id; o.textContent=a.ico+' '+a.name; sel.appendChild(o);
-  });
-}
-
-function buildReports(){
-  var container = document.getElementById('reports-grid');
-  container.innerHTML = '';
-  var colors      = { teal:'#1E9890', warm:'#B87010', coral:'#C04030', sage:'#3A7860', violet:'#7040B8' };
-  var borderColors= { teal:'rgba(46,184,168,.4)', warm:'rgba(212,146,10,.4)', coral:'rgba(232,88,72,.4)', sage:'rgba(74,152,112,.4)', violet:'rgba(112,64,184,.4)' };
-  var bgColors    = { teal:'rgba(46,184,168,.08)', warm:'rgba(212,146,10,.08)', coral:'rgba(232,88,72,.08)', sage:'rgba(74,152,112,.08)', violet:'rgba(112,64,184,.08)' };
-  S.agents.slice(0,4).forEach(function(a){
-    var c  = colors[a.color]       || '#1E9890';
-    var bc = borderColors[a.color] || 'rgba(46,184,168,.4)';
-    var bg = bgColors[a.color]     || 'rgba(46,184,168,.08)';
-    var div = document.createElement('div');
-    div.style.cssText = 'background:var(--card);border:1px solid var(--bw);border-radius:18px;padding:24px;box-shadow:0 2px 12px rgba(30,10,0,.06)';
-    div.innerHTML =
-      '<div style="font-size:24px;margin-bottom:12px">'+a.ico+'</div>' +
-      '<div style="font-family:var(--fh);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:8px">'+a.name+' Report</div>' +
-      '<div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">'+a.desc+'</div>' +
-      '<button style="font-family:var(--fm);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 16px;border-radius:100px;border:1.5px solid '+bc+';background:'+bg+';color:'+c+';cursor:pointer;transition:.14s ease">Generate Report →</button>';
-    var btn = div.querySelector('button');
-    btn.addEventListener('mouseover', function(){ this.style.background=c; this.style.color='#fff'; });
-    btn.addEventListener('mouseout',  function(){ this.style.background=bg; this.style.color=c; });
-    btn.addEventListener('click', (function(id){ return function(){ generateReport(id); }; })(a.id));
-    container.appendChild(div);
-  });
-}
-
-
-
 
 // ── COLOUR MAPS ─────────────────────────────────────────────────────────────
 var C_BG   = {teal:'rgba(46,184,168,.06)',warm:'rgba(212,146,10,.06)',coral:'rgba(232,88,72,.06)',sage:'rgba(74,152,112,.06)',violet:'rgba(112,64,184,.06)'};
@@ -1170,9 +973,10 @@ function activatePortal(brief){
   S.agentHist={};S.agentBusy={};S.agentInit={};
 
   document.getElementById('sb-client-name').textContent=brief.client;
-  document.getElementById('sb-client-plan').textContent=(TNAMES[brief.template]||brief.template)+' · Active';
+  var planEl=document.getElementById('sb-client-plan');
+  planEl.innerHTML=(TNAMES[brief.template]||brief.template)+' &middot; <a href="index.html" style="color:var(--teal-d);text-decoration:none;font-size:11px">&#8592; Edit Workflow</a>';
   document.getElementById('welcome-name').textContent=S.user?S.user.name:'Client';
-  document.getElementById('welcome-sub').textContent='Your '+(TNAMES[brief.template]||brief.template)+' agent system is active. '+S.agents.length+' specialists ready.';
+  document.getElementById('welcome-sub').innerHTML='Your <strong>'+(TNAMES[brief.template]||brief.template)+'</strong> agent team is active &mdash; '+S.agents.length+' specialists built from your workflow brief, ready to execute.';
   document.getElementById('stat-agents').textContent=S.agents.length;
 
   buildSidebarAgents();
@@ -1202,7 +1006,7 @@ function buildSidebarAgents(){
 // ── BUILD OVERVIEW CARDS ─────────────────────────────────────────────────────
 function buildOverviewCards(){
   var el=document.getElementById('ov-agents');el.innerHTML='';
-  S.agents.slice(0,8).forEach(function(a){
+  S.agents.forEach(function(a){
     var div=document.createElement('div');
     div.className='ov-agent-card agent-'+a.color;
     div.innerHTML=
