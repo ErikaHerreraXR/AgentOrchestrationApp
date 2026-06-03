@@ -4082,68 +4082,109 @@ function downloadReport() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 var voice = {
-  micEnabled:  true,
-  ttsEnabled:  localStorage.getItem('pi-tts') !== 'off',
-  openaiKey:   localStorage.getItem('pi-oai-key') || '',
-  recognition: null,
-  isListening: false,
+  micEnabled:    true,
+  ttsEnabled:    localStorage.getItem('pi-tts') !== 'off',
+  selectedVoice: localStorage.getItem('pi-oai-voice') || 'nova',  // OpenAI voice model
+  openaiKey:     '',       // keys live on the server — not used client-side
+  recognition:   null,
+  isListening:   false,
   mediaRecorder: null,
   audioChunks:   [],
   currentAudio:  null,
+  serverHasOai:  null,     // cached from /api/status — null = unknown
 };
 
 /* ── OpenAI API key modal ─────────────────────────────────────────────────── */
 function showApiKeyModal() {
   var existing = document.getElementById('api-key-modal');
   if (existing) { existing.remove(); return; }
+
+  var currentVoice = voice.selectedVoice || localStorage.getItem('pi-oai-voice') || 'nova';
+  var voices = [
+    { id:'nova',    label:'Nova',    desc:'Warm, natural female — most human-sounding ⭐' },
+    { id:'shimmer', label:'Shimmer', desc:'Bright, clear female' },
+    { id:'alloy',   label:'Alloy',   desc:'Balanced, neutral' },
+    { id:'fable',   label:'Fable',   desc:'Expressive, British accent' },
+    { id:'echo',    label:'Echo',    desc:'Clear, measured male' },
+    { id:'onyx',    label:'Onyx',    desc:'Deep, authoritative male' },
+  ];
+
   var div = document.createElement('div');
-  div.id  = 'api-key-modal';
+  div.id = 'api-key-modal';
   div.className = 'modal-backdrop';
   div.innerHTML =
     '<div class="modal-box">' +
-      '<h3>🔑 Voice Settings</h3>' +
-      '<p>Enter your OpenAI API key to enable high-quality voice input (Whisper) and agent speech (TTS). Without a key, your browser\'s built-in speech recognition is used for input only.</p>' +
-      '<label class="modal-label">OpenAI API Key</label>' +
-      '<input class="modal-input" id="modal-oai-key" type="password" placeholder="sk-..." value="' + (voice.openaiKey ? voice.openaiKey.slice(0,8)+'…' : '') + '">' +
-      '<label class="modal-label">Agent Voice (OpenAI TTS-HD)</label>' +
-      '<select class="modal-input" id="modal-voice-select" style="margin-bottom:16px">' +
-        '<option value="nova"'    + (localStorage.getItem('pi-oai-voice')==='nova'    ?' selected':'') + '>Nova — Warm, natural female ⭐ Recommended</option>' +
-        '<option value="shimmer"' + (localStorage.getItem('pi-oai-voice')==='shimmer' ?' selected':'') + '>Shimmer — Bright, clear female</option>' +
-        '<option value="alloy"'   + (localStorage.getItem('pi-oai-voice')==='alloy'   ?' selected':'') + '>Alloy — Balanced, neutral</option>' +
-        '<option value="fable"'   + (localStorage.getItem('pi-oai-voice')==='fable'   ?' selected':'') + '>Fable — Expressive, British accent</option>' +
-        '<option value="echo"'    + (localStorage.getItem('pi-oai-voice')==='echo'    ?' selected':'') + '>Echo — Clear, measured male</option>' +
-        '<option value="onyx"'    + (localStorage.getItem('pi-oai-voice')==='onyx'    ?' selected':'') + '>Onyx — Deep, authoritative male</option>' +
-      '</select>' +
-      '<div class="modal-actions">' +
-        '<button class="btn btn-primary" onclick="saveApiKey()">Save</button>' +
-        '<button class="btn btn-ghost" onclick="document.getElementById(\'api-key-modal\').remove()">Cancel</button>' +
-        (voice.openaiKey ? '<button class="btn btn-ghost" style="color:var(--rose);border-color:var(--rose);margin-left:auto" onclick="clearApiKey()">Remove Key</button>' : '') +
+      '<h3>🎙️ Agent Voice</h3>' +
+      '<p style="margin-bottom:16px">All voices use <strong>OpenAI TTS-HD</strong> via the server. Choose the voice that sounds most natural to you.</p>' +
+      '<div id="api-status-bar" style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:10px 12px;border-radius:8px;background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.18);font-size:0.78rem;color:var(--text-secondary)">' +
+        '<span id="api-status-dot" style="width:8px;height:8px;border-radius:50%;background:var(--text-muted);flex-shrink:0"></span>' +
+        '<span id="api-status-text">Checking server connection…</span>' +
       '</div>' +
-      '<div class="modal-note">API keys are managed on the server. No keys needed in the browser.</div>' +
+      '<label class="modal-label">Select Voice</label>' +
+      '<select class="modal-input" id="modal-voice-select" style="margin-bottom:8px">' +
+        voices.map(function(v){
+          return '<option value="'+v.id+'"'+(currentVoice===v.id?' selected':'')+'>'+v.label+' — '+v.desc+'</option>';
+        }).join('') +
+      '</select>' +
+      '<div id="voice-preview-btn-row" style="margin-bottom:16px">' +
+        '<button class="btn btn-ghost btn-sm" onclick="previewVoice()" style="font-size:0.78rem">▶ Preview selected voice</button>' +
+      '</div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn btn-primary" onclick="saveVoiceSettings()">Save Voice</button>' +
+        '<button class="btn btn-ghost" onclick="document.getElementById(\'api-key-modal\').remove()">Cancel</button>' +
+      '</div>' +
+      '<div class="modal-note" style="margin-top:12px">API keys are managed in <strong>.env</strong> on the server — never exposed to the browser.</div>' +
     '</div>';
   div.addEventListener('click', function(e){ if(e.target===div) div.remove(); });
   document.body.appendChild(div);
-  setTimeout(function(){ document.getElementById('modal-oai-key') && document.getElementById('modal-oai-key').focus(); }, 100);
+
+  // Check server status and update indicator
+  fetch('/api/status').then(function(r){ return r.json(); }).then(function(d){
+    var dot  = document.getElementById('api-status-dot');
+    var txt  = document.getElementById('api-status-text');
+    if(!dot||!txt) return;
+    if(d.openai){
+      dot.style.background='#34D399';
+      txt.textContent='OpenAI TTS-HD connected — voice is active';
+      txt.style.color='var(--emerald,#34D399)';
+    } else {
+      dot.style.background='var(--rose,#F87171)';
+      txt.textContent='OpenAI not configured on server — add key to .env';
+      txt.style.color='var(--rose,#F87171)';
+    }
+  }).catch(function(){
+    var dot=document.getElementById('api-status-dot');
+    var txt=document.getElementById('api-status-text');
+    if(dot) dot.style.background='var(--amber,#FCD34D)';
+    if(txt){ txt.textContent='Server offline — running locally?'; txt.style.color='var(--amber,#FCD34D)'; }
+  });
 }
 
-function saveApiKey() {
-  var k = document.getElementById('modal-oai-key').value.trim();
-  var v = document.getElementById('modal-voice-select').value;
-  if (k && !k.endsWith('…')) {
-    voice.openaiKey = k;
-    localStorage.setItem('pi-oai-key', k);
+function previewVoice() {
+  var sel = document.getElementById('modal-voice-select');
+  if (!sel) return;
+  var previewVoiceName = sel.value;
+  var sampleText = 'Hello. This is the ' + previewVoiceName + ' voice. I am your AI agent, ready to guide you.';
+  // Temporarily override voice for preview
+  var prev = voice.selectedVoice;
+  voice.selectedVoice = previewVoiceName;
+  speakOpenAI(sampleText);
+  voice.selectedVoice = prev;
+}
+
+function saveVoiceSettings() {
+  var v = document.getElementById('modal-voice-select');
+  if (v) {
+    voice.selectedVoice = v.value;
+    localStorage.setItem('pi-oai-voice', v.value);
   }
-  localStorage.setItem('pi-oai-voice', v);
   document.getElementById('api-key-modal') && document.getElementById('api-key-modal').remove();
-  addBubble('system', '✓ Voice settings saved. ' + (voice.openaiKey ? 'OpenAI Whisper + TTS active.' : 'Browser speech recognition active.'), null);
+  addBubble('system', '✓ Voice set to <strong>' + (voice.selectedVoice||'nova') + '</strong> — OpenAI TTS-HD via server.', null);
 }
 
-function clearApiKey() {
-  voice.openaiKey = '';
-  localStorage.removeItem('pi-oai-key');
-  document.getElementById('api-key-modal') && document.getElementById('api-key-modal').remove();
-  addBubble('system', 'OpenAI key removed. Using browser speech recognition.', null);
-}
+// Legacy stubs — kept so old onclick references don't throw
+function saveApiKey() { saveVoiceSettings(); }
+function clearApiKey() { document.getElementById('api-key-modal') && document.getElementById('api-key-modal').remove(); }
 
 /* ── Mic toggle ──────────────────────────────────────────────────────────── */
 function toggleMicEnabled() {
@@ -4220,29 +4261,44 @@ function initWebSpeech() {
 
 /* ── Mic input (OpenAI Whisper) ──────────────────────────────────────────── */
 function startWhisperRecording() {
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(function(stream) {
-      voice.audioChunks = [];
-      var mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
-      voice.mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
-
-      voice.mediaRecorder.ondataavailable = function(e) {
-        if (e.data.size > 0) voice.audioChunks.push(e.data);
-      };
-
-      voice.mediaRecorder.onstop = function() {
-        stream.getTracks().forEach(function(t){ t.stop(); });
-        var blob = new Blob(voice.audioChunks, { type: mimeType });
-        transcribeWithWhisper(blob, mimeType);
-      };
-
-      voice.mediaRecorder.start();
-      voice.isListening = true;
-      updateMicUI(true);
-    })
-    .catch(function(err) {
-      addBubble('system', '🎙️ Could not access microphone: ' + err.message, null);
-    });
+  // Check server has a key before firing up the mic; fall back to Web Speech if not
+  fetch('/api/status').then(function(r){ return r.json(); }).then(function(d){
+    if (!d.openai) {
+      // Server doesn't have an OpenAI key — use browser Web Speech instead
+      var rec = initWebSpeech();
+      if (rec) {
+        voice.recognition = rec;
+        try { rec.start(); } catch(e) {}
+      } else {
+        addBubble('system', '🎙️ OpenAI key not configured on server. Voice input requires Chrome or the key in .env.', null);
+      }
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(function(stream) {
+        voice.audioChunks = [];
+        var mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
+        voice.mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
+        voice.mediaRecorder.ondataavailable = function(e) {
+          if (e.data.size > 0) voice.audioChunks.push(e.data);
+        };
+        voice.mediaRecorder.onstop = function() {
+          stream.getTracks().forEach(function(t){ t.stop(); });
+          var blob = new Blob(voice.audioChunks, { type: mimeType });
+          transcribeWithWhisper(blob, mimeType);
+        };
+        voice.mediaRecorder.start();
+        voice.isListening = true;
+        updateMicUI(true);
+      })
+      .catch(function(err) {
+        addBubble('system', '🎙️ Could not access microphone: ' + err.message, null);
+      });
+  }).catch(function() {
+    // Server unreachable — fall back to Web Speech
+    var rec = initWebSpeech();
+    if (rec) { voice.recognition = rec; try { rec.start(); } catch(e){} }
+  });
 }
 
 function stopWhisperRecording() {
@@ -4297,21 +4353,12 @@ function toggleMic() {
     return;
   }
 
-  // Use Whisper if API key exists, else Web Speech
-  if (voice.openaiKey) {
-    startWhisperRecording();
-  } else {
-    if (!voice.recognition) voice.recognition = initWebSpeech();
-    if (!voice.recognition) {
-      addBubble('system', '🎙️ Speech recognition is not supported in this browser. Try Chrome or Safari on iOS. Or add an OpenAI key for Whisper.', null);
-      return;
-    }
-    try { voice.recognition.start(); } catch(e) { /* already started */ }
-  }
+  // Always try Whisper via server proxy first; fall back to Web Speech if server unavailable
+  startWhisperRecording();
 }
 
 function stopListening() {
-  if (voice.openaiKey) {
+  if (voice.mediaRecorder && voice.mediaRecorder.state !== 'inactive') {
     stopWhisperRecording();
   } else {
     if (voice.recognition) try { voice.recognition.stop(); } catch(e) {}
@@ -4423,50 +4470,63 @@ function pickNaturalVoice(voices) {
 }
 
 /* Main entry — decide what and how much to speak */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   VOICE ENGINE
+   Primary:  OpenAI TTS-HD via /api/openai/speech (server proxy)
+   Fallback: Web Speech API (browser built-in)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 function speakText(text, isFullDoc) {
   if (!voice.ttsEnabled) return;
 
-  // Hard stop anything currently playing before starting new speech
-  if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  // Stop anything already playing — never overlap
+  stopCurrentSpeech();
 
-  var clean = cleanTextForSpeech(text);
+  var clean  = cleanTextForSpeech(text);
   if (!clean.trim()) return;
 
-  // Questions (short): speak up to 2 sentences. Docs: first sentence only.
+  // Speak at most 2 sentences for questions; 1 for document readouts
   var spoken = isFullDoc ? firstSentences(clean, 1) : firstSentences(clean, 2);
   if (!spoken.trim()) return;
 
-  speakOpenAI(spoken);
+  speakViaProxy(spoken);
 }
 
-/* OpenAI TTS — tts-1-hd, natural speed, best voice */
-function speakOpenAI(text) {
-  // Cancel any current playback
+function stopCurrentSpeech() {
   if (voice.currentAudio) {
     voice.currentAudio.pause();
     voice.currentAudio = null;
   }
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
   removeTTSBadge();
-  showTTSBadge('Speaking…');
+}
 
-  var selectedVoice = localStorage.getItem('pi-oai-voice') || 'nova';
+function speakViaProxy(text) {
+  // Use cached server status to skip the check on repeated calls
+  if (voice.serverHasOai === false) {
+    speakBrowser(text);
+    return;
+  }
 
   fetch('/api/openai/speech', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'tts-1-hd',   // HD = significantly more natural than tts-1
-      input: text,
-      voice: selectedVoice,
-      speed: 0.94,          // Slightly slower = clearer, more human pacing
+      model:           'tts-1-hd',            // OpenAI's highest-quality, most natural TTS model
+      input:           text,
+      voice:           voice.selectedVoice,   // nova | shimmer | alloy | fable | echo | onyx
+      speed:           0.92,                  // 0.92 ≈ 130 WPM — natural conversational pace
       response_format: 'mp3',
     }),
   })
   .then(function(r) {
-    if (!r.ok) throw new Error('TTS API error ' + r.status);
+    if (r.status === 503) {
+      // Server has no OpenAI key configured — cache result, fall back permanently
+      voice.serverHasOai = false;
+      throw new Error('no-key');
+    }
+    if (!r.ok) throw new Error('http-' + r.status);
+    voice.serverHasOai = true;
     return r.blob();
   })
   .then(function(blob) {
@@ -4474,21 +4534,26 @@ function speakOpenAI(text) {
     var audio = new Audio(url);
     audio.volume = 1.0;
     voice.currentAudio = audio;
+    audio.onplay  = function() { showTTSBadge('Speaking…'); };
     audio.onended = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
     audio.onerror = function() { removeTTSBadge(); };
-    audio.play().catch(function(e) {
-      // Autoplay blocked — show a tap-to-play prompt
+    audio.play().catch(function() {
+      // Browser blocked autoplay — need a user gesture first; show tap prompt
       removeTTSBadge();
       showTapToPlay(url);
     });
   })
   .catch(function(err) {
     removeTTSBadge();
-    console.warn('[TTS]', err.message);
-    // Silently fall back to browser TTS
+    if (err.message !== 'no-key') {
+      console.warn('[TTS]', err.message);
+    }
     speakBrowser(text);
   });
 }
+
+// Keep speakOpenAI as an alias so any existing calls still work
+var speakOpenAI = speakViaProxy;
 
 /* Browser SpeechSynthesis — natural voice, proper pacing */
 function speakBrowser(text) {
