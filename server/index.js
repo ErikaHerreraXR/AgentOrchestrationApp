@@ -1,22 +1,12 @@
 /**
  * Product Imagination Agents OS — Backend Proxy Server
+ * Serves all static files + proxies OpenAI & Anthropic (keys never reach the browser)
  *
- * Keeps your API keys on the server — clients never see them.
- * Proxies requests to OpenAI and Anthropic on behalf of the portal.
- *
- * SETUP:
- *   1. cd server
- *   2. npm install
- *   3. cp .env.example .env   →  add your real API keys to .env
- *   4. npm start              →  server starts on http://localhost:3000
- *
- * DEPLOY TO RENDER (free):
- *   1. Push this folder to a GitHub repo
- *   2. Create a new Web Service on render.com → connect repo
- *   3. Build command: npm install
- *   4. Start command: npm start
- *   5. Add ANTHROPIC_API_KEY and OPENAI_API_KEY as Environment Variables
- *   6. Copy the Render URL → paste into portal's API Settings → Proxy URL
+ * Render setup:
+ *   Root directory: server           (or leave blank and set build/start below)
+ *   Build command:  npm install
+ *   Start command:  node index.js
+ *   Environment:    OPENAI_API_KEY, ANTHROPIC_API_KEY
  */
 
 'use strict';
@@ -25,41 +15,56 @@ require('dotenv').config();
 const express = require('express');
 const cors    = require('cors');
 const path    = require('path');
+const fs      = require('fs');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
+const HOST = '0.0.0.0';
 
 // ── Middleware ─────────────────────────────────────────────────────────────
-app.use(cors({
-  origin:  ALLOWED_ORIGIN,
-  methods: ['GET', 'POST', 'OPTIONS'],
+app.use(cors({ origin: '*', methods: ['GET','POST','OPTIONS'] }));
+app.use(express.json({ limit: '4mb' }));
+
+// ── Static files — serve everything from the REPO ROOT (one level up) ──────
+const STATIC_DIR = path.join(__dirname, '..');
+app.use(express.static(STATIC_DIR, {
+  index: 'index.html',
+  setHeaders(res, filePath) {
+    if (filePath.endsWith('.html')) res.setHeader('Cache-Control', 'no-store');
+  }
 }));
-app.use(express.json({ limit: '2mb' }));
 
-// Serve the portal files (HTML, icons, hero image, etc.)
-app.use(express.static(path.join(__dirname, '..')));
+// ── Build-time info ────────────────────────────────────────────────────────
+const BUILD_TIME  = new Date().toISOString();
+const GIT_COMMIT  = process.env.RENDER_GIT_COMMIT || 'local';
 
-// ── Health check ───────────────────────────────────────────────────────────
-app.get('/health', (req, res) => {
+// ── /api/version — confirms the proxy is running (not a static-file serve) ─
+app.get('/api/version', (_req, res) => {
+  res.json({ ok: true, server: 'pi-agents-os', commit: GIT_COMMIT, built: BUILD_TIME });
+});
+
+// ── /api/status — key presence check used by the portal ────────────────────
+app.get('/api/status', (_req, res) => {
+  const hasOai = !!process.env.OPENAI_API_KEY    && process.env.OPENAI_API_KEY    !== 'sk-...';
+  const hasAnt = !!process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'sk-ant-...';
   res.json({
-    status:    'ok',
-    openai:    process.env.OPENAI_API_KEY    ? 'configured' : 'missing',
-    anthropic: process.env.ANTHROPIC_API_KEY ? 'configured' : 'missing',
+    ok:        true,
+    commit:    GIT_COMMIT,
+    openai:    hasOai,
+    anthropic: hasAnt,
+    voice:     process.env.OPENAI_VOICE || 'nova',
   });
 });
 
-// ── Anthropic proxy ────────────────────────────────────────────────────────
-app.post('/api/anthropic/*', async (req, res) => {
+// ── /api/anthropic — Claude Sonnet ─────────────────────────────────────────
+app.post('/api/anthropic', async (req, res) => {
   const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return res.status(500).json({ error: 'Anthropic API key not configured on server.' });
-
-  const targetPath = req.path.replace('/api/anthropic', '');
-  const url        = 'https://api.anthropic.com' + targetPath;
-
+  if (!key || key === 'sk-ant-...') {
+    return res.status(503).json({ error: 'Anthropic API key not configured on server.' });
+  }
   try {
     const { default: fetch } = await import('node-fetch');
-    const response = await fetch(url, {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
       method:  'POST',
       headers: {
         'Content-Type':      'application/json',
@@ -68,100 +73,99 @@ app.post('/api/anthropic/*', async (req, res) => {
       },
       body: JSON.stringify(req.body),
     });
-
-    const data = await response.json();
-    res.status(response.status).json(data);
+    const data = await r.json();
+    res.status(r.status).json(data);
   } catch (err) {
-    console.error('[Anthropic proxy]', err.message);
-    res.status(502).json({ error: 'Proxy error: ' + err.message });
+    console.error('[Anthropic]', err.message);
+    res.status(502).json({ error: err.message });
   }
 });
 
-// ── OpenAI TTS — returns binary MP3, must be handled before the wildcard ─────
-app.post('/api/openai/v1/audio/speech', async (req, res) => {
+// ── /api/openai/speech — OpenAI TTS-HD (returns MP3 binary) ────────────────
+app.post('/api/openai/speech', async (req, res) => {
   const key = process.env.OPENAI_API_KEY;
-  if (!key) return res.status(500).json({ error: 'OpenAI API key not configured on server.' });
-
-  // Force the best settings regardless of what the client sends
-  const ttsBody = {
-    model:           'tts-1-hd',          // highest quality model
+  if (!key || key === 'sk-...') {
+    return res.status(503).json({ error: 'OpenAI API key not configured on server.' });
+  }
+  const body = {
+    model:           'tts-1-hd',
     input:           req.body.input || '',
-    voice:           req.body.voice || 'nova',  // nova = most natural, human-like
-    speed:           req.body.speed || 0.94,    // slightly slower = more natural
+    voice:           req.body.voice || process.env.OPENAI_VOICE || 'nova',
+    speed:           req.body.speed || 0.92,
     response_format: 'mp3',
   };
-
   try {
     const { default: fetch } = await import('node-fetch');
-    const response = await fetch('https://api.openai.com/v1/audio/speech', {
+    const r = await fetch('https://api.openai.com/v1/audio/speech', {
       method:  'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Authorization': 'Bearer ' + key,
-      },
-      body: JSON.stringify(ttsBody),
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body:    JSON.stringify(body),
     });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error('[TTS proxy] OpenAI error:', response.status, errText);
-      return res.status(response.status).send(errText);
-    }
-
-    // Stream binary audio back to browser
-    const audioBuffer = await response.arrayBuffer();
-    res.set({
-      'Content-Type':                  'audio/mpeg',
-      'Content-Length':                audioBuffer.byteLength,
-      'Access-Control-Allow-Origin':   process.env.ALLOWED_ORIGIN || '*',
-      'Cache-Control':                 'no-cache',
-    });
-    res.status(200).send(Buffer.from(audioBuffer));
-    console.log(`[TTS] Served ${Math.round(audioBuffer.byteLength/1024)}KB audio — voice:${ttsBody.voice}`);
+    if (!r.ok) { const t = await r.text(); return res.status(r.status).send(t); }
+    const buf = await r.arrayBuffer();
+    res.set({ 'Content-Type': 'audio/mpeg', 'Cache-Control': 'no-store' });
+    res.status(200).send(Buffer.from(buf));
   } catch (err) {
-    console.error('[TTS proxy]', err.message);
-    res.status(502).json({ error: 'TTS proxy error: ' + err.message });
+    console.error('[TTS]', err.message);
+    res.status(502).json({ error: err.message });
   }
 });
 
-// ── OpenAI chat / embeddings proxy (JSON responses) ──────────────────────────
-app.post('/api/openai/*', async (req, res) => {
+// ── /api/openai/transcribe — Whisper voice-to-text ─────────────────────────
+app.post('/api/openai/transcribe', async (req, res) => {
   const key = process.env.OPENAI_API_KEY;
-  if (!key) return res.status(500).json({ error: 'OpenAI API key not configured on server.' });
-
-  const targetPath = req.path.replace('/api/openai', '');
-  const url        = 'https://api.openai.com' + targetPath;
-
+  if (!key || key === 'sk-...') {
+    return res.status(503).json({ error: 'OpenAI API key not configured on server.' });
+  }
   try {
     const { default: fetch } = await import('node-fetch');
-    const response = await fetch(url, {
+    const r = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       method:  'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Authorization': 'Bearer ' + key,
-      },
-      body: JSON.stringify(req.body),
+      headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': req.headers['content-type'] },
+      body:    req,
+      duplex:  'half',
     });
-
-    const data = await response.json();
-    res.status(response.status).json(data);
+    const data = await r.json();
+    res.status(r.status).json(data);
   } catch (err) {
-    console.error('[OpenAI proxy]', err.message);
-    res.status(502).json({ error: 'Proxy error: ' + err.message });
+    console.error('[Whisper]', err.message);
+    res.status(502).json({ error: err.message });
   }
 });
 
-// ── Fallback → serve portal ─────────────────────────────────────────────────
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client-portal.html'));
+// ── /api/openai — GPT-4o chat completions ──────────────────────────────────
+app.post('/api/openai', async (req, res) => {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key || key === 'sk-...') {
+    return res.status(503).json({ error: 'OpenAI API key not configured on server.' });
+  }
+  try {
+    const { default: fetch } = await import('node-fetch');
+    const r = await fetch('https://api.openai.com/v1/chat/completions', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body:    JSON.stringify(req.body),
+    });
+    const data = await r.json();
+    res.status(r.status).json(data);
+  } catch (err) {
+    console.error('[OpenAI]', err.message);
+    res.status(502).json({ error: err.message });
+  }
+});
+
+// ── Catch-all: SPA fallback → index.html ───────────────────────────────────
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(STATIC_DIR, 'index.html'));
 });
 
 // ── Start ───────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n✓ Product Imagination Agents OS`);
-  console.log(`  Server:    http://localhost:${PORT}`);
-  console.log(`  Portal:    http://localhost:${PORT}/client-portal.html`);
-  console.log(`  Health:    http://localhost:${PORT}/health`);
-  console.log(`  OpenAI:    ${process.env.OPENAI_API_KEY    ? '✓ configured' : '✗ missing — add to .env'}`);
-  console.log(`  Anthropic: ${process.env.ANTHROPIC_API_KEY ? '✓ configured' : '✗ missing — add to .env'}\n`);
+app.listen(PORT, HOST, () => {
+  const hasOai = !!process.env.OPENAI_API_KEY    && process.env.OPENAI_API_KEY    !== 'sk-...';
+  const hasAnt = !!process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'sk-ant-...';
+  console.log(`\n✅  Product Imagination Agents OS`);
+  console.log(`    Listening on ${HOST}:${PORT}`);
+  console.log(`    OpenAI:    ${hasOai ? '✓ connected' : '✗ key missing — add to Render Environment'}`);
+  console.log(`    Anthropic: ${hasAnt ? '✓ connected' : '✗ key missing — add to Render Environment'}`);
+  console.log(`    Commit:    ${GIT_COMMIT}\n`);
 });
