@@ -1870,6 +1870,7 @@ function saveSetup(){
 
 // ── VOICE ──────────────────────────────────────────────────────────────────
 var _rec=null;
+
 function openVoice(agentId){
   S.voiceAgentId=agentId||S.currentAgent||(S.agents[0]&&S.agents[0].id);
   document.getElementById('voice-overlay').classList.add('active');
@@ -1884,6 +1885,7 @@ function closeVoice(){
   if(_rec){try{_rec.stop();}catch(e){}}
   _rec=null;
   if(window.speechSynthesis)window.speechSynthesis.cancel();
+  if(S.currentAudio){S.currentAudio.pause();S.currentAudio=null;}
 }
 function startListening(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -1898,7 +1900,7 @@ function startListening(){
     trans.textContent=t;
     if(e.results[e.results.length-1].isFinal){
       bars.classList.remove('active');lbl.textContent='Processing...';
-      var id=S.voiceAgentId||( S.agents[0]&&S.agents[0].id);
+      var id=S.voiceAgentId||(S.agents[0]&&S.agents[0].id);
       var inp=document.getElementById('inp-'+id);
       if(inp)inp.value=t;
       agentSend(id);
@@ -1915,22 +1917,120 @@ function startListening(){
   _rec.onend=function(){bars.classList.remove('active');};
   try{_rec.start();}catch(e){}
 }
-function speak(text){
-  if(!window.speechSynthesis)return;
+
+// ── Text-to-speech — routes through server proxy for natural OpenAI voice ────
+function speak(rawText){
+  // Clean text for speech
+  var text = rawText
+    .replace(/<[^>]+>/g,'')
+    .replace(/\*\*(.+?)\*\*/g,'$1')
+    .replace(/\*([^*]+)\*/g,'$1')
+    .replace(/_([^_]+)_/g,'$1')
+    .replace(/[\n\r]+/g,' ')
+    .trim();
+
+  // Limit to first 4 sentences for natural delivery pace
+  var sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+  var spoken    = sentences.slice(0,4).join(' ').trim();
+  if(!spoken) return;
+
+  var onServer = window.location.protocol !== 'file:';
+
+  if(onServer){
+    // Use server proxy — OpenAI TTS-HD nova voice, most natural
+    speakViaProxy(spoken);
+  } else if(S.antKey || S.oaiKey){
+    speakOpenAIDirect(spoken);
+  } else {
+    speakBrowser(spoken);
+  }
+}
+
+function speakViaProxy(text){
+  // Stop any current audio
+  if(S.currentAudio){S.currentAudio.pause();URL.revokeObjectURL(S.currentAudio._url||'');S.currentAudio=null;}
+
+  fetch(window.location.origin+'/api/openai/v1/audio/speech',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'tts-1-hd',
+      input:text,
+      voice:'nova',   // most natural, warm human-like female
+      speed:0.94,
+      response_format:'mp3'
+    })
+  })
+  .then(function(r){
+    if(!r.ok) throw new Error('TTS proxy '+r.status);
+    return r.blob();
+  })
+  .then(function(blob){
+    var url=URL.createObjectURL(blob);
+    var audio=new Audio(url);
+    audio._url=url;
+    S.currentAudio=audio;
+    audio.onended=function(){URL.revokeObjectURL(url);S.currentAudio=null;};
+    audio.onerror=function(){URL.revokeObjectURL(url);S.currentAudio=null;};
+    // iOS Safari requires user gesture — play silently catches it
+    audio.play().catch(function(){
+      console.warn('[TTS] Autoplay blocked — user must interact first');
+    });
+  })
+  .catch(function(err){
+    console.warn('[TTS]',err.message);
+    speakBrowser(text); // graceful fallback
+  });
+}
+
+function speakOpenAIDirect(text){
+  var key = S.oaiKey;
+  if(!key) return speakBrowser(text);
+  if(S.currentAudio){S.currentAudio.pause();S.currentAudio=null;}
+
+  fetch('https://api.openai.com/v1/audio/speech',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    body:JSON.stringify({model:'tts-1-hd',input:text,voice:'nova',speed:0.94,response_format:'mp3'})
+  })
+  .then(function(r){return r.blob();})
+  .then(function(blob){
+    var url=URL.createObjectURL(blob);
+    var audio=new Audio(url);
+    S.currentAudio=audio;
+    audio.onended=function(){URL.revokeObjectURL(url);};
+    audio.play().catch(function(){speakBrowser(text);});
+  })
+  .catch(function(){speakBrowser(text);});
+}
+
+function speakBrowser(text){
+  // Fallback: browser built-in — picks the most natural available voice
+  if(!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   function go(){
     var voices=window.speechSynthesis.getVoices();
-    var v=voices.find(function(x){return /Samantha|Karen|Serena|Google US/i.test(x.name);})||voices.find(function(x){return x.lang==='en-US';})||voices[0];
-    var utt=new SpeechSynthesisUtterance(text);utt.rate=0.92;utt.pitch=1.0;
-    if(v)utt.voice=v;
+    // Priority order: best-quality voices first
+    var PREFERRED=[/Samantha/i,/Serena/i,/Karen/i,/Moira/i,/Google US English/i,
+                   /Microsoft Aria/i,/Microsoft Jenny/i,/Ava/i,/Nicky/i];
+    var picked=null;
+    for(var i=0;i<PREFERRED.length;i++){
+      picked=voices.find(function(v){return PREFERRED[i].test(v.name);});
+      if(picked) break;
+    }
+    if(!picked) picked=voices.find(function(v){return v.lang==='en-US'&&v.localService;})||voices[0];
+    var utt=new SpeechSynthesisUtterance(text);
+    utt.rate=0.88; utt.pitch=1.05; utt.volume=1.0;
+    if(picked) utt.voice=picked;
     var orb=document.getElementById('voice-orb'),lbl=document.getElementById('voice-label');
     utt.onstart=function(){orb&&orb.classList.add('speaking');if(lbl)lbl.textContent='Speaking...';};
     utt.onend=function(){orb&&orb.classList.remove('speaking');if(lbl)lbl.textContent='Listening...';startListening();};
     window.speechSynthesis.speak(utt);
   }
-  if(window.speechSynthesis.getVoices().length)go();
+  if(window.speechSynthesis.getVoices().length) go();
   else{window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.onvoiceschanged=null;go();};}
 }
+
 
 // ── CHAT HELPERS ──────────────────────────────────────────────────────────
 function addMsg(agentId,role,html){

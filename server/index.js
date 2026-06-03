@@ -77,7 +77,54 @@ app.post('/api/anthropic/*', async (req, res) => {
   }
 });
 
-// ── OpenAI proxy ────────────────────────────────────────────────────────────
+// ── OpenAI TTS — returns binary MP3, must be handled before the wildcard ─────
+app.post('/api/openai/v1/audio/speech', async (req, res) => {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) return res.status(500).json({ error: 'OpenAI API key not configured on server.' });
+
+  // Force the best settings regardless of what the client sends
+  const ttsBody = {
+    model:           'tts-1-hd',          // highest quality model
+    input:           req.body.input || '',
+    voice:           req.body.voice || 'nova',  // nova = most natural, human-like
+    speed:           req.body.speed || 0.94,    // slightly slower = more natural
+    response_format: 'mp3',
+  };
+
+  try {
+    const { default: fetch } = await import('node-fetch');
+    const response = await fetch('https://api.openai.com/v1/audio/speech', {
+      method:  'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': 'Bearer ' + key,
+      },
+      body: JSON.stringify(ttsBody),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('[TTS proxy] OpenAI error:', response.status, errText);
+      return res.status(response.status).send(errText);
+    }
+
+    // Stream binary audio back to browser
+    const audioBuffer = await response.arrayBuffer();
+    res.set({
+      'Content-Type':                  'audio/mpeg',
+      'Content-Length':                audioBuffer.byteLength,
+      'Access-Control-Allow-Origin':   process.env.ALLOWED_ORIGIN || '*',
+      'Cache-Control':                 'no-cache',
+    });
+    res.status(200).send(Buffer.from(audioBuffer));
+    console.log(`[TTS] Served ${Math.round(audioBuffer.byteLength/1024)}KB audio — voice:${ttsBody.voice}`);
+  } catch (err) {
+    console.error('[TTS proxy]', err.message);
+    res.status(502).json({ error: 'TTS proxy error: ' + err.message });
+  }
+});
+
+// ── OpenAI chat / embeddings proxy (JSON responses) ──────────────────────────
 app.post('/api/openai/*', async (req, res) => {
   const key = process.env.OPENAI_API_KEY;
   if (!key) return res.status(500).json({ error: 'OpenAI API key not configured on server.' });
@@ -102,12 +149,6 @@ app.post('/api/openai/*', async (req, res) => {
     console.error('[OpenAI proxy]', err.message);
     res.status(502).json({ error: 'Proxy error: ' + err.message });
   }
-});
-
-// ── OpenAI audio (Whisper transcription) ────────────────────────────────────
-app.post('/api/openai/v1/audio/transcriptions', async (req, res) => {
-  // Handled by the wildcard above — included here for clarity
-  res.status(405).json({ error: 'Use multipart form upload directly to this endpoint.' });
 });
 
 // ── Fallback → serve portal ─────────────────────────────────────────────────
