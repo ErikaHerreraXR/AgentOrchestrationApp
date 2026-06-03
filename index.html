@@ -578,6 +578,26 @@ nav{
   flex-shrink:0;
 }
 
+/* Top-4 agent chips on template cards */
+.card-agents-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:5px;
+  padding:0 16px 12px;
+}
+.agent-chip{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(0,0,0,0.025);border:1px solid rgba(15,23,42,0.08);
+  border-radius:7px;padding:6px 9px;transition:0.15s ease;
+}
+.template-card:hover .agent-chip{
+  background:rgba(255,255,255,0.60);border-color:rgba(15,23,42,0.12);
+}
+.agent-chip-ico{font-size:0.82rem;line-height:1;flex-shrink:0}
+.agent-chip-name{
+  font-size:0.67rem;font-weight:600;color:#1E293B;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:-0.01em;line-height:1.3;
+}
+
 /* Coming soon footer */
 .coming-soon-badge{
   display:flex;align-items:center;justify-content:center;
@@ -1582,23 +1602,15 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 
     <div class="hero-pipeline">
       <div class="pipeline-node active">
-        <div class="node-icon">📥</div>User Brief
+        <div class="node-icon">📋</div>Brief
       </div>
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-node active">
-        <div class="node-icon">🎯</div>Orchestration
+        <div class="node-icon">🎯</div>Orchestrate
       </div>
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-node active">
-        <div class="node-icon">⚙️</div>Specialists
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-node active">
-        <div class="node-icon">🛡️</div>Guardian QA
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-node active">
-        <div class="node-icon">📄</div>Logged
+        <div class="node-icon">🛡️</div>QA Review
       </div>
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-node active">
@@ -2838,7 +2850,15 @@ function scrollToTemplates() { document.getElementById('templates-section').scro
 
 function renderTemplates() {
   const grid = document.getElementById('templates-grid');
-  grid.innerHTML = TEMPLATES.map(t => `
+  grid.innerHTML = TEMPLATES.map(t => {
+    // Pick top 4 agents for this template
+    const top4 = t.active && t.agents
+      ? t.agents.slice(0, 4).map(a =>
+          `<div class="agent-chip"><span class="agent-chip-ico">${a.icon}</span><span class="agent-chip-name">${a.name.replace(/ Agent$/,'').replace(/ Planner$/,'').replace(/ Director$/,'')}</span></div>`
+        ).join('')
+      : '';
+
+    return `
     <div class="template-card ${t.active ? '' : 'coming-soon'}"
          style="--card-color:${t.color}"
          onclick="${t.active ? `selectTemplate('${t.id}')` : ''}"
@@ -2858,15 +2878,10 @@ function renderTemplates() {
         <div class="card-desc">${t.desc}</div>
       </div>
 
-      <div class="card-agents-row">
-        <div class="card-agents-pill">
-          <div class="pill-dot"></div>
-          ${t.active
-            ? `${t.agents.length} agents · Orchestration · Guardian QA`
-            : 'Agent roster in development'
-          }
-        </div>
-      </div>
+      ${t.active && top4
+        ? `<div class="card-agents-grid">${top4}</div>`
+        : `<div class="card-agents-row"><div class="card-agents-pill"><div class="pill-dot"></div>Agent roster in development</div></div>`
+      }
 
       ${t.active
         ? `<div class="card-activate-btn">
@@ -2875,8 +2890,8 @@ function renderTemplates() {
            </div>`
         : `<div class="coming-soon-badge">Coming Soon</div>`
       }
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
   // Keyboard support
   grid.querySelectorAll('.template-card[tabindex]').forEach(function(card) {
@@ -3538,14 +3553,19 @@ function removeQuickReplies() {
   if (el) el.remove();
 }
 
-function agentSay(text, delay) {
+function agentSay(text, delay, shouldSpeak) {
   return new Promise(function(resolve) {
     var typing = showTyping();
     setTimeout(function() {
       removeTyping();
       addBubble('agent', text, state.currentAgentIcon);
-      // Speak the agent message — cleaned and limited to natural length
-      speakText(text, false);
+      // Only speak if explicitly requested (questions only — not long intros)
+      if (shouldSpeak) {
+        // Cancel anything playing first so voices never overlap
+        if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        setTimeout(function() { speakText(text, false); }, 150);
+      }
       resolve();
     }, delay || 900);
   });
@@ -3705,16 +3725,18 @@ function startAgentConversation(agent, agentIdx, templateId) {
 
 function askQuestion(conv, qIdx, templateId, agent) {
   if (!conv.questions || qIdx >= conv.questions.length) {
-    // All questions answered — move to output
     processingToOutput(conv, templateId, agent);
     return;
   }
   var q = conv.questions[qIdx];
-  agentSay(q.text, 800).then(function() {
+  // Pass shouldSpeak=true ONLY for questions so the user hears what to answer
+  agentSay(q.text, 800, true).then(function() {
     showQuickReplies(q.opts, function(answer) {
+      // Stop any speech the moment user responds
+      if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
       state.convAnswers[q.id] = answer;
       addBubble('user', answer, '👤');
-      // Ask next question
       setTimeout(function() { askQuestion(conv, qIdx + 1, templateId, agent); }, 500);
     });
   });
@@ -4097,7 +4119,7 @@ function showApiKeyModal() {
         '<button class="btn btn-ghost" onclick="document.getElementById(\'api-key-modal\').remove()">Cancel</button>' +
         (voice.openaiKey ? '<button class="btn btn-ghost" style="color:var(--rose);border-color:var(--rose);margin-left:auto" onclick="clearApiKey()">Remove Key</button>' : '') +
       '</div>' +
-      '<div class="modal-note">Your key is stored locally in this browser only — never sent anywhere except directly to api.openai.com. Get a key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>.</div>' +
+      '<div class="modal-note">API keys are managed on the server. No keys needed in the browser.</div>' +
     '</div>';
   div.addEventListener('click', function(e){ if(e.target===div) div.remove(); });
   document.body.appendChild(div);
@@ -4243,9 +4265,9 @@ function transcribeWithWhisper(blob, mimeType) {
   fd.append('model', 'whisper-1');
   fd.append('language', 'en');
 
-  fetch('https://api.openai.com/v1/audio/transcriptions', {
+  fetch('/api/openai/transcribe', {
     method: 'POST',
-    headers: { 'Authorization': 'Bearer ' + voice.openaiKey },
+    headers: {},
     body: fd,
   })
   .then(function(r){ return r.json(); })
@@ -4403,19 +4425,19 @@ function pickNaturalVoice(voices) {
 /* Main entry — decide what and how much to speak */
 function speakText(text, isFullDoc) {
   if (!voice.ttsEnabled) return;
+
+  // Hard stop anything currently playing before starting new speech
+  if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+
   var clean = cleanTextForSpeech(text);
   if (!clean.trim()) return;
 
-  // For intro/closing agent messages: read up to 4 sentences
-  // For long document output: read only the first 3 lines (not the whole doc)
-  var spoken = isFullDoc ? firstSentences(clean, 3) : firstSentences(clean, 5);
+  // Questions (short): speak up to 2 sentences. Docs: first sentence only.
+  var spoken = isFullDoc ? firstSentences(clean, 1) : firstSentences(clean, 2);
   if (!spoken.trim()) return;
 
-  if (voice.openaiKey) {
-    speakOpenAI(spoken);
-  } else {
-    speakBrowser(spoken);
-  }
+  speakOpenAI(spoken);
 }
 
 /* OpenAI TTS — tts-1-hd, natural speed, best voice */
@@ -4430,10 +4452,9 @@ function speakOpenAI(text) {
 
   var selectedVoice = localStorage.getItem('pi-oai-voice') || 'nova';
 
-  fetch('https://api.openai.com/v1/audio/speech', {
+  fetch('/api/openai/speech', {
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer ' + voice.openaiKey,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({

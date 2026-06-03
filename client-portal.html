@@ -706,43 +706,33 @@ a{color:inherit;text-decoration:none}
   <button class="voice-close" onclick="closeVoice()">&times; &nbsp;Close Voice Mode</button>
 </div>
 
-<!-- API SETTINGS MODAL -->
+<!-- API STATUS PANEL -->
 <div class="api-modal-ov" id="api-modal">
   <div class="api-modal-card">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px">
       <div style="width:8px;height:8px;border-radius:50%;background:var(--teal)"></div>
-      <div style="font-family:var(--fh);font-size:15px;font-weight:700;color:#FDFAF7">API &amp; Settings</div>
+      <div style="font-family:var(--fh);font-size:15px;font-weight:700;color:#FDFAF7">Server API Status</div>
     </div>
     <div class="api-section-title">&#127981; OpenAI</div>
-    <div class="api-section-sub">Powers GPT-4o chat, Whisper voice-to-text, and TTS-HD voice responses.</div>
-    <input class="api-input" type="password" id="api-oai" placeholder="sk-...  OpenAI API key">
+    <div class="api-section-sub">GPT-4o chat responses, Whisper voice-to-text, and TTS-HD voice output.</div>
     <div class="api-status-row">
-      <div class="api-pill" id="oai-pill">&#9679; Not connected</div>
-      <span style="font-size:11px;color:rgba(253,250,247,.3)">platform.openai.com/api-keys</span>
+      <div class="api-pill" id="oai-pill">&#9679; Checking&hellip;</div>
     </div>
     <div class="api-divider"></div>
     <div class="api-section-title">&#129302; Anthropic</div>
-    <div class="api-section-sub">Powers Claude Sonnet for the highest-quality AI agent responses.</div>
-    <input class="api-input" type="password" id="api-ant" placeholder="sk-ant-...  Anthropic API key">
+    <div class="api-section-sub">Claude Sonnet for the highest-quality AI agent responses.</div>
     <div class="api-status-row">
-      <div class="api-pill" id="ant-pill">&#9679; Not connected</div>
-      <span style="font-size:11px;color:rgba(253,250,247,.3)">console.anthropic.com/keys</span>
+      <div class="api-pill" id="ant-pill">&#9679; Checking&hellip;</div>
     </div>
     <div class="api-divider"></div>
-    <div style="font-family:var(--fm);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:8px">Agent Voice (TTS)</div>
-    <select class="api-input" id="api-voice" style="margin-bottom:0">
-      <option value="nova">Nova &mdash; Warm, natural female (recommended)</option>
-      <option value="shimmer">Shimmer &mdash; Bright, clear female</option>
-      <option value="alloy">Alloy &mdash; Balanced, neutral</option>
-      <option value="fable">Fable &mdash; Expressive, British</option>
-      <option value="echo">Echo &mdash; Clear, measured male</option>
-      <option value="onyx">Onyx &mdash; Deep, authoritative male</option>
-    </select>
-    <div style="display:flex;gap:10px;margin-top:22px">
-      <button class="login-btn" style="margin:0;flex:1" onclick="saveApiSettings()">Save Settings &rarr;</button>
-      <button onclick="closeApiModal()" style="padding:12px 20px;border-radius:100px;border:1.5px solid rgba(255,255,255,.15);background:none;color:rgba(255,255,255,.4);font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Cancel</button>
+    <div style="font-size:12px;color:rgba(253,250,247,.3);line-height:1.6">
+      API keys are managed in <strong style="color:rgba(253,250,247,.5)">.env</strong> on the server &mdash;
+      they are never exposed to the browser.<br>
+      To change keys: edit <code style="color:var(--teal)">.env</code> and restart the server.
     </div>
-    <div style="font-size:11px;color:rgba(253,250,247,.2);text-align:center;margin-top:14px;line-height:1.5">Keys stored locally in your browser only &mdash; never sent anywhere except directly to OpenAI or Anthropic servers.</div>
+    <div style="margin-top:20px">
+      <button class="login-btn" style="margin:0" onclick="closeApiModal()">Close</button>
+    </div>
   </div>
 </div>
 
@@ -882,8 +872,7 @@ var S = {
   user:null, client:{}, agents:[], tasks:[], docs:[], goals:[],
   agentHist:{}, agentBusy:{}, agentInit:{},
   currentAgent:null, voiceAgentId:null, recognition:null,
-  oaiKey: localStorage.getItem('pi-oai-key')||'',
-  antKey: localStorage.getItem('pi-ant-key')||'',
+  oaiKey: 'server', antKey: 'server',  // keys are server-side
   libAgentId:null, libTabFilter:null,
 };
 
@@ -1194,7 +1183,7 @@ async function agentSend(agentId){
       catch(e){ reply=await callOpenAI(agentId,txt); }
     } else if(S.antKey){
       reply=await callAnthropic(agentId,txt);
-    } else if(S.oaiKey){
+    } else if(true){
       reply=await callOpenAI(agentId,txt);
     }
   }catch(e){console.warn('API error:',e.message);reply=null;}
@@ -1219,7 +1208,7 @@ async function callAnthropic(agentId,userMsg){
   var useProxy = window.location.protocol !== 'file:' && !S.antKey;
   var url = useProxy
     ? window.location.origin+'/api/anthropic/v1/messages'
-    : 'https://api.anthropic.com/v1/messages';
+    : '/api/anthropic';
   var headers = {'Content-Type':'application/json'};
   if(!useProxy){
     headers['x-api-key']=S.antKey;
@@ -1247,7 +1236,7 @@ async function callOpenAI(agentId,userMsg){
   var useProxy = window.location.protocol !== 'file:' && !S.oaiKey;
   var url = useProxy
     ? window.location.origin+'/api/openai/v1/chat/completions'
-    : 'https://api.openai.com/v1/chat/completions';
+    : '/api/openai';
   var headers = {'Content-Type':'application/json'};
   if(!useProxy) headers['Authorization']='Bearer '+S.oaiKey;
   var res=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({model:'gpt-4o-mini',max_tokens:1200,messages:msgs})});
@@ -1471,20 +1460,27 @@ function generateReport(agentId){
 
 // ── API SETTINGS ────────────────────────────────────────────────────────────
 function openApiModal(){
-  var oai=localStorage.getItem('pi-oai-key')||'';
-  var ant=localStorage.getItem('pi-ant-key')||'';
-  document.getElementById('api-oai').value=oai?(oai.slice(0,8)+'...'):'';
-  document.getElementById('api-ant').value=ant?(ant.slice(0,12)+'...'):'';
-  document.getElementById('api-voice').value=localStorage.getItem('pi-oai-voice')||'nova';
-  document.getElementById('oai-pill').textContent=oai?'✓ Connected':'● Not connected';
-  document.getElementById('oai-pill').className='api-pill '+(oai?'active':'inactive');
-  document.getElementById('ant-pill').textContent=ant?'✓ Connected':'● Not connected';
-  document.getElementById('ant-pill').className='api-pill '+(ant?'active':'inactive');
   document.getElementById('api-modal').classList.add('open');
+  checkApiStatus();
+}
+
+function checkApiStatus(){
+  fetch('/api/status').then(function(r){return r.json();}).then(function(d){
+    var op=document.getElementById('oai-pill');
+    var ap=document.getElementById('ant-pill');
+    if(op){op.textContent=d.openai?'✓ Connected':'✗ Key missing — add to .env';op.className='api-pill '+(d.openai?'active':'inactive');}
+    if(ap){ap.textContent=d.anthropic?'✓ Connected':'✗ Key missing — add to .env';ap.className='api-pill '+(d.anthropic?'active':'inactive');}
+    updateApiDot();
+  }).catch(function(){
+    var op=document.getElementById('oai-pill');var ap=document.getElementById('ant-pill');
+    if(op){op.textContent='⚠ Server not running';op.className='api-pill inactive';}
+    if(ap){ap.textContent='⚠ Server not running';ap.className='api-pill inactive';}
+  });
 }
 function closeApiModal(){document.getElementById('api-modal').classList.remove('open');}
 
-function saveApiSettings(){
+function saveApiSettings(){ closeApiModal(); /* Keys managed server-side */ }
+function _old_saveApiSettings_disabled(){
   var oaiEl=document.getElementById('api-oai');
   var antEl=document.getElementById('api-ant');
   var oai=oaiEl.value.trim();
@@ -1558,8 +1554,8 @@ function submitTask(){
       task.status='done';
       try{
         var prompt=obj+(ctx?'\n\nContext: '+ctx:'');
-        if(S.antKey)task.output=await callAnthropic(agentId,prompt);
-        else if(S.oaiKey)task.output=await callOpenAI(agentId,prompt);
+        task.output=await callAnthropic(agentId,prompt);
+        
         else task.output=smartFallback(agentId,obj);
       }catch(e){task.output=smartFallback(agentId,obj);}
       task.output=(task.output||'').replace(/<[^>]+>/g,'');
@@ -1792,7 +1788,7 @@ function speakOpenAIDirect(text){
   if(!key) return speakBrowser(text);
   if(S.currentAudio){S.currentAudio.pause();S.currentAudio=null;}
 
-  fetch('https://api.openai.com/v1/audio/speech',{
+  fetch('/api/openai/speech',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
     body:JSON.stringify({model:'tts-1-hd',input:text,voice:'nova',speed:0.94,response_format:'mp3'})
