@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Client Portal — Product Imagination</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════
+   PI CLIENT PORTAL — Brand System
+═══════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:     #1C1108;
+  --body:    #3A2A1E;
+  --mid:     #5A4030;
+  --muted:   #7A6050;
+  --bg:      #C8A898;
+  --bg-s:    #BFA090;
+  --bg-d:    #B09080;
+  --card:    rgba(255,252,248,0.92);
+  --white:   #FDFAF7;
+  --border:  rgba(90,64,48,0.13);
+  --bw:      rgba(255,255,255,0.55);
+  --teal:    #2EB8A8;
+  --teal-d:  #1E9890;
+  --coral:   #E85848;
+  --warm:    #D4920A;
+  --gold:    #C49010;
+  --sage:    #4A9870;
+  --violet:  #7040B8;
+  --fh:'Playfair Display',serif;
+  --fb:'DM Sans',sans-serif;
+  --fm:'Space Mono',monospace;
+}
+
+html,body{height:100%;font-family:var(--fb);overflow:hidden}
+body{background:var(--bg);color:var(--body)}
+button,input,textarea,select{font-family:var(--fb)}
+a{color:inherit;text-decoration:none}
+
+/* ═══════════════════════════════════════
+   PAGE SYSTEM
+═══════════════════════════════════════ */
+.page{position:fixed;inset:0;display:none;transition:opacity .4s ease}
+.page.active{display:flex;opacity:1}
+.page.fade-out{opacity:0;pointer-events:none}
+
+/* ═══════════════════════════════════════
+   LOGIN PAGE
+═══════════════════════════════════════ */
+#page-login{
+  flex-direction:column;align-items:center;justify-content:center;
+  background:var(--ink);overflow:hidden;
+}
+
+/* animated bg mesh */
+#page-login::before{
+  content:'';position:absolute;inset:-50%;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 30%, rgba(46,184,168,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(232,88,72,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 60% 20%, rgba(212,146,10,.1) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 40% 80%, rgba(112,64,184,.1) 0%, transparent 60%);
+  animation:meshMove 18s ease-in-out infinite alternate;
+}
+@keyframes meshMove{
+  0%  {transform:translate(0,0) rotate(0deg)}
+  100%{transform:translate(3%,2%) rotate(4deg)}
+}
+
+/* grain overlay */
+#page-login::after{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;opacity:.5;
+}
+
+.login-card{
+  position:relative;z-index:2;
+  width:420px;max-width:94vw;
+  background:rgba(253,250,247,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:28px;padding:48px 44px;
+  backdrop-filter:blur(24px);
+  box-shadow:0 40px 80px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.06);
+  animation:loginIn .7s cubic-bezier(.34,1.4,.64,1) both;
+}
+@keyframes loginIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+
+.login-brand{
+  display:flex;align-items:center;gap:8px;margin-bottom:36px;
+}
+.login-brand-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);flex-shrink:0;box-shadow:0 0 12px var(--teal)}
+.login-brand-name{font-family:var(--fh);font-size:16px;font-weight:700;color:#FDFAF7;letter-spacing:-.2px}
+
+.login-h{font-family:var(--fh);font-size:30px;font-weight:700;color:#FDFAF7;line-height:1.1;margin-bottom:6px}
+.login-h em{font-style:italic;color:var(--teal)}
+.login-sub{font-size:14px;color:rgba(253,250,247,.45);margin-bottom:32px;font-weight:300}
+
+.login-label{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(253,250,247,.4);margin-bottom:7px;display:block}
+
+.login-input{
+  width:100%;padding:13px 16px;border-radius:12px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  color:#FDFAF7;font-size:15px;outline:none;
+  transition:border-color .2s,background .2s,box-shadow .2s;
+  margin-bottom:16px;
+}
+.login-input:focus{border-color:var(--teal);background:rgba(255,255,255,.1);box-shadow:0 0 0 3px rgba(46,184,168,.2)}
+.login-input::placeholder{color:rgba(253,250,247,.25)}
+
+.login-select{
+  width:100%;padding:13px 16px;border-radius:12px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  color:#FDFAF7;font-size:15px;outline:none;
+  cursor:pointer;appearance:none;
+  transition:border-color .2s,background .2s;
+  margin-bottom:24px;
+}
+.login-select option{background:#1C1108;color:#FDFAF7}
+.login-select:focus{border-color:var(--teal);background:rgba(255,255,255,.1)}
+
+.login-btn{
+  width:100%;padding:15px;border-radius:100px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--teal-d),var(--teal));
+  color:#fff;font-family:var(--fm);font-size:11px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  box-shadow:0 8px 28px rgba(46,184,168,.45);
+  transition:transform .15s,box-shadow .15s;
+}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(46,184,168,.6)}
+.login-btn:active{transform:scale(.98)}
+
+.login-err{
+  font-size:13px;color:var(--coral);margin-top:12px;text-align:center;
+  display:none;animation:shake .4s ease;
+}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.login-err.show{display:block}
+
+.login-note{font-size:11px;color:rgba(253,250,247,.25);text-align:center;margin-top:20px;letter-spacing:.3px}
+
+/* ═══════════════════════════════════════
+   DASHBOARD PAGE
+═══════════════════════════════════════ */
+#page-dash{
+  flex-direction:row;height:100vh;overflow:hidden;
+}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:260px;flex-shrink:0;
+  background:var(--ink);
+  display:flex;flex-direction:column;
+  padding:0;overflow:hidden;
+  position:relative;
+  transition:width .3s ease;
+}
+#sidebar::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--teal),var(--warm),var(--coral),var(--gold),var(--sage));
+}
+
+.sb-top{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-brand{display:flex;align-items:center;gap:7px;margin-bottom:0}
+.sb-brand-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.sb-brand-name{font-family:var(--fh);font-size:15px;font-weight:700;color:#FDFAF7}
+
+.sb-client-box{
+  margin:0 12px 8px;padding:14px 16px;
+  background:rgba(255,255,255,.04);border-radius:14px;
+  border:1px solid rgba(255,255,255,.07);
+}
+.sb-client-label{font-family:var(--fm);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:4px}
+.sb-client-name{font-size:14px;font-weight:600;color:#FDFAF7;margin-bottom:2px}
+.sb-client-plan{font-size:11px;color:var(--teal);font-family:var(--fm);letter-spacing:.5px}
+
+.sb-nav{flex:1;overflow-y:auto;padding:8px 12px}
+.sb-nav::-webkit-scrollbar{width:0}
+
+.sb-section-label{font-family:var(--fm);font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.25);padding:16px 8px 8px;display:block}
+
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 12px;border-radius:12px;cursor:pointer;
+  transition:background .15s,color .15s;margin-bottom:2px;
+  border:1px solid transparent;
+  position:relative;
+}
+.sb-item:hover{background:rgba(255,255,255,.06)}
+.sb-item.active{background:rgba(46,184,168,.14);border-color:rgba(46,184,168,.25)}
+.sb-item.active .sb-item-icon{color:var(--teal)}
+.sb-item.active .sb-item-label{color:#FDFAF7}
+.sb-item-icon{font-size:16px;flex-shrink:0;width:20px;text-align:center}
+.sb-item-label{font-size:13px;color:rgba(255,255,255,.6);font-weight:400;flex:1}
+.sb-item.active .sb-item-label{font-weight:500;color:#FDFAF7}
+.sb-item-badge{
+  font-family:var(--fm);font-size:9px;font-weight:700;
+  background:var(--coral);color:#fff;
+  padding:2px 7px;border-radius:100px;flex-shrink:0;
+}
+
+.sb-bottom{padding:12px;border-top:1px solid rgba(255,255,255,.06)}
+.sb-logout{
+  display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;
+  cursor:pointer;transition:background .15s;color:rgba(255,255,255,.35);font-size:13px;
+  border:none;background:none;width:100%;text-align:left;
+}
+.sb-logout:hover{background:rgba(255,0,0,.08);color:rgba(255,100,100,.7)}
+.sb-logout-icon{font-size:15px}
+
+/* ── MAIN ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+
+/* topbar */
+#topbar{
+  flex-shrink:0;height:60px;
+  padding:0 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(200,168,152,0.9);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.topbar-title{font-family:var(--fh);font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-voice-btn{
+  display:flex;align-items:center;gap:7px;
+  font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:8px 16px;border-radius:100px;border:none;cursor:pointer;
+  background:var(--teal-d);color:#fff;
+  transition:transform .15s,box-shadow .15s;
+  box-shadow:0 4px 14px rgba(30,152,144,.4);
+}
+.topbar-voice-btn:hover{transform:scale(1.04);box-shadow:0 8px 22px rgba(30,152,144,.5)}
+.topbar-voice-btn.listening{background:var(--coral);animation:pulse-btn 1.5s ease-in-out infinite}
+@keyframes pulse-btn{0%,100%{box-shadow:0 4px 14px rgba(232,88,72,.4)}50%{box-shadow:0 4px 28px rgba(232,88,72,.7)}}
+.voice-dot{width:8px;height:8px;border-radius:50%;background:#fff;flex-shrink:0}
+.topbar-voice-btn.listening .voice-dot{animation:blink 0.8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.topbar-avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),var(--sage));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:#fff;font-family:var(--fm);
+  cursor:pointer;
+}
+
+/* ── PANEL SYSTEM ── */
+#panels{flex:1;overflow:hidden;position:relative}
+.panel{position:absolute;inset:0;overflow-y:auto;display:none;padding:28px}
+.panel.active{display:block}
+.panel::-webkit-scrollbar{width:4px}
+.panel::-webkit-scrollbar-thumb{background:rgba(90,64,48,.15);border-radius:4px}
+
+/* ── OVERVIEW PANEL ── */
+.ov-welcome{margin-bottom:28px}
+.ov-welcome-h{font-family:var(--fh);font-size:28px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.ov-welcome-h em{font-style:italic;color:var(--coral)}
+.ov-welcome-sub{font-size:15px;color:var(--mid);font-weight:300;line-height:1.7}
+
+.ov-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:900px){.ov-stats{grid-template-columns:repeat(2,1fr)}}
+.ov-stat{
+  background:var(--card);border:1px solid var(--bw);border-radius:18px;
+  padding:22px 20px;text-align:center;
+  box-shadow:0 2px 12px rgba(30,10,0,.06);
+  transition:transform .2s,box-shadow .2s;
+}
+.ov-stat:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(30,10,0,.1)}
+.ov-stat-n{font-family:var(--fh);font-size:38px;font-weight:800;color:var(--ink);letter-spacing:-2px;line-height:1;margin-bottom:4px}
+.ov-stat-l{font-size:12px;color:var(--muted);font-weight:400;line-height:1.4}
+
+.ov-agents{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:700px){.ov-agents{grid-template-columns:1fr}}
+.ov-agent-card{
+  background:var(--card);border:1px solid var(--bw);border-radius:20px;
+  padding:22px;cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .22s,box-shadow .22s;
+  box-shadow:0 2px 12px rgba(30,10,0,.06);
+}
+.ov-agent-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:20px 20px 0 0}
+.ov-agent-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(30,10,0,.12)}
+.ov-agent-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ov-agent-ico{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ov-agent-name{font-family:var(--fh);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.ov-agent-tag{font-family:var(--fm);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+.ov-agent-desc{font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:14px;font-weight:300}
+.ov-agent-launch{
+  font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:7px 16px;border-radius:100px;border:1.5px solid;cursor:pointer;
+  transition:all .15s;background:none;
+}
+
+/* agent card color themes */
+.agent-teal::before{background:linear-gradient(90deg,#2EB8A8,#5ED4C4)}
+.agent-teal .ov-agent-ico{background:rgba(46,184,168,.12)}
+.agent-teal .ov-agent-tag{color:#1E9890}
+.agent-teal .ov-agent-launch{color:#1E9890;border-color:rgba(30,152,144,.35);background:rgba(46,184,168,.08)}
+.agent-teal .ov-agent-launch:hover{background:#1E9890;color:#fff;border-color:#1E9890}
+
+.agent-warm::before{background:linear-gradient(90deg,#D4920A,#C49010)}
+.agent-warm .ov-agent-ico{background:rgba(212,146,10,.1)}
+.agent-warm .ov-agent-tag{color:#B87010}
+.agent-warm .ov-agent-launch{color:#B87010;border-color:rgba(180,112,16,.35);background:rgba(212,146,10,.08)}
+.agent-warm .ov-agent-launch:hover{background:#B87010;color:#fff;border-color:#B87010}
+
+.agent-coral::before{background:linear-gradient(90deg,#E85848,#F08878)}
+.agent-coral .ov-agent-ico{background:rgba(232,88,72,.1)}
+.agent-coral .ov-agent-tag{color:#C04030}
+.agent-coral .ov-agent-launch{color:#C04030;border-color:rgba(192,64,48,.35);background:rgba(232,88,72,.08)}
+.agent-coral .ov-agent-launch:hover{background:#C04030;color:#fff;border-color:#C04030}
+
+.agent-sage::before{background:linear-gradient(90deg,#4A9870,#6AB888)}
+.agent-sage .ov-agent-ico{background:rgba(74,152,112,.1)}
+.agent-sage .ov-agent-tag{color:#3A7860}
+.agent-sage .ov-agent-launch{color:#3A7860;border-color:rgba(58,120,96,.35);background:rgba(74,152,112,.08)}
+.agent-sage .ov-agent-launch:hover{background:#3A7860;color:#fff;border-color:#3A7860}
+
+/* ── AGENT CHAT PANEL ── */
+.agent-chat-layout{display:flex;flex-direction:column;height:100%;max-height:calc(100vh - 120px)}
+
+.agent-header{
+  flex-shrink:0;display:flex;align-items:center;gap:14px;
+  padding:18px 22px;border-radius:18px;margin-bottom:16px;
+  border:1px solid var(--bw);
+  box-shadow:0 2px 12px rgba(30,10,0,.06);
+}
+.agent-header-ico{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.agent-header-name{font-family:var(--fh);font-size:20px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.agent-header-desc{font-size:13px;color:var(--muted);font-weight:300}
+.agent-status-dot{width:8px;height:8px;border-radius:50%;background:#22C55E;margin-left:auto;flex-shrink:0;box-shadow:0 0 8px rgba(34,197,94,.5)}
+
+.chat-window{
+  flex:1;overflow-y:auto;
+  background:rgba(255,252,248,.6);border:1px solid var(--bw);
+  border-radius:18px;padding:20px;
+  display:flex;flex-direction:column;gap:14px;
+  margin-bottom:14px;
+  box-shadow:inset 0 2px 8px rgba(30,10,0,.04);
+  min-height:300px;
+}
+.chat-window::-webkit-scrollbar{width:3px}
+.chat-window::-webkit-scrollbar-thumb{background:rgba(90,64,48,.12);border-radius:3px}
+
+.chat-msg{display:flex;gap:8px;align-items:flex-end;animation:msgUp .25s ease both}
+@keyframes msgUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.chat-msg.user{flex-direction:row-reverse}
+.chat-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px}
+.chat-msg.agent .chat-av{background:linear-gradient(135deg,#2EB8A8,#4A9870)}
+.chat-msg.user  .chat-av{background:linear-gradient(135deg,#E85848,#E89848)}
+.chat-bub{max-width:75%;padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.7;font-weight:400}
+.chat-msg.agent .chat-bub{background:rgba(255,252,248,.96);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--body);box-shadow:0 2px 8px rgba(30,10,0,.05)}
+.chat-msg.user  .chat-bub{background:var(--teal-d);color:#fff;border-bottom-right-radius:4px;box-shadow:0 4px 14px rgba(30,152,144,.35)}
+.chat-bub b{font-weight:600;color:var(--ink)}
+.chat-msg.user .chat-bub b{color:#fff}
+.chat-bub em{color:var(--teal-d);font-style:normal;font-weight:600}
+.chat-msg.user .chat-bub em{color:rgba(255,255,255,.85)}
+
+.chat-typing{display:flex;gap:8px;align-items:flex-end;animation:msgUp .25s ease both}
+.chat-dots{background:rgba(255,252,248,.96);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:4px;padding:13px 16px;display:flex;gap:4px;align-items:center;box-shadow:0 2px 8px rgba(30,10,0,.05)}
+.chat-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:db 1.2s ease-in-out infinite}
+.chat-dot:nth-child(2){animation-delay:.15s}
+.chat-dot:nth-child(3){animation-delay:.3s}
+@keyframes db{0%,80%,100%{transform:scale(.6);opacity:.3}40%{transform:scale(1);opacity:1}}
+
+/* quick replies */
+.qr-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;flex-shrink:0}
+.qr-chip{font-size:12px;font-weight:500;padding:7px 14px;border-radius:100px;border:1.5px solid var(--border);background:var(--card);color:var(--body);cursor:pointer;transition:all .16s;white-space:nowrap}
+.qr-chip:hover{background:var(--teal-d);color:#fff;border-color:var(--teal-d);transform:translateY(-1px)}
+
+/* input row */
+.chat-input-row{
+  flex-shrink:0;display:flex;align-items:center;gap:8px;
+  background:rgba(255,252,248,.85);border:1.5px solid var(--border);
+  border-radius:14px;padding:5px 5px 5px 16px;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.chat-input-row:focus-within{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(46,184,168,.12)}
+.chat-inp{flex:1;border:none;background:transparent;outline:none;font-family:var(--fb);font-size:14px;color:var(--ink);padding:8px 0;resize:none;max-height:80px;line-height:1.45}
+.chat-inp::placeholder{color:var(--muted)}
+.chat-send{width:38px;height:38px;border-radius:11px;background:var(--teal-d);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s;flex-shrink:0}
+.chat-send:hover{background:var(--teal);transform:scale(1.06)}
+.chat-send svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chat-voice-btn{width:38px;height:38px;border-radius:11px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;font-size:16px}
+.chat-voice-btn:hover{border-color:var(--teal);background:rgba(46,184,168,.1)}
+.chat-voice-btn.active{background:var(--coral);border-color:var(--coral);animation:pulse-btn 1.2s ease-in-out infinite}
+
+/* ── VOICE OVERLAY ── */
+#voice-overlay{
+  position:fixed;inset:0;z-index:9000;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(28,17,8,.88);backdrop-filter:blur(24px);
+}
+#voice-overlay.active{display:flex}
+.voice-orb-wrap{position:relative;margin-bottom:32px}
+.voice-orb{
+  width:140px;height:140px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal-d),var(--teal));
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;
+  box-shadow:0 0 0 0 rgba(46,184,168,.5);
+  animation:orb-pulse 2s ease-in-out infinite;
+  transition:transform .3s;
+}
+.voice-orb.speaking{animation:orb-speak .6s ease-in-out infinite alternate}
+@keyframes orb-pulse{0%,100%{box-shadow:0 0 0 0 rgba(46,184,168,.4),0 20px 60px rgba(46,184,168,.3)}50%{box-shadow:0 0 0 30px rgba(46,184,168,.0),0 20px 60px rgba(46,184,168,.5)}}
+@keyframes orb-speak{0%{transform:scale(1)}100%{transform:scale(1.08)}}
+.voice-rings{position:absolute;inset:-20px;border-radius:50%;border:2px solid rgba(46,184,168,.2);animation:ring-expand 2s ease-out infinite}
+.voice-rings:nth-child(2){inset:-40px;animation-delay:.6s;border-color:rgba(46,184,168,.12)}
+.voice-rings:nth-child(3){inset:-60px;animation-delay:1.2s;border-color:rgba(46,184,168,.07)}
+@keyframes ring-expand{0%{opacity:1;transform:scale(.8)}100%{opacity:0;transform:scale(1.3)}}
+.voice-label{font-family:var(--fh);font-size:24px;font-weight:700;color:#FDFAF7;margin-bottom:8px}
+.voice-transcript{font-size:15px;color:rgba(253,250,247,.5);max-width:340px;text-align:center;line-height:1.6;min-height:48px;margin-bottom:32px}
+.voice-close{font-family:var(--fm);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:11px 24px;border-radius:100px;border:1.5px solid rgba(255,255,255,.2);background:none;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s}
+.voice-close:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.voice-bars{display:flex;align-items:center;gap:4px;margin-bottom:28px;height:40px}
+.voice-bar{width:4px;border-radius:4px;background:var(--teal);opacity:.6;animation:bar-idle 1.4s ease-in-out infinite}
+.voice-bars.active .voice-bar{opacity:1}
+.voice-bar:nth-child(1){animation-delay:0s}
+.voice-bar:nth-child(2){animation-delay:.1s}
+.voice-bar:nth-child(3){animation-delay:.2s}
+.voice-bar:nth-child(4){animation-delay:.1s}
+.voice-bar:nth-child(5){animation-delay:0s}
+@keyframes bar-idle{0%,100%{height:8px}50%{height:28px}}
+.voice-bars.active .voice-bar{animation:bar-active .4s ease-in-out infinite alternate}
+@keyframes bar-active{0%{height:8px}100%{height:36px}}
+.voice-bar:nth-child(1).active{animation-delay:0s}
+.voice-bar:nth-child(2).active{animation-delay:.08s}
+.voice-bar:nth-child(3).active{animation-delay:.16s}
+.voice-bar:nth-child(4).active{animation-delay:.08s}
+.voice-bar:nth-child(5).active{animation-delay:0s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){
+  #sidebar{width:220px}
+  .ov-agents{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  #sidebar{display:none}
+  .ov-stats{grid-template-columns:repeat(2,1fr)}
+}
+
+/* API Settings Modal */
+.api-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(12px)}
+.api-modal-ov.open{display:flex}
+.api-modal-card{width:100%;max-width:460px;background:var(--ink);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:36px;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:loginIn .4s cubic-bezier(.34,1.4,.64,1) both}
+.api-section-title{font-family:var(--fh);font-size:15px;font-weight:700;color:#FDFAF7;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.api-section-sub{font-size:12px;color:rgba(253,250,247,.35);margin-bottom:14px;line-height:1.5}
+.api-input{width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#FDFAF7;font-size:14px;font-family:var(--fb);outline:none;transition:.2s ease;margin-bottom:8px}
+.api-input:focus{border-color:var(--teal);background:rgba(255,255,255,.1);box-shadow:0 0 0 3px rgba(46,184,168,.2)}
+.api-input::placeholder{color:rgba(253,250,247,.25)}
+.api-status-row{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.api-pill{font-family:var(--fm);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:100px}
+.api-pill.active{background:rgba(46,184,168,.15);border:1px solid rgba(46,184,168,.3);color:var(--teal)}
+.api-pill.inactive{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3)}
+.api-divider{height:1px;background:rgba(255,255,255,.06);margin:20px 0}
+
+/* Prompt Library */
+.lib-btn{font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:7px 14px;border-radius:100px;border:1.5px solid rgba(46,184,168,.25);background:rgba(46,184,168,.08);color:var(--teal-d);cursor:pointer;transition:.16s ease;flex-shrink:0}
+.lib-btn:hover{border-color:var(--teal);background:rgba(46,184,168,.15)}
+#lib-overlay{position:fixed;inset:0;z-index:8000;display:none;background:rgba(28,17,8,.6);backdrop-filter:blur(8px);align-items:flex-end}
+#lib-overlay.open{display:flex}
+.lib-drawer{width:100%;max-height:82vh;background:var(--white);border-radius:24px 24px 0 0;display:flex;flex-direction:column;box-shadow:0 -16px 48px rgba(30,10,0,.2);animation:drawerUp .3s cubic-bezier(.34,1.4,.64,1) both}
+@keyframes drawerUp{from{transform:translateY(100%)}to{transform:none}}
+.lib-handle{width:40px;height:4px;border-radius:2px;background:rgba(90,64,48,.15);margin:10px auto 0}
+.lib-hd{flex-shrink:0;padding:12px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.lib-hd-title{font-family:var(--fh);font-size:20px;font-weight:700;color:var(--ink)}
+.lib-hd-title em{font-style:italic;color:var(--teal-d)}
+.lib-hd-sub{font-size:13px;color:var(--muted);margin-top:2px;font-weight:300}
+.lib-hd-close{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;transition:.14s ease;flex-shrink:0}
+.lib-hd-close:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+.lib-search-row{padding:10px 24px 0;flex-shrink:0}
+.lib-search{width:100%;padding:10px 15px;border-radius:12px;background:rgba(90,64,48,.05);border:1.5px solid var(--border);color:var(--ink);font-size:14px;outline:none;font-family:var(--fb);transition:.18s ease}
+.lib-search:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(46,184,168,.1)}
+.lib-search::placeholder{color:var(--muted)}
+.lib-cat-tabs{display:flex;gap:6px;padding:9px 24px 0;overflow-x:auto;flex-shrink:0}
+.lib-cat-tabs::-webkit-scrollbar{height:0}
+.lib-cat{font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:100px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;white-space:nowrap;transition:.14s ease}
+.lib-cat:hover{border-color:var(--teal);color:var(--teal-d)}
+.lib-cat.on{background:var(--teal-d);border-color:var(--teal-d);color:#fff}
+.lib-scroll{flex:1;overflow-y:auto;padding:12px 24px 28px}
+.lib-scroll::-webkit-scrollbar{width:3px}
+.lib-scroll::-webkit-scrollbar-thumb{background:rgba(90,64,48,.12);border-radius:3px}
+.lib-cat-section{margin-bottom:18px}
+.lib-cat-label{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.lib-cat-label::after{content:'';flex:1;height:1px;background:rgba(90,64,48,.1)}
+.lib-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:7px}
+.lib-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:11px 13px;cursor:pointer;transition:.15s ease;position:relative;overflow:hidden}
+.lib-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--teal);border-radius:3px 0 0 3px;opacity:0;transition:.13s ease}
+.lib-card:hover{border-color:rgba(46,184,168,.3);background:#fff;transform:translateY(-1px);box-shadow:0 6px 16px rgba(30,10,0,.07)}
+.lib-card:hover::before{opacity:1}
+.lib-card-text{font-size:13px;font-weight:500;color:var(--body);line-height:1.5}
+.lib-card-cta{font-family:var(--fm);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--teal-d);opacity:0;transition:.13s ease;margin-top:4px}
+.lib-card:hover .lib-card-cta{opacity:1}
+.lib-empty{text-align:center;padding:32px 16px;color:var(--muted);font-size:13px}
+
+/* Setup modal overrides for light bg */
+.setup-modal-ov{position:fixed;inset:0;background:rgba(28,17,8,.6);z-index:7500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)}
+.setup-modal-ov.open{display:flex}
+.setup-modal-card{width:100%;max-width:480px;background:var(--white);border:1px solid var(--border);border-radius:24px;padding:32px;max-height:88vh;overflow-y:auto;box-shadow:0 32px 80px rgba(30,10,0,.18);animation:loginIn .4s cubic-bezier(.34,1.4,.64,1) both}
+.sm-h{font-family:var(--fh);font-size:22px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.sm-h em{font-style:italic;color:var(--coral)}
+.sm-sub{font-size:13px;color:var(--muted);margin-bottom:22px;font-weight:300;line-height:1.55}
+.sm-label{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--mid);margin-bottom:6px;display:block;margin-top:14px}
+.sm-input,.sm-select,.sm-textarea{width:100%;padding:11px 14px;border-radius:11px;background:rgba(90,64,48,.05);border:1px solid rgba(90,64,48,.15);color:var(--ink);font-size:14px;font-family:var(--fb);outline:none;transition:.18s ease}
+.sm-input:focus,.sm-select:focus,.sm-textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(46,184,168,.12)}
+.sm-select{cursor:pointer;appearance:none}
+.sm-textarea{resize:vertical;min-height:64px;line-height:1.5}
+.sm-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(max-width:480px){.sm-grid{grid-template-columns:1fr}}
+.sm-full{grid-column:1/-1}
+.sm-actions{display:flex;gap:10px;margin-top:20px}
+
+/* Upload */
+.upload-drop{border:2px dashed rgba(46,184,168,.25);border-radius:16px;padding:32px 20px;text-align:center;cursor:pointer;background:rgba(46,184,168,.02);transition:.2s ease;position:relative;margin-bottom:16px}
+.upload-drop:hover,.upload-drop.drag{border-color:var(--teal);background:rgba(46,184,168,.05)}
+.upload-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.doc-row{background:var(--card);border:1px solid var(--bw);border-radius:13px;padding:13px 16px;display:flex;align-items:center;gap:11px;box-shadow:0 2px 8px rgba(30,10,0,.05);margin-bottom:8px}
+.doc-row-name{font-size:14px;font-weight:500;color:var(--ink);flex:1}
+.doc-row-meta{font-family:var(--fm);font-size:10px;color:var(--muted)}
+
+/* Goal progress in sidebar */
+.sb-goal-block{padding:12px;border-top:1px solid rgba(255,255,255,.06)}
+.sb-goal-lbl{font-family:var(--fm);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:9px;display:block}
+.sb-goal-item{margin-bottom:8px}
+.sb-goal-text{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:3px;line-height:1.35}
+.sb-goal-bar{height:2px;background:rgba(255,255,255,.08);border-radius:2px}
+.sb-goal-fill{height:2px;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--sage));transition:width .7s ease}
+.sb-goal-pct{font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.22);margin-top:2px}
+
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="page-login" class="page active">
+  <div class="login-card">
+    <div class="login-brand"><div class="login-brand-dot"></div><div class="login-brand-name">Product Imagination</div></div>
+    <div class="login-h">Client <em>Portal</em></div>
+    <div class="login-sub">Your personal AI operations hub. Clients only.</div>
+    <label class="login-label">Email Address</label>
+    <input class="login-input" type="email" id="login-email" placeholder="you@company.com" autocomplete="email">
+    <label class="login-label">Password</label>
+    <input class="login-input" type="password" id="login-pass" placeholder="••••••••">
+    <button class="login-btn" onclick="doLogin()">Access My Portal &rarr;</button>
+    <div class="login-err" id="login-err">Incorrect credentials &mdash; try demo@demo.com / demo</div>
+    <div class="login-note">Secure client access &middot; erika@productimagination.com</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="page-dash" class="page">
+  <div id="sidebar">
+    <div style="height:3px;background:linear-gradient(90deg,var(--teal),var(--warm),var(--coral),var(--gold),var(--sage))"></div>
+    <div class="sb-top">
+      <div class="sb-brand"><div class="sb-brand-dot"></div><div class="sb-brand-name">Product Imagination</div></div>
+    </div>
+    <div style="padding:10px 12px 4px">
+      <div class="sb-client-box">
+        <div class="sb-client-label">Active Client</div>
+        <div class="sb-client-name" id="sb-client-name">—</div>
+        <div class="sb-client-plan" id="sb-client-plan">Full Package &middot; Active</div>
+      </div>
+    </div>
+    <div class="sb-nav">
+      <span class="sb-section-label">Overview</span>
+      <div class="sb-item active" data-panel="overview"><span class="sb-item-icon">&#127968;</span><span class="sb-item-label">Dashboard</span></div>
+      <span class="sb-section-label">AI Agents</span>
+      <div id="sb-agents"></div>
+      <span class="sb-section-label">Tools</span>
+      <div class="sb-item" data-panel="tasks"><span class="sb-item-icon">&#9889;</span><span class="sb-item-label">Task Board</span><span class="sb-item-badge" id="sb-task-ct" style="display:none">0</span></div>
+      <div class="sb-item" data-panel="docs"><span class="sb-item-icon">&#128193;</span><span class="sb-item-label">Documents</span></div>
+      <div class="sb-item" data-panel="reports"><span class="sb-item-icon">&#128202;</span><span class="sb-item-label">Reports</span></div>
+    </div>
+    <div id="sb-goals"></div>
+    <div class="sb-bottom">
+      <div id="settings-btn" style="display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .15s;color:rgba(255,255,255,.55);font-size:13px;margin-bottom:4px" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='transparent'">
+        <span style="font-size:15px">&#128273;</span>
+        <span>API &amp; Settings</span>
+        <span id="api-connected-dot" style="display:none;width:6px;height:6px;border-radius:50%;background:#2EB8A8;margin-left:auto;box-shadow:0 0 6px #2EB8A8"></span>
+      </div>
+      <div id="brief-btn" style="display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .15s;color:rgba(255,255,255,.55);font-size:13px;margin-bottom:4px" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='transparent'">
+        <span style="font-size:15px">&#9998;</span>
+        <span>Edit Brief</span>
+      </div>
+      <button class="sb-logout" id="logout-btn"><span class="sb-logout-icon">&crarr;</span>Sign out</button>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <button class="topbar-voice-btn" id="voice-btn" onclick="openVoice()">
+          <span class="voice-dot"></span><span>Voice Mode</span>
+        </button>
+        <div class="topbar-avatar" id="topbar-avatar">PI</div>
+      </div>
+    </div>
+    <div id="panels">
+
+      <!-- OVERVIEW -->
+      <div class="panel active" id="panel-overview">
+        <div class="ov-welcome">
+          <div class="ov-welcome-h">Welcome back, <em id="welcome-name">Client</em> &#128075;</div>
+          <div class="ov-welcome-sub" id="welcome-sub">Your AI agents are ready. Configure your brief to activate your full team.</div>
+        </div>
+        <div class="ov-stats">
+          <div class="ov-stat"><div class="ov-stat-n" id="stat-agents" style="color:var(--teal)">—</div><div class="ov-stat-l">Active Agents</div></div>
+          <div class="ov-stat"><div class="ov-stat-n" id="stat-tasks" style="color:var(--coral)">0</div><div class="ov-stat-l">Tasks Complete</div></div>
+          <div class="ov-stat"><div class="ov-stat-n" id="stat-docs" style="color:var(--warm)">0</div><div class="ov-stat-l">Documents</div></div>
+          <div class="ov-stat"><div class="ov-stat-n" id="stat-prog" style="color:var(--sage)">0%</div><div class="ov-stat-l">Goal Progress</div></div>
+        </div>
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Your AI Agent Team</div>
+        <div class="ov-agents" id="ov-agents"><div style="text-align:center;padding:32px;color:var(--muted);font-size:14px">Set up your brief to activate your agent team.</div></div>
+      </div>
+
+      <!-- AGENT PANELS (injected) -->
+      <div id="agent-panels"></div>
+
+      <!-- TASKS -->
+      <div class="panel" id="panel-tasks">
+        <div class="ov-welcome" style="margin-bottom:20px">
+          <div class="ov-welcome-h">Task <em>Board</em></div>
+          <div class="ov-welcome-sub">Prompt any agent with a task &mdash; it runs and delivers results here.</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--bw);border-radius:20px;padding:22px;margin-bottom:22px;box-shadow:0 2px 12px rgba(30,10,0,.06)">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">&#9889; Prompt an Agent</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div><label class="sm-label" style="margin-top:0">Agent</label><select class="sm-select" id="task-agent-sel"><option value="">&#8212; Choose agent &#8212;</option></select></div>
+            <div><label class="sm-label" style="margin-top:0">Priority</label><select class="sm-select" id="task-pri"><option value="normal">Normal</option><option value="high">High Priority</option><option value="urgent">Urgent</option></select></div>
+            <div style="grid-column:1/-1"><label class="sm-label">Objective *</label><input class="sm-input" id="task-obj" placeholder="What should this agent accomplish?"></div>
+            <div style="grid-column:1/-1"><label class="sm-label">Context / Instructions</label><textarea class="sm-textarea" id="task-ctx" placeholder="Files to reference, constraints, specific requirements&#8230;"></textarea></div>
+          </div>
+          <button id="task-submit-btn" style="font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:11px 24px;border-radius:100px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;box-shadow:0 6px 20px rgba(46,184,168,.35)">Execute Task &rarr;</button>
+        </div>
+        <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px">
+          <div style="flex:1;min-width:190px">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:5px 0;margin-bottom:8px;display:flex;align-items:center;gap:7px">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--warm);display:inline-block;flex-shrink:0"></span>Queued<span id="ct-p" style="font-size:9px;background:rgba(90,64,48,.1);border:1px solid var(--border);padding:1px 7px;border-radius:10px">0</span></div>
+            <div id="col-p"><div style="text-align:center;padding:14px;font-size:12px;color:var(--muted)">No queued tasks.</div></div>
+          </div>
+          <div style="flex:1;min-width:190px">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:5px 0;margin-bottom:8px;display:flex;align-items:center;gap:7px">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--teal);display:inline-block;flex-shrink:0"></span>Running<span id="ct-r" style="font-size:9px;background:rgba(90,64,48,.1);border:1px solid var(--border);padding:1px 7px;border-radius:10px">0</span></div>
+            <div id="col-r"><div style="text-align:center;padding:14px;font-size:12px;color:var(--muted)">No running tasks.</div></div>
+          </div>
+          <div style="flex:1;min-width:190px">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:5px 0;margin-bottom:8px;display:flex;align-items:center;gap:7px">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--sage);display:inline-block;flex-shrink:0"></span>Complete<span id="ct-d" style="font-size:9px;background:rgba(90,64,48,.1);border:1px solid var(--border);padding:1px 7px;border-radius:10px">0</span></div>
+            <div id="col-d"><div style="text-align:center;padding:14px;font-size:12px;color:var(--muted)">Completed tasks appear here.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOCS -->
+      <div class="panel" id="panel-docs">
+        <div class="ov-welcome" style="margin-bottom:20px">
+          <div class="ov-welcome-h">Documents <em>&amp; Files</em></div>
+          <div class="ov-welcome-sub">Upload files your agents need &mdash; contracts, briefs, images, reports. Click Prompt Agent to have any agent analyze a document.</div>
+        </div>
+        <div class="upload-drop" id="upload-drop">
+          <input type="file" id="file-in" multiple>
+          <div style="font-size:2rem;margin-bottom:8px;opacity:.65">&#128193;</div>
+          <div style="font-family:var(--fh);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:4px">Drop files here</div>
+          <div style="font-size:13px;color:var(--muted)">or <span style="color:var(--teal-d);font-weight:500;cursor:pointer" onclick="document.getElementById('file-in').click()">browse to upload</span></div>
+        </div>
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px" id="doc-ct-lbl">No files uploaded</div>
+        <div id="doc-list"></div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="panel" id="panel-reports">
+        <div class="ov-welcome" style="margin-bottom:20px">
+          <div class="ov-welcome-h">Monthly <em>Reports</em></div>
+          <div class="ov-welcome-sub">Click Generate to send a report request to any agent.</div>
+        </div>
+        <div id="reports-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- VOICE OVERLAY -->
+<div id="voice-overlay">
+  <div class="voice-orb-wrap">
+    <div class="voice-rings"></div><div class="voice-rings"></div><div class="voice-rings"></div>
+    <div class="voice-orb" id="voice-orb">&#127897;&#65039;</div>
+  </div>
+  <div class="voice-bars" id="voice-bars">
+    <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
+    <div class="voice-bar"></div><div class="voice-bar"></div>
+  </div>
+  <div class="voice-label" id="voice-label">Listening&hellip;</div>
+  <div class="voice-transcript" id="voice-transcript">Speak to your AI agent.</div>
+  <button class="voice-close" onclick="closeVoice()">&times; &nbsp;Close Voice Mode</button>
+</div>
+
+<!-- API SETTINGS MODAL -->
+<div class="api-modal-ov" id="api-modal">
+  <div class="api-modal-card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--teal)"></div>
+      <div style="font-family:var(--fh);font-size:15px;font-weight:700;color:#FDFAF7">API &amp; Settings</div>
+    </div>
+    <div class="api-section-title">&#127981; OpenAI</div>
+    <div class="api-section-sub">Powers GPT-4o chat, Whisper voice-to-text, and TTS-HD voice responses.</div>
+    <input class="api-input" type="password" id="api-oai" placeholder="sk-...  OpenAI API key">
+    <div class="api-status-row">
+      <div class="api-pill" id="oai-pill">&#9679; Not connected</div>
+      <span style="font-size:11px;color:rgba(253,250,247,.3)">platform.openai.com/api-keys</span>
+    </div>
+    <div class="api-divider"></div>
+    <div class="api-section-title">&#129302; Anthropic</div>
+    <div class="api-section-sub">Powers Claude Sonnet for the highest-quality AI agent responses.</div>
+    <input class="api-input" type="password" id="api-ant" placeholder="sk-ant-...  Anthropic API key">
+    <div class="api-status-row">
+      <div class="api-pill" id="ant-pill">&#9679; Not connected</div>
+      <span style="font-size:11px;color:rgba(253,250,247,.3)">console.anthropic.com/keys</span>
+    </div>
+    <div class="api-divider"></div>
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:8px">Agent Voice (TTS)</div>
+    <select class="api-input" id="api-voice" style="margin-bottom:0">
+      <option value="nova">Nova &mdash; Warm, natural female (recommended)</option>
+      <option value="shimmer">Shimmer &mdash; Bright, clear female</option>
+      <option value="alloy">Alloy &mdash; Balanced, neutral</option>
+      <option value="fable">Fable &mdash; Expressive, British</option>
+      <option value="echo">Echo &mdash; Clear, measured male</option>
+      <option value="onyx">Onyx &mdash; Deep, authoritative male</option>
+    </select>
+    <div style="display:flex;gap:10px;margin-top:22px">
+      <button class="login-btn" style="margin:0;flex:1" onclick="saveApiSettings()">Save Settings &rarr;</button>
+      <button onclick="closeApiModal()" style="padding:12px 20px;border-radius:100px;border:1.5px solid rgba(255,255,255,.15);background:none;color:rgba(255,255,255,.4);font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Cancel</button>
+    </div>
+    <div style="font-size:11px;color:rgba(253,250,247,.2);text-align:center;margin-top:14px;line-height:1.5">Keys stored locally in your browser only &mdash; never sent anywhere except directly to OpenAI or Anthropic servers.</div>
+  </div>
+</div>
+
+<!-- SETUP BRIEF MODAL -->
+<div class="setup-modal-ov" id="setup-modal">
+  <div class="setup-modal-card">
+    <div class="sm-h">Configure Your <em>Portal</em></div>
+    <div class="sm-sub">Enter your project details to activate your full AI agent team. Every field improves agent outputs.</div>
+    <div class="sm-grid">
+      <div><label class="sm-label" style="margin-top:0">Client / Company *</label><input class="sm-input" id="s-client" placeholder="Acme Corp"></div>
+      <div><label class="sm-label" style="margin-top:0">Project Name *</label><input class="sm-input" id="s-project" placeholder="Brand Refresh Q3"></div>
+      <div class="sm-full"><label class="sm-label">Primary Goal *</label><input class="sm-input" id="s-goal" placeholder="What does success look like?"></div>
+      <div><label class="sm-label">Industry / Template *</label>
+        <select class="sm-select" id="s-template">
+          <option value="consulting">Strategy Consulting</option>
+          <option value="product">Product Design</option>
+          <option value="marketing">Marketing Campaign</option>
+          <option value="compliance">Compliance Program</option>
+          <option value="realestate">Real Estate Development</option>
+          <option value="interior">Interior Design</option>
+          <option value="airbnb">Airbnb / STR Hosting</option>
+        </select>
+      </div>
+      <div><label class="sm-label">Target Audience</label><input class="sm-input" id="s-audience" placeholder="Who is this for?"></div>
+      <div><label class="sm-label">Deadline</label><input class="sm-input" id="s-deadline" placeholder="e.g. 8 weeks"></div>
+      <div><label class="sm-label">Budget</label><input class="sm-input" id="s-budget" placeholder="e.g. $50,000"></div>
+      <div class="sm-full"><label class="sm-label">Primary Deliverable</label><input class="sm-input" id="s-deliverable" placeholder="Main thing being produced"></div>
+    </div>
+    <div class="sm-actions">
+      <button class="login-btn" style="margin:0;flex:1" onclick="saveSetup()">Activate Portal &rarr;</button>
+      <button onclick="closeSetup()" style="padding:11px 20px;border-radius:100px;border:1.5px solid var(--border);background:none;color:var(--muted);font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROMPT LIBRARY DRAWER -->
+<!-- lib dropdown is inline per agent panel -->
+
+<script>
+// ════════════════════════════════════════════════════════════════════════
+// PRODUCT IMAGINATION CLIENT PORTAL
+// Connects to: OpenAI GPT-4o + Anthropic Claude Sonnet
+// ════════════════════════════════════════════════════════════════════════
+
+// ── DEMO USERS ──────────────────────────────────────────────────────────
+var DEMO_USERS = {
+  'erika@productimagination.com':{ pass:'pi2025!', name:'Erika',  initials:'EP' },
+  'demo@demo.com':               { pass:'demo',    name:'Client', initials:'CL' },
+  'demo@productimagination.com': { pass:'demo2024',name:'Demo',   initials:'DM' },
+  'shoreline@demo.com':          { pass:'demo123', name:'Alex',   initials:'AP' },
+  'client@example.com':          { pass:'client123',name:'Client',initials:'CL' },
+};
+
+// ── TEMPLATE DEFINITIONS ────────────────────────────────────────────────
+var TNAMES = {consulting:'Strategy Consulting',product:'Product Design',marketing:'Marketing Campaign',compliance:'Compliance Program',realestate:'Real Estate Development',interior:'Interior Design',airbnb:'Airbnb / STR Hosting'};
+var COLORS = ['teal','warm','coral','sage','violet','warm','teal','coral'];
+var ROSTER_DEFS = {
+  consulting:[{id:'discovery',ico:'&#128269;',name:'Discovery Agent',tag:'Stakeholder Mapping',desc:'Maps stakeholders, frames the real problem, and defines success criteria before any solution design.'},{id:'research',ico:'&#128200;',name:'Research &amp; Insights',tag:'Market Intelligence',desc:'Synthesizes market data, competitive landscape, and customer insights into decision-ready findings.'},{id:'strategy',ico:'&#129517;',name:'Strategy Agent',tag:'Options &amp; Recommendation',desc:'Builds 3 distinct strategic paths with rigorous analysis and a clear recommendation.'},{id:'financial',ico:'&#128201;',name:'Financial Modeling',tag:'ROI &amp; Business Case',desc:'Models costs, benefits, ROI, and sensitivity analysis ready for board or investor review.'},{id:'change',ico:'&#128260;',name:'Change Management',tag:'Adoption Planning',desc:'Designs stakeholder engagement, communications plan, and adoption milestones.'},{id:'presentation',ico:'&#127912;',name:'Presentation Agent',tag:'Executive Narrative',desc:'Structures the story arc, slide outline, and executive summary for any audience.'},{id:'implementation',ico:'&#128197;',name:'Implementation Planner',tag:'Workstreams &amp; RACI',desc:'Turns strategy into an executable plan with milestones, risk register, and accountability.'},{id:'comms',ico:'&#128221;',name:'Client Comms Agent',tag:'Status &amp; Decisions',desc:'Produces meeting notes, decision logs, and status updates for every client touchpoint.'}],
+  product:[{id:'research',ico:'&#128300;',name:'Research Agent',tag:'User Insights',desc:'Conducts user research, builds personas, and maps the current-state journey.'},{id:'ux',ico:'&#128204;',name:'UX Strategy Agent',tag:'Information Architecture',desc:'Defines the IA, user flows, and feature prioritization before any design begins.'},{id:'wireframe',ico:'&#128208;',name:'Wireframe Agent',tag:'Structural Design',desc:'Produces lo-fi layouts, interaction patterns, and the clickable prototype brief.'},{id:'visual',ico:'&#128396;',name:'Visual Design Agent',tag:'Design System &amp; Screens',desc:'Creates the full design system and hi-fi screens your engineers build from.'},{id:'content',ico:'&#9999;',name:'Content &amp; Copy Agent',tag:'UX Writing',desc:'Writes every label, error, empty state, and CTA in the brand voice.'},{id:'handoff',ico:'&#129309;',name:'Handoff Agent',tag:'Developer Specs',desc:'Produces developer specs, redlines, assets, and an accessibility audit.'},{id:'testing',ico:'&#129514;',name:'Usability Testing Agent',tag:'Validation &amp; Findings',desc:'Plans and runs user tests, then delivers prioritized design recommendations.'}],
+  marketing:[{id:'brand',ico:'&#127991;',name:'Brand Strategy Agent',tag:'Positioning &amp; Messaging',desc:'Builds the positioning statement, messaging hierarchy, and brand voice guide.'},{id:'creative',ico:'&#128161;',name:'Creative Director',tag:'Campaign Concept',desc:'Develops 3 distinct campaign concepts and produces the approved creative brief.'},{id:'copy',ico:'&#129354;',name:'Copywriting Agent',tag:'Headlines &amp; Emails',desc:'Writes all copy &mdash; headlines, body text, email sequences, and CTAs.'},{id:'media',ico:'&#128225;',name:'Paid Media Agent',tag:'Platform &amp; Budget Strategy',desc:'Designs the media plan &mdash; platforms, audiences, budget, and KPI targets.'},{id:'content',ico:'&#128240;',name:'Content Agent',tag:'SEO &amp; Editorial Calendar',desc:'Builds the 90-day content calendar, keyword strategy, and article briefs.'},{id:'analytics',ico:'&#128201;',name:'Analytics Agent',tag:'Tracking &amp; Attribution',desc:'Designs the KPI framework, tracking plan, and reporting templates.'},{id:'production',ico:'&#128640;',name:'Production Agent',tag:'Asset Specs &amp; Launch',desc:'Manages asset specs, QA checklist, and the signed launch sign-off.'}],
+  compliance:[{id:'regulatory',ico:'&#128218;',name:'Regulatory Research',tag:'Applicable Law Mapping',desc:'Maps every regulation, jurisdiction, and enforcement trend for your business.'},{id:'risk',ico:'&#9888;',name:'Risk Assessment Agent',tag:'Risk Register &amp; Gaps',desc:'Scores every compliance risk and identifies gaps requiring immediate action.'},{id:'policy',ico:'&#128203;',name:'Policy Drafting Agent',tag:'Policies &amp; Code of Conduct',desc:'Writes clear, enforceable policies and SOPs in plain language.'},{id:'training',ico:'&#127891;',name:'Training Agent',tag:'Curriculum &amp; LMS',desc:'Designs compliance training from curriculum through e-learning delivery.'},{id:'audit',ico:'&#128270;',name:'Audit &amp; Monitoring',tag:'Control Testing',desc:'Builds the audit plan, control testing checklist, and monitoring metrics.'},{id:'incident',ico:'&#128680;',name:'Incident Response Agent',tag:'Playbooks &amp; Notifications',desc:'Creates incident classification frameworks, playbooks, and notification timelines.'},{id:'reporting',ico:'&#128202;',name:'Compliance Reporting',tag:'Board Reports',desc:'Produces board compliance reports, dashboards, and regulator submissions.'}],
+  realestate:[{id:'market',ico:'&#128205;',name:'Market Research Agent',tag:'Comps &amp; Absorption',desc:'Pulls comparable sales, calculates absorption rates, and produces a site viability scorecard.'},{id:'underwriting',ico:'&#128201;',name:'Underwriting Agent',tag:'Pro Forma &amp; IRR',desc:'Builds the development budget, revenue model, return metrics, and sensitivity analysis.'},{id:'entitlements',ico:'&#127963;',name:'Entitlements Agent',tag:'Zoning &amp; Permits',desc:'Maps the full entitlement path, flags political risk, and tracks every permit milestone.'},{id:'architecture',ico:'&#128208;',name:'Design Brief Agent',tag:'Building Program',desc:'Defines the building program, unit mix, amenity brief, and design standards.'},{id:'construction',ico:'&#127959;',name:'Construction Mgmt Agent',tag:'GC &amp; Schedule',desc:'Structures the GC bid package, contract terms, draw process, and schedule reporting.'},{id:'leasing',ico:'&#128273;',name:'Sales &amp; Leasing Agent',tag:'Pricing &amp; Velocity',desc:'Builds the pricing matrix, leasing velocity plan, broker strategy, and marketing brief.'},{id:'propmanagement',ico:'&#127962;',name:'Property Mgmt Agent',tag:'Operations &amp; NOI',desc:'Writes the operations manual, annual budget, vendor contracts, and NOI optimization plan.'},{id:'finance',ico:'&#127974;',name:'Finance &amp; Capital Agent',tag:'Capital Stack &amp; Investors',desc:'Structures the capital stack, lender package, investor deck, and equity waterfall model.'}],
+  interior:[{id:'discovery',ico:'&#128269;',name:'Client Discovery Agent',tag:'Design Brief',desc:'Uncovers the authentic vision, lifestyle requirements, and budget reality.'},{id:'concept',ico:'&#128161;',name:'Concept &amp; Creative Agent',tag:'Concept &amp; Mood Board',desc:'Develops 2 distinct design concepts with color story and curated mood board.'},{id:'space',ico:'&#128207;',name:'Space Planning Agent',tag:'Floor Plan &amp; Layout',desc:'Produces scaled floor plans with furniture placement and traffic flow.'},{id:'materials',ico:'&#127912;',name:'Material &amp; Finish Agent',tag:'Finish Schedule',desc:'Specifies every surface with exact product references contractors can price from.'},{id:'procurement',ico:'&#128705;',name:'Procurement Agent',tag:'FF&amp;E &amp; Purchase Orders',desc:'Manages furniture from specification through purchase orders and delivery.'},{id:'lighting',ico:'&#128161;',name:'Lighting Design Agent',tag:'3-Layer Lighting Plan',desc:'Designs ambient, task, and accent lighting with fixture specs and dimmer matching.'},{id:'styling',ico:'&#127807;',name:'Styling &amp; Accessories Agent',tag:'Art &amp; Final Layer',desc:'Curates art, soft furnishings, and produces the photoshoot shot list.'},{id:'installation',ico:'&#128295;',name:'Trade Coordination Agent',tag:'Contractor Schedule',desc:'Manages all trades in sequence, runs site visits, and delivers the closeout package.'}],
+  airbnb:[{id:'revenue',ico:'&#128200;',name:'Market &amp; Revenue Agent',tag:'Pricing Strategy',desc:'Analyzes comps, sets ADR and pricing architecture, and projects annual revenue.'},{id:'listing',ico:'&#11088;',name:'Listing Optimisation Agent',tag:'Title &amp; Description',desc:'Writes the optimized title, description, and amenity checklist to maximize conversion.'},{id:'guestexperience',ico:'&#129309;',name:'Guest Experience Agent',tag:'Welcome Guide &amp; Messages',desc:'Designs the end-to-end guest experience to earn 5 stars every time.'},{id:'setup',ico:'&#127968;',name:'Property Setup Agent',tag:'Amenity Audit &amp; Staging',desc:'Audits amenities, sets linen par levels, and writes the photography staging guide.'},{id:'operations',ico:'&#9881;',name:'Operations Agent',tag:'Turnover Checklist',desc:'Builds the room-by-room turnover checklist, maintenance schedule, and vendor directory.'},{id:'communication',ico:'&#128172;',name:'Guest Comms Agent',tag:'Message Templates',desc:'Writes the full 15-template message library and sets up the automation schedule.'},{id:'reviews',ico:'&#11088;',name:'Review &amp; Reputation Agent',tag:'Superhost Tracker',desc:'Sets up the Superhost metric tracker and writes review responses.'},{id:'finance',ico:'&#128184;',name:'Finance &amp; Reporting Agent',tag:'P&amp;L &amp; Tax Prep',desc:'Builds the monthly P&L structure, expense tracker, and annual tax prep file.'}]
+};
+
+// ── MASTER PROMPT LIBRARY (categories per agent) ─────────────────────────────
+// PLACEHOLDER_REPLACED
+
+var MASTER_PROMPT_LIBRARY = {};
+// ── Prompt library will be populated here (add prompts per agent) ──
+var AGENT_QR = {};
+
+// ── STATE ────────────────────────────────────────────────────
+var S = {
+  user: null,
+  client: {},
+  agents: [],
+  tasks: [],
+  docs: [],
+  goals: [],
+  agentState: {},
+  currentAgent: null,
+  voiceAgentId: null,
+  recognition: null,
+  oaiKey: localStorage.getItem('pi-oai-key') || '',
+};
+
+// ── LOGIN ────────────────────────────────────────────────────
+document.getElementById('login-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+
+function doLogin(){
+  var email = document.getElementById('login-email').value.trim().toLowerCase();
+  var pass  = document.getElementById('login-pass').value;
+  var err   = document.getElementById('login-err');
+  err.classList.remove('show');
+
+  var user = DEMO_USERS[email];
+  if(user && user.pass === pass){
+    S.user = Object.assign({email:email}, user);
+    enterDash();
+  } else {
+    err.classList.add('show');
+    document.getElementById('login-pass').value = '';
+  }
+}
+
+function enterDash(){
+  var login = document.getElementById('page-login');
+  var dash  = document.getElementById('page-dash');
+  login.classList.add('fade-out');
+  setTimeout(function(){
+    login.style.display = 'none';
+    dash.classList.add('active');
+    initDash();
+  }, 400);
+}
+
+function doLogout(){
+  var dash  = document.getElementById('page-dash');
+  var login = document.getElementById('page-login');
+  dash.classList.remove('active');
+  login.style.display = 'flex';
+  login.classList.remove('fade-out');
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pass').value  = '';
+  S.user = null;
+  // Clear chat histories
+  S.agentState = {};
+  document.getElementById('agent-panels').innerHTML = '';
+  document.getElementById('sb-agents').innerHTML = '';
+  document.getElementById('ov-agents').innerHTML = '';
+}
+
+// ── INIT DASH ────────────────────────────────────────────────
+function initDash(){
+  // Load brief
+  var brief = null;
+  try{ brief = JSON.parse(localStorage.getItem('pi-client-brief') || 'null'); }catch(e){}
+
+  if(brief && brief.client){ activatePortal(brief); }
+  else{ openSetup(); }
+}
+
+// ── PORTAL ACTIVATION ────────────────────────────────────────
+function activatePortal(brief){
+  S.client = brief;
+  S.agents = (ROSTER_DEFS[brief.template] || ROSTER_DEFS.consulting).map(function(a, i){
+    return Object.assign({}, a, { color: ROSTER_COLORS[i % ROSTER_COLORS.length], status:'ready' });
+  });
+  S.goals = [
+    { text: brief.goal || 'Primary project goal', pct: 0 },
+    { text: 'Agent tasks completed', pct: 0 },
+    { text: 'Deliverables produced', pct: 0 },
+  ];
+  // Clear previous agent states
+  S.agentState = {};
+  S.agents.forEach(function(a){ S.agentState[a.id] = { hist:[], busy:false, init:false }; });
+
+  // Nav
+  document.getElementById('welcome-name').textContent = S.user ? S.user.name : 'Client';
+  document.getElementById('topbar-avatar').textContent = S.user ? S.user.initials : 'PI';
+  document.getElementById('sb-client-name').textContent = brief.client;
+  document.getElementById('sb-client-plan').textContent = (TNAMES[brief.template]||brief.template) + ' · Active';
+
+  // Welcome
+  document.getElementById('welcome-sub').textContent = 'Your ' + (TNAMES[brief.template]||brief.template) + ' agent system is active. ' + S.agents.length + ' specialists ready.';
+  document.getElementById('stat-agents').textContent = S.agents.length;
+
+  buildSidebar();
+  buildAgentCards();
+  buildAgentPanels();
+  buildAgentSelect();
+  buildReports();
+  buildSidebarGoals();
+
+  // Init first agent after short delay
+  if(S.agents.length){ setTimeout(function(){ initAgent(S.agents[0].id); }, 500); }
+}
+
+// ── SIDEBAR ──────────────────────────────────────────────────
+function buildSidebar(){
+  var el = document.getElementById('sb-agents');
+  el.innerHTML = '';
+  S.agents.forEach(function(a,i){
+    var div = document.createElement('div');
+    div.className = 'sb-item';
+    div.setAttribute('data-agent', a.id);
+    div.innerHTML = '<span class="sb-item-icon">'+a.ico+'</span><span class="sb-item-label">'+a.name+'</span>';
+    div.addEventListener('click', (function(id){ return function(){ showAgentPanel(id, div); }; })(a.id));
+    el.appendChild(div);
+  });
+}
+
+function showAgentPanel(agentId, sbEl){
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sb-item').forEach(function(i){ i.classList.remove('active'); });
+  var panel = document.getElementById('panel-agent-'+agentId);
+  if(panel) panel.classList.add('active');
+  if(sbEl) sbEl.classList.add('active');
+  var agent = S.agents.find(function(a){ return a.id===agentId; });
+  if(agent){ document.getElementById('topbar-title').textContent = agent.name; }
+  S.currentAgent = agentId;
+  if(!S.agentState[agentId] || !S.agentState[agentId].init) initAgent(agentId);
+}
+
+
+function buildSidebarGoals(){
+  var html = '<div class="sb-goal"><span class="sb-goal-label">Goal Progress</span>';
+  S.goals.forEach(function(g){
+    html += '<div class="sb-goal-item">' +
+      '<div class="sb-goal-text">'+g.text+'</div>' +
+      '<div class="sb-goal-bar"><div class="sb-goal-fill" style="width:'+g.pct+'%"></div></div>' +
+      '<div class="sb-goal-pct">'+g.pct+'% complete</div>' +
+      '</div>';
+  });
+  html += '</div>';
+  document.getElementById('sb-goals').innerHTML = html;
+}
+
+// ── OVERVIEW AGENT CARDS ──────────────────────────────────────
+function buildAgentCards(){
+  var el = document.getElementById('ov-agents');
+  el.innerHTML = '';
+  var colorBgs = { teal:'rgba(46,184,168,.06)', warm:'rgba(212,146,10,.06)', coral:'rgba(232,88,72,.06)', sage:'rgba(74,152,112,.06)', violet:'rgba(112,64,184,.06)' };
+  var colorIco = { teal:'rgba(46,184,168,.12)', warm:'rgba(212,146,10,.10)', coral:'rgba(232,88,72,.10)', sage:'rgba(74,152,112,.10)', violet:'rgba(112,64,184,.10)' };
+  S.agents.slice(0,8).forEach(function(a){
+    var div = document.createElement('div');
+    div.className = 'ov-agent-card agent-'+a.color;
+    div.innerHTML =
+      '<div class="ov-agent-top">' +
+        '<div class="ov-agent-ico" style="background:'+(colorIco[a.color]||colorIco.teal)+'">'+a.ico+'</div>' +
+        '<div><div class="ov-agent-name">'+a.name+'</div><div class="ov-agent-tag">'+a.tag+'</div></div>' +
+      '</div>' +
+      '<div class="ov-agent-desc">'+a.desc+'</div>' +
+      '<button class="ov-agent-launch">Open Agent →</button>';
+    div.addEventListener('click', (function(id){ return function(){ showAgentPanel(id, document.querySelector('[data-agent="'+id+'"]')); }; })(a.id));
+    el.appendChild(div);
+  });
+}
+
+
+function buildAgentPanels(){
+  var colorBgs    = { teal:'rgba(46,184,168,.06)', warm:'rgba(212,146,10,.06)', coral:'rgba(232,88,72,.06)', sage:'rgba(74,152,112,.06)', violet:'rgba(112,64,184,.06)' };
+  var colorBorders= { teal:'rgba(46,184,168,.2)',  warm:'rgba(212,146,10,.2)', coral:'rgba(232,88,72,.2)',  sage:'rgba(74,152,112,.2)',  violet:'rgba(112,64,184,.2)'  };
+  var colorIco    = { teal:'rgba(46,184,168,.12)', warm:'rgba(212,146,10,.1)', coral:'rgba(232,88,72,.1)',  sage:'rgba(74,152,112,.1)',  violet:'rgba(112,64,184,.1)'  };
+  var container = document.getElementById('agent-panels');
+  container.innerHTML = '';
+  S.agents.forEach(function(a){
+    var bg  = colorBgs[a.color]     || colorBgs.teal;
+    var bor = colorBorders[a.color] || colorBorders.teal;
+    var ico = colorIco[a.color]     || colorIco.teal;
+    var div = document.createElement('div');
+    div.className = 'panel';
+    div.id = 'panel-agent-'+a.id;
+    div.innerHTML =
+      '<div class="agent-chat-layout">' +
+        '<div class="agent-header" style="background:'+bg+';border-color:'+bor+'">' +
+          '<div class="agent-header-ico" style="background:'+ico+'">'+a.ico+'</div>' +
+          '<div><div class="agent-header-name">'+a.name+'</div><div class="agent-header-desc">'+a.tag+' · Product Imagination</div></div>' +
+          '<div class="agent-status-dot"></div>' +
+          '<button class="lib-btn" data-lib="'+a.id+'">&#128218; Prompt Library</button>' +
+        '</div>' +
+        '<div class="chat-window" id="chat-'+a.id+'"></div>' +
+        '<div class="qr-row" id="qr-'+a.id+'"></div>' +
+        '<div class="chat-input-row">' +
+          '<textarea class="chat-inp" id="inp-'+a.id+'" placeholder="Ask '+a.name+' anything…" rows="1"></textarea>' +
+          '<button class="chat-voice-btn" title="Voice input" data-voice="'+a.id+'">&#127897;&#65039;</button>' +
+          '<button class="chat-send" data-send="'+a.id+'"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>' +
+        '</div>' +
+      '</div>';
+    container.appendChild(div);
+    // Wire events after inserting
+    (function(id){
+      var ta = div.querySelector('#inp-'+id);
+      if(ta){
+        ta.addEventListener('keydown', function(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();agentSend(id);} });
+        ta.addEventListener('input', function(){ autoH(this); });
+      }
+      var vbtn = div.querySelector('[data-voice="'+id+'"]');
+      if(vbtn) vbtn.addEventListener('click', function(){ openVoice(id); });
+      var lbtn = div.querySelector('[data-lib="'+id+'"]');
+      if(lbtn) lbtn.addEventListener('click', function(e){ e.stopPropagation(); openLibrary(id); });
+      var sbtn = div.querySelector('[data-send="'+id+'"]');
+      if(sbtn) sbtn.addEventListener('click', function(){ agentSend(id); });
+    })(a.id);
+  });
+}
+
+
+function buildAgentSelect(){
+  var sel = document.getElementById('task-agent-sel');
+  sel.innerHTML = '<option value="">— Choose agent —</option>';
+  S.agents.forEach(function(a){
+    var o = document.createElement('option'); o.value=a.id; o.textContent=a.ico+' '+a.name; sel.appendChild(o);
+  });
+}
+
+function buildReports(){
+  var container = document.getElementById('reports-grid');
+  container.innerHTML = '';
+  var colors      = { teal:'#1E9890', warm:'#B87010', coral:'#C04030', sage:'#3A7860', violet:'#7040B8' };
+  var borderColors= { teal:'rgba(46,184,168,.4)', warm:'rgba(212,146,10,.4)', coral:'rgba(232,88,72,.4)', sage:'rgba(74,152,112,.4)', violet:'rgba(112,64,184,.4)' };
+  var bgColors    = { teal:'rgba(46,184,168,.08)', warm:'rgba(212,146,10,.08)', coral:'rgba(232,88,72,.08)', sage:'rgba(74,152,112,.08)', violet:'rgba(112,64,184,.08)' };
+  S.agents.slice(0,4).forEach(function(a){
+    var c  = colors[a.color]       || '#1E9890';
+    var bc = borderColors[a.color] || 'rgba(46,184,168,.4)';
+    var bg = bgColors[a.color]     || 'rgba(46,184,168,.08)';
+    var div = document.createElement('div');
+    div.style.cssText = 'background:var(--card);border:1px solid var(--bw);border-radius:18px;padding:24px;box-shadow:0 2px 12px rgba(30,10,0,.06)';
+    div.innerHTML =
+      '<div style="font-size:24px;margin-bottom:12px">'+a.ico+'</div>' +
+      '<div style="font-family:var(--fh);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:8px">'+a.name+' Report</div>' +
+      '<div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">'+a.desc+'</div>' +
+      '<button style="font-family:var(--fm);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 16px;border-radius:100px;border:1.5px solid '+bc+';background:'+bg+';color:'+c+';cursor:pointer;transition:.14s ease">Generate Report →</button>';
+    var btn = div.querySelector('button');
+    btn.addEventListener('mouseover', function(){ this.style.background=c; this.style.color='#fff'; });
+    btn.addEventListener('mouseout',  function(){ this.style.background=bg; this.style.color=c; });
+    btn.addEventListener('click', (function(id){ return function(){ generateReport(id); }; })(a.id));
+    container.appendChild(div);
+  });
+}
+
+
+
+
+// ── COLOUR MAPS ─────────────────────────────────────────────────────────────
+var C_BG   = {teal:'rgba(46,184,168,.06)',warm:'rgba(212,146,10,.06)',coral:'rgba(232,88,72,.06)',sage:'rgba(74,152,112,.06)',violet:'rgba(112,64,184,.06)'};
+var C_BOR  = {teal:'rgba(46,184,168,.2)', warm:'rgba(212,146,10,.2)', coral:'rgba(232,88,72,.2)', sage:'rgba(74,152,112,.2)', violet:'rgba(112,64,184,.2)'};
+var C_ICO  = {teal:'rgba(46,184,168,.12)',warm:'rgba(212,146,10,.1)', coral:'rgba(232,88,72,.1)', sage:'rgba(74,152,112,.1)', violet:'rgba(112,64,184,.1)'};
+var C_COL  = {teal:'#1E9890',warm:'#B87010',coral:'#C04030',sage:'#3A7860',violet:'#7040B8'};
+var C_BORD = {teal:'rgba(46,184,168,.4)',warm:'rgba(212,146,10,.4)',coral:'rgba(232,88,72,.4)',sage:'rgba(74,152,112,.4)',violet:'rgba(112,64,184,.4)'};
+var C_BGLT = {teal:'rgba(46,184,168,.08)',warm:'rgba(212,146,10,.08)',coral:'rgba(232,88,72,.08)',sage:'rgba(74,152,112,.08)',violet:'rgba(112,64,184,.08)'};
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+var S = {
+  user:null, client:{}, agents:[], tasks:[], docs:[], goals:[],
+  agentHist:{}, agentBusy:{}, agentInit:{},
+  currentAgent:null, voiceAgentId:null, recognition:null,
+  oaiKey: localStorage.getItem('pi-oai-key')||'',
+  antKey: localStorage.getItem('pi-ant-key')||'',
+  libAgentId:null, libTabFilter:null,
+};
+
+// ── LOGIN ────────────────────────────────────────────────────────────────────
+document.getElementById('login-pass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+document.getElementById('login-email').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('login-pass').focus();});
+
+function doLogin(){
+  var email=document.getElementById('login-email').value.trim().toLowerCase();
+  var pass=document.getElementById('login-pass').value;
+  var err=document.getElementById('login-err');
+  err.classList.remove('show');
+  var user=DEMO_USERS[email];
+  if(user&&user.pass===pass){
+    S.user=Object.assign({email:email},user);
+    enterDash();
+  }else{
+    err.classList.add('show');
+    document.getElementById('login-pass').value='';
+  }
+}
+
+function enterDash(){
+  var login=document.getElementById('page-login');
+  var dash=document.getElementById('page-dash');
+  login.classList.add('fade-out');
+  setTimeout(function(){
+    login.style.display='none';
+    dash.classList.add('active');
+    document.getElementById('topbar-avatar').textContent=S.user.initials;
+    var brief=null;try{brief=JSON.parse(localStorage.getItem('pi-client-brief')||'null');}catch(e){}
+    if(brief&&brief.client){activatePortal(brief);}else{openSetup();}
+  },400);
+}
+
+function doLogout(){
+  document.getElementById('page-dash').classList.remove('active');
+  var login=document.getElementById('page-login');
+  login.style.display='flex';login.classList.remove('fade-out');
+  document.getElementById('login-email').value='';
+  document.getElementById('login-pass').value='';
+  S.user=null;S.agentHist={};S.agentBusy={};S.agentInit={};
+  document.getElementById('agent-panels').innerHTML='';
+}
+
+// ── SIDEBAR WIRE-UP ──────────────────────────────────────────────────────────
+document.querySelectorAll('.sb-item[data-panel]').forEach(function(item){
+  item.addEventListener('click',function(){switchPanel(item.getAttribute('data-panel'),item);});
+});
+document.getElementById('settings-btn').addEventListener('click',openApiModal);
+document.getElementById('brief-btn').addEventListener('click',openSetup);
+document.getElementById('logout-btn').addEventListener('click',doLogout);
+document.getElementById('task-submit-btn').addEventListener('click',submitTask);
+
+// ── PANEL SWITCHING ──────────────────────────────────────────────────────────
+function switchPanel(id,sbEl){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active');});
+  var panel=document.getElementById('panel-'+id);
+  if(panel)panel.classList.add('active');
+  if(sbEl)sbEl.classList.add('active');
+  var titles={overview:'Dashboard',tasks:'Task Board',docs:'Documents',reports:'Reports'};
+  document.getElementById('topbar-title').textContent=titles[id]||id;
+}
+
+function switchToAgent(agentId){
+  var panel=document.getElementById('panel-agent-'+agentId);
+  if(!panel)return;
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active');});
+  panel.classList.add('active');
+  var sbItem=document.querySelector('[data-agent="'+agentId+'"]');
+  if(sbItem)sbItem.classList.add('active');
+  var agent=S.agents.find(function(a){return a.id===agentId;});
+  if(agent)document.getElementById('topbar-title').textContent=agent.name;
+  S.currentAgent=agentId;
+  if(!S.agentInit[agentId])initAgent(agentId);
+}
+
+// ── PORTAL ACTIVATION ────────────────────────────────────────────────────────
+function activatePortal(brief){
+  S.client=brief;
+  S.agents=(ROSTER_DEFS[brief.template]||ROSTER_DEFS.consulting).map(function(a,i){
+    return Object.assign({},a,{color:COLORS[i%COLORS.length]});
+  });
+  S.goals=[{text:brief.goal||'Primary goal',pct:0},{text:'Agent tasks completed',pct:0},{text:'Deliverables produced',pct:0}];
+  S.agentHist={};S.agentBusy={};S.agentInit={};
+
+  document.getElementById('sb-client-name').textContent=brief.client;
+  document.getElementById('sb-client-plan').textContent=(TNAMES[brief.template]||brief.template)+' · Active';
+  document.getElementById('welcome-name').textContent=S.user?S.user.name:'Client';
+  document.getElementById('welcome-sub').textContent='Your '+(TNAMES[brief.template]||brief.template)+' agent system is active. '+S.agents.length+' specialists ready.';
+  document.getElementById('stat-agents').textContent=S.agents.length;
+
+  buildSidebarAgents();
+  buildOverviewCards();
+  buildAgentPanels();
+  buildAgentSelect();
+  buildReportsGrid();
+  buildGoals();
+
+  setTimeout(function(){if(S.agents.length)initAgent(S.agents[0].id);},500);
+}
+
+// ── BUILD SIDEBAR AGENTS ─────────────────────────────────────────────────────
+function buildSidebarAgents(){
+  var el=document.getElementById('sb-agents');
+  el.innerHTML='';
+  S.agents.forEach(function(a){
+    var div=document.createElement('div');
+    div.className='sb-item';
+    div.setAttribute('data-agent',a.id);
+    div.innerHTML='<span class="sb-item-icon">'+a.ico+'</span><span class="sb-item-label">'+a.name+'</span>';
+    div.addEventListener('click',function(){switchToAgent(a.id);});
+    el.appendChild(div);
+  });
+}
+
+// ── BUILD OVERVIEW CARDS ─────────────────────────────────────────────────────
+function buildOverviewCards(){
+  var el=document.getElementById('ov-agents');el.innerHTML='';
+  S.agents.slice(0,8).forEach(function(a){
+    var div=document.createElement('div');
+    div.className='ov-agent-card agent-'+a.color;
+    div.innerHTML=
+      '<div class="ov-agent-top">'+
+        '<div class="ov-agent-ico" style="background:'+(C_ICO[a.color]||C_ICO.teal)+'">'+a.ico+'</div>'+
+        '<div><div class="ov-agent-name">'+a.name+'</div><div class="ov-agent-tag">'+a.tag+'</div></div>'+
+      '</div>'+
+      '<div class="ov-agent-desc">'+a.desc+'</div>'+
+      '<button class="ov-agent-launch">Open Agent &rarr;</button>';
+    div.addEventListener('click',function(){switchToAgent(a.id);});
+    el.appendChild(div);
+  });
+}
+
+// ── BUILD AGENT PANELS ───────────────────────────────────────────────────────
+function buildAgentPanels(){
+  var container=document.getElementById('agent-panels');container.innerHTML='';
+  S.agents.forEach(function(a){
+    var bg=C_BG[a.color]||C_BG.teal;
+    var bor=C_BOR[a.color]||C_BOR.teal;
+    var ico=C_ICO[a.color]||C_ICO.teal;
+    var col=C_COL[a.color]||C_COL.teal;
+    var div=document.createElement('div');
+    div.className='panel';div.id='panel-agent-'+a.id;
+    div.innerHTML=
+      '<div class="agent-chat-layout">'+
+        '<div class="agent-header" style="background:'+bg+';border-color:'+bor+'">'+
+          '<div class="agent-header-ico" style="background:'+ico+'">'+a.ico+'</div>'+
+          '<div>'+
+            '<div class="agent-header-name">'+a.name+'</div>'+
+            '<div class="agent-header-desc">'+a.tag+' · Product Imagination</div>'+
+          '</div>'+
+          '<button class="lib-btn" style="border-color:'+bor.replace('.2','1')+';color:'+col+'">&#128218; Prompt Library</button>'+
+          '<div class="agent-status-dot"></div>'+
+        '</div>'+
+        '<div class="chat-window" id="chat-'+a.id+'"></div>'+
+        '<div class="qr-row" id="qr-'+a.id+'"></div>'+
+        '<div class="chat-input-row">'+
+          '<textarea class="chat-inp" id="inp-'+a.id+'" placeholder="Ask '+a.name+' anything…" rows="1"></textarea>'+
+          '<button class="chat-voice-btn" title="Voice input">&#127897;&#65039;</button>'+
+          '<button class="chat-send"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>'+
+        '</div>'+
+      '</div>';
+    container.appendChild(div);
+    // Wire events after insertion
+    (function(id){
+      var ta=div.querySelector('#inp-'+id);
+      if(ta){
+        ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();agentSend(id);}});
+        ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px';});
+      }
+      div.querySelector('.chat-voice-btn').addEventListener('click',function(){openVoice(id);});
+      div.querySelector('.chat-send').addEventListener('click',function(){agentSend(id);});
+      var lb=div.querySelector('.lib-btn[data-agent-lib]');if(lb)lb.addEventListener('click',function(e){e.stopPropagation();openLibrary(id);});
+    })(a.id);
+  });
+}
+
+function buildAgentSelect(){
+  var sel=document.getElementById('task-agent-sel');
+  sel.innerHTML='<option value="">&#8212; Choose agent &#8212;</option>';
+  S.agents.forEach(function(a){
+    var o=document.createElement('option');o.value=a.id;o.textContent=a.ico+' '+a.name.replace(/&amp;/g,'&');
+    sel.appendChild(o);
+  });
+}
+
+function buildReportsGrid(){
+  var el=document.getElementById('reports-grid');el.innerHTML='';
+  S.agents.slice(0,4).forEach(function(a){
+    var c=C_COL[a.color]||'#1E9890',bc=C_BORD[a.color]||'rgba(46,184,168,.4)',bg=C_BGLT[a.color]||'rgba(46,184,168,.08)';
+    var div=document.createElement('div');
+    div.style.cssText='background:var(--card);border:1px solid var(--bw);border-radius:18px;padding:22px;box-shadow:0 2px 12px rgba(30,10,0,.06)';
+    div.innerHTML=
+      '<div style="font-size:24px;margin-bottom:10px">'+a.ico+'</div>'+
+      '<div style="font-family:var(--fh);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:7px">'+a.name.replace(/&amp;/g,'&')+' Report</div>'+
+      '<div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:14px">'+a.desc+'</div>'+
+      '<button style="font-family:var(--fm);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:7px 14px;border-radius:100px;border:1.5px solid '+bc+';background:'+bg+';color:'+c+';cursor:pointer">Generate Report &rarr;</button>';
+    var btn=div.querySelector('button');
+    btn.addEventListener('mouseover',function(){this.style.background=c;this.style.color='#fff';});
+    btn.addEventListener('mouseout',function(){this.style.background=bg;this.style.color=c;});
+    btn.addEventListener('click',(function(id){return function(){generateReport(id);};})(a.id));
+    el.appendChild(div);
+  });
+}
+
+function buildGoals(){
+  var el=document.getElementById('sb-goals');
+  el.innerHTML='<div class="sb-goal-block"><span class="sb-goal-lbl">Goal Progress</span>'+
+    S.goals.map(function(g){return '<div class="sb-goal-item"><div class="sb-goal-text">'+g.text+'</div><div class="sb-goal-bar"><div class="sb-goal-fill" style="width:'+g.pct+'%"></div></div><div class="sb-goal-pct">'+g.pct+'% complete</div></div>';}).join('')+
+    '</div>';
+}
+
+function updateStats(){
+  var done=S.tasks.filter(function(t){return t.status==='done';}).length;
+  document.getElementById('stat-tasks').textContent=done;
+  document.getElementById('stat-docs').textContent=S.docs.length;
+  var badge=document.getElementById('sb-task-ct');
+  badge.textContent=S.tasks.length;badge.style.display=S.tasks.length?'inline-flex':'none';
+  if(S.goals[1])S.goals[1].pct=Math.min(100,done*14);
+  var avg=S.goals.reduce(function(s,g){return s+g.pct;},0)/Math.max(1,S.goals.length);
+  document.getElementById('stat-prog').textContent=Math.round(avg)+'%';
+  buildGoals();
+}
+
+// ── AGENT CHAT SYSTEM ────────────────────────────────────────────────────────
+function greeting(agentId){
+  var a=S.agents.find(function(x){return x.id===agentId;});
+  var b=S.client;
+  if(!a)return 'Hello! How can I help?';
+  var tag=a.tag.replace(/&amp;/g,'&');
+  var desc=a.desc.replace(/&amp;/g,'&').replace(/&mdash;/g,'-');
+  var name=a.name.replace(/&amp;/g,'&');
+  var lines=[
+    '**'+name+'** here - your dedicated **'+tag+'** specialist.',
+    '',
+    desc,
+    '',
+    'I have your full brief for **'+b.client+' - '+(b.project||'')+'**.'+(b.goal?'\n\nYour goal: _'+b.goal+'_':''),
+    '',
+    'Click the **Prompt Library** button above for ready-to-use prompts, or just ask me anything.'
+  ];
+  return lines.join('\n');
+}
+
+function systemPrompt(agentId){
+  var a=S.agents.find(function(x){return x.id===agentId;});
+  var b=S.client;
+  if(!a)return 'You are a helpful AI agent.';
+  var lines=[
+    'You are the '+a.name.replace(/&amp;/g,'&')+' for Product Imagination LLC.',
+    '',
+    'Specialty: '+a.tag.replace(/&amp;/g,'&'),
+    'Your core responsibility: '+a.desc.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&mdash;/g,'-'),
+    '',
+    'CLIENT BRIEF:',
+    'Client: '+b.client,
+    'Project: '+(b.project||'—'),
+    'Goal: '+(b.goal||'—'),
+    'Audience: '+(b.audience||'—'),
+    'Deadline: '+(b.deadline||'—'),
+    'Budget: '+(b.budget||'—'),
+    '',
+    'RULES: Always produce complete, ready-to-use outputs. Write the full document when asked to write. Be direct and actionable.',
+    'User: '+(S.user?S.user.name:'Client')
+  ];
+  return lines.join('\n');
+}
+
+
+// ── AGENT CHAT & API ────────────────────────────────────────────────────────
+function initAgent(agentId){
+  if(S.agentInit[agentId])return;
+  S.agentInit[agentId]=true;
+  if(!S.agentHist[agentId])S.agentHist[agentId]=[];
+  var g=greeting(agentId);
+  showTyping(agentId);
+  setTimeout(function(){
+    hideTyping(agentId);
+    addMsg(agentId,'agent',fmtMd(g));
+    S.agentHist[agentId].push({role:'assistant',content:g});
+    var lib=MASTER_PROMPT_LIBRARY[agentId]||{};
+    var fc=Object.keys(lib)[0];
+    setQR(agentId,fc&&lib[fc]?lib[fc].slice(0,5):[]);
+  },700);
+}
+
+async function agentSend(agentId){
+  var inp=document.getElementById('inp-'+agentId);
+  if(!inp||S.agentBusy[agentId])return;
+  var txt=inp.value.trim();if(!txt)return;
+  S.agentBusy[agentId]=true;
+  setQR(agentId,[]);
+  inp.value='';inp.style.height='auto';
+  addMsg(agentId,'user',txt);
+  if(!S.agentHist[agentId])S.agentHist[agentId]=[];
+  S.agentHist[agentId].push({role:'user',content:txt});
+  showTyping(agentId);
+  var reply=null;
+  try{
+    var onServer = window.location.protocol !== 'file:';
+    if(onServer){
+      // Try Anthropic first (via server proxy), fall back to OpenAI proxy
+      try{ reply=await callAnthropic(agentId,txt); }
+      catch(e){ reply=await callOpenAI(agentId,txt); }
+    } else if(S.antKey){
+      reply=await callAnthropic(agentId,txt);
+    } else if(S.oaiKey){
+      reply=await callOpenAI(agentId,txt);
+    }
+  }catch(e){console.warn('API error:',e.message);reply=null;}
+  if(!reply)reply=smartFallback(agentId,txt);
+  hideTyping(agentId);
+  addMsg(agentId,'agent',fmtMd(reply));
+  S.agentHist[agentId].push({role:'assistant',content:reply});
+  if(document.getElementById('voice-overlay').classList.contains('active')){
+    speak(reply.replace(/[*#`_]/g,'').substring(0,400));
+  }
+  var lib=MASTER_PROMPT_LIBRARY[agentId]||{};
+  var fc=Object.keys(lib)[0];
+  setQR(agentId,fc&&lib[fc]?lib[fc].slice(0,4):[]);
+  S.agentBusy[agentId]=false;
+  updateStats();
+}
+
+async function callAnthropic(agentId,userMsg){
+  var sysP=systemPrompt(agentId);
+  var msgs=S.agentHist[agentId].slice(-12);
+  // Use server proxy if running on a host (not file://), else direct with key
+  var useProxy = window.location.protocol !== 'file:' && !S.antKey;
+  var url = useProxy
+    ? window.location.origin+'/api/anthropic/v1/messages'
+    : 'https://api.anthropic.com/v1/messages';
+  var headers = {'Content-Type':'application/json'};
+  if(!useProxy){
+    headers['x-api-key']=S.antKey;
+    headers['anthropic-version']='2023-06-01';
+    headers['anthropic-dangerous-direct-browser-access']='true';
+  }
+  var res=await fetch(url,{
+    method:'POST',
+    headers:headers,
+    body:JSON.stringify({
+      model:'claude-sonnet-4-5',
+      max_tokens:1500,
+      system:sysP,
+      messages:msgs.slice(-10)
+    })
+  });
+  if(!res.ok)throw new Error('Anthropic '+res.status);
+  var data=await res.json();
+  return data.content&&data.content[0]&&data.content[0].text;
+}
+
+async function callOpenAI(agentId,userMsg){
+  var sysP=systemPrompt(agentId);
+  var msgs=[{role:'system',content:sysP}].concat(S.agentHist[agentId].slice(-10));
+  var useProxy = window.location.protocol !== 'file:' && !S.oaiKey;
+  var url = useProxy
+    ? window.location.origin+'/api/openai/v1/chat/completions'
+    : 'https://api.openai.com/v1/chat/completions';
+  var headers = {'Content-Type':'application/json'};
+  if(!useProxy) headers['Authorization']='Bearer '+S.oaiKey;
+  var res=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({model:'gpt-4o-mini',max_tokens:1200,messages:msgs})});
+  if(!res.ok)throw new Error('OpenAI '+res.status);
+  var data=await res.json();
+  return data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content;
+}
+
+function smartFallback(agentId,msg){
+  var b=S.client;
+  var a=S.agents.find(function(x){return x.id===agentId;});
+  var m=msg.toLowerCase();
+  var name=a?a.name.replace(/&amp;/g,'&'):'Agent';
+  var tag=a?a.tag.replace(/&amp;/g,'&'):'';
+  if(/write|draft|create|build|generate|make|produce/i.test(m)){
+    return '**Output for '+b.client+'**\n\nTask: '+msg+'\n\n'+(a?a.desc.replace(/&amp;/g,'&').replace(/&mdash;/g,'-')+'\n\n':'')+
+      'Add your **OpenAI** or **Anthropic** API key via **API & Settings** (bottom of sidebar) to get live AI-generated responses.\n\nStatus: Ready once API key is configured.';
+  }
+  if(/help|what|how|explain/i.test(m)){
+    return 'As your **'+name+'**, I specialise in **'+tag+'**.\n\n'+(a?a.desc.replace(/&amp;/g,'&').replace(/&mdash;/g,'-')+'\n\n':'')+
+      'Open the **Prompt Library** button in the agent header for ready-to-use prompts, or ask me to create any deliverable.';
+  }
+  return 'Understood. Working on "'+msg+'" for **'+b.client+'**.\n\nConnect your API key via **API & Settings** for live AI responses. In demo mode I can show structure and approach for any deliverable.';
+}
+
+// ── PROMPT LIBRARY DROPDOWN ────────────────────────────────────────────────
+
+function openLibrary(agentId){
+  // Close any other open dropdowns
+  document.querySelectorAll('.lib-dropdown.open').forEach(function(d){d.classList.remove('open');});
+  document.querySelectorAll('.lib-btn.open').forEach(function(b){b.classList.remove('open');});
+
+  var btn = document.querySelector('.lib-btn[data-agent-lib="'+agentId+'"]');
+  var drop = document.getElementById('lib-drop-'+agentId);
+  if(!btn||!drop){buildLibDropdown(agentId);return;}
+
+  var isOpen = drop.classList.contains('open');
+  if(isOpen){ closeLibrary(); return; }
+
+  S.libAgentId = agentId;
+  populateLibDropdown(agentId, null, '');
+  drop.classList.add('open');
+  btn.classList.add('open');
+
+  // Close on outside click
+  setTimeout(function(){
+    document.addEventListener('click', libOutsideClick, {once:true, capture:true});
+  }, 10);
+}
+
+function libOutsideClick(e){
+  var open = document.querySelector('.lib-dropdown.open');
+  if(open && !open.contains(e.target) && !e.target.closest('.lib-btn')){
+    closeLibrary();
+  } else if(open){
+    document.addEventListener('click', libOutsideClick, {once:true, capture:true});
+  }
+}
+
+function closeLibrary(){
+  document.querySelectorAll('.lib-dropdown.open').forEach(function(d){d.classList.remove('open');});
+  document.querySelectorAll('.lib-btn.open').forEach(function(b){b.classList.remove('open');});
+}
+
+function buildLibDropdown(agentId){
+  // Create the dropdown element and insert after the lib button in the agent header
+  var header = document.querySelector('#panel-agent-'+agentId+' .agent-header');
+  if(!header) return;
+
+  var drop = document.createElement('div');
+  drop.className = 'lib-dropdown';
+  drop.id = 'lib-drop-'+agentId;
+  drop.innerHTML =
+    '<div class="lib-drop-hd">'+
+      '<div class="lib-drop-title" id="lib-title-'+agentId+'">Prompt <em>Library</em></div>'+
+      '<button class="lib-drop-x" onclick="closeLibrary()">&times;</button>'+
+    '</div>'+
+    '<div class="lib-search-row"><input class="lib-search" id="lib-search-'+agentId+'" placeholder="Search prompts&hellip;"></div>'+
+    '<div class="lib-cat-tabs" id="lib-cats-'+agentId+'"></div>'+
+    '<div class="lib-select-wrap"><select class="lib-select" id="lib-sel-'+agentId+'" size="6"></select></div>'+
+    '<div class="lib-send-row">'+
+      '<div class="lib-preview" id="lib-prev-'+agentId+'">Select a prompt above to preview it.</div>'+
+      '<button class="lib-send-btn" id="lib-send-'+agentId+'" data-send-agent="'+agentId+'" disabled>Send &rarr;</button>'+
+    '</div>';
+
+  // Position: relative on the btn wrapper
+  var btn = document.querySelector('.lib-btn[data-agent-lib="'+agentId+'"]');
+  if(btn){
+    var wrap = btn.parentElement;
+    wrap.style.position = 'relative';
+    wrap.appendChild(drop);
+  } else {
+    header.style.position = 'relative';
+    header.appendChild(drop);
+  }
+
+  // Wire search
+  document.getElementById('lib-search-'+agentId).addEventListener('input', function(){
+    populateLibDropdown(agentId, S.libTabFilter, this.value);
+  });
+
+  // Wire send button
+  drop.querySelector('[data-send-agent]').addEventListener('click', function(){
+    sendLibPrompt(this.getAttribute('data-send-agent'));
+  });
+  // Wire select change
+  document.getElementById('lib-sel-'+agentId).addEventListener('change', function(){
+    document.getElementById('lib-prev-'+agentId).textContent = this.value||'Select a prompt above to preview it.';
+    document.getElementById('lib-send-'+agentId).disabled = !this.value;
+  });
+
+  populateLibDropdown(agentId, null, '');
+  drop.classList.add('open');
+  var libBtn = document.querySelector('.lib-btn[data-agent-lib="'+agentId+'"]');
+  if(libBtn) libBtn.classList.add('open');
+  S.libAgentId = agentId;
+  setTimeout(function(){
+    document.addEventListener('click', libOutsideClick, {once:true, capture:true});
+  }, 10);
+}
+
+function populateLibDropdown(agentId, catFilter, query){
+  S.libTabFilter = catFilter;
+  var cats = MASTER_PROMPT_LIBRARY[agentId] || {};
+  var q    = (query||'').toLowerCase().trim();
+
+  // Build category tabs
+  var tabEl = document.getElementById('lib-cats-'+agentId);
+  if(tabEl && tabEl.children.length === 0){
+    var all = document.createElement('button');
+    all.className='lib-cat on'; all.textContent='All';
+    all.addEventListener('click',function(){
+      tabEl.querySelectorAll('.lib-cat').forEach(function(t){t.classList.remove('on');});
+      all.classList.add('on');
+      populateLibDropdown(agentId,null,document.getElementById('lib-search-'+agentId).value);
+    });
+    tabEl.appendChild(all);
+    Object.keys(cats).forEach(function(cat){
+      var b=document.createElement('button');b.className='lib-cat';b.textContent=cat;
+      b.addEventListener('click',function(){
+        tabEl.querySelectorAll('.lib-cat').forEach(function(t){t.classList.remove('on');});
+        b.classList.add('on');
+        populateLibDropdown(agentId,cat,document.getElementById('lib-search-'+agentId).value);
+      });
+      tabEl.appendChild(b);
+    });
+  }
+
+  // Build <select> with <optgroup> per category
+  var sel = document.getElementById('lib-sel-'+agentId);
+  if(!sel) return;
+  sel.innerHTML = '';
+
+  var placeholder = document.createElement('option');
+  placeholder.value=''; placeholder.textContent='— Choose a prompt —';
+  sel.appendChild(placeholder);
+
+  var total = 0;
+  Object.keys(cats).forEach(function(cat){
+    if(catFilter && cat !== catFilter) return;
+    var prompts = cats[cat].filter(function(p){ return !q || p.toLowerCase().indexOf(q) !== -1; });
+    if(!prompts.length) return;
+
+    var grp = document.createElement('optgroup');
+    grp.label = cat;
+    prompts.forEach(function(p){
+      var opt = document.createElement('option');
+      opt.value = p;
+      // Truncate long prompts for display
+      opt.textContent = p.length > 80 ? p.slice(0,78)+'…' : p;
+      opt.title = p; // full text on hover
+      grp.appendChild(opt);
+      total++;
+    });
+    sel.appendChild(grp);
+  });
+
+  if(!total){
+    var empty = document.createElement('option');
+    empty.disabled=true;
+    empty.textContent = q ? 'No prompts match "'+q+'"' : 'No prompts available for this agent.';
+    sel.appendChild(empty);
+  }
+
+  // Reset preview + send
+  var prev = document.getElementById('lib-prev-'+agentId);
+  var send = document.getElementById('lib-send-'+agentId);
+  if(prev) prev.textContent = 'Select a prompt above to preview it.';
+  if(send) send.disabled = true;
+
+  // Adjust select size
+  sel.size = Math.min(Math.max(total+1, 4), 10);
+}
+
+function sendLibPrompt(agentId){
+  var sel    = document.getElementById('lib-sel-'+agentId);
+  var prompt = sel && sel.value;
+  if(!prompt) return;
+  closeLibrary();
+  var inp = document.getElementById('inp-'+agentId);
+  if(inp){
+    inp.value = prompt;
+    inp.style.height = 'auto';
+    inp.style.height = Math.min(inp.scrollHeight, 80)+'px';
+  }
+  switchToAgent(agentId);
+  setTimeout(function(){ agentSend(agentId); }, 150);
+}
+
+function generateReport(agentId){
+  switchToAgent(agentId);
+  setTimeout(function(){
+    var inp=document.getElementById('inp-'+agentId);
+    if(inp){
+      inp.value='Generate a complete monthly performance report for '+(S.client.client||'our project')+'. Include key metrics, achievements, issues, and 3 actionable recommendations for next month.';
+      agentSend(agentId);
+    }
+  },600);
+}
+
+
+// ── API SETTINGS ────────────────────────────────────────────────────────────
+function openApiModal(){
+  var oai=localStorage.getItem('pi-oai-key')||'';
+  var ant=localStorage.getItem('pi-ant-key')||'';
+  document.getElementById('api-oai').value=oai?(oai.slice(0,8)+'...'):'';
+  document.getElementById('api-ant').value=ant?(ant.slice(0,12)+'...'):'';
+  document.getElementById('api-voice').value=localStorage.getItem('pi-oai-voice')||'nova';
+  document.getElementById('oai-pill').textContent=oai?'✓ Connected':'● Not connected';
+  document.getElementById('oai-pill').className='api-pill '+(oai?'active':'inactive');
+  document.getElementById('ant-pill').textContent=ant?'✓ Connected':'● Not connected';
+  document.getElementById('ant-pill').className='api-pill '+(ant?'active':'inactive');
+  document.getElementById('api-modal').classList.add('open');
+}
+function closeApiModal(){document.getElementById('api-modal').classList.remove('open');}
+
+function saveApiSettings(){
+  var oaiEl=document.getElementById('api-oai');
+  var antEl=document.getElementById('api-ant');
+  var oai=oaiEl.value.trim();
+  var ant=antEl.value.trim();
+  var voice=document.getElementById('api-voice').value;
+  // Only save if it's a real new key (not the truncated display version)
+  // Use sessionStorage (clears on tab close — safer than localStorage)
+  if(oai && !oai.includes('...') && oai.length>10){
+    sessionStorage.setItem('pi-oai-key',oai); S.oaiKey=oai;
+    localStorage.removeItem('pi-oai-key'); // migrate away from localStorage
+  } else if(oai===''){
+    sessionStorage.removeItem('pi-oai-key');
+    localStorage.removeItem('pi-oai-key');
+    S.oaiKey='';
+  }
+  if(ant && !ant.includes('...') && ant.length>10){
+    sessionStorage.setItem('pi-ant-key',ant); S.antKey=ant;
+    localStorage.removeItem('pi-ant-key');
+  } else if(ant===''){
+    sessionStorage.removeItem('pi-ant-key');
+    localStorage.removeItem('pi-ant-key');
+    S.antKey='';
+  }
+  localStorage.setItem('pi-oai-voice',voice);
+  updateApiDot();
+  closeApiModal();
+  // Restart agents so they use new keys
+  if(S.agents.length){
+    S.agentHist={}; S.agentBusy={}; S.agentInit={};
+    document.querySelectorAll('.chat-window').forEach(function(w){w.innerHTML='';});
+    setTimeout(function(){
+      if(S.currentAgent) initAgent(S.currentAgent);
+      else if(S.agents.length) initAgent(S.agents[0].id);
+    },200);
+  }
+  var connected=[];
+  if(S.antKey) connected.push('Anthropic Claude Sonnet');
+  if(S.oaiKey) connected.push('OpenAI GPT-4o');
+  alert(connected.length
+    ? '✓ ' + connected.join(' + ') + ' connected.\n\nAgents are now powered by live AI.'
+    : 'Settings saved. Add an API key to enable live AI responses.');
+}
+
+function updateApiDot(){
+  var dot=document.getElementById('api-connected-dot');
+  if(!dot)return;
+  var active = S.serverProxy || !!(S.antKey||S.oaiKey);
+  dot.style.display = active ? 'inline-block' : 'none';
+  dot.style.background = S.serverProxy ? '#2EB8A8' : '#D4920A';
+  dot.title = S.serverProxy
+    ? 'Connected via server proxy'
+    : (S.antKey||S.oaiKey) ? 'Connected with local key' : 'No API connection';
+}
+
+// ── TASKS ──────────────────────────────────────────────────────────────────
+function submitTask(){
+  var agentId=document.getElementById('task-agent-sel').value;
+  var obj=document.getElementById('task-obj').value.trim();
+  var ctx=document.getElementById('task-ctx').value.trim();
+  var pri=document.getElementById('task-pri').value;
+  if(!agentId){alert('Please select an agent.');return;}
+  if(!obj){alert('Please enter a task objective.');return;}
+  var agent=S.agents.find(function(a){return a.id===agentId;})||{ico:'&#9889;',name:agentId};
+  var now=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  var task={id:Date.now(),agentId:agentId,agentIco:agent.ico,agentName:agent.name.replace(/&amp;/g,'&'),title:obj,ctx:ctx,pri:pri,status:'pending',time:now,output:''};
+  S.tasks.unshift(task);renderBoard();updateStats();
+  document.getElementById('task-obj').value='';document.getElementById('task-ctx').value='';
+  setTimeout(function(){
+    task.status='running';renderBoard();
+    setTimeout(async function(){
+      task.status='done';
+      try{
+        var prompt=obj+(ctx?'\n\nContext: '+ctx:'');
+        if(S.antKey)task.output=await callAnthropic(agentId,prompt);
+        else if(S.oaiKey)task.output=await callOpenAI(agentId,prompt);
+        else task.output=smartFallback(agentId,obj);
+      }catch(e){task.output=smartFallback(agentId,obj);}
+      task.output=(task.output||'').replace(/<[^>]+>/g,'');
+      renderBoard();updateStats();
+    },2200+Math.random()*1500);
+  },800+Math.random()*500);
+}
+
+function renderBoard(){
+  var groups={pending:[],running:[],done:[]};
+  S.tasks.forEach(function(t){if(groups[t.status])groups[t.status].push(t);});
+  ['pending','running','done'].forEach(function(s){
+    var el=document.getElementById('col-'+s[0]);
+    el.innerHTML=groups[s].length?groups[s].map(taskHTML).join(''):'<div style="text-align:center;padding:12px;font-size:12px;color:var(--muted)">No '+s+' tasks.</div>';
+    document.getElementById('ct-'+s[0]).textContent=groups[s].length;
+  });
+  document.getElementById('sb-task-ct').textContent=S.tasks.length;
+  document.getElementById('sb-task-ct').style.display=S.tasks.length?'inline-flex':'none';
+}
+
+function taskHTML(t){
+  var cols={pending:'var(--warm)',running:'var(--teal)',done:'var(--sage)'};
+  return '<div style="background:var(--card);border:1px solid var(--bw);border-radius:13px;padding:14px 16px;margin-bottom:7px;box-shadow:0 2px 8px rgba(30,10,0,.05)">'+
+    '<div style="font-family:var(--fm);font-size:9px;letter-spacing:1px;color:var(--teal-d);text-transform:uppercase;margin-bottom:6px">'+t.agentIco+' '+t.agentName+'</div>'+
+    '<div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;line-height:1.4">'+t.title+'</div>'+
+    (t.ctx?'<div style="font-size:12px;color:var(--muted);margin-bottom:4px">'+t.ctx.slice(0,80)+(t.ctx.length>80?'...':'')+'</div>':'')+
+    (t.output?'<div style="font-family:var(--fm);font-size:11px;color:var(--body);background:rgba(46,184,168,.04);border-left:2px solid var(--teal);padding:6px 9px;border-radius:0 7px 7px 0;line-height:1.6;max-height:80px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;margin-bottom:5px">'+t.output.slice(0,200)+(t.output.length>200?'...':'')+'</div>':'')+
+    '<div style="display:flex;align-items:center;gap:6px">'+
+      '<span style="font-family:var(--fm);font-size:9px;font-weight:700;padding:2px 8px;border-radius:100px;color:#fff;background:'+cols[t.status]+'">'+t.status+'</span>'+
+      (t.pri!=='normal'?'<span style="font-family:var(--fm);font-size:9px;color:var(--coral)">'+t.pri.toUpperCase()+'</span>':'')+
+      '<span style="font-family:var(--fm);font-size:9px;color:var(--muted);margin-left:auto">'+t.time+'</span>'+
+    '</div></div>';
+}
+
+// ── DOCUMENTS ─────────────────────────────────────────────────────────────
+(function(){
+  var dz=document.getElementById('upload-drop');
+  if(!dz)return;
+  dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('drag');});
+  dz.addEventListener('dragleave',function(){dz.classList.remove('drag');});
+  dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('drag');handleFiles(e.dataTransfer.files);});
+  document.getElementById('file-in').addEventListener('change',function(){handleFiles(this.files);this.value='';});
+})();
+
+function handleFiles(files){
+  Array.from(files).forEach(function(f){
+    var size=f.size<1024*1024?(f.size/1024).toFixed(0)+'KB':(f.size/1024/1024).toFixed(1)+'MB';
+    S.docs.unshift({name:f.name,size:size,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),url:URL.createObjectURL(f)});
+  });
+  renderDocs();updateStats();
+}
+
+function renderDocs(){
+  var icons={pdf:'📄',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊',png:'🖼️',jpg:'🖼️',jpeg:'🖼️',mp4:'🎥',zip:'📦'};
+  document.getElementById('doc-ct-lbl').textContent=S.docs.length?S.docs.length+' file'+(S.docs.length>1?'s':'')+' uploaded':'No files uploaded';
+  document.getElementById('doc-list').innerHTML=S.docs.map(function(d,i){
+    var ext=(d.name.split('.').pop()||'').toLowerCase();
+    var ico=icons[ext]||'📎';
+    return '<div class="doc-row">'+
+      '<span style="font-size:18px;flex-shrink:0">'+ico+'</span>'+
+      '<div class="doc-row-name">'+d.name+'</div>'+
+      '<div class="doc-row-meta">'+d.size+' · '+d.time+'</div>'+
+      '<div style="display:flex;gap:6px;flex-shrink:0">'+
+        '<button onclick="promptDoc('+i+')" style="font-family:var(--fm);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border-radius:100px;border:1.5px solid rgba(46,184,168,.3);background:rgba(46,184,168,.07);color:var(--teal-d);cursor:pointer">Prompt Agent</button>'+
+        '<button onclick="delDoc('+i+')" style="font-family:var(--fm);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border-radius:100px;border:1.5px solid rgba(232,88,72,.2);background:none;color:var(--coral);cursor:pointer">Remove</button>'+
+      '</div></div>';
+  }).join('');
+}
+
+function delDoc(i){S.docs.splice(i,1);renderDocs();updateStats();}
+function promptDoc(i){
+  var d=S.docs[i];
+  if(!S.agents.length)return;
+  switchToAgent(S.agents[0].id);
+  setTimeout(function(){
+    var inp=document.getElementById('inp-'+S.agents[0].id);
+    if(inp){inp.value='Analyze the document "'+d.name+'" and extract key insights relevant to: '+(S.client.goal||'our project goals');agentSend(S.agents[0].id);}
+  },500);
+}
+
+function updateStats(){
+  var done=S.tasks.filter(function(t){return t.status==='done';}).length;
+  document.getElementById('stat-tasks').textContent=done;
+  document.getElementById('stat-docs').textContent=S.docs.length;
+  if(S.goals[1])S.goals[1].pct=Math.min(100,done*14);
+  var avg=S.goals.reduce(function(s,g){return s+g.pct;},0)/Math.max(1,S.goals.length);
+  document.getElementById('stat-prog').textContent=Math.round(avg)+'%';
+  buildGoals();
+}
+
+// ── SAVE SETUP ─────────────────────────────────────────────────────────────
+function saveSetup(){
+  var c=document.getElementById('s-client').value.trim();
+  var g=document.getElementById('s-goal').value.trim();
+  if(!c||!g){alert('Client Name and Primary Goal are required.');return;}
+  var brief={
+    client:c,
+    project:document.getElementById('s-project').value.trim(),
+    goal:g,
+    template:document.getElementById('s-template').value,
+    audience:document.getElementById('s-audience').value.trim(),
+    deadline:document.getElementById('s-deadline').value.trim(),
+    budget:document.getElementById('s-budget').value.trim(),
+    deliverable:document.getElementById('s-deliverable').value.trim()
+  };
+  localStorage.setItem('pi-client-brief',JSON.stringify(brief));
+  closeSetup();
+  S.agentHist={}; S.agentBusy={}; S.agentInit={};
+  document.getElementById('agent-panels').innerHTML='';
+  activatePortal(brief);
+}
+
+// ── VOICE ──────────────────────────────────────────────────────────────────
+var _rec=null;
+function openVoice(agentId){
+  S.voiceAgentId=agentId||S.currentAgent||(S.agents[0]&&S.agents[0].id);
+  document.getElementById('voice-overlay').classList.add('active');
+  document.getElementById('voice-label').textContent='Listening...';
+  document.getElementById('voice-transcript').textContent='Speak to your AI agent.';
+  document.getElementById('voice-orb').textContent='🎙️';
+  document.getElementById('voice-orb').classList.remove('speaking');
+  startListening();
+}
+function closeVoice(){
+  document.getElementById('voice-overlay').classList.remove('active');
+  if(_rec){try{_rec.stop();}catch(e){}}
+  _rec=null;
+  if(window.speechSynthesis)window.speechSynthesis.cancel();
+}
+function startListening(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('voice-transcript').textContent='Voice requires Chrome or Safari.';return;}
+  _rec=new SR();_rec.continuous=false;_rec.interimResults=true;_rec.lang='en-US';
+  var bars=document.getElementById('voice-bars'),
+      trans=document.getElementById('voice-transcript'),
+      lbl=document.getElementById('voice-label');
+  _rec.onstart=function(){bars.classList.add('active');lbl.textContent='Listening...';};
+  _rec.onresult=function(e){
+    var t=Array.from(e.results).map(function(r){return r[0].transcript;}).join('');
+    trans.textContent=t;
+    if(e.results[e.results.length-1].isFinal){
+      bars.classList.remove('active');lbl.textContent='Processing...';
+      var id=S.voiceAgentId||( S.agents[0]&&S.agents[0].id);
+      var inp=document.getElementById('inp-'+id);
+      if(inp)inp.value=t;
+      agentSend(id);
+      document.getElementById('voice-orb').textContent='🤖';
+      document.getElementById('voice-orb').classList.add('speaking');
+      setTimeout(function(){if(document.getElementById('voice-overlay').classList.contains('active'))startListening();},3500);
+    }
+  };
+  _rec.onerror=function(e){
+    bars.classList.remove('active');
+    if(e.error!=='no-speech')trans.textContent='Could not hear. Try again.';
+    setTimeout(function(){if(document.getElementById('voice-overlay').classList.contains('active'))startListening();},1500);
+  };
+  _rec.onend=function(){bars.classList.remove('active');};
+  try{_rec.start();}catch(e){}
+}
+function speak(text){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  function go(){
+    var voices=window.speechSynthesis.getVoices();
+    var v=voices.find(function(x){return /Samantha|Karen|Serena|Google US/i.test(x.name);})||voices.find(function(x){return x.lang==='en-US';})||voices[0];
+    var utt=new SpeechSynthesisUtterance(text);utt.rate=0.92;utt.pitch=1.0;
+    if(v)utt.voice=v;
+    var orb=document.getElementById('voice-orb'),lbl=document.getElementById('voice-label');
+    utt.onstart=function(){orb&&orb.classList.add('speaking');if(lbl)lbl.textContent='Speaking...';};
+    utt.onend=function(){orb&&orb.classList.remove('speaking');if(lbl)lbl.textContent='Listening...';startListening();};
+    window.speechSynthesis.speak(utt);
+  }
+  if(window.speechSynthesis.getVoices().length)go();
+  else{window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.onvoiceschanged=null;go();};}
+}
+
+// ── CHAT HELPERS ──────────────────────────────────────────────────────────
+function addMsg(agentId,role,html){
+  var c=document.getElementById('chat-'+agentId);if(!c)return;
+  var wrap=document.createElement('div');wrap.className='chat-msg '+role;
+  var av=document.createElement('div');av.className='chat-av';
+  av.textContent=role==='agent'?'🤖':(S.user&&S.user.initials?S.user.initials[0]:'👤');
+  var bub=document.createElement('div');bub.className='chat-bub';bub.innerHTML=html;
+  var col=document.createElement('div');col.style.cssText='max-width:78%;display:flex;flex-direction:column';
+  col.appendChild(bub);
+  if(role==='agent'){wrap.appendChild(av);wrap.appendChild(col);}
+  else{wrap.appendChild(col);wrap.appendChild(av);}
+  c.appendChild(wrap);c.scrollTop=c.scrollHeight;
+}
+function showTyping(agentId){
+  var c=document.getElementById('chat-'+agentId);if(!c)return;
+  var w=document.createElement('div');w.className='chat-typing';w.id='typing-'+agentId;
+  var av=document.createElement('div');av.className='chat-av';av.textContent='🤖';
+  var d=document.createElement('div');d.className='chat-dots';
+  d.innerHTML='<div class="chat-dot"></div><div class="chat-dot"></div><div class="chat-dot"></div>';
+  w.appendChild(av);w.appendChild(d);c.appendChild(w);c.scrollTop=c.scrollHeight;
+}
+function hideTyping(agentId){var e=document.getElementById('typing-'+agentId);if(e)e.remove();}
+function setQR(agentId,opts){
+  var qr=document.getElementById('qr-'+agentId);if(!qr)return;qr.innerHTML='';
+  (opts||[]).slice(0,5).forEach(function(o){
+    var b=document.createElement('button');b.className='qr-chip';b.textContent=o;
+    b.onclick=function(){
+      var inp=document.getElementById('inp-'+agentId);
+      if(inp){inp.value=o;inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,80)+'px';}
+      agentSend(agentId);
+    };
+    qr.appendChild(b);
+  });
+}
+function fmtMd(t){
+  return t.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+    .replace(/\*([^*\n]+)\*/g,'<em>$1</em>')
+    .replace(/_([^_\n]+)_/g,'<em>$1</em>')
+    .replace(/^#{1,3}\s+(.+)$/gm,'<b>$1</b>')
+    .replace(/\n\n/g,'<br><br>')
+    .replace(/\n/g,'<br>');
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){closeVoice();closeLibrary();closeApiModal();closeSetup();}
+});
+
+// ── BOOT ──────────────────────────────────────────────────────────────────
+(function boot(){
+  // Load any locally saved keys (used when running as a local file)
+  S.oaiKey=sessionStorage.getItem('pi-oai-key')||localStorage.getItem('pi-oai-key')||'';
+  S.antKey=sessionStorage.getItem('pi-ant-key')||localStorage.getItem('pi-ant-key')||'';
+
+  // Check if running on a server (auto-detects proxy availability)
+  if(window.location.protocol !== 'file:'){
+    fetch('/health').then(function(r){return r.json();}).then(function(d){
+      S.serverProxy = true;
+      S.serverHasAnt = d.anthropic==='configured';
+      S.serverHasOai = d.openai==='configured';
+      updateApiDot();
+      console.log('[PI Agents OS] Server proxy active. Anthropic:',d.anthropic,'OpenAI:',d.openai);
+    }).catch(function(){S.serverProxy=false;updateApiDot();});
+  } else {
+    S.serverProxy = false;
+    updateApiDot();
+  }
+  if(window.speechSynthesis)window.speechSynthesis.getVoices();
+})();
+
+</script>
+
+<div id="lib-overlay" onclick="libOverlayClick(event)">
+  <div class="lib-drawer">
+    <div class="lib-handle"></div>
+    <div class="lib-drawer-hd">
+      <div><div class="lib-drawer-title" id="lib-title">Prompt <em>Library</em></div><div class="lib-drawer-sub" id="lib-sub">Ready-to-use prompts for this agent</div></div>
+      <button class="lib-close" onclick="closeLibrary()">&#10005;</button>
+    </div>
+    <div class="lib-search-wrap"><input class="lib-search" id="lib-search" placeholder="Search all prompts for this agent&#8230;" oninput="filterLibrary()"></div>
+    <div class="lib-tabs" id="lib-tabs"></div>
+    <div class="lib-body" id="lib-body"></div>
+  </div>
+</div>
+
+
+<div id="lib-overlay" onclick="libOverlayClick(event)">
+  <div class="lib-drawer">
+    <div style="height:4px;width:40px;border-radius:2px;background:rgba(90,64,48,.15);margin:10px auto 0"></div>
+    <div class="lib-drawer-hd">
+      <div><div class="lib-drawer-title" id="lib-title">Prompt <em>Library</em></div><div class="lib-drawer-sub" id="lib-sub">Ready-to-use prompts for this agent</div></div>
+      <button class="lib-close" onclick="closeLibrary()">&#10005;</button>
+    </div>
+    <div class="lib-search-wrap"><input class="lib-search" id="lib-search" placeholder="Search all prompts&#8230;" oninput="filterLibrary()"></div>
+    <div class="lib-tabs" id="lib-tabs"></div>
+    <div class="lib-body" id="lib-body"></div>
+  </div>
+</div>
+
+</body>
+</html
+
+</body>
+</html>

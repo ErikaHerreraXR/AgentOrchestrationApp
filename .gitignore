@@ -1,0 +1,29 @@
+# ── Dependencies ──────────────────────────────────────────────
+server/node_modules/
+node_modules/
+
+# ── Environment / API keys (NEVER commit real keys) ──────────
+server/.env
+.env
+*.env
+
+# ── macOS ──────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# ── Logs ───────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ── Build output ───────────────────────────────────────────────
+dist/
+build/
+.cache/
+
+# ── Editor ─────────────────────────────────────────────────────
+.vscode/
+*.swp
+*.swo
