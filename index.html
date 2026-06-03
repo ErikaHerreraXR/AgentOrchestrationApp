@@ -5194,6 +5194,49 @@ function sendBriefByEmail() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 renderTemplates();
+
+// ── Server health check — shows a banner if running as static site (no Node proxy) ──
+(function checkServer() {
+  fetch('/api/version', { signal: AbortSignal.timeout(3000) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && d.server === 'pi-agents-os') {
+        // Running under Node — proxy is active, all good
+        voice.serverHasOai = null; // let first TTS call detect key status
+        console.log('[PI Agents OS] Server proxy active. Commit:', d.commit);
+      }
+    })
+    .catch(function() {
+      // Static-file fallback: show a one-time banner
+      if (localStorage.getItem('pi-server-banner-dismissed') === '1') return;
+      var banner = document.createElement('div');
+      banner.style.cssText = [
+        'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);',
+        'background:#1A0C04;border:1px solid rgba(255,112,48,.45);',
+        'border-radius:12px;padding:12px 18px;',
+        'font-family:Space Mono,monospace;font-size:11px;letter-spacing:.04em;',
+        'color:rgba(255,220,185,.85);z-index:9999;',
+        'display:flex;align-items:center;gap:12px;max-width:440px;',
+        'box-shadow:0 8px 32px rgba(0,0,0,.5);',
+      ].join('');
+      banner.innerHTML = [
+        '<span style="font-size:18px;flex-shrink:0">⚠️</span>',
+        '<span>Running as static site — AI agents need the <strong style="color:#FF9A60">Node.js Web Service</strong> on Render. See console for setup guide.</span>',
+        '<button onclick="localStorage.setItem(\'pi-server-banner-dismissed\',\'1\');this.parentElement.remove()" style="background:none;border:none;color:rgba(255,154,96,.6);font-size:18px;cursor:pointer;flex-shrink:0;padding:0">×</button>',
+      ].join('');
+      document.body.appendChild(banner);
+      console.warn(
+        '%c[PI Agents OS] Running as static site — proxy not available.\n' +
+        'To enable AI agents:\n' +
+        '  1. In Render dashboard, delete the Static Site\n' +
+        '  2. Create a NEW Web Service from the same GitHub repo\n' +
+        '  3. Build command:  npm install\n' +
+        '  4. Start command:  node server.js\n' +
+        '  5. Add OPENAI_API_KEY and ANTHROPIC_API_KEY in Environment tab',
+        'color:orange;font-size:13px'
+      );
+    });
+})();
 </script>
 
   <!-- iOS status bar background spacer -->

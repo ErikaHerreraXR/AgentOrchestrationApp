@@ -48,9 +48,19 @@ app.use(express.static(__dirname, {
   }
 }));
 
+// ── Version + health check ────────────────────────────────────────
+const BUILD_TIME = new Date().toISOString();
+const GIT_COMMIT = process.env.RENDER_GIT_COMMIT || 'local';
+
+app.get('/api/version', (req, res) => {
+  res.json({ commit: GIT_COMMIT, built: BUILD_TIME, server: 'pi-agents-os' });
+});
+
 // ── API status ────────────────────────────────────────────────────
 app.get('/api/status', (req, res) => {
   res.json({
+    ok:        true,
+    commit:    GIT_COMMIT,
     openai:    !!process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.startsWith('sk-...'),
     anthropic: !!process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY.startsWith('sk-ant-...'),
     voice:     process.env.OPENAI_VOICE || 'nova',
