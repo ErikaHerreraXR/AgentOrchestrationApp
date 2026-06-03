@@ -534,6 +534,117 @@ a{color:inherit;text-decoration:none}
 .sb-goal-fill{height:2px;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--sage));transition:width .7s ease}
 .sb-goal-pct{font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.22);margin-top:2px}
 
+
+/* ── Editable Brief Panel ── */
+.brief-panel-section { margin-bottom: 24px; }
+.brief-field-card {
+  background:var(--card); border:1px solid var(--bw);
+  border-radius:16px; padding:18px 20px;
+  margin-bottom:10px;
+  box-shadow:0 2px 8px rgba(30,10,0,.05);
+  transition:.18s ease;
+}
+.brief-field-card:focus-within {
+  border-color:rgba(46,184,168,.35);
+  box-shadow:0 0 0 3px rgba(46,184,168,.08),0 2px 8px rgba(30,10,0,.05);
+}
+.brief-field-label {
+  font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;
+}
+.brief-field-required { color:var(--coral); margin-left:4px; }
+.brief-field-input, .brief-field-textarea, .brief-field-select {
+  width:100%;border:none;outline:none;background:transparent;
+  font-family:var(--fb);font-size:15px;color:var(--ink);line-height:1.55;
+  resize:none;
+}
+.brief-field-textarea { min-height:60px; }
+.brief-field-select   { cursor:pointer; appearance:none; }
+.brief-field-select option { background:#fff; color:var(--ink); }
+.brief-field-input::placeholder,
+.brief-field-textarea::placeholder { color:rgba(90,64,48,.28); font-style:italic; }
+.brief-field-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+@media(max-width:600px){ .brief-field-grid { grid-template-columns:1fr; } }
+
+/* brief save bar */
+.brief-save-bar {
+  position:sticky; bottom:0; left:0; right:0;
+  background:rgba(253,250,247,.95); border-top:1px solid var(--border);
+  padding:14px 0; display:flex; align-items:center; gap:12px;
+  backdrop-filter:blur(10px); margin:0 -28px; padding-left:28px; padding-right:28px;
+}
+.brief-unsaved-dot {
+  width:7px;height:7px;border-radius:50%;background:var(--coral);
+  flex-shrink:0;display:none;
+}
+.brief-unsaved-dot.show { display:block; }
+.brief-unsaved-label { font-size:12px;color:var(--muted);flex:1 }
+
+/* ── All Agents Panel ── */
+.agents-panel-grid {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));
+  gap:14px;
+}
+.agent-full-card {
+  background:var(--card);border:1px solid var(--bw);border-radius:20px;
+  padding:22px;position:relative;overflow:hidden;
+  box-shadow:0 2px 12px rgba(30,10,0,.06);
+  transition:transform .2s,box-shadow .2s;
+}
+.agent-full-card::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  border-radius:20px 20px 0 0;
+}
+.agent-full-card:hover { transform:translateY(-3px); box-shadow:0 12px 36px rgba(30,10,0,.1); }
+.agent-full-top { display:flex;align-items:flex-start;gap:12px;margin-bottom:12px; }
+.agent-full-ico {
+  width:46px;height:46px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
+}
+.agent-full-name { font-family:var(--fh);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:2px; }
+.agent-full-tag {
+  font-family:var(--fm);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;
+}
+.agent-full-desc {
+  font-size:13px;color:var(--mid);line-height:1.75;margin-bottom:14px;font-weight:300;
+}
+.agent-full-prompt {
+  font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:8px 16px;border-radius:100px;border:1.5px solid;cursor:pointer;
+  transition:all .15s;background:none;width:100%;
+}
+
+/* color themes for agent cards */
+.af-teal::before{background:linear-gradient(90deg,#2EB8A8,#5ED4C4)}
+.af-teal .agent-full-ico{background:rgba(46,184,168,.1)}
+.af-teal .agent-full-tag{color:#1E9890}
+.af-teal .agent-full-prompt{color:#1E9890;border-color:rgba(30,152,144,.3);background:rgba(46,184,168,.06)}
+.af-teal .agent-full-prompt:hover{background:#1E9890;color:#fff;border-color:#1E9890}
+
+.af-warm::before{background:linear-gradient(90deg,#D4920A,#C49010)}
+.af-warm .agent-full-ico{background:rgba(212,146,10,.1)}
+.af-warm .agent-full-tag{color:#B87010}
+.af-warm .agent-full-prompt{color:#B87010;border-color:rgba(180,112,16,.3);background:rgba(212,146,10,.06)}
+.af-warm .agent-full-prompt:hover{background:#B87010;color:#fff;border-color:#B87010}
+
+.af-coral::before{background:linear-gradient(90deg,#E85848,#F08878)}
+.af-coral .agent-full-ico{background:rgba(232,88,72,.1)}
+.af-coral .agent-full-tag{color:#C04030}
+.af-coral .agent-full-prompt{color:#C04030;border-color:rgba(192,64,48,.3);background:rgba(232,88,72,.06)}
+.af-coral .agent-full-prompt:hover{background:#C04030;color:#fff;border-color:#C04030}
+
+.af-sage::before{background:linear-gradient(90deg,#4A9870,#6AB888)}
+.af-sage .agent-full-ico{background:rgba(74,152,112,.1)}
+.af-sage .agent-full-tag{color:#3A7860}
+.af-sage .agent-full-prompt{color:#3A7860;border-color:rgba(58,120,96,.3);background:rgba(74,152,112,.06)}
+.af-sage .agent-full-prompt:hover{background:#3A7860;color:#fff;border-color:#3A7860}
+
+.af-violet::before{background:linear-gradient(90deg,#7040B8,#9060D8)}
+.af-violet .agent-full-ico{background:rgba(112,64,184,.1)}
+.af-violet .agent-full-tag{color:#6030A8}
+.af-violet .agent-full-prompt{color:#6030A8;border-color:rgba(96,48,168,.3);background:rgba(112,64,184,.06)}
+.af-violet .agent-full-prompt:hover{background:#6030A8;color:#fff;border-color:#6030A8}
+
 </style>
 </head>
 <body>
@@ -585,9 +696,13 @@ a{color:inherit;text-decoration:none}
         <span>API &amp; Settings</span>
         <span id="api-connected-dot" style="display:none;width:6px;height:6px;border-radius:50%;background:#2EB8A8;margin-left:auto;box-shadow:0 0 6px #2EB8A8"></span>
       </div>
-      <div id="brief-btn" style="display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .15s;color:rgba(255,255,255,.55);font-size:13px;margin-bottom:4px" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='transparent'">
-        <span style="font-size:15px">&#9998;</span>
-        <span>Edit Brief</span>
+      <div id="brief-btn" class="sb-item" data-panel="brief" style="margin-bottom:2px">
+        <span class="sb-item-icon">&#9998;</span>
+        <span class="sb-item-label">Edit Brief</span>
+      </div>
+      <div class="sb-item" data-panel="agents" style="margin-bottom:2px">
+        <span class="sb-item-icon">&#129302;</span>
+        <span class="sb-item-label">All Agents</span>
       </div>
       <button class="sb-logout" id="logout-btn"><span class="sb-logout-icon">&crarr;</span>Sign out</button>
     </div>
@@ -685,6 +800,83 @@ a{color:inherit;text-decoration:none}
           <div class="ov-welcome-sub">Click Generate to send a report request to any agent.</div>
         </div>
         <div id="reports-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px"></div>
+      </div>
+
+      <!-- EDIT BRIEF PANEL -->
+      <div class="panel" id="panel-brief">
+        <div class="ov-welcome" style="margin-bottom:24px">
+          <div class="ov-welcome-h">Your Project <em>Brief</em></div>
+          <div class="ov-welcome-sub">Edit any field below — your agents use this information to personalise every output they produce.</div>
+        </div>
+
+        <div class="brief-panel-section">
+          <div class="brief-field-grid">
+            <div class="brief-field-card">
+              <div class="brief-field-label">Client / Company<span class="brief-field-required">*</span></div>
+              <input class="brief-field-input" id="bp-client" placeholder="Acme Corp" oninput="markBriefDirty()">
+            </div>
+            <div class="brief-field-card">
+              <div class="brief-field-label">Project Name<span class="brief-field-required">*</span></div>
+              <input class="brief-field-input" id="bp-project" placeholder="e.g. Brand Refresh Q3" oninput="markBriefDirty()">
+            </div>
+          </div>
+
+          <div class="brief-field-card">
+            <div class="brief-field-label">Industry Template<span class="brief-field-required">*</span></div>
+            <select class="brief-field-select" id="bp-template" onchange="markBriefDirty()">
+              <option value="consulting">Strategy Consulting</option>
+              <option value="product">Product Design</option>
+              <option value="marketing">Marketing Campaign</option>
+              <option value="compliance">Compliance Program</option>
+              <option value="realestate">Real Estate Development</option>
+              <option value="interior">Interior Design</option>
+              <option value="airbnb">Airbnb / STR Hosting</option>
+            </select>
+          </div>
+
+          <div class="brief-field-card">
+            <div class="brief-field-label">Primary Goal<span class="brief-field-required">*</span></div>
+            <textarea class="brief-field-textarea" id="bp-goal" placeholder="What does success look like for this project? Be as specific as possible." oninput="markBriefDirty()"></textarea>
+          </div>
+
+          <div class="brief-field-grid">
+            <div class="brief-field-card">
+              <div class="brief-field-label">Target Audience</div>
+              <input class="brief-field-input" id="bp-audience" placeholder="Who is this for?" oninput="markBriefDirty()">
+            </div>
+            <div class="brief-field-card">
+              <div class="brief-field-label">Deadline / Timeline</div>
+              <input class="brief-field-input" id="bp-deadline" placeholder="e.g. 8 weeks" oninput="markBriefDirty()">
+            </div>
+            <div class="brief-field-card">
+              <div class="brief-field-label">Budget</div>
+              <input class="brief-field-input" id="bp-budget" placeholder="e.g. $50,000" oninput="markBriefDirty()">
+            </div>
+            <div class="brief-field-card">
+              <div class="brief-field-label">Primary Deliverable</div>
+              <input class="brief-field-input" id="bp-deliverable" placeholder="Main output being produced" oninput="markBriefDirty()">
+            </div>
+          </div>
+        </div>
+
+        <div class="brief-save-bar">
+          <div class="brief-unsaved-dot" id="brief-dirty-dot"></div>
+          <span class="brief-unsaved-label" id="brief-dirty-label">All changes saved</span>
+          <button onclick="saveBriefPanel()" style="font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:11px 24px;border-radius:100px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;box-shadow:0 6px 20px rgba(46,184,168,.35)">Save Brief &rarr;</button>
+        </div>
+      </div>
+
+      <!-- ALL AGENTS PANEL -->
+      <div class="panel" id="panel-agents">
+        <div class="ov-welcome" style="margin-bottom:24px">
+          <div class="ov-welcome-h">Your <em>Agent Team</em></div>
+          <div class="ov-welcome-sub" id="agents-panel-sub">Your full AI agent roster — click any agent to start a conversation.</div>
+        </div>
+        <div class="agents-panel-grid" id="agents-panel-grid">
+          <div style="text-align:center;padding:40px;color:var(--muted);font-size:14px;grid-column:1/-1">
+            Configure your brief to see your agent team.
+          </div>
+        </div>
       </div>
 
     </div>
@@ -923,7 +1115,7 @@ document.querySelectorAll('.sb-item[data-panel]').forEach(function(item){
   item.addEventListener('click',function(){switchPanel(item.getAttribute('data-panel'),item);});
 });
 document.getElementById('settings-btn').addEventListener('click',openApiModal);
-document.getElementById('brief-btn').addEventListener('click',openSetup);
+// brief-btn is now a data-panel='brief' item — handled by the panel switcher loop
 document.getElementById('logout-btn').addEventListener('click',doLogout);
 document.getElementById('task-submit-btn').addEventListener('click',submitTask);
 
@@ -934,7 +1126,7 @@ function switchPanel(id,sbEl){
   var panel=document.getElementById('panel-'+id);
   if(panel)panel.classList.add('active');
   if(sbEl)sbEl.classList.add('active');
-  var titles={overview:'Dashboard',tasks:'Task Board',docs:'Documents',reports:'Reports'};
+  var titles={overview:'Dashboard',tasks:'Task Board',docs:'Documents',reports:'Reports',brief:'Edit Brief',agents:'Agent Team'};
   document.getElementById('topbar-title').textContent=titles[id]||id;
 }
 
@@ -976,6 +1168,8 @@ function activatePortal(brief){
   buildGoals();
 
   setTimeout(function(){if(S.agents.length)initAgent(S.agents[0].id);},500);
+  buildAgentsPanelGrid();
+  populateBriefPanel(brief);
 }
 
 // ── BUILD SIDEBAR AGENTS ─────────────────────────────────────────────────────
@@ -1555,8 +1749,6 @@ function submitTask(){
       try{
         var prompt=obj+(ctx?'\n\nContext: '+ctx:'');
         task.output=await callAnthropic(agentId,prompt);
-        
-        else task.output=smartFallback(agentId,obj);
       }catch(e){task.output=smartFallback(agentId,obj);}
       task.output=(task.output||'').replace(/<[^>]+>/g,'');
       renderBoard();updateStats();
