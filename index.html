@@ -160,6 +160,11 @@ button{font-family:var(--fb)}
 
 .screen{display:none;min-height:100vh}
 .screen.active{display:flex;flex-direction:column}
+/* Desktop scroll — allow non-workflow screens to scroll naturally */
+#screen-home.active,#screen-brief.active,#screen-complete.active{
+  overflow-y:auto;
+  height:auto;
+}
 .container{max-width:1160px;margin:0 auto;padding:0 24px}
 
 /* ── Accent bar ── */
@@ -842,7 +847,13 @@ select option{background:#FFFFFF;color:#0F172A}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .workflow-main.chat-mode{
   display:flex;flex-direction:column;padding:0;
-  height:calc(100vh - 60px - var(--sat,0px));overflow:hidden;
+  height:calc(100vh - 60px - var(--sat,0px));
+  overflow:hidden;  /* container locked — only .chat-messages scrolls */
+}
+/* Desktop: allow sidebar to scroll independently */
+@media(min-width:769px){
+  .workflow-sidebar{overflow-y:auto}
+  .workflow-main{overflow:hidden}
 }
 
 .chat-header{
@@ -4502,57 +4513,77 @@ function stopCurrentSpeech() {
 }
 
 function speakViaProxy(text) {
-  // Use cached server status to skip the check on repeated calls
+  // If server definitely has no key, use browser TTS immediately
   if (voice.serverHasOai === false) {
     speakBrowser(text);
     return;
   }
 
+  // If status unknown, check now then speak
+  if (voice.serverHasOai === null) {
+    fetch('/api/status', { signal: AbortSignal.timeout(3000) })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        voice.serverHasOai = !!(d && d.openai);
+        speakViaProxy(text); // retry with known status
+      })
+      .catch(function() {
+        voice.serverHasOai = false;
+        speakBrowser(text);
+      });
+    return;
+  }
+
+  // serverHasOai === true — fetch real audio from OpenAI via proxy
   fetch('/api/openai/speech', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model:           'tts-1-hd',            // OpenAI's highest-quality, most natural TTS model
+      model:           'tts-1-hd',
       input:           text,
-      voice:           voice.selectedVoice,   // nova | shimmer | alloy | fable | echo | onyx
-      speed:           0.92,                  // 0.92 ≈ 130 WPM — natural conversational pace
+      voice:           voice.selectedVoice || 'nova',
+      speed:           0.92,
       response_format: 'mp3',
     }),
   })
   .then(function(r) {
-    if (r.status === 503) {
-      // Server has no OpenAI key configured — cache result, fall back permanently
-      voice.serverHasOai = false;
-      throw new Error('no-key');
-    }
+    if (r.status === 503) { voice.serverHasOai = false; throw new Error('no-key'); }
     if (!r.ok) throw new Error('http-' + r.status);
-    voice.serverHasOai = true;
     return r.blob();
   })
   .then(function(blob) {
+    // Verify we actually got audio (not a JSON error body)
+    if (!blob.type.includes('audio') && blob.size < 1000) {
+      // Got a small non-audio response — probably an error JSON
+      throw new Error('bad-response');
+    }
     var url   = URL.createObjectURL(blob);
     var audio = new Audio(url);
-    audio.volume = 1.0;
+    audio.preload = 'auto';
+    audio.volume  = 1.0;
     voice.currentAudio = audio;
     audio.onplay  = function() { showTTSBadge('Speaking…'); };
     audio.onended = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
-    audio.onerror = function() { removeTTSBadge(); };
-    audio.play().catch(function() {
-      // Browser blocked autoplay — need a user gesture first; show tap prompt
+    audio.onerror = function() { removeTTSBadge(); URL.revokeObjectURL(url); };
+    audio.play().catch(function(playErr) {
+      // Autoplay blocked — most common on first load before a user gesture.
+      // Show a visible "tap to hear" prompt instead of silently using robotic TTS.
       removeTTSBadge();
       showTapToPlay(url);
     });
   })
   .catch(function(err) {
     removeTTSBadge();
-    if (err.message !== 'no-key') {
-      console.warn('[TTS]', err.message);
+    if (err.message !== 'no-key') console.warn('[TTS]', err.message);
+    // Only fall back to browser TTS if truly unreachable — don't silently degrade
+    if (err.message === 'no-key' || err.message === 'bad-response') {
+      speakBrowser(text);
     }
-    speakBrowser(text);
+    // For http errors (4xx/5xx), don't use robotic browser TTS — just stay silent
   });
 }
 
-// Keep speakOpenAI as an alias so any existing calls still work
+// Alias
 var speakOpenAI = speakViaProxy;
 
 /* Browser SpeechSynthesis — natural voice, proper pacing */
@@ -5195,15 +5226,23 @@ function sendBriefByEmail() {
 
 renderTemplates();
 
-// ── Server health check — shows a banner if running as static site (no Node proxy) ──
+// ── Server health check — pre-warm TTS status and show banner if static-site ──
 (function checkServer() {
-  fetch('/api/version', { signal: AbortSignal.timeout(3000) })
+  fetch('/api/status', { signal: AbortSignal.timeout(4000) })
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d && d.server === 'pi-agents-os') {
-        // Running under Node — proxy is active, all good
-        voice.serverHasOai = null; // let first TTS call detect key status
-        console.log('[PI Agents OS] Server proxy active. Commit:', d.commit);
+      if (d && d.ok) {
+        // Server proxy is active — cache OpenAI key status immediately
+        voice.serverHasOai = !!d.openai;
+        if (d.openai) {
+          console.log('[PI Agents OS] OpenAI TTS ready. Voice:', voice.selectedVoice);
+        } else {
+          console.warn('[PI Agents OS] Server running but OpenAI key not configured — using browser TTS');
+        }
+        // Also fetch /api/version for commit info
+        fetch('/api/version').then(function(r2){return r2.json();}).then(function(v){
+          console.log('[PI Agents OS] Commit:', v.commit, '| Built:', v.built);
+        }).catch(function(){});
       }
     })
     .catch(function() {
