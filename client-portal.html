@@ -454,20 +454,6 @@ a{color:inherit;text-decoration:none}
   .panel{padding-bottom:calc(28px + var(--sab,0px))}
 }
 
-/* API Settings Modal */
-.api-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(12px)}
-.api-modal-ov.open{display:flex}
-.api-modal-card{width:100%;max-width:460px;background:var(--ink);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:36px;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:loginIn .4s cubic-bezier(.34,1.4,.64,1) both}
-.api-section-title{font-family:var(--fh);font-size:15px;font-weight:700;color:#FDFAF7;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-.api-section-sub{font-size:12px;color:rgba(253,250,247,.35);margin-bottom:14px;line-height:1.5}
-.api-input{width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#FDFAF7;font-size:14px;font-family:var(--fb);outline:none;transition:.2s ease;margin-bottom:8px}
-.api-input:focus{border-color:var(--teal);background:rgba(255,255,255,.1);box-shadow:0 0 0 3px rgba(46,184,168,.2)}
-.api-input::placeholder{color:rgba(253,250,247,.25)}
-.api-status-row{display:flex;align-items:center;gap:8px;margin-bottom:16px}
-.api-pill{font-family:var(--fm);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:100px}
-.api-pill.active{background:rgba(46,184,168,.15);border:1px solid rgba(46,184,168,.3);color:var(--teal)}
-.api-pill.inactive{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3)}
-.api-divider{height:1px;background:rgba(255,255,255,.06);margin:20px 0}
 
 /* Prompt Library */
 .lib-btn{font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:7px 14px;border-radius:100px;border:1.5px solid rgba(46,184,168,.25);background:rgba(46,184,168,.08);color:var(--teal-d);cursor:pointer;transition:.16s ease;flex-shrink:0}
@@ -715,11 +701,7 @@ a{color:inherit;text-decoration:none}
     </div>
     <div id="sb-goals"></div>
     <div class="sb-bottom">
-      <div id="settings-btn" style="display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .15s;color:rgba(255,255,255,.55);font-size:13px;margin-bottom:4px" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='transparent'">
-        <span style="font-size:15px">&#128273;</span>
-        <span>API &amp; Settings</span>
-        <span id="api-connected-dot" style="display:none;width:6px;height:6px;border-radius:50%;background:#2EB8A8;margin-left:auto;box-shadow:0 0 6px #2EB8A8"></span>
-      </div>
+
       <div id="brief-btn" class="sb-item" data-panel="brief" style="margin-bottom:2px">
         <span class="sb-item-icon">&#9998;</span>
         <span class="sb-item-label">Edit Brief</span>
@@ -922,43 +904,6 @@ a{color:inherit;text-decoration:none}
   <button class="voice-close" onclick="closeVoice()">&times; &nbsp;Close Voice Mode</button>
 </div>
 
-<!-- API & SETTINGS PANEL -->
-<div class="api-modal-ov" id="api-modal">
-  <div class="api-modal-card">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
-      <div style="width:8px;height:8px;border-radius:50%;background:var(--teal)"></div>
-      <div style="font-family:var(--fh);font-size:15px;font-weight:700;color:#FDFAF7">API &amp; <em style="font-style:italic;color:var(--teal)">Settings</em></div>
-    </div>
-
-    <div class="api-section-title">&#127981; OpenAI</div>
-    <div class="api-section-sub">GPT-4o responses, Whisper voice-to-text, TTS audio.</div>
-    <div class="api-status-row" style="margin-bottom:8px">
-      <div class="api-pill" id="oai-pill">&#9679; Checking&hellip;</div>
-    </div>
-    <input class="api-input" id="api-oai" type="password" placeholder="sk-… (paste your OpenAI key)" autocomplete="off">
-
-    <div class="api-divider"></div>
-
-    <div class="api-section-title">&#129302; Anthropic</div>
-    <div class="api-section-sub">Claude Sonnet for highest-quality agent responses.</div>
-    <div class="api-status-row" style="margin-bottom:8px">
-      <div class="api-pill" id="ant-pill">&#9679; Checking&hellip;</div>
-    </div>
-    <input class="api-input" id="api-ant" type="password" placeholder="sk-ant-… (paste your Anthropic key)" autocomplete="off">
-
-    <div class="api-divider"></div>
-
-    <div style="font-size:11px;color:rgba(253,250,247,.3);line-height:1.6;margin-bottom:16px">
-      Keys are stored in this browser session only and never sent to any third party.<br>
-      Server-side keys (if configured) are used automatically and take priority.
-    </div>
-
-    <div style="display:flex;gap:10px">
-      <button class="login-btn" style="margin:0;flex:1" onclick="saveApiSettings()">Save &amp; Connect &rarr;</button>
-      <button onclick="closeApiModal()" style="padding:11px 18px;border-radius:100px;border:1.5px solid rgba(255,255,255,.15);background:none;color:rgba(255,255,255,.4);font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Cancel</button>
-    </div>
-  </div>
-</div>
 
 <!-- SETUP BRIEF MODAL -->
 <div class="setup-modal-ov" id="setup-modal">
@@ -1146,7 +1091,7 @@ function doLogout(){
 document.querySelectorAll('.sb-item[data-panel]').forEach(function(item){
   item.addEventListener('click',function(){switchPanel(item.getAttribute('data-panel'),item);});
 });
-document.getElementById('settings-btn').addEventListener('click',openApiModal);
+
 // brief-btn is now a data-panel='brief' item — handled by the panel switcher loop
 document.getElementById('logout-btn').addEventListener('click',doLogout);
 document.getElementById('task-submit-btn').addEventListener('click',submitTask);
@@ -1513,7 +1458,7 @@ function smartFallback(agentId,msg){
       '- **Target (78% occ):** $73,970',
       '- **Upside (85% occ):** $80,600',
       '',
-      '*Connect an API key in ⚙️ API & Settings for a fully personalised analysis.*'
+      '*Ask me anything and I\'ll generate a fully personalised analysis for '+client+'.*'
     ].join('\n'),
     listing:[
       '## Listing Optimisation — '+client,
@@ -1534,7 +1479,7 @@ function smartFallback(agentId,msg){
       '4. 📺 Smart TV with streaming (guest expectation)',
       '5. 🧺 Washer/dryer (essential for 4+ night stays)',
       '',
-      '*Connect an API key in ⚙️ API & Settings to generate your full listing.*'
+      '*Ask me anything and I\'ll generate a fully personalised listing for '+client+'.*'
     ].join('\n'),
     guestexperience:[
       '## Guest Experience Design — '+client,
@@ -1557,7 +1502,7 @@ function smartFallback(agentId,msg){
       '| Day 3+ stays | Small surprise (fresh flowers, local coffee) |',
       '| Check-out | Same-day review request with warm message |',
       '',
-      '*Connect an API key in ⚙️ API & Settings to build your full guest journey.*'
+      '*Ask me anything and I\'ll build the full guest journey for '+client+'.*'
     ].join('\n'),
     research:[
       '## Competitive Landscape — '+client,
@@ -1578,7 +1523,7 @@ function smartFallback(agentId,msg){
       '### Recommended Positioning',
       'For **'+client+'**, the clearest differentiation is [unique angle] targeting [segment] — currently uncontested at this price point.',
       '',
-      '*Connect an API key in ⚙️ API & Settings for a personalised competitive analysis.*'
+      '*Ask me anything and I\'ll generate a personalised competitive analysis for '+client+'.*'
     ].join('\n'),
     strategy:[
       '## Strategic Options — '+client,
@@ -1601,7 +1546,7 @@ function smartFallback(agentId,msg){
       '### Recommendation',
       'Pursue **Option 2**. The data supports a controlled expansion that protects the existing base while capturing the new opportunity. Key decision: secure the Q2 hire before competitor does.',
       '',
-      '*Connect an API key in ⚙️ API & Settings to build the full strategic analysis.*'
+      '*Ask me anything and I\'ll build the full strategic analysis for '+client+'.*'
     ].join('\n'),
   };
 
@@ -1621,7 +1566,7 @@ function smartFallback(agentId,msg){
       '1. **Week 1–2:** Baseline the current state and align stakeholders\n'+
       '2. **Week 3–4:** Address the primary gap with the quick-win approach\n'+
       '3. **Month 2:** Implement the structural fix and measure results\n\n'+
-      '*Connect an API key in ⚙️ API & Settings for a fully personalised '+tag+' analysis.*';
+      '*Ask me anything and I\'ll generate a fully personalised '+tag+' analysis for '+client+'.*';
   }
 
   if(/write|draft|creat|build|generat|make|produc|plan/i.test(m)){
@@ -1634,7 +1579,7 @@ function smartFallback(agentId,msg){
       '3. **Options** — 3 distinct paths with trade-offs\n'+
       '4. **Recommendation** — preferred path with rationale\n'+
       '5. **Next Steps** — owners, dates, dependencies\n\n'+
-      '*Connect an API key in ⚙️ API & Settings to generate the full '+tag+' for '+client+'.*';
+      '*Ask me anything and I\'ll generate the full '+tag+' for '+client+'.*';
   }
 
   if(/help|what|how|explain|tell me|who/i.test(m)){
@@ -1647,8 +1592,7 @@ function smartFallback(agentId,msg){
 
   return '## '+name+' — '+client+'\n\n'+
     'Request received: *"'+msg+'"*\n\n'+
-    'I\'m ready to deliver your **'+tag+'**. To get a fully AI-generated response personalised to '+client+'\'s brief, connect your API key via **⚙️ API & Settings** in the sidebar.\n\n'+
-    'In the meantime, use the **Prompt Library** to explore the structured deliverables I can produce — each prompt will generate a complete, usable output.';
+    'I\'m ready to deliver your **'+tag+'**. Use the **Prompt Library** to browse structured prompts, or just tell me exactly what you need and I\'ll generate a complete, usable output.';
 }
 
 // ── PROMPT LIBRARY ────────────────────────────────────────────────────────
@@ -1980,75 +1924,6 @@ function generateReport(agentId){
 }
 
 
-// ── API SETTINGS ────────────────────────────────────────────────────────────
-function openApiModal(){
-  // Pre-fill inputs with masked existing keys
-  var oaiEl=document.getElementById('api-oai');
-  var antEl=document.getElementById('api-ant');
-  if(oaiEl) oaiEl.value = S.oaiKey && S.oaiKey!=='server' ? S.oaiKey.slice(0,8)+'…' : '';
-  if(antEl) antEl.value = S.antKey && S.antKey!=='server' ? S.antKey.slice(0,12)+'…' : '';
-  document.getElementById('api-modal').classList.add('open');
-  checkApiStatus();
-}
-
-function checkApiStatus(){
-  fetch('/api/status').then(function(r){return r.json();}).then(function(d){
-    var op=document.getElementById('oai-pill');
-    var ap=document.getElementById('ant-pill');
-    if(op){op.textContent=d.openai?'✓ Connected':'✗ Key missing — add to .env';op.className='api-pill '+(d.openai?'active':'inactive');}
-    if(ap){ap.textContent=d.anthropic?'✓ Connected':'✗ Key missing — add to .env';ap.className='api-pill '+(d.anthropic?'active':'inactive');}
-    updateApiDot();
-  }).catch(function(){
-    var op=document.getElementById('oai-pill');var ap=document.getElementById('ant-pill');
-    if(op){op.textContent='⚠ Server not running';op.className='api-pill inactive';}
-    if(ap){ap.textContent='⚠ Server not running';ap.className='api-pill inactive';}
-  });
-}
-function closeApiModal(){document.getElementById('api-modal').classList.remove('open');}
-
-function saveApiSettings(){
-  var oaiEl=document.getElementById('api-oai');
-  var antEl=document.getElementById('api-ant');
-  var oai=(oaiEl&&oaiEl.value.trim())||'';
-  var ant=(antEl&&antEl.value.trim())||'';
-  var changed=false;
-  if(oai && !oai.includes('…') && oai.length>10){
-    localStorage.setItem('pi-oai-key',oai); S.oaiKey=oai; changed=true;
-  } else if(oai===''){
-    localStorage.removeItem('pi-oai-key'); sessionStorage.removeItem('pi-oai-key'); S.oaiKey=''; changed=true;
-  }
-  if(ant && !ant.includes('…') && ant.length>10){
-    localStorage.setItem('pi-ant-key',ant); S.antKey=ant; changed=true;
-  } else if(ant===''){
-    localStorage.removeItem('pi-ant-key'); sessionStorage.removeItem('pi-ant-key'); S.antKey=''; changed=true;
-  }
-  updateApiDot();
-  closeApiModal();
-  if(changed && S.agents.length){
-    S.agentHist={}; S.agentBusy={}; S.agentInit={};
-    document.querySelectorAll('.chat-window').forEach(function(w){w.innerHTML='';});
-    setTimeout(function(){
-      if(S.currentAgent) initAgent(S.currentAgent);
-      else if(S.agents.length) initAgent(S.agents[0].id);
-    },200);
-  }
-  var connected=[];
-  if(S.serverProxy) connected.push('Server proxy');
-  if(S.antKey&&S.antKey!=='server') connected.push('Anthropic Claude');
-  if(S.oaiKey&&S.oaiKey!=='server') connected.push('OpenAI GPT-4o');
-  if(connected.length) alert('✓ Connected via: '+connected.join(' + ')+'\n\nAgents are now live.');
-}
-
-function updateApiDot(){
-  var dot=document.getElementById('api-connected-dot');
-  if(!dot)return;
-  var active = S.serverProxy || !!(S.antKey||S.oaiKey);
-  dot.style.display = active ? 'inline-block' : 'none';
-  dot.style.background = S.serverProxy ? '#2EB8A8' : '#D4920A';
-  dot.title = S.serverProxy
-    ? 'Connected via server proxy'
-    : (S.antKey||S.oaiKey) ? 'Connected with local key' : 'No API connection';
-}
 
 // ── TASKS ──────────────────────────────────────────────────────────────────
 function submitTask(){
@@ -2252,8 +2127,6 @@ function speak(rawText){
   if(onServer){
     // Use server proxy — OpenAI TTS-HD nova voice, most natural
     speakViaProxy(spoken);
-  } else if(S.antKey || S.oaiKey){
-    speakOpenAIDirect(spoken);
   } else {
     speakBrowser(spoken);
   }
@@ -2390,32 +2263,22 @@ function fmtMd(t){
 
 // ── KEYBOARD ──────────────────────────────────────────────────────────────
 document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){closeVoice();closeLibrary();closeApiModal();closeSetup();}
+  if(e.key==='Escape'){closeVoice();closeLibrary();closeSetup();}
 });
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
 (function boot(){
-  // Load any locally saved keys (used when running as a local file)
-  S.oaiKey=sessionStorage.getItem('pi-oai-key')||localStorage.getItem('pi-oai-key')||'';
-  S.antKey=sessionStorage.getItem('pi-ant-key')||localStorage.getItem('pi-ant-key')||'';
-
   // Check if running on a server (auto-detects proxy availability)
   if(window.location.protocol !== 'file:'){
     fetch('/api/status',{signal:AbortSignal.timeout(4000)}).then(function(r){return r.json();}).then(function(d){
       S.serverProxy = !!(d && d.ok);
       S.serverHasAnt = !!(d && d.anthropic);
       S.serverHasOai = !!(d && d.openai);
-      updateApiDot();
       if(d.anthropic) console.log('[Portal] Anthropic proxy ready');
       if(d.openai)    console.log('[Portal] OpenAI proxy ready');
-      if(!d.anthropic && !d.openai && !S.antKey && !S.oaiKey){
-        // No server keys AND no user keys — prompt to add keys
-        setTimeout(openApiModal, 1200);
-      }
-    }).catch(function(){S.serverProxy=false;updateApiDot();});
+    }).catch(function(){S.serverProxy=false;});
   } else {
     S.serverProxy = false;
-    updateApiDot();
   }
   if(window.speechSynthesis)window.speechSynthesis.getVoices();
 
