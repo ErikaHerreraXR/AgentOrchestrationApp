@@ -1482,17 +1482,173 @@ function smartFallback(agentId,msg){
   var b=S.client;
   var a=S.agents.find(function(x){return x.id===agentId;});
   var m=msg.toLowerCase();
+  var client=b.client||'your client';
+  var goal=b.goal||'project goals';
   var name=a?a.name.replace(/&amp;/g,'&'):'Agent';
   var tag=a?a.tag.replace(/&amp;/g,'&'):'';
-  if(/write|draft|create|build|generate|make|produce/i.test(m)){
-    return '**Output for '+b.client+'**\n\nTask: '+msg+'\n\n'+(a?a.desc.replace(/&amp;/g,'&').replace(/&mdash;/g,'-')+'\n\n':'')+
-      'Add your **OpenAI** or **Anthropic** API key via **API & Settings** (bottom of sidebar) to get live AI-generated responses.\n\nStatus: Ready once API key is configured.';
+  var desc=a?a.desc.replace(/&amp;/g,'&').replace(/&mdash;/g,'—'):'';
+
+  // Rich structured output keyed to agent type
+  var templates={
+    revenue:[
+      '## Market & Revenue Analysis — '+client,
+      '',
+      '### Comparable Properties (Top 5)',
+      '| Property | ADR | Occupancy | RevPAR | Notes |',
+      '|---|---|---|---|---|',
+      '| Comp A | $245 | 78% | $191 | Similar size, 2BR |',
+      '| Comp B | $310 | 72% | $223 | Premium amenities |',
+      '| Comp C | $198 | 84% | $166 | Budget positioning |',
+      '| Comp D | $275 | 76% | $209 | Comparable location |',
+      '| Market Avg | $257 | 77% | $198 | — |',
+      '',
+      '### Recommended Pricing Architecture',
+      '- **Base rate (off-peak):** $220–240/night',
+      '- **Shoulder season:** $260–285/night',
+      '- **Peak/event pricing:** $320–380/night',
+      '- **Minimum stay:** 2 nights weekends, 1 night weekdays',
+      '',
+      '### Annual Revenue Projection',
+      '- **Conservative (70% occ):** $66,430',
+      '- **Target (78% occ):** $73,970',
+      '- **Upside (85% occ):** $80,600',
+      '',
+      '*Connect an API key in ⚙️ API & Settings for a fully personalised analysis.*'
+    ].join('\n'),
+    listing:[
+      '## Listing Optimisation — '+client,
+      '',
+      '### Recommended Title (49 chars)',
+      '**"Bright 2BR Retreat | Walk to Beach | Fast Wi-Fi"**',
+      '',
+      '### Description Draft',
+      'Wake up to natural light in this thoughtfully designed retreat, steps from the waterfront and a short walk to the best local restaurants. The open-plan living area flows onto a private terrace — perfect for morning coffee or evening drinks.',
+      '',
+      '**The space**',
+      'Two comfortable bedrooms sleep four adults. The kitchen is fully equipped with everything you need for self-catering. High-speed Wi-Fi (200 Mbps tested) keeps remote workers connected.',
+      '',
+      '**Top 5 amenity upgrades to add:**',
+      '1. ☕ Nespresso machine (adds ~$15/night premium)',
+      '2. 🚴 Bike hire partnership (unique local angle)',
+      '3. 🧴 Hotel-quality toiletries (5-star perception)',
+      '4. 📺 Smart TV with streaming (guest expectation)',
+      '5. 🧺 Washer/dryer (essential for 4+ night stays)',
+      '',
+      '*Connect an API key in ⚙️ API & Settings to generate your full listing.*'
+    ].join('\n'),
+    guestexperience:[
+      '## Guest Experience Design — '+client,
+      '',
+      '### Pre-Arrival Sequence',
+      '- **T-7 days:** Booking confirmation + local guide PDF',
+      '- **T-2 days:** Check-in instructions + door code',
+      '- **T-0 (arrival day):** Welcome text + parking tip',
+      '',
+      '### Welcome Touches (First 5 Minutes)',
+      '1. Hand-written welcome card with guest\'s first name',
+      '2. Local snack basket (chocolates, coffee pods, sparkling water)',
+      '3. Printed one-page house guide in visible spot',
+      '4. TV already on a welcome screen with Wi-Fi code',
+      '',
+      '### 5-Star Review Triggers',
+      '| Moment | What to do |',
+      '|---|---|',
+      '| Day 1 check-in | Mid-afternoon "all good?" text |',
+      '| Day 3+ stays | Small surprise (fresh flowers, local coffee) |',
+      '| Check-out | Same-day review request with warm message |',
+      '',
+      '*Connect an API key in ⚙️ API & Settings to build your full guest journey.*'
+    ].join('\n'),
+    research:[
+      '## Competitive Landscape — '+client,
+      '',
+      '### Market Map',
+      '| Player | Positioning | Price Point | Key Strength | Weakness |',
+      '|---|---|---|---|---|',
+      '| Leader A | Premium, full-service | High | Brand trust | Price |',
+      '| Challenger B | Value, self-serve | Low | Accessibility | Support |',
+      '| Niche C | Specialist vertical | Mid-high | Depth | Breadth |',
+      '| New entrant D | Tech-first | Mid | UX | Track record |',
+      '',
+      '### White Space Opportunities',
+      '1. **Mid-market quality gap** — nobody owns the "premium without the premium price" position',
+      '2. **Underserved segment:** [audience] with specific need not addressed by current players',
+      '3. **Channel gap:** competitors weak on [channel] — strong opportunity for owned audience',
+      '',
+      '### Recommended Positioning',
+      'For **'+client+'**, the clearest differentiation is [unique angle] targeting [segment] — currently uncontested at this price point.',
+      '',
+      '*Connect an API key in ⚙️ API & Settings for a personalised competitive analysis.*'
+    ].join('\n'),
+    strategy:[
+      '## Strategic Options — '+client,
+      '',
+      '### Option 1 — Conservative Growth',
+      'Optimise the core business before expanding. Lower risk, 12–18 month payback.',
+      '- **Pros:** Preserves cash, builds on proven capabilities',
+      '- **Cons:** Slower to market, competitors may close the gap',
+      '',
+      '### Option 2 — Focused Expansion *(Recommended)*',
+      'Enter the highest-opportunity adjacent market while strengthening core.',
+      '- **Pros:** Best risk-adjusted return, maintains momentum',
+      '- **Cons:** Requires additional headcount in Q2',
+      '',
+      '### Option 3 — Bold Bet',
+      'Pivot to the new business model in full. High upside, high execution risk.',
+      '- **Pros:** 3–5× revenue potential if successful',
+      '- **Cons:** 18-month cash runway required, all-in commitment',
+      '',
+      '### Recommendation',
+      'Pursue **Option 2**. The data supports a controlled expansion that protects the existing base while capturing the new opportunity. Key decision: secure the Q2 hire before competitor does.',
+      '',
+      '*Connect an API key in ⚙️ API & Settings to build the full strategic analysis.*'
+    ].join('\n'),
+  };
+
+  // Use template if agent ID matches, otherwise build a generic structured response
+  if(templates[agentId]){
+    return templates[agentId];
   }
-  if(/help|what|how|explain/i.test(m)){
-    return 'As your **'+name+'**, I specialise in **'+tag+'**.\n\n'+(a?a.desc.replace(/&amp;/g,'&').replace(/&mdash;/g,'-')+'\n\n':'')+
-      'Open the **Prompt Library** button in the agent header for ready-to-use prompts, or ask me to create any deliverable.';
+
+  // Generic structured response based on query intent
+  if(/analys|audit|review|assess|evaluat/i.test(m)){
+    return '## '+name+' Analysis — '+client+'\n\n'+
+      '### Current State Assessment\n'+
+      'Based on your brief for **'+client+'** (goal: *'+goal+'*), here is the structured analysis:\n\n'+
+      '**Strengths identified:**\n- Core capability #1 is well-positioned\n- Market timing is favourable for this initiative\n\n'+
+      '**Gaps to address:**\n- Priority gap #1 requires immediate attention\n- Secondary gap #2 can be addressed in Phase 2\n\n'+
+      '### Recommended Actions\n'+
+      '1. **Week 1–2:** Baseline the current state and align stakeholders\n'+
+      '2. **Week 3–4:** Address the primary gap with the quick-win approach\n'+
+      '3. **Month 2:** Implement the structural fix and measure results\n\n'+
+      '*Connect an API key in ⚙️ API & Settings for a fully personalised '+tag+' analysis.*';
   }
-  return 'Understood. Working on "'+msg+'" for **'+b.client+'**.\n\nConnect your API key via **API & Settings** for live AI responses. In demo mode I can show structure and approach for any deliverable.';
+
+  if(/write|draft|creat|build|generat|make|produc|plan/i.test(m)){
+    return '## '+tag+' — '+client+'\n\n'+
+      '**Task:** '+msg+'\n\n'+
+      desc+'\n\n'+
+      '### Deliverable Outline\n'+
+      '1. **Executive Summary** — situation, recommendation, ask\n'+
+      '2. **Analysis** — data, findings, implications\n'+
+      '3. **Options** — 3 distinct paths with trade-offs\n'+
+      '4. **Recommendation** — preferred path with rationale\n'+
+      '5. **Next Steps** — owners, dates, dependencies\n\n'+
+      '*Connect an API key in ⚙️ API & Settings to generate the full '+tag+' for '+client+'.*';
+  }
+
+  if(/help|what|how|explain|tell me|who/i.test(m)){
+    return 'As your **'+name+'**, my focus is **'+tag+'** for '+client+'.\n\n'+
+      desc+'\n\n'+
+      '**I can produce:**\n'+
+      Object.values(MASTER_PROMPT_LIBRARY[agentId]||{}).flat().slice(0,5).map(function(p){return '- '+p;}).join('\n')+
+      '\n\nTap the **Prompt Library** button above to browse all ready-to-use prompts, or just tell me what you need.';
+  }
+
+  return '## '+name+' — '+client+'\n\n'+
+    'Request received: *"'+msg+'"*\n\n'+
+    'I\'m ready to deliver your **'+tag+'**. To get a fully AI-generated response personalised to '+client+'\'s brief, connect your API key via **⚙️ API & Settings** in the sidebar.\n\n'+
+    'In the meantime, use the **Prompt Library** to explore the structured deliverables I can produce — each prompt will generate a complete, usable output.';
 }
 
 // ── PROMPT LIBRARY ────────────────────────────────────────────────────────
