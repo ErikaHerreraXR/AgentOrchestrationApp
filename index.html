@@ -3934,6 +3934,9 @@ function buildChatUI(agent, idx, total) {
         '<button class="voice-ctrl-btn ' + (voice.micEnabled ? '' : 'off') + '" id="mic-toggle-btn" onclick="toggleMicEnabled()" title="Toggle microphone">' +
           '🎙️' +
         '</button>' +
+        '<button class="voice-ctrl-btn" onclick="showApiKeyModal()" title="Set OpenAI API key for natural voice">' +
+          '🔑' +
+        '</button>' +
       '</div>' +
     '</div>' +
     '<div class="chat-progress-wrap">' +
@@ -4378,10 +4381,24 @@ var voice = {
   audioChunks:   [],
   currentAudio:  null,
   serverHasOai:  null,     // cached from /api/status — null = unknown
+  userOaiKey:    localStorage.getItem('pi-oai-key') || '',
 };
 
-// API key modal removed — keys managed server-side only
-function showApiKeyModal() {}
+// Lightweight API key entry for voice — persists in localStorage
+function showApiKeyModal(){
+  var k = prompt('Enter your OpenAI API key to enable natural voice (stored in this browser only):\n\nGet one at platform.openai.com', voice.userOaiKey ? voice.userOaiKey.slice(0,8)+'…' : '');
+  if(k === null) return;
+  k = k.trim();
+  if(k && !k.includes('…') && k.length > 10){
+    localStorage.setItem('pi-oai-key', k);
+    voice.userOaiKey = k;
+    voice.serverHasOai = null; // re-check
+    console.log('[PI Agents OS] OpenAI key saved — voice enabled');
+  } else if(k === ''){
+    localStorage.removeItem('pi-oai-key');
+    voice.userOaiKey = '';
+  }
+}
 function saveApiKey() {}
 function clearApiKey() {}
 function saveVoiceSettings() {}
@@ -4703,9 +4720,13 @@ function stopCurrentSpeech() {
 }
 
 function speakViaProxy(text) {
-  // If server definitely has no key, use browser TTS immediately
+  // If server has no key but user supplied one, call OpenAI directly
   if (voice.serverHasOai === false) {
-    speakBrowser(text);
+    if (voice.userOaiKey) {
+      speakDirect(text);
+    } else {
+      speakBrowser(text);
+    }
     return;
   }
 
@@ -4775,6 +4796,33 @@ function speakViaProxy(text) {
 
 // Alias
 var speakOpenAI = speakViaProxy;
+
+/* Direct OpenAI TTS with user-supplied key (no server proxy needed) */
+function speakDirect(text) {
+  if (!voice.userOaiKey) { speakBrowser(text); return; }
+  fetch('https://api.openai.com/v1/audio/speech', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + voice.userOaiKey },
+    body: JSON.stringify({ model: 'tts-1', input: text, voice: voice.selectedVoice || 'nova', speed: 0.92, response_format: 'mp3' }),
+  })
+  .then(function(r) {
+    if (!r.ok) throw new Error('direct-tts-' + r.status);
+    return r.blob();
+  })
+  .then(function(blob) {
+    var url = URL.createObjectURL(blob);
+    var audio = new Audio(url);
+    audio.volume = 1.0;
+    voice.currentAudio = audio;
+    audio.onplay  = function() { showTTSBadge('Speaking…'); };
+    audio.onended = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
+    audio.play().catch(function() { removeTTSBadge(); showTapToPlay(url); });
+  })
+  .catch(function(err) {
+    console.warn('[TTS direct]', err.message);
+    speakBrowser(text);
+  });
+}
 
 /* Browser SpeechSynthesis — natural voice, proper pacing */
 function speakBrowser(text) {
@@ -5426,8 +5474,10 @@ renderTemplates();
         voice.serverHasOai = !!d.openai;
         if (d.openai) {
           console.log('[PI Agents OS] OpenAI TTS ready. Voice:', voice.selectedVoice);
+        } else if (voice.userOaiKey) {
+          console.log('[PI Agents OS] No server key — using direct OpenAI TTS with saved key');
         } else {
-          console.warn('[PI Agents OS] Server running but OpenAI key not configured — using browser TTS');
+          console.warn('[PI Agents OS] No OpenAI key configured — voice unavailable. Add key via VOICE MODE settings.');
         }
         // Also fetch /api/version for commit info
         fetch('/api/version').then(function(r2){return r2.json();}).then(function(v){

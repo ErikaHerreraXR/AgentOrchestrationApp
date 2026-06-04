@@ -2013,14 +2013,14 @@ function saveApiSettings(){
   var ant=(antEl&&antEl.value.trim())||'';
   var changed=false;
   if(oai && !oai.includes('…') && oai.length>10){
-    sessionStorage.setItem('pi-oai-key',oai); S.oaiKey=oai; changed=true;
+    localStorage.setItem('pi-oai-key',oai); S.oaiKey=oai; changed=true;
   } else if(oai===''){
-    sessionStorage.removeItem('pi-oai-key'); S.oaiKey=''; changed=true;
+    localStorage.removeItem('pi-oai-key'); sessionStorage.removeItem('pi-oai-key'); S.oaiKey=''; changed=true;
   }
   if(ant && !ant.includes('…') && ant.length>10){
-    sessionStorage.setItem('pi-ant-key',ant); S.antKey=ant; changed=true;
+    localStorage.setItem('pi-ant-key',ant); S.antKey=ant; changed=true;
   } else if(ant===''){
-    sessionStorage.removeItem('pi-ant-key'); S.antKey=''; changed=true;
+    localStorage.removeItem('pi-ant-key'); sessionStorage.removeItem('pi-ant-key'); S.antKey=''; changed=true;
   }
   updateApiDot();
   closeApiModal();
@@ -2401,12 +2401,17 @@ document.addEventListener('keydown',function(e){
 
   // Check if running on a server (auto-detects proxy availability)
   if(window.location.protocol !== 'file:'){
-    fetch('/health').then(function(r){return r.json();}).then(function(d){
-      S.serverProxy = true;
-      S.serverHasAnt = d.anthropic==='configured';
-      S.serverHasOai = d.openai==='configured';
+    fetch('/api/status',{signal:AbortSignal.timeout(4000)}).then(function(r){return r.json();}).then(function(d){
+      S.serverProxy = !!(d && d.ok);
+      S.serverHasAnt = !!(d && d.anthropic);
+      S.serverHasOai = !!(d && d.openai);
       updateApiDot();
-      console.log('[PI Agents OS] Server proxy active. Anthropic:',d.anthropic,'OpenAI:',d.openai);
+      if(d.anthropic) console.log('[Portal] Anthropic proxy ready');
+      if(d.openai)    console.log('[Portal] OpenAI proxy ready');
+      if(!d.anthropic && !d.openai && !S.antKey && !S.oaiKey){
+        // No server keys AND no user keys — prompt to add keys
+        setTimeout(openApiModal, 1200);
+      }
     }).catch(function(){S.serverProxy=false;updateApiDot();});
   } else {
     S.serverProxy = false;
