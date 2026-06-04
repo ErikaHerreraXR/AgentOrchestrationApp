@@ -1294,13 +1294,16 @@ select option{background:#FFFFFF;color:#0F172A}
   }
   .sidebar-label{display:none}
   .agent-item{
-    width:40px;height:40px;border-radius:50% !important;
+    width:36px;height:36px;border-radius:50% !important;
     padding:0;margin:0;min-width:unset;gap:0;
     display:flex;align-items:center;justify-content:center;
-    border-width:2px;
+    border:1.5px solid rgba(255,255,255,0.12);
+    background:rgba(255,255,255,0.04);
   }
-  .agent-item.active{box-shadow:0 0 0 3px rgba(34,211,238,0.25)}
-  .agent-item .agent-ico{font-size:18px;line-height:1;display:flex}
+  .agent-item.active{border-color:rgba(34,211,238,0.55);background:rgba(34,211,238,0.12);box-shadow:0 0 0 3px rgba(34,211,238,0.18)}
+  .agent-item.done{border-color:rgba(52,211,153,0.45);background:rgba(52,211,153,0.08);opacity:1}
+  .agent-item.locked{border-color:rgba(255,255,255,0.07);background:rgba(255,255,255,0.02);opacity:0.5}
+  .agent-item .agent-ico{font-size:17px;line-height:1;display:flex}
   .agent-item .agent-num,.agent-item .agent-name,.agent-item .agent-status{display:none}
   .sidebar-progress{
     display:flex;align-items:center;gap:10px;
@@ -3884,8 +3887,8 @@ function approveAgent(agentId) {
         sb.innerHTML = agents.map(function(a, idx) {
           var done=state.scores[a.id]!==undefined,active=idx===nextIdx,locked=idx>nextIdx;
           var cls=active?'active':done?'done':locked?'locked':'';
-          return '<div class="sidebar-section"><div class="agent-item '+cls+'" onclick="'+(!locked?'jumpToAgent('+idx+')':'')+'">' +
-            '<div class="agent-num">'+(idx+1)+'</div><div class="agent-name">'+a.name+'</div><div class="agent-status">'+(done?'✓':active?'▶':'·')+'</div></div></div>';
+          return '<div class="sidebar-section"><div class="agent-item '+cls+'" title="'+a.name+'" onclick="'+(!locked?'jumpToAgent('+idx+')':'')+'">' +
+            '<div class="agent-ico">'+a.icon+'</div><div class="agent-num">'+(idx+1)+'</div><div class="agent-name">'+a.name+'</div><div class="agent-status">'+(done?'✓':active?'▶':'·')+'</div></div></div>';
         }).join('');
       }
       startAgentConversation(agents[nextIdx], nextIdx, t.id);

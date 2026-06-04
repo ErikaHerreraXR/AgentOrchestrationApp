@@ -1403,16 +1403,23 @@ async function agentSend(agentId){
   var reply=null;
   try{
     var onServer = window.location.protocol !== 'file:';
-    if(onServer){
-      // Try Anthropic first (via server proxy), fall back to OpenAI proxy
-      try{ reply=await callAnthropic(agentId,txt); }
-      catch(e){ reply=await callOpenAI(agentId,txt); }
-    } else if(S.antKey){
-      reply=await callAnthropic(agentId,txt);
-    } else if(true){
-      reply=await callOpenAI(agentId,txt);
+    // 1. Server proxy (Render with env keys)
+    if(onServer && (!S.antKey || S.antKey==='server')){
+      try{ reply=await callAnthropic(agentId,txt); }catch(e){}
     }
-  }catch(e){console.warn('API error:',e.message);reply=null;}
+    // 2. User-supplied Anthropic key
+    if(!reply && S.antKey && S.antKey!=='server'){
+      try{ reply=await callAnthropic(agentId,txt); }catch(e){}
+    }
+    // 3. OpenAI server proxy
+    if(!reply && onServer && (!S.oaiKey || S.oaiKey==='server')){
+      try{ reply=await callOpenAI(agentId,txt); }catch(e){}
+    }
+    // 4. User-supplied OpenAI key
+    if(!reply && S.oaiKey && S.oaiKey!=='server'){
+      try{ reply=await callOpenAI(agentId,txt); }catch(e){}
+    }
+  }catch(e){console.warn('API error:',e.message);}
   if(!reply)reply=smartFallback(agentId,txt);
   hideTyping(agentId);
   addMsg(agentId,'agent',fmtMd(reply));
@@ -1430,11 +1437,11 @@ async function agentSend(agentId){
 async function callAnthropic(agentId,userMsg){
   var sysP=systemPrompt(agentId);
   var msgs=S.agentHist[agentId].slice(-12);
-  // Use server proxy if running on a host (not file://), else direct with key
-  var useProxy = window.location.protocol !== 'file:' && !S.antKey;
+  // Use server proxy when hosted (no user key supplied, or key is the 'server' sentinel)
+  var useProxy = window.location.protocol !== 'file:' && (!S.antKey || S.antKey === 'server');
   var url = useProxy
-    ? window.location.origin+'/api/anthropic/v1/messages'
-    : '/api/anthropic';
+    ? '/api/anthropic'
+    : 'https://api.anthropic.com/v1/messages';
   var headers = {'Content-Type':'application/json'};
   if(!useProxy){
     headers['x-api-key']=S.antKey;
@@ -1459,10 +1466,10 @@ async function callAnthropic(agentId,userMsg){
 async function callOpenAI(agentId,userMsg){
   var sysP=systemPrompt(agentId);
   var msgs=[{role:'system',content:sysP}].concat(S.agentHist[agentId].slice(-10));
-  var useProxy = window.location.protocol !== 'file:' && !S.oaiKey;
+  var useProxy = window.location.protocol !== 'file:' && (!S.oaiKey || S.oaiKey === 'server');
   var url = useProxy
-    ? window.location.origin+'/api/openai/v1/chat/completions'
-    : '/api/openai';
+    ? '/api/openai'
+    : 'https://api.openai.com/v1/chat/completions';
   var headers = {'Content-Type':'application/json'};
   if(!useProxy) headers['Authorization']='Bearer '+S.oaiKey;
   var res=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({model:'gpt-4o-mini',max_tokens:1200,messages:msgs})});
