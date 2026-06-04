@@ -353,7 +353,109 @@ nav{
   margin:0 2px;padding-bottom:22px;
 }
 
-/* Section header */
+/* ── How It Works ─────────────────────────────────────────────────── */
+.how-section{padding:80px 0 64px;border-bottom:1px solid var(--border)}
+.how-flow{
+  display:flex;align-items:flex-start;justify-content:center;
+  gap:0;flex-wrap:nowrap;margin:0 auto 64px;max-width:960px;
+}
+.how-step{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  flex:1;min-width:0;padding:0 8px;position:relative;
+}
+.how-step-num{
+  font-family:var(--fm);font-size:0.52rem;font-weight:800;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;
+}
+.how-step-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  border:1px solid rgba(255,255,255,0.10);
+  background:rgba(255,255,255,0.04);
+  margin-bottom:10px;transition:0.2s ease;
+}
+.how-step.accent .how-step-icon{border-color:rgba(34,211,238,0.4);background:rgba(34,211,238,0.10);box-shadow:0 0 18px rgba(34,211,238,0.14)}
+.how-step.qa .how-step-icon{border-color:rgba(129,140,248,0.4);background:rgba(129,140,248,0.10);box-shadow:0 0 18px rgba(129,140,248,0.12)}
+.how-step.done .how-step-icon{border-color:rgba(52,211,153,0.4);background:rgba(52,211,153,0.10);box-shadow:0 0 18px rgba(52,211,153,0.12)}
+.how-step-title{font-size:0.84rem;font-weight:700;color:var(--text-primary);margin-bottom:5px;white-space:nowrap}
+.how-step-desc{font-size:0.72rem;color:var(--text-secondary);line-height:1.5;max-width:130px}
+.how-connector{
+  font-size:1rem;color:rgba(148,163,184,0.25);
+  padding:0 2px;margin-top:26px;flex-shrink:0;
+}
+
+/* Agent chain */
+.how-pipeline-wrap{max-width:960px;margin:0 auto}
+.how-pipeline-label{
+  font-family:var(--fm);font-size:0.58rem;font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--text-muted);text-align:center;margin-bottom:20px;
+}
+.how-pipeline{
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:0;padding:24px 28px;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  border-radius:18px;
+}
+.how-agent{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  min-width:68px;padding:0 6px;
+}
+.how-agent-ico{
+  width:40px;height:40px;border-radius:11px;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(34,211,238,0.20);background:rgba(34,211,238,0.07);
+}
+.how-agent-lbl{
+  font-family:var(--fm);font-size:0.48rem;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--text-muted);text-align:center;max-width:64px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.how-qa-gate{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:0 4px;
+}
+.how-qa-arrow{color:rgba(148,163,184,0.25);font-size:0.78rem;line-height:1}
+.how-qa-badge{
+  font-family:var(--fm);font-size:0.46rem;font-weight:800;letter-spacing:0.04em;
+  background:rgba(129,140,248,0.12);border:1px solid rgba(129,140,248,0.25);
+  color:rgba(129,140,248,0.85);border-radius:100px;padding:2px 5px;white-space:nowrap;
+}
+.how-guardian{
+  display:flex;flex-direction:column;align-items:center;gap:5px;min-width:58px;padding:0 4px;
+}
+.how-guardian-ico{
+  width:36px;height:36px;border-radius:50%;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(129,140,248,0.35);background:rgba(129,140,248,0.10);
+}
+.how-guardian-lbl{
+  font-family:var(--fm);font-size:0.44rem;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:rgba(129,140,248,0.7);text-align:center;
+}
+.how-final{
+  display:flex;flex-direction:column;align-items:center;gap:5px;min-width:58px;padding:0 4px;
+}
+.how-final-ico{
+  width:40px;height:40px;border-radius:11px;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(52,211,153,0.35);background:rgba(52,211,153,0.10);
+}
+.how-final-lbl{
+  font-family:var(--fm);font-size:0.48rem;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:rgba(52,211,153,0.8);text-align:center;
+}
+
+@media(max-width:768px){
+  .how-flow{flex-wrap:wrap;gap:16px;justify-content:center}
+  .how-step{flex:0 0 calc(50% - 8px);max-width:140px}
+  .how-connector{display:none}
+  .how-step-desc{max-width:none}
+  .how-pipeline{flex-wrap:wrap;gap:8px;padding:18px 14px}
+  .how-agent,.how-guardian,.how-final{min-width:54px}
+  .how-qa-gate{display:none}
+}
+
+
 .section-header{text-align:center;margin-bottom:48px}
 .section-header .tag{
   display:inline-block;font-family:var(--fm);font-size:0.60rem;font-weight:700;
@@ -1650,6 +1752,156 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-node active">
         <div class="node-icon">✅</div>Delivered
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HOW IT WORKS ── -->
+  <div class="how-section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:40px">
+        <div class="tag">How It Works</div>
+        <h2>From Brief to Delivered<br><span style="color:var(--accent)">in One Session</span></h2>
+        <p style="max-width:520px;margin:0 auto">A team of specialist AI agents executes your project step by step — each output reviewed and scored by Guardian QA before the next agent starts.</p>
+      </div>
+
+      <!-- 5-step process flow -->
+      <div class="how-flow">
+        <div class="how-step">
+          <div class="how-step-num">Step 01</div>
+          <div class="how-step-icon">📋</div>
+          <div class="how-step-title">Client Brief</div>
+          <div class="how-step-desc">Name your client, set the goal, budget, and deadline in 60 seconds.</div>
+        </div>
+        <div class="how-connector">→</div>
+        <div class="how-step accent">
+          <div class="how-step-num">Step 02</div>
+          <div class="how-step-icon">🎯</div>
+          <div class="how-step-title">Orchestrate</div>
+          <div class="how-step-desc">Master agent reads the brief and sequences the right specialists.</div>
+        </div>
+        <div class="how-connector">→</div>
+        <div class="how-step">
+          <div class="how-step-num">Step 03</div>
+          <div class="how-step-icon">⚡</div>
+          <div class="how-step-title">Agents Execute</div>
+          <div class="how-step-desc">Each specialist produces its deliverable and passes to the next.</div>
+        </div>
+        <div class="how-connector">→</div>
+        <div class="how-step qa">
+          <div class="how-step-num">Step 04</div>
+          <div class="how-step-icon">🛡️</div>
+          <div class="how-step-title">Guardian QA</div>
+          <div class="how-step-desc">Every output is scored before the next agent starts. Nothing ships below standard.</div>
+        </div>
+        <div class="how-connector">→</div>
+        <div class="how-step done">
+          <div class="how-step-num">Step 05</div>
+          <div class="how-step-icon">✅</div>
+          <div class="how-step-title">Delivered</div>
+          <div class="how-step-desc">All deliverables packaged and ready — strategy, copy, models, or plans.</div>
+        </div>
+      </div>
+
+      <!-- Agent pipeline visual (Consulting example) -->
+      <div class="how-pipeline-wrap">
+        <div class="how-pipeline-label">Example: Strategy Consulting Pipeline</div>
+        <div class="how-pipeline">
+
+          <div class="how-agent">
+            <div class="how-agent-ico">🔍</div>
+            <div class="how-agent-lbl">Discovery</div>
+          </div>
+          <div class="how-qa-gate">
+            <div class="how-qa-arrow">→</div>
+            <div class="how-guardian-ico">🛡️</div>
+            <div class="how-qa-badge">QA ✓</div>
+            <div class="how-qa-arrow">→</div>
+          </div>
+
+          <div class="how-agent">
+            <div class="how-agent-ico">📈</div>
+            <div class="how-agent-lbl">Research</div>
+          </div>
+          <div class="how-qa-gate">
+            <div class="how-qa-arrow">→</div>
+            <div class="how-guardian-ico">🛡️</div>
+            <div class="how-qa-badge">QA ✓</div>
+            <div class="how-qa-arrow">→</div>
+          </div>
+
+          <div class="how-agent">
+            <div class="how-agent-ico">🧭</div>
+            <div class="how-agent-lbl">Strategy</div>
+          </div>
+          <div class="how-qa-gate">
+            <div class="how-qa-arrow">→</div>
+            <div class="how-guardian-ico">🛡️</div>
+            <div class="how-qa-badge">QA ✓</div>
+            <div class="how-qa-arrow">→</div>
+          </div>
+
+          <div class="how-agent">
+            <div class="how-agent-ico">💹</div>
+            <div class="how-agent-lbl">Financial</div>
+          </div>
+          <div class="how-qa-gate">
+            <div class="how-qa-arrow">→</div>
+            <div class="how-guardian-ico">🛡️</div>
+            <div class="how-qa-badge">QA ✓</div>
+            <div class="how-qa-arrow">→</div>
+          </div>
+
+          <div class="how-agent">
+            <div class="how-agent-ico">🔄</div>
+            <div class="how-agent-lbl">Change Mgmt</div>
+          </div>
+          <div class="how-qa-gate">
+            <div class="how-qa-arrow">→</div>
+            <div class="how-guardian-ico">🛡️</div>
+            <div class="how-qa-badge">QA ✓</div>
+            <div class="how-qa-arrow">→</div>
+          </div>
+
+          <div class="how-agent">
+            <div class="how-agent-ico">🎨</div>
+            <div class="how-agent-lbl">Presentation</div>
+          </div>
+          <div class="how-qa-gate">
+            <div class="how-qa-arrow">→</div>
+            <div class="how-guardian-ico">🛡️</div>
+            <div class="how-qa-badge">QA ✓</div>
+            <div class="how-qa-arrow">→</div>
+          </div>
+
+          <div class="how-agent">
+            <div class="how-agent-ico">📅</div>
+            <div class="how-agent-lbl">Impl. Plan</div>
+          </div>
+          <div class="how-qa-gate">
+            <div class="how-qa-arrow">→</div>
+            <div class="how-guardian-ico">🛡️</div>
+            <div class="how-qa-badge">QA ✓</div>
+            <div class="how-qa-arrow">→</div>
+          </div>
+
+          <div class="how-agent">
+            <div class="how-agent-ico">📝</div>
+            <div class="how-agent-lbl">Comms</div>
+          </div>
+          <div class="how-qa-gate">
+            <div class="how-qa-arrow">→</div>
+            <div class="how-guardian-ico">🛡️</div>
+            <div class="how-qa-badge">QA ✓</div>
+            <div class="how-qa-arrow">→</div>
+          </div>
+
+          <div class="how-final">
+            <div class="how-final-ico">✅</div>
+            <div class="how-final-lbl">Delivered</div>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
