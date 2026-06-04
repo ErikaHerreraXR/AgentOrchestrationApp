@@ -1430,8 +1430,8 @@ async function agentSend(agentId){
 async function callAnthropic(agentId,userMsg){
   var sysP=systemPrompt(agentId);
   var msgs=S.agentHist[agentId].slice(-12);
-  // Use server proxy if running on a host (not file://), else direct with key
-  var useProxy = window.location.protocol !== 'file:' && !S.antKey;
+  // Use server proxy when hosted (no user key supplied, or key is the 'server' sentinel)
+  var useProxy = window.location.protocol !== 'file:' && (!S.antKey || S.antKey === 'server');
   var url = useProxy
     ? window.location.origin+'/api/anthropic/v1/messages'
     : '/api/anthropic';
@@ -1459,10 +1459,10 @@ async function callAnthropic(agentId,userMsg){
 async function callOpenAI(agentId,userMsg){
   var sysP=systemPrompt(agentId);
   var msgs=[{role:'system',content:sysP}].concat(S.agentHist[agentId].slice(-10));
-  var useProxy = window.location.protocol !== 'file:' && !S.oaiKey;
+  var useProxy = window.location.protocol !== 'file:' && (!S.oaiKey || S.oaiKey === 'server');
   var url = useProxy
     ? window.location.origin+'/api/openai/v1/chat/completions'
-    : '/api/openai';
+    : 'https://api.openai.com/v1/chat/completions';
   var headers = {'Content-Type':'application/json'};
   if(!useProxy) headers['Authorization']='Bearer '+S.oaiKey;
   var res=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({model:'gpt-4o-mini',max_tokens:1200,messages:msgs})});
