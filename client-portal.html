@@ -506,7 +506,23 @@ a{color:inherit;text-decoration:none}
 .lib-card-text{font-size:13px;font-weight:500;color:var(--body);line-height:1.5}
 .lib-card-cta{font-family:var(--fm);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--teal-d);opacity:0;transition:.13s ease;margin-top:4px}
 .lib-card:hover .lib-card-cta{opacity:1}
+.lib-card.selected{border-color:var(--teal-d);background:#fff;box-shadow:0 6px 16px rgba(30,10,0,.07)}
+.lib-card.selected::before{opacity:1}
 .lib-empty{text-align:center;padding:32px 16px;color:var(--muted);font-size:13px}
+/* Drawer inner aliases (HTML uses lib-drawer-hd etc.) */
+.lib-drawer-hd{flex-shrink:0;padding:12px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.lib-drawer-title{font-family:var(--fh);font-size:20px;font-weight:700;color:var(--ink)}
+.lib-drawer-title em{font-style:italic;color:var(--teal-d)}
+.lib-drawer-sub{font-size:13px;color:var(--muted);margin-top:2px;font-weight:300}
+.lib-close{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;transition:.14s ease;flex-shrink:0}
+.lib-close:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+.lib-search-wrap{padding:10px 24px 0;flex-shrink:0}
+.lib-body{flex:1;overflow-y:auto;padding:12px 24px 28px}
+.lib-body::-webkit-scrollbar{width:3px}
+.lib-body::-webkit-scrollbar-thumb{background:rgba(90,64,48,.12);border-radius:3px}
+.lib-group-hd{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:14px 0 7px;display:flex;align-items:center;gap:8px}
+.lib-group-hd::after{content:'';flex:1;height:1px;background:rgba(90,64,48,.1)}
+.lib-body .lib-card{margin-bottom:6px;font-size:13px;font-weight:500;color:var(--body);line-height:1.5}
 
 /* Setup modal overrides for light bg */
 .setup-modal-ov{position:fixed;inset:0;background:rgba(28,17,8,.6);z-index:7500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)}
@@ -906,32 +922,40 @@ a{color:inherit;text-decoration:none}
   <button class="voice-close" onclick="closeVoice()">&times; &nbsp;Close Voice Mode</button>
 </div>
 
-<!-- API STATUS PANEL -->
+<!-- API & SETTINGS PANEL -->
 <div class="api-modal-ov" id="api-modal">
   <div class="api-modal-card">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
       <div style="width:8px;height:8px;border-radius:50%;background:var(--teal)"></div>
-      <div style="font-family:var(--fh);font-size:15px;font-weight:700;color:#FDFAF7">Server API Status</div>
+      <div style="font-family:var(--fh);font-size:15px;font-weight:700;color:#FDFAF7">API &amp; <em style="font-style:italic;color:var(--teal)">Settings</em></div>
     </div>
+
     <div class="api-section-title">&#127981; OpenAI</div>
-    <div class="api-section-sub">GPT-4o chat responses, Whisper voice-to-text, and TTS-HD voice output.</div>
-    <div class="api-status-row">
+    <div class="api-section-sub">GPT-4o responses, Whisper voice-to-text, TTS audio.</div>
+    <div class="api-status-row" style="margin-bottom:8px">
       <div class="api-pill" id="oai-pill">&#9679; Checking&hellip;</div>
     </div>
+    <input class="api-input" id="api-oai" type="password" placeholder="sk-… (paste your OpenAI key)" autocomplete="off">
+
     <div class="api-divider"></div>
+
     <div class="api-section-title">&#129302; Anthropic</div>
-    <div class="api-section-sub">Claude Sonnet for the highest-quality AI agent responses.</div>
-    <div class="api-status-row">
+    <div class="api-section-sub">Claude Sonnet for highest-quality agent responses.</div>
+    <div class="api-status-row" style="margin-bottom:8px">
       <div class="api-pill" id="ant-pill">&#9679; Checking&hellip;</div>
     </div>
+    <input class="api-input" id="api-ant" type="password" placeholder="sk-ant-… (paste your Anthropic key)" autocomplete="off">
+
     <div class="api-divider"></div>
-    <div style="font-size:12px;color:rgba(253,250,247,.3);line-height:1.6">
-      API keys are managed in <strong style="color:rgba(253,250,247,.5)">.env</strong> on the server &mdash;
-      they are never exposed to the browser.<br>
-      To change keys: edit <code style="color:var(--teal)">.env</code> and restart the server.
+
+    <div style="font-size:11px;color:rgba(253,250,247,.3);line-height:1.6;margin-bottom:16px">
+      Keys are stored in this browser session only and never sent to any third party.<br>
+      Server-side keys (if configured) are used automatically and take priority.
     </div>
-    <div style="margin-top:20px">
-      <button class="login-btn" style="margin:0" onclick="closeApiModal()">Close</button>
+
+    <div style="display:flex;gap:10px">
+      <button class="login-btn" style="margin:0;flex:1" onclick="saveApiSettings()">Save &amp; Connect &rarr;</button>
+      <button onclick="closeApiModal()" style="padding:11px 18px;border-radius:100px;border:1.5px solid rgba(255,255,255,.15);background:none;color:rgba(255,255,255,.4);font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Cancel</button>
     </div>
   </div>
 </div>
@@ -1230,7 +1254,7 @@ function buildAgentPanels(){
             '<div class="agent-header-name">'+a.name+'</div>'+
             '<div class="agent-header-desc">'+a.tag+' · Product Imagination</div>'+
           '</div>'+
-          '<button class="lib-btn" style="border-color:'+bor.replace('.2','1')+';color:'+col+'">&#128218; Prompt Library</button>'+
+          '<button class="lib-btn" data-agent-lib="'+a.id+'" style="border-color:'+bor.replace('.2','1')+';color:'+col+'">&#128218; Prompt Library</button>'+
           '<div class="agent-status-dot"></div>'+
         '</div>'+
         '<div class="chat-window" id="chat-'+a.id+'"></div>'+
@@ -1464,188 +1488,321 @@ function smartFallback(agentId,msg){
   return 'Understood. Working on "'+msg+'" for **'+b.client+'**.\n\nConnect your API key via **API & Settings** for live AI responses. In demo mode I can show structure and approach for any deliverable.';
 }
 
-// ── PROMPT LIBRARY DROPDOWN ────────────────────────────────────────────────
+// ── PROMPT LIBRARY ────────────────────────────────────────────────────────
+
+var MASTER_PROMPT_LIBRARY = {
+  // CONSULTING
+  discovery:{
+    'Problem Framing':['Map every key stakeholder, their influence level, and their primary concerns about this project.','Define the real problem we are trying to solve — not the symptom, but the root cause.','What does success look like in 6 months? Define 3 measurable success criteria.','Identify the assumptions we are making that, if wrong, would change our entire approach.','Create a stakeholder interview guide with 10 questions that surface hidden requirements.'],
+    'Research Setup':['Design a discovery sprint plan: who to interview, what to observe, and what secondary data to pull.','What competitive intelligence do we need before recommending a strategy?','List the 5 biggest unknowns we need to resolve before we can move forward.'],
+  },
+  research:{
+    'Market Analysis':['Produce a competitive landscape map: key players, positioning, pricing, and white-space.','Summarize the top 5 market trends that will shape this industry over the next 3 years.','Identify the 3 most underserved customer segments and why competitors are missing them.','What does the data say about market size, growth rate, and addressable opportunity?'],
+    'Customer Insights':['Synthesize customer interview findings into 3 key insight themes with supporting evidence.','Build 2 evidence-based personas with goals, frustrations, and decision-making triggers.','Map the current customer journey from awareness to repeat purchase and highlight pain points.','What would make a customer switch from the current solution to ours?'],
+  },
+  strategy:{
+    'Strategic Options':['Build 3 genuinely distinct strategic paths — conservative, moderate, and bold — with clear trade-offs.','What is the single most important strategic bet we need to make in the next 12 months?','Identify the key risks in our proposed strategy and a mitigation plan for each.','Which strategic option has the best risk-adjusted return? Defend the recommendation.'],
+    'Implementation':['Turn the approved strategy into a 90-day action plan with owners and milestones.','What are the top 3 things that could cause this strategy to fail, and how do we prevent them?','Write a one-page strategic narrative for the leadership team.'],
+  },
+  financial:{
+    'Modeling':['Build a 3-year P&L model with revenue assumptions, COGS, and operating expense breakdown.','Create a sensitivity analysis: show impact on NPV if revenue is 20% below and 20% above forecast.','What is the payback period and IRR for this investment at our current assumptions?','Build a scenario model: base case, downside, and upside with the key variable for each.'],
+    'Business Case':['Write the investment business case: problem, solution, financials, and go/no-go recommendation.','What KPIs should the board track to measure the success of this investment?','Model the cost of doing nothing vs. investing now over a 5-year horizon.'],
+  },
+  change:{
+    'Change Planning':['Map the change impact by team: who is most affected and what they need to succeed.','Build a 90-day adoption plan with communication milestones and feedback checkpoints.','Identify the 5 people who, if they champion this change, will carry the rest of the organization.','What is the most common reason this type of change fails, and how do we prevent it?'],
+    'Communications':['Write the all-hands announcement for this change: context, what\'s changing, and what stays the same.','Build a FAQ document that answers the 10 questions employees will ask on day one.','Design a manager toolkit for cascading this change to their teams.'],
+  },
+  presentation:{
+    'Story Structure':['Structure a 15-slide executive presentation: situation, complication, resolution narrative.','Write the executive summary for a board presentation — one page, five bullets maximum.','Design the opening slide that hooks the audience in the first 30 seconds.','What is the single most important thing the audience must leave the room believing?'],
+    'Content':['Write the speaker notes for each slide so it flows as a confident verbal presentation.','Create the appendix with supporting data for every claim in the main presentation.','Design 3 alternative endings — conservative ask, full ask, and stretch ask.'],
+  },
+  implementation:{
+    'Planning':['Build a project plan with workstreams, owners, milestones, and dependencies.','Create a RACI matrix for all major activities in this project.','Identify the 5 highest-risk milestones and a contingency plan for each.','Write the project charter: scope, objectives, team, budget, and governance.'],
+    'Execution':['Design the weekly status report format: progress, issues, decisions needed, next steps.','Write the risk register with probability, impact, and mitigation for each risk.','Build the vendor evaluation scorecard for selecting the right implementation partner.'],
+  },
+  comms:{
+    'Status Updates':['Write a weekly status update: accomplishments, issues, decisions needed, next steps.','Draft the meeting summary for today\'s session with decisions and action items.','Create a client-ready dashboard showing project health across all workstreams.'],
+    'Stakeholder Comms':['Write a stakeholder communication for a project delay — honest, clear, and solution-focused.','Draft the executive briefing note: situation, recommendation, and request.','Create an escalation memo for a decision that needs C-suite resolution.'],
+  },
+  // PRODUCT
+  ux:{
+    'Information Architecture':['Map the information architecture for the core product flows from signup to value moment.','Design the navigation system: primary, secondary, and utility navigation with labels.','Prioritize the feature backlog using impact vs. effort: which 5 features ship first?'],
+    'User Flows':['Map the end-to-end user flow for the most common task in this product.','Identify every friction point in the current onboarding flow and propose a fix for each.','Design the empty state experience: what does a new user see before they have data?'],
+  },
+  wireframe:{
+    'Layouts':['Produce a wireframe brief for the homepage: hierarchy, primary CTA, and key content modules.','Design the mobile layout for the 3 most-used screens — content and interaction model.','Write the interaction specification for the checkout or sign-up flow.'],
+    'Components':['Define the component inventory needed to build this product without duplication.','Spec the data table component: columns, sorting, filtering, and bulk actions.','Design the notification system: types, priority levels, and where they appear.'],
+  },
+  visual:{
+    'Design System':['Define the color system: brand palette, semantic colors, and dark mode tokens.','Build the typography scale: font choices, size ramp, weight usage, and line-height rules.','Create the component naming convention and file organization for the design system.'],
+    'Screen Design':['Design the hero section of the marketing site — headline, sub, CTA, and visual direction.','Produce hi-fi screens for the 3 most important product flows.','Write the art direction brief for all illustrations and icons in the product.'],
+  },
+  handoff:{
+    'Developer Specs':['Produce the developer handoff spec for the button component: all states, sizes, and tokens.','Write the animation spec: easing, duration, and trigger for every transition in the product.','Create the responsive breakpoint specification with layout behavior at each breakpoint.'],
+    'Accessibility':['Conduct a WCAG 2.1 AA audit of the design and list every failing criterion with a fix.','Write the accessibility annotation guide for the engineering team.','Test the color system for WCAG contrast compliance and flag any failures.'],
+  },
+  testing:{
+    'Test Planning':['Design a moderated usability test plan for the onboarding flow: tasks, script, and metrics.','Write the screener questionnaire for recruiting the right participants.','Build the usability test analysis template for synthesizing findings across 5 participants.'],
+    'Findings':['Synthesize usability test findings into prioritized design recommendations.','Write the research report: methodology, findings, and specific design changes required.','Create a before/after comparison showing how the redesign addresses each usability issue.'],
+  },
+  // MARKETING
+  brand:{
+    'Positioning':['Write our positioning statement using the "For X who Y, we are the Z that W unlike V" format.','Define our brand voice: 3 attributes we always are, and 3 we never are, with examples.','Build the messaging hierarchy: company tagline, value proposition, and 3 proof points.'],
+    'Brand Identity':['Write the brand narrative — the origin story that makes clients choose us over competitors.','Define the brand personality: if our brand were a person, how would they speak and behave?','Create the tone-of-voice guide with do/don\'t examples for website, social, and proposals.'],
+  },
+  creative:{
+    'Campaign Concepts':['Develop 3 distinct campaign concepts for the launch — each with a big idea, visual direction, and tagline.','Write the creative brief for the hero campaign: objective, audience, message, and mandatories.','What is the one emotional truth about our audience that should drive this creative campaign?'],
+    'Art Direction':['Write the art direction guide: photography style, color treatment, and typography rules.','Create a mood board brief describing the visual world of this campaign.','Define the campaign content architecture: hero asset, supporting assets, and social adaptations.'],
+  },
+  copy:{
+    'Headlines':['Write 10 headline options for the homepage hero — ranging from functional to emotional.','Create 3 A/B/C headline tests for the primary email subject line.','Write the below-the-fold copy block: problem, solution, proof, and CTA.'],
+    'Email Sequences':['Write a 5-email welcome sequence: day 1, 3, 7, 14, and 30 with clear progression.','Write a cart abandonment sequence: 3 emails at 1 hour, 24 hours, and 72 hours.','Create the re-engagement sequence for subscribers who haven\'t opened in 90 days.'],
+  },
+  media:{
+    'Media Planning':['Design the media plan: platforms, audience targeting, budget split, and flight dates.','Recommend the optimal budget allocation across Meta, Google, LinkedIn, and programmatic.','Build the audience targeting strategy for cold, warm, and retargeting stages.'],
+    'Performance':['Set the KPI targets for each channel: CPM, CPC, CTR, CPA, and ROAS.','Design the creative testing matrix: 3 audiences × 3 creatives × 2 CTAs.','Build the media reporting template: weekly pacing, performance vs. target, and optimization log.'],
+  },
+  content:{
+    'Content Strategy':['Build a 90-day content calendar across blog, social, email, and video.','Identify 10 pillar content topics with supporting cluster articles for each.','Write the editorial guidelines: tone, structure, SEO requirements, and approval process.'],
+    'SEO':['Research the top 20 keywords we should own in the next 6 months.','Write the SEO brief for a 2,000-word pillar article on our most important topic.','Conduct a content gap analysis: what high-intent topics are competitors ranking for that we\'re missing?'],
+  },
+  analytics:{
+    'Measurement':['Define our North Star metric and the 3 input metrics that drive it.','Build the KPI dashboard for the marketing team: what we track, how often, and who owns it.','Design the attribution model: how do we assign credit across a multi-touch customer journey?'],
+    'Reporting':['Write the monthly marketing report template: performance, learnings, and next month plan.','Build the experiment tracking log: hypothesis, test design, results, and conclusion.','Create the campaign debrief template: objectives, results, what worked, what didn\'t, next time.'],
+  },
+  production:{
+    'Asset Management':['Create the asset specification sheet for all digital placements in this campaign.','Build the QA checklist for every asset before it goes live.','Write the launch-day runbook: sequence of events, owners, and go/no-go criteria.'],
+    'Launch':['Design the launch readiness scorecard: what must be true before we go live?','Write the post-launch monitoring plan: what we watch in the first 48 hours.','Create the rollback plan if something goes wrong in the first 24 hours of launch.'],
+  },
+  // COMPLIANCE
+  regulatory:{
+    'Research':['Map every regulation that applies to our business: jurisdiction, enforcement body, and effective date.','Identify the top 3 regulatory changes in the next 12 months that require our attention.','Summarize the key obligations under the applicable regulations in plain language for non-legal stakeholders.'],
+    'Risk Mapping':['Create a regulatory risk heat map: likelihood vs. impact for every applicable regulation.','Which regulations expose us to the highest penalties and how do we prioritize remediation?','Identify any regulatory grey areas in our business model that require legal counsel.'],
+  },
+  risk:{
+    'Risk Assessment':['Complete a compliance risk register: control, likelihood, impact, residual risk, and owner.','Score every compliance gap on severity and create a remediation priority order.','Identify which compliance controls have failed in the past 12 months and why.'],
+    'Mitigation':['Design the control framework for our highest-rated compliance risk.','Build a compliance monitoring calendar: what we test, when, and who reviews results.','Write the escalation procedure when a compliance breach is identified.'],
+  },
+  policy:{
+    'Drafting':['Draft the relevant policy in plain language — purpose, scope, rules, and consequences.','Write the Code of Conduct: core principles, expected behaviors, and reporting process.','Create the data privacy policy for customers: what we collect, how we use it, their rights.'],
+    'Review':['Review the existing policy against current regulations and flag any gaps.','Simplify the policy so a front-line employee can understand it without legal training.','Create the policy training quiz: 10 questions that verify understanding of key obligations.'],
+  },
+  training:{
+    'Curriculum':['Design the annual compliance training curriculum: modules, duration, and required audiences.','Write the learning objectives for the compliance training module.','Create the e-learning storyboard for the first compliance module.'],
+    'Assessment':['Write 20 scenario-based assessment questions for the annual compliance training.','Design the certification process: who must certify, by when, and what happens if they don\'t.','Create the manager toolkit for running a live compliance discussion with their team.'],
+  },
+  audit:{
+    'Audit Planning':['Build the annual internal audit plan: scope, timing, resources, and reporting cadence.','Write the audit scope document for our highest-risk compliance area.','Create the control testing workpaper template for the relevant control area.'],
+    'Monitoring':['Design the continuous monitoring dashboard: controls tested, pass/fail rate, and trend.','Write the audit findings report with severity rating, root cause, and management response.','Build the corrective action tracking log with owner, due date, and status.'],
+  },
+  incident:{
+    'Response':['Write the incident response playbook for a data breach: detection, containment, notification.','Create the incident classification framework: severity levels and initial response for each.','Design the regulatory notification timeline: who must be notified, in what form, and by when.'],
+    'Prevention':['Identify the top 5 incident scenarios we are most likely to face and their prevention controls.','Write the post-incident review template: what happened, why, and what we change.','Build the incident tracking log for the board: frequency, severity, resolution, and trend.'],
+  },
+  reporting:{
+    'Board Reports':['Write the quarterly compliance report for the board: status, issues, and forward look.','Create the compliance dashboard for the management team: green/amber/red status by area.','Build the annual compliance program effectiveness report for senior leadership.'],
+    'Regulator':['Write the regulatory submission cover letter and compliance attestation.','Build the evidence pack for a regulatory examination: controls, testing, and remediation.','Create the regulatory change log: all notices, our assessment, and actions taken.'],
+  },
+  // REAL ESTATE
+  market:{
+    'Market Analysis':['Pull comparable sales data and produce a site viability scorecard with a go/no-go recommendation.','Calculate the absorption rate for this submarket over the past 12 months.','Identify the top 3 demand drivers for residential development in this location.','Map the supply pipeline: what is under construction, planned, and recently delivered?'],
+    'Positioning':['Define the product positioning for this development: who is the buyer and what makes us different?','Benchmark our proposed pricing against 5 comparable recent sales.','What amenity program does the market demand at this price point?'],
+  },
+  underwriting:{
+    'Pro Forma':['Build the development pro forma: land, hard costs, soft costs, financing, and returns.','Calculate the IRR, equity multiple, and profit margin at our baseline assumptions.','Run the sensitivity analysis: show returns if costs are 10% over and revenue 10% under.','What is the maximum land price we can pay and still hit our return hurdle?'],
+    'Financial Modeling':['Build the construction draw schedule aligned to the project timeline.','Model the income approach at stabilization for the rental asset.','Create the investor return waterfall: preferred return, catch-up, and profit split.'],
+  },
+  entitlements:{
+    'Permit Tracking':['Map the full entitlement path: approvals needed, sequence, timing, and decision makers.','Identify the top 3 political risks to entitlement approval and our mitigation strategy.','Build the permit milestone tracker with owner, due date, and status.'],
+    'Zoning':['Summarize the zoning code requirements for this site: FAR, height, setbacks, parking.','Identify variances or exceptions we need to apply for and the process for each.','Write the community outreach plan for the entitlement hearing.'],
+  },
+  architecture:{
+    'Design Brief':['Define the building program: unit mix, unit sizes, amenity brief, and unit-to-amenity ratio.','Write the design standards brief for the architect: aesthetic direction, materials palette, sustainability targets.','Identify 5 comparable buildings that represent the quality standard we are targeting.'],
+    'Specifications':['Create the unit specification list: finishes, appliances, and technology for each unit tier.','Write the common area design brief: lobby, gym, amenity deck, and coworking space.','Define the sustainability requirements: certification targets, energy standards, and green features.'],
+  },
+  construction:{
+    'Bid Package':['Write the GC bid package: scope of work, qualification requirements, and evaluation criteria.','Build the construction contract term sheet: GMP, retainage, change order process, and liquidated damages.','Create the draw request process: documentation required, approval chain, and disbursement timeline.'],
+    'Schedule':['Build the master construction schedule: milestones, critical path, and float.','Design the weekly progress report format for the GC: work completed, issues, and projected finish.','Write the substantial completion checklist: every item the GC must complete before final payment.'],
+  },
+  leasing:{
+    'Pricing':['Build the unit pricing matrix: base rents by floor, view, and exposure with a premium schedule.','Design the leasing velocity model: units per week needed to hit stabilization by target date.','What concessions should we offer at launch without destroying revenue?'],
+    'Marketing':['Write the broker outreach strategy: target brokers, co-broke terms, and activation plan.','Create the sales center experience brief: what a prospect sees, hears, and feels on a tour.','Build the digital marketing plan: platforms, creative strategy, and lead nurturing sequence.'],
+  },
+  propmanagement:{
+    'Operations':['Write the property operations manual: daily, weekly, monthly, and annual procedures.','Build the vendor directory and contract terms for all building services.','Create the emergency response procedure for the top 5 building emergencies.'],
+    'Financial':['Build the annual operating budget with revenue, expenses, and NOI forecast.','Design the NOI optimization plan: 5 ways to increase revenue and 5 ways to cut costs.','Create the capital expenditure plan for the next 5 years with cost estimates.'],
+  },
+  // INTERIOR DESIGN
+  concept:{
+    'Design Concept':['Develop 2 distinct design concepts: describe the story, emotion, and visual world for each.','Create the color story for Concept A: primary palette, accent, and how it flows room to room.','Write the mood board brief for the photography team: imagery style, texture, and tone direction.'],
+    'Client Alignment':['Write the concept presentation narrative: how do we tell the design story to the client?','Create the concept approval document with the client\'s feedback and our response.','Define what success looks like for this design concept before we proceed to specification.'],
+  },
+  space:{
+    'Floor Planning':['Produce the furniture placement plan for the living area with traffic flow notes.','Design the bedroom layout: bed orientation, storage solutions, and bedside clearances.','Identify any structural or planning issues that will affect the furniture plan.'],
+    'Layout':['Recommend the optimal furniture scale for each room based on the square footage.','Design the flow between public and private zones of the home.','Create the storage plan: built-in vs. freestanding and location for each room.'],
+  },
+  materials:{
+    'Finishes':['Create the finish schedule for all flooring, wall, and ceiling surfaces with product references.','Select the kitchen finish package: cabinetry, countertop, backsplash, and hardware.','Specify the bathroom finish package: tile, fixtures, vanity, and accessories.'],
+    'Specification':['Write the finish specification in contractor-ready format for every surface.','Identify any finish conflicts or coordination issues between trades.','Create the sample board specification: what samples does the client need to approve?'],
+  },
+  procurement:{
+    'FF&E':['Build the furniture specification list with vendor, product, quantity, and lead time for each room.','Create the purchase order package for all approved furniture items.','Identify any long-lead items that must be ordered immediately to hit the installation date.'],
+    'Management':['Build the delivery and installation schedule: sequence, staging area, and access requirements.','Write the white-glove delivery brief for the installation team.','Create the punch list for furniture defects identified on delivery day.'],
+  },
+  lighting:{
+    'Lighting Plan':['Design the 3-layer lighting plan for the living room: ambient, task, and accent layers.','Create the fixture specification list: manufacturer, product, wattage, and trim finish.','Write the dimmer and switching schedule: which fixtures group together and why.'],
+    'Specification':['Specify all exterior lighting: entry, landscape, and facade fixtures with placement notes.','Create the electrical coordination notes for the lighting contractor.','Write the lighting commissioning guide: how to set dimmer scenes for each room.'],
+  },
+  styling:{
+    'Styling Plan':['Curate the art brief: style direction, palette, scale, and placement for each wall.','Specify the soft furnishing package: rugs, cushions, throws, and curtains for each room.','Create the accessory brief: objects, books, botanicals, and styling direction per surface.'],
+    'Photography':['Write the photoshoot shot list: room sequence, key details, and hero compositions.','Create the photoshoot styling checklist: what to add, what to remove, and final prep.','Write the photography brief for the photographer: style, tone, and usage requirements.'],
+  },
+  installation:{
+    'Trade Coordination':['Build the trade sequence schedule: demolition → structure → MEP → plaster → paint → floors → finish.','Write the site access and coordination rules for all contractors.','Create the weekly site visit agenda and reporting format.'],
+    'Closeout':['Write the client closeout package: warranties, maintenance guides, and contractor contacts.','Create the defects liability period inspection checklist.','Build the as-built documentation package for the building records.'],
+  },
+  // AIRBNB / STR
+  revenue:{
+    'Pricing Strategy':['Analyze comparable listings in my area and recommend my base nightly rate.','Build a seasonal pricing calendar with peak, shoulder, and off-peak rate recommendations.','What dynamic pricing adjustments should I make for local events and holidays?','Calculate my projected annual revenue at 65%, 75%, and 85% occupancy.'],
+    'Market Analysis':['Identify my top 5 direct competitors and compare their pricing, reviews, and amenities.','What is the average length of stay in my market and how should I optimize my minimum night policy?','Compare my current pricing to the market: am I leaving money on the table?'],
+  },
+  listing:{
+    'Listing Copy':['Write a search-optimized title under 50 characters that highlights my property\'s strongest selling point.','Write the full listing description: hook, highlights, neighbourhood, and call to book.','Create the amenity checklist in the format Airbnb recommends for maximum search ranking.'],
+    'Optimization':['Review my current listing and give me the top 5 changes that would increase click-through rate.','Write the house rules section: clear, friendly, and comprehensive.','What photos should I add or retake to improve my listing\'s performance?'],
+  },
+  guestexperience:{
+    'Guest Journey':['Design the end-to-end guest experience from booking confirmation to post-checkout.','Write the pre-arrival message sequence: confirmation, 7-day reminder, and check-in instructions.','What welcome touches in the first 5 minutes ensure a 5-star review?'],
+    'Welcome Guide':['Write the digital welcome guide: Wi-Fi, appliances, check-out instructions, and local recommendations.','Create the local area guide: top 10 restaurants, cafes, activities, and transport tips.','Write the house manual for all appliances and systems in plain language.'],
+  },
+  setup:{
+    'Amenity Audit':['Audit my current amenities against Superhost standards and identify every gap.','What are the must-have amenities for 5-star reviews in my market?','Build the linen and supplies par level for my property: exactly how much of everything I need.'],
+    'Staging':['Write the photography staging guide: how to style each room for the listing photos.','Create the pre-shoot checklist: everything to add, remove, and arrange before photos.','Recommend the most impactful under-$500 improvements that increase my nightly rate.'],
+  },
+  operations:{
+    'Turnover':['Build the room-by-room turnover checklist my cleaners follow after every checkout.','Write the cleaning inspection checklist: what to verify before releasing to the next guest.','Design the restocking checklist: every consumable to replenish after each turnover.'],
+    'Maintenance':['Create the preventive maintenance schedule: monthly, quarterly, and annual tasks.','Build the vendor directory: cleaner, handyman, plumber, electrician, and HVAC with contacts.','Write the emergency maintenance protocol: what the cleaner does if something breaks.'],
+  },
+  communication:{
+    'Message Templates':['Write the full 15-template message library: inquiry, booking, pre-arrival, check-in, mid-stay, check-out, review request.','Write a compassionate cancellation message that protects the review.','Write the response to a guest complaint that turns a negative into a positive.'],
+    'Automation':['Design the automated message schedule: trigger times and content for each touchpoint.','Write the instant reply template for inquiries that converts browsers into bookers.','Create the post-checkout message that reliably generates 5-star reviews.'],
+  },
+  reviews:{
+    'Review Strategy':['Set up my Superhost metric tracker: occupancy, response rate, cancellation rate, and rating targets.','What is my review request strategy: when to send, what to say, and how to follow up?','Analyze my existing reviews and identify the top 3 improvements guests are asking for.'],
+    'Response Templates':['Write 5-star review response templates that reinforce our best attributes.','Write a response template for a 3-star review that addresses the concern professionally.','Write a response for a negative review with a false claim — firm but professional.'],
+  },
+  finance:{
+    'P&L':['Build the monthly P&L template: revenue, platform fees, cleaning, supplies, utilities, mortgage, and net income.','Calculate my actual cost per reservation including all variable costs.','Create the annual performance report: revenue, occupancy, ADR, RevPAR, and net profit.'],
+    'Tax Preparation':['Organize my income and expenses for the annual tax filing.','What deductions can I claim and how do I document them correctly?','Build the depreciation schedule for my property and eligible furnishings.'],
+  },
+};
 
 function openLibrary(agentId){
-  // Close any other open dropdowns
-  document.querySelectorAll('.lib-dropdown.open').forEach(function(d){d.classList.remove('open');});
-  document.querySelectorAll('.lib-btn.open').forEach(function(b){b.classList.remove('open');});
-
-  var btn = document.querySelector('.lib-btn[data-agent-lib="'+agentId+'"]');
-  var drop = document.getElementById('lib-drop-'+agentId);
-  if(!btn||!drop){buildLibDropdown(agentId);return;}
-
-  var isOpen = drop.classList.contains('open');
-  if(isOpen){ closeLibrary(); return; }
-
   S.libAgentId = agentId;
-  populateLibDropdown(agentId, null, '');
-  drop.classList.add('open');
-  btn.classList.add('open');
-
-  // Close on outside click
-  setTimeout(function(){
-    document.addEventListener('click', libOutsideClick, {once:true, capture:true});
-  }, 10);
-}
-
-function libOutsideClick(e){
-  var open = document.querySelector('.lib-dropdown.open');
-  if(open && !open.contains(e.target) && !e.target.closest('.lib-btn')){
-    closeLibrary();
-  } else if(open){
-    document.addEventListener('click', libOutsideClick, {once:true, capture:true});
-  }
+  S.libTabFilter = null;
+  var a = S.agents.find(function(x){return x.id===agentId;});
+  var titleEl = document.getElementById('lib-title');
+  var subEl   = document.getElementById('lib-sub');
+  var searchEl= document.getElementById('lib-search');
+  if(titleEl) titleEl.innerHTML = (a ? a.name.replace(/&amp;/g,'&') : 'Prompt') + ' <em>Library</em>';
+  if(subEl)   subEl.textContent  = a ? 'Ready-to-use prompts for ' + a.tag.replace(/&amp;/g,'&') : 'Ready-to-use prompts';
+  if(searchEl){ searchEl.value = ''; }
+  renderLibrary(agentId, null, '');
+  document.getElementById('lib-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeLibrary(){
-  document.querySelectorAll('.lib-dropdown.open').forEach(function(d){d.classList.remove('open');});
-  document.querySelectorAll('.lib-btn.open').forEach(function(b){b.classList.remove('open');});
+  document.getElementById('lib-overlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
-function buildLibDropdown(agentId){
-  // Create the dropdown element and insert after the lib button in the agent header
-  var header = document.querySelector('#panel-agent-'+agentId+' .agent-header');
-  if(!header) return;
-
-  var drop = document.createElement('div');
-  drop.className = 'lib-dropdown';
-  drop.id = 'lib-drop-'+agentId;
-  drop.innerHTML =
-    '<div class="lib-drop-hd">'+
-      '<div class="lib-drop-title" id="lib-title-'+agentId+'">Prompt <em>Library</em></div>'+
-      '<button class="lib-drop-x" onclick="closeLibrary()">&times;</button>'+
-    '</div>'+
-    '<div class="lib-search-row"><input class="lib-search" id="lib-search-'+agentId+'" placeholder="Search prompts&hellip;"></div>'+
-    '<div class="lib-cat-tabs" id="lib-cats-'+agentId+'"></div>'+
-    '<div class="lib-select-wrap"><select class="lib-select" id="lib-sel-'+agentId+'" size="6"></select></div>'+
-    '<div class="lib-send-row">'+
-      '<div class="lib-preview" id="lib-prev-'+agentId+'">Select a prompt above to preview it.</div>'+
-      '<button class="lib-send-btn" id="lib-send-'+agentId+'" data-send-agent="'+agentId+'" disabled>Send &rarr;</button>'+
-    '</div>';
-
-  // Position: relative on the btn wrapper
-  var btn = document.querySelector('.lib-btn[data-agent-lib="'+agentId+'"]');
-  if(btn){
-    var wrap = btn.parentElement;
-    wrap.style.position = 'relative';
-    wrap.appendChild(drop);
-  } else {
-    header.style.position = 'relative';
-    header.appendChild(drop);
-  }
-
-  // Wire search
-  document.getElementById('lib-search-'+agentId).addEventListener('input', function(){
-    populateLibDropdown(agentId, S.libTabFilter, this.value);
-  });
-
-  // Wire send button
-  drop.querySelector('[data-send-agent]').addEventListener('click', function(){
-    sendLibPrompt(this.getAttribute('data-send-agent'));
-  });
-  // Wire select change
-  document.getElementById('lib-sel-'+agentId).addEventListener('change', function(){
-    document.getElementById('lib-prev-'+agentId).textContent = this.value||'Select a prompt above to preview it.';
-    document.getElementById('lib-send-'+agentId).disabled = !this.value;
-  });
-
-  populateLibDropdown(agentId, null, '');
-  drop.classList.add('open');
-  var libBtn = document.querySelector('.lib-btn[data-agent-lib="'+agentId+'"]');
-  if(libBtn) libBtn.classList.add('open');
-  S.libAgentId = agentId;
-  setTimeout(function(){
-    document.addEventListener('click', libOutsideClick, {once:true, capture:true});
-  }, 10);
+function libOverlayClick(e){
+  if(e.target === document.getElementById('lib-overlay')) closeLibrary();
 }
 
-function populateLibDropdown(agentId, catFilter, query){
+function filterLibrary(){
+  var q = (document.getElementById('lib-search').value||'').trim();
+  renderLibrary(S.libAgentId, S.libTabFilter, q);
+}
+
+function renderLibrary(agentId, catFilter, query){
   S.libTabFilter = catFilter;
   var cats = MASTER_PROMPT_LIBRARY[agentId] || {};
   var q    = (query||'').toLowerCase().trim();
+  var tabsEl = document.getElementById('lib-tabs');
+  var bodyEl = document.getElementById('lib-body');
+  if(!tabsEl || !bodyEl) return;
 
-  // Build category tabs
-  var tabEl = document.getElementById('lib-cats-'+agentId);
-  if(tabEl && tabEl.children.length === 0){
-    var all = document.createElement('button');
-    all.className='lib-cat on'; all.textContent='All';
-    all.addEventListener('click',function(){
-      tabEl.querySelectorAll('.lib-cat').forEach(function(t){t.classList.remove('on');});
-      all.classList.add('on');
-      populateLibDropdown(agentId,null,document.getElementById('lib-search-'+agentId).value);
-    });
-    tabEl.appendChild(all);
-    Object.keys(cats).forEach(function(cat){
-      var b=document.createElement('button');b.className='lib-cat';b.textContent=cat;
-      b.addEventListener('click',function(){
-        tabEl.querySelectorAll('.lib-cat').forEach(function(t){t.classList.remove('on');});
-        b.classList.add('on');
-        populateLibDropdown(agentId,cat,document.getElementById('lib-search-'+agentId).value);
-      });
-      tabEl.appendChild(b);
-    });
-  }
+  // Build category tabs once (or rebuild on agent change)
+  tabsEl.innerHTML = '';
+  var catKeys = Object.keys(cats);
+  var allBtn = document.createElement('button');
+  allBtn.className = 'lib-cat' + (!catFilter ? ' on' : '');
+  allBtn.textContent = 'All';
+  allBtn.onclick = function(){
+    tabsEl.querySelectorAll('.lib-cat').forEach(function(t){t.classList.remove('on');});
+    allBtn.classList.add('on');
+    renderLibrary(agentId, null, document.getElementById('lib-search').value);
+  };
+  tabsEl.appendChild(allBtn);
+  catKeys.forEach(function(cat){
+    var b = document.createElement('button');
+    b.className = 'lib-cat' + (catFilter===cat ? ' on' : '');
+    b.textContent = cat;
+    b.onclick = function(){
+      tabsEl.querySelectorAll('.lib-cat').forEach(function(t){t.classList.remove('on');});
+      b.classList.add('on');
+      renderLibrary(agentId, cat, document.getElementById('lib-search').value);
+    };
+    tabsEl.appendChild(b);
+  });
 
-  // Build <select> with <optgroup> per category
-  var sel = document.getElementById('lib-sel-'+agentId);
-  if(!sel) return;
-  sel.innerHTML = '';
-
-  var placeholder = document.createElement('option');
-  placeholder.value=''; placeholder.textContent='— Choose a prompt —';
-  sel.appendChild(placeholder);
-
+  // Build prompt cards
+  bodyEl.innerHTML = '';
   var total = 0;
-  Object.keys(cats).forEach(function(cat){
+  catKeys.forEach(function(cat){
     if(catFilter && cat !== catFilter) return;
     var prompts = cats[cat].filter(function(p){ return !q || p.toLowerCase().indexOf(q) !== -1; });
     if(!prompts.length) return;
 
-    var grp = document.createElement('optgroup');
-    grp.label = cat;
+    var grpHd = document.createElement('div');
+    grpHd.className = 'lib-group-hd';
+    grpHd.textContent = cat;
+    bodyEl.appendChild(grpHd);
+
     prompts.forEach(function(p){
-      var opt = document.createElement('option');
-      opt.value = p;
-      // Truncate long prompts for display
-      opt.textContent = p.length > 80 ? p.slice(0,78)+'…' : p;
-      opt.title = p; // full text on hover
-      grp.appendChild(opt);
+      var card = document.createElement('div');
+      card.className = 'lib-card';
+      card.textContent = p;
+      card.onclick = function(){
+        bodyEl.querySelectorAll('.lib-card').forEach(function(c){c.classList.remove('selected');});
+        card.classList.add('selected');
+        selectLibPrompt(agentId, p);
+      };
+      bodyEl.appendChild(card);
       total++;
     });
-    sel.appendChild(grp);
   });
 
   if(!total){
-    var empty = document.createElement('option');
-    empty.disabled=true;
-    empty.textContent = q ? 'No prompts match "'+q+'"' : 'No prompts available for this agent.';
-    sel.appendChild(empty);
+    var empty = document.createElement('div');
+    empty.className = 'lib-empty';
+    empty.textContent = q ? 'No prompts match "' + query + '"' : 'No prompts available for this agent yet.';
+    bodyEl.appendChild(empty);
   }
-
-  // Reset preview + send
-  var prev = document.getElementById('lib-prev-'+agentId);
-  var send = document.getElementById('lib-send-'+agentId);
-  if(prev) prev.textContent = 'Select a prompt above to preview it.';
-  if(send) send.disabled = true;
-
-  // Adjust select size
-  sel.size = Math.min(Math.max(total+1, 4), 10);
 }
 
-function sendLibPrompt(agentId){
-  var sel    = document.getElementById('lib-sel-'+agentId);
-  var prompt = sel && sel.value;
-  if(!prompt) return;
+function selectLibPrompt(agentId, promptText){
   closeLibrary();
   var inp = document.getElementById('inp-'+agentId);
   if(inp){
-    inp.value = prompt;
+    inp.value = promptText;
     inp.style.height = 'auto';
-    inp.style.height = Math.min(inp.scrollHeight, 80)+'px';
+    inp.style.height = Math.min(inp.scrollHeight, 80) + 'px';
+    inp.focus();
   }
   switchToAgent(agentId);
-  setTimeout(function(){ agentSend(agentId); }, 150);
+  setTimeout(function(){ agentSend(agentId); }, 200);
 }
 
 function generateReport(agentId){
@@ -1662,6 +1819,11 @@ function generateReport(agentId){
 
 // ── API SETTINGS ────────────────────────────────────────────────────────────
 function openApiModal(){
+  // Pre-fill inputs with masked existing keys
+  var oaiEl=document.getElementById('api-oai');
+  var antEl=document.getElementById('api-ant');
+  if(oaiEl) oaiEl.value = S.oaiKey && S.oaiKey!=='server' ? S.oaiKey.slice(0,8)+'…' : '';
+  if(antEl) antEl.value = S.antKey && S.antKey!=='server' ? S.antKey.slice(0,12)+'…' : '';
   document.getElementById('api-modal').classList.add('open');
   checkApiStatus();
 }
@@ -1681,36 +1843,25 @@ function checkApiStatus(){
 }
 function closeApiModal(){document.getElementById('api-modal').classList.remove('open');}
 
-function saveApiSettings(){ closeApiModal(); /* Keys managed server-side */ }
-function _old_saveApiSettings_disabled(){
+function saveApiSettings(){
   var oaiEl=document.getElementById('api-oai');
   var antEl=document.getElementById('api-ant');
-  var oai=oaiEl.value.trim();
-  var ant=antEl.value.trim();
-  var voice=document.getElementById('api-voice').value;
-  // Only save if it's a real new key (not the truncated display version)
-  // Use sessionStorage (clears on tab close — safer than localStorage)
-  if(oai && !oai.includes('...') && oai.length>10){
-    sessionStorage.setItem('pi-oai-key',oai); S.oaiKey=oai;
-    localStorage.removeItem('pi-oai-key'); // migrate away from localStorage
+  var oai=(oaiEl&&oaiEl.value.trim())||'';
+  var ant=(antEl&&antEl.value.trim())||'';
+  var changed=false;
+  if(oai && !oai.includes('…') && oai.length>10){
+    sessionStorage.setItem('pi-oai-key',oai); S.oaiKey=oai; changed=true;
   } else if(oai===''){
-    sessionStorage.removeItem('pi-oai-key');
-    localStorage.removeItem('pi-oai-key');
-    S.oaiKey='';
+    sessionStorage.removeItem('pi-oai-key'); S.oaiKey=''; changed=true;
   }
-  if(ant && !ant.includes('...') && ant.length>10){
-    sessionStorage.setItem('pi-ant-key',ant); S.antKey=ant;
-    localStorage.removeItem('pi-ant-key');
+  if(ant && !ant.includes('…') && ant.length>10){
+    sessionStorage.setItem('pi-ant-key',ant); S.antKey=ant; changed=true;
   } else if(ant===''){
-    sessionStorage.removeItem('pi-ant-key');
-    localStorage.removeItem('pi-ant-key');
-    S.antKey='';
+    sessionStorage.removeItem('pi-ant-key'); S.antKey=''; changed=true;
   }
-  localStorage.setItem('pi-oai-voice',voice);
   updateApiDot();
   closeApiModal();
-  // Restart agents so they use new keys
-  if(S.agents.length){
+  if(changed && S.agents.length){
     S.agentHist={}; S.agentBusy={}; S.agentInit={};
     document.querySelectorAll('.chat-window').forEach(function(w){w.innerHTML='';});
     setTimeout(function(){
@@ -1719,11 +1870,10 @@ function _old_saveApiSettings_disabled(){
     },200);
   }
   var connected=[];
-  if(S.antKey) connected.push('Anthropic Claude Sonnet');
-  if(S.oaiKey) connected.push('OpenAI GPT-4o');
-  alert(connected.length
-    ? '✓ ' + connected.join(' + ') + ' connected.\n\nAgents are now powered by live AI.'
-    : 'Settings saved. Add an API key to enable live AI responses.');
+  if(S.serverProxy) connected.push('Server proxy');
+  if(S.antKey&&S.antKey!=='server') connected.push('Anthropic Claude');
+  if(S.oaiKey&&S.oaiKey!=='server') connected.push('OpenAI GPT-4o');
+  if(connected.length) alert('✓ Connected via: '+connected.join(' + ')+'\n\nAgents are now live.');
 }
 
 function updateApiDot(){
@@ -2121,31 +2271,19 @@ document.addEventListener('keydown',function(e){
   <div class="lib-drawer">
     <div class="lib-handle"></div>
     <div class="lib-drawer-hd">
-      <div><div class="lib-drawer-title" id="lib-title">Prompt <em>Library</em></div><div class="lib-drawer-sub" id="lib-sub">Ready-to-use prompts for this agent</div></div>
+      <div>
+        <div class="lib-drawer-title" id="lib-title">Prompt <em>Library</em></div>
+        <div class="lib-drawer-sub" id="lib-sub">Ready-to-use prompts for this agent</div>
+      </div>
       <button class="lib-close" onclick="closeLibrary()">&#10005;</button>
     </div>
-    <div class="lib-search-wrap"><input class="lib-search" id="lib-search" placeholder="Search all prompts for this agent&#8230;" oninput="filterLibrary()"></div>
-    <div class="lib-tabs" id="lib-tabs"></div>
+    <div class="lib-search-wrap">
+      <input class="lib-search" id="lib-search" placeholder="Search prompts&hellip;" oninput="filterLibrary()">
+    </div>
+    <div class="lib-cat-tabs" id="lib-tabs"></div>
     <div class="lib-body" id="lib-body"></div>
   </div>
 </div>
-
-
-<div id="lib-overlay" onclick="libOverlayClick(event)">
-  <div class="lib-drawer">
-    <div style="height:4px;width:40px;border-radius:2px;background:rgba(90,64,48,.15);margin:10px auto 0"></div>
-    <div class="lib-drawer-hd">
-      <div><div class="lib-drawer-title" id="lib-title">Prompt <em>Library</em></div><div class="lib-drawer-sub" id="lib-sub">Ready-to-use prompts for this agent</div></div>
-      <button class="lib-close" onclick="closeLibrary()">&#10005;</button>
-    </div>
-    <div class="lib-search-wrap"><input class="lib-search" id="lib-search" placeholder="Search all prompts&#8230;" oninput="filterLibrary()"></div>
-    <div class="lib-tabs" id="lib-tabs"></div>
-    <div class="lib-body" id="lib-body"></div>
-  </div>
-</div>
-
-</body>
-</html
 
 </body>
 </html>

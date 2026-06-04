@@ -1275,19 +1275,39 @@ select option{background:#FFFFFF;color:#0F172A}
   #screen-workflow{flex-direction:column !important}
   .workflow-sidebar{
     width:100%;max-height:none;position:relative;top:0;
-    display:flex;flex-direction:row;overflow-x:auto;
-    padding:8px 6px;gap:2px;border-right:none;
+    display:flex;flex-direction:column;overflow:visible;
+    padding:10px 0 6px;border-right:none;
     border-bottom:1px solid var(--border);
+    background:var(--bg-surface);
   }
-  .sidebar-section{padding:0;flex-shrink:0}
+  #sidebar-agents{
+    display:flex;flex-direction:row;align-items:center;
+    padding:0 14px;gap:0;overflow-x:auto;
+    -ms-overflow-style:none;scrollbar-width:none;
+  }
+  #sidebar-agents::-webkit-scrollbar{display:none}
+  .sidebar-section{display:flex;align-items:center;flex-shrink:0}
+  /* connecting line between steps */
+  .sidebar-section+.sidebar-section::before{
+    content:'';display:block;width:18px;height:1.5px;
+    background:var(--border);flex-shrink:0;
+  }
   .sidebar-label{display:none}
   .agent-item{
-    padding:8px 10px;flex-direction:column;align-items:center;
-    gap:4px;min-width:64px;text-align:center;margin:0;
+    width:40px;height:40px;border-radius:50% !important;
+    padding:0;margin:0;min-width:unset;gap:0;
+    display:flex;align-items:center;justify-content:center;
+    border-width:2px;
   }
-  .agent-item .agent-name{font-size:0.60rem;line-height:1.2}
-  .agent-item .agent-status{display:none}
-  .sidebar-progress{display:none}
+  .agent-item.active{box-shadow:0 0 0 3px rgba(34,211,238,0.25)}
+  .agent-item .agent-ico{font-size:18px;line-height:1;display:flex}
+  .agent-item .agent-num,.agent-item .agent-name,.agent-item .agent-status{display:none}
+  .sidebar-progress{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 14px 0;border-top:none;margin-top:0;
+  }
+  .progress-label{font-size:0.63rem;color:var(--text-muted);white-space:nowrap}
+  .progress-bar-track{flex:1}
   .workflow-main,.workflow-main.chat-mode{
     height:auto;max-height:none;overflow:visible;padding:18px 14px;
   }
@@ -3623,7 +3643,7 @@ function renderWorkflow() {
     var locked = idx > i;
     var cls    = active ? 'active' : done ? 'done' : locked ? 'locked' : '';
     var status = done ? '✓' : active ? '▶' : '·';
-    return '<div class="sidebar-section"><div class="agent-item ' + cls + '" onclick="' + (!locked ? 'jumpToAgent(' + idx + ')' : '') + '"><div class="agent-num">' + (idx+1) + '</div><div class="agent-name">' + a.name + '</div><div class="agent-status">' + status + '</div></div></div>';
+    return '<div class="sidebar-section"><div class="agent-item ' + cls + '" title="' + a.name + '" onclick="' + (!locked ? 'jumpToAgent(' + idx + ')' : '') + '"><div class="agent-ico">' + a.icon + '</div><div class="agent-num">' + (idx+1) + '</div><div class="agent-name">' + a.name + '</div><div class="agent-status">' + status + '</div></div></div>';
   }).join('');
 
   // Build chat UI if not yet present
@@ -3967,8 +3987,8 @@ function jumpToAgent(idx) {
       sb.innerHTML = agents.map(function(a, i2) {
         var done=state.scores[a.id]!==undefined, active=i2===idx, locked=i2>idx;
         var cls=active?'active':done?'done':locked?'locked':'';
-        return '<div class="sidebar-section"><div class="agent-item '+cls+'" onclick="'+(!locked?'jumpToAgent('+i2+')':'')+'">' +
-          '<div class="agent-num">'+(i2+1)+'</div><div class="agent-name">'+a.name+'</div><div class="agent-status">'+(done?'✓':active?'▶':'·')+'</div></div></div>';
+        return '<div class="sidebar-section"><div class="agent-item '+cls+'" title="'+a.name+'" onclick="'+(!locked?'jumpToAgent('+i2+')':'')+'">' +
+          '<div class="agent-ico">'+a.icon+'</div><div class="agent-num">'+(i2+1)+'</div><div class="agent-name">'+a.name+'</div><div class="agent-status">'+(done?'✓':active?'▶':'·')+'</div></div></div>';
       }).join('');
     }
     document.getElementById('nav-pr').textContent = 'PR-' + String(state.prCount).padStart(3,'0');
