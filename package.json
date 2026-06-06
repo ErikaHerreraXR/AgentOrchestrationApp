@@ -1,7 +1,7 @@
 {
   "name": "pi-agents-os",
   "version": "1.0.0",
-  "description": "Product Imagination Agents OS \u2014 server + proxy",
+  "description": "Product Imagination Agents OS — server + proxy",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
