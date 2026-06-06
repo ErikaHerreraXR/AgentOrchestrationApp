@@ -738,7 +738,7 @@ em{font-style:italic}
     <input type="email" id="login-email" class="login-input" placeholder="you@email.com" autocomplete="email">
     <label class="login-label">Password</label>
     <input type="password" id="login-pass" class="login-input" placeholder="••••••••" autocomplete="current-password">
-    <div class="login-err" id="login-err">Invalid credentials — try demo / demo</div>
+    <div class="login-err" id="login-err">Incorrect credentials.</div>
     <button class="login-btn" onclick="doLogin()">Sign In →</button>
     <span class="login-skip" onclick="doGuestLogin()">Continue as guest (demo mode)</span>
   </div>
@@ -1190,20 +1190,30 @@ var TPL_DOCS = {
 /* ═══════════════════════════════════════════════════════════════
    LOGIN
 ═══════════════════════════════════════════════════════════════ */
+/* Accepted credentials — add real client entries here as needed */
+var VALID_USERS = [
+  {email:'demo@productimagination.com', pass:'demo',   name:'Client Demo',   initials:'CD'},
+  {email:'demo',                         pass:'demo',   name:'Client Demo',   initials:'CD'},
+  {email:'client@productimagination.com',pass:'client', name:'Client',        initials:'CL'},
+  {email:'erika@productimagination.com', pass:'admin',  name:'Erika',         initials:'EH'},
+];
+
 function doLogin(){
-  var email=document.getElementById('login-email').value.trim();
+  var email=document.getElementById('login-email').value.trim().toLowerCase();
   var pass=document.getElementById('login-pass').value.trim();
   var err=document.getElementById('login-err');
-  if(!email && !pass){ doGuestLogin(); return; }
-  var ok=(pass==='demo')||(email.includes('@')&&pass.length>=3);
-  if(!ok){ err.classList.add('show'); return; }
+  if(!email || !pass){ err.textContent='Please enter your email and password.'; err.classList.add('show'); return; }
+
+  var match=VALID_USERS.find(function(u){ return u.email===email && u.pass===pass; });
+  if(!match){ err.textContent='Incorrect credentials. Contact erika@productimagination.com for access.'; err.classList.add('show'); return; }
+
   err.classList.remove('show');
-  S.user={name:email.split('@')[0]||'Client',email:email,initials:(email[0]||'C').toUpperCase()+'D'};
+  S.user={name:match.name, email:match.email, initials:match.initials};
   bootPortal();
 }
 
 function doGuestLogin(){
-  S.user={name:'Client',email:'demo@productimagination.com',initials:'CD'};
+  S.user={name:'Client Demo', email:'demo@productimagination.com', initials:'CD'};
   bootPortal();
 }
 
@@ -1926,16 +1936,11 @@ function loadPrefs(){
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BOOT
+   BOOT — always show login first
 ═══════════════════════════════════════════════════════════════ */
 (function init(){
-  /* Auto-login if brief is available (came from index.html) */
-  var brief=null;
-  try{brief=JSON.parse(localStorage.getItem('pi-client-brief')||'null');}catch(e){}
-  if(brief&&brief.client){
-    S.user={name:brief.client,email:'',initials:getInitials(brief.client)};
-    bootPortal();
-  }
+  /* Login page is always shown first — do not auto-bypass */
+  document.getElementById('page-login').style.display='flex';
 })();
 </script>
 </body>
