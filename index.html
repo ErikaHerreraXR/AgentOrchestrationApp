@@ -54,7 +54,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Mono:wght@400;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;overflow-x:hidden}
+html{scroll-behavior:smooth}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    DESIGN TOKENS — clean dark-mode palette
@@ -158,12 +158,16 @@ button{font-family:var(--fb)}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.10);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.18)}
 
-.screen{display:none;min-height:100vh;min-height:100dvh}
-.screen.active{display:flex;flex-direction:column}
-/* Desktop scroll — allow non-workflow screens to scroll naturally */
+.screen{display:none}
+.screen.active{display:block}
+/* Non-workflow screens grow with content; window is the scroll container on desktop */
 #screen-home.active,#screen-brief.active,#screen-complete.active{
-  overflow-y:auto;
-  height:auto;
+  min-height:100vh;min-height:100dvh;
+}
+/* Workflow screen keeps flex row so sidebar+main sit side-by-side */
+#screen-workflow.active{
+  display:flex;flex-direction:row;
+  min-height:calc(100vh - 60px);min-height:calc(100dvh - 60px);
 }
 .container{max-width:1160px;margin:0 auto;padding:0 24px}
 
@@ -838,7 +842,7 @@ select option{background:#FFFFFF;color:#0F172A}
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    WORKFLOW — sidebar + chat
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#screen-workflow{flex-direction:row !important;min-height:calc(100vh - 60px);min-height:calc(100dvh - 60px)}
+/* #screen-workflow layout handled in .screen.active overrides above */
 
 .workflow-sidebar{
   width:268px;flex-shrink:0;
@@ -3230,6 +3234,8 @@ let state = {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(`screen-${id}`).classList.add('active');
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
   window.scrollTo(0, 0);
 }
 
