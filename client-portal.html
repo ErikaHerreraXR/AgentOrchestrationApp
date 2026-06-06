@@ -1489,6 +1489,7 @@ function openChat(agentId){
     var b=S.brief||{};
     var greeting='Hey '+(b.client||'there')+'! I\'m your '+agent.name+' — your dedicated '+agent.specs[0].toLowerCase()+' specialist.\n\nI handle everything for '+(b.client||'you')+': '+agent.specs.join(', ')+'.\n\nWhat do you need today?';
     addMsg('agent',fmtMd(greeting),agent.icon);
+    speakPortalText(greeting);
     S.agentHist[agentId].push({role:'assistant',content:greeting});
     setQR(agentId,getDefaultQR(agentId));
   } else {
@@ -1597,6 +1598,7 @@ async function sendChat(){
 
   removeTypingIndicator();
   addMsg('agent',fmtMd(reply),agent?agent.icon:'🤖');
+  speakPortalText(reply);
   S.agentHist[id].push({role:'assistant',content:reply});
   S.agentBusy[id]=false;
   setQR(id,getDefaultQR(id));
@@ -1883,6 +1885,64 @@ function resizeImageForUpload(file){
     };
     img.src=url;
   });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PORTAL TTS — speaks agent messages via OpenAI → browser fallback
+═══════════════════════════════════════════════════════════════ */
+function speakPortalText(text){
+  /* Respect the Voice Replies preference toggle */
+  var prefEl=document.getElementById('pref-voice');
+  if(prefEl&&!prefEl.checked)return;
+
+  /* Strip HTML and collapse whitespace */
+  var clean=text.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  if(!clean)return;
+
+  /* Speak first 2 sentences max — keep it conversational */
+  var sentences=clean.match(/[^.!?]+[.!?]+/g)||[clean];
+  var spoken=sentences.slice(0,2).join(' ').trim();
+  if(!spoken)return;
+
+  /* Cancel anything already playing */
+  if(window.speechSynthesis)window.speechSynthesis.cancel();
+
+  if(window.location.protocol!=='file:'){
+    fetch('/api/openai/speech',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'tts-1',input:spoken,voice:'nova',speed:0.92,response_format:'mp3'})
+    })
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.blob();})
+    .then(function(blob){
+      var url=URL.createObjectURL(blob);
+      var audio=new Audio(url);
+      audio.onended=function(){URL.revokeObjectURL(url);};
+      audio.play().catch(function(){
+        URL.revokeObjectURL(url);
+        speakPortalBrowser(spoken);
+      });
+    })
+    .catch(function(){speakPortalBrowser(spoken);});
+    return;
+  }
+  speakPortalBrowser(spoken);
+}
+
+function speakPortalBrowser(text){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  function go(){
+    var voices=window.speechSynthesis.getVoices();
+    var best=voices.find(function(v){return v.lang==='en-US'&&v.localService;})
+      ||voices.find(function(v){return /^en/.test(v.lang);})
+      ||voices[0]||null;
+    var utt=new SpeechSynthesisUtterance(text);
+    utt.rate=0.90;utt.pitch=1.0;utt.lang='en-US';
+    if(best)utt.voice=best;
+    window.speechSynthesis.speak(utt);
+  }
+  if(window.speechSynthesis.getVoices().length){go();}
+  else{window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.onvoiceschanged=null;go();};}
 }
 
 /* Strip markdown/AI formatting markers from text */

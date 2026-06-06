@@ -1205,6 +1205,52 @@ select option{background:#FFFFFF;color:#0F172A}
 [data-theme="light"] .modal-box{background:#FFFFFF;border-color:rgba(15,23,42,0.10)}
 [data-theme="light"] .modal-input{background:#F8FAFC;border-color:rgba(15,23,42,0.14);color:#0F172A}
 
+/* ── How It Works Modal ─────────────────────────────────────────────── */
+#hiw-modal{
+  position:fixed;inset:0;z-index:500;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(8,14,26,0.82);backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;transition:opacity .25s;padding:16px;
+}
+#hiw-modal.open{opacity:1;pointer-events:auto}
+.hiw-card{
+  background:var(--bg-card);border:1px solid var(--border-active);border-radius:20px;
+  max-width:540px;width:100%;max-height:90vh;overflow-y:auto;
+  padding:36px 32px 28px;
+  box-shadow:0 24px 64px rgba(0,0,0,.5);
+  animation:fadeUp .3s cubic-bezier(.34,1.4,.64,1) both;
+}
+.hiw-tag{
+  font-family:var(--fm);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;
+}
+.hiw-h{font-size:1.55rem;font-weight:800;letter-spacing:-.03em;color:var(--text-primary);margin-bottom:8px;line-height:1.15}
+.hiw-sub{font-size:.9rem;color:var(--text-muted);line-height:1.6;margin-bottom:22px}
+.hiw-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
+.hiw-step{display:flex;gap:14px;align-items:flex-start}
+.hiw-step-num{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;
+  background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fm);font-size:.68rem;font-weight:700;color:var(--accent);margin-top:1px;
+}
+.hiw-step-body{flex:1}
+.hiw-step-title{font-weight:700;font-size:.9rem;color:var(--text-primary);margin-bottom:2px}
+.hiw-step-desc{font-size:.82rem;color:var(--text-muted);line-height:1.55}
+.hiw-stat-box{
+  background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,.15);border-radius:12px;
+  padding:14px 16px;margin-bottom:22px;
+}
+.hiw-stat-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.hiw-stat-text{font-size:.85rem;color:var(--text-secondary);line-height:1.6}
+.hiw-benefits{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.hiw-benefit{
+  padding:5px 11px;border-radius:20px;
+  background:rgba(34,211,238,0.07);border:1px solid rgba(34,211,238,.15);
+  font-size:.75rem;color:var(--accent);font-weight:600;
+}
+.hiw-footer{display:flex;gap:10px;justify-content:flex-end}
+
 /* TTS playing badge */
 .tts-playing-badge{
   position:fixed;bottom:calc(86px + var(--sab,0px));left:50%;
@@ -1781,7 +1827,7 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 
     <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
       <button class="btn btn-primary btn-lg" onclick="scrollToTemplates()">Choose a Template →</button>
-      <button class="btn btn-ghost btn-lg" onclick="scrollToTemplates()">See How It Works</button>
+      <button class="btn btn-ghost btn-lg" onclick="openHIW()">See How It Works</button>
     </div>
 
     <div class="hero-pipeline">
@@ -1983,7 +2029,10 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
     <div class="brief-header">
       <div class="template-badge" id="brief-badge">—</div>
       <h2>Client Project Brief</h2>
-      <button class="btn btn-ghost btn-sm" onclick="goHome()">← Change Template</button>
+      <div style="display:flex;gap:8px;align-items:center;margin-left:auto">
+        <button class="btn btn-ghost btn-sm" id="brief-hiw-btn" onclick="openHIW(state.template&&state.template.id)" title="See industry insights for this template" style="font-size:.7rem;padding:5px 10px">📊 Why This Works</button>
+        <button class="btn btn-ghost btn-sm" onclick="goHome()">← Change Template</button>
+      </div>
     </div>
     <div class="brief-grid">
       <div class="form-group">
@@ -3178,6 +3227,34 @@ function showScreen(id) {
 function goHome() { showScreen('home'); }
 function scrollToTemplates() { document.getElementById('templates-section').scrollIntoView({ behavior: 'smooth' }); }
 
+// ── How It Works Modal ────────────────────────────────────────────────────────
+var HIW_STATS = {
+  consulting:  { label:'Why AI Strategy Works', text:'McKinsey: companies that embed AI in strategy processes cut project timelines by 40% and deliver 3× better ROI on consulting engagements. The edge isn\'t more analysis — it\'s faster, smarter sequencing of the right analysis.' },
+  product:     { label:'Why AI Product Teams Win', text:'Forrester: product teams using AI-assisted research and design ship 2× faster with 30% fewer post-launch defects. The bottleneck in most product organizations isn\'t ideas — it\'s turning research into decisions fast enough to matter.' },
+  marketing:   { label:'Why AI Marketing Outperforms', text:'HubSpot & Salesforce data shows AI-powered marketing campaigns generate 67% more qualified leads at 40% lower cost per acquisition. Brands that use AI to orchestrate messaging across channels see 3.5× the lifetime customer value.' },
+  compliance:  { label:'Why AI Compliance Changes Everything', text:'Deloitte: AI-augmented compliance programs reduce audit preparation time by 70% and material findings by 45%. The average company spends $10,000 per employee annually on compliance — AI cuts that while increasing accuracy.' },
+  realestate:  { label:'Why AI Real Estate Outperforms', text:'JLL: AI-driven deal analysis and market intelligence improves acquisition ROI by 2.4× and reduces time-to-close by 35%. Developers who use structured AI workflows make fewer underwriting errors and move faster than competitors who don\'t.' },
+  interior:    { label:'Why AI Elevates Design Studios', text:'ASID research: design firms that implement digital workflow systems increase project throughput by 60% and reduce scope creep by 40%. The constraint in most studios isn\'t creativity — it\'s managing a complex, multi-vendor process without losing margin.' },
+  airbnb:      { label:'Why AI-Powered Hosts Win', text:'AirDNA: hosts with data-driven pricing strategies earn 32% more than the market average. Superhosts with optimized listings and systemized operations earn 5× more than typical hosts — and spend 50% less time on administration.' },
+};
+
+function openHIW(templateId) {
+  var modal = document.getElementById('hiw-modal');
+  modal.classList.add('open');
+  var stat = templateId && HIW_STATS[templateId];
+  var box  = document.getElementById('hiw-stat-box');
+  if (stat) {
+    document.getElementById('hiw-stat-label').textContent = stat.label;
+    document.getElementById('hiw-stat-text').textContent  = stat.text;
+    box.style.display = 'block';
+  } else {
+    box.style.display = 'none';
+  }
+}
+function closeHIW() {
+  document.getElementById('hiw-modal').classList.remove('open');
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // HOME — Render templates
 // ══════════════════════════════════════════════════════════════════════════════
@@ -3911,6 +3988,38 @@ function agentSay(text, delay, shouldSpeak) {
   });
 }
 
+// ── "How does this work?" — concise, value-driven pitch per template ─────────
+var SYSTEM_PITCHES = {
+  consulting: function(b) {
+    return 'Here\'s the short version, <strong>' + b.client + '</strong>: instead of one consultant juggling everything, you get a specialist agent for every discipline — discovery, strategy, financials, implementation — each asking only the questions that matter. A Guardian AI reviews every output before you see it. McKinsey data shows AI-augmented consulting cuts timelines by 40% and delivers 3× ROI. That system is running for you right now.';
+  },
+  product: function(b) {
+    return 'Short version: every product phase — research, UX, architecture, copy, handoff — gets its own specialist agent. They build on each other\'s work in sequence. Forrester data: AI-assisted product teams ship 2× faster with 30% fewer post-launch defects. That\'s exactly what\'s happening for <strong>' + b.project + '</strong>.';
+  },
+  marketing: function(b) {
+    return 'Short version: brand strategy agent first, then campaign, then copy, then performance — each an expert, each building on the one before. HubSpot data shows AI-orchestrated marketing drives 67% more qualified leads at 40% lower cost. This is that system, tuned for <strong>' + (b.client||'you') + '</strong>.';
+  },
+  compliance: function(b) {
+    return 'Short version: compliance has to be sequenced correctly — regulations first, risk second, policy third, controls fourth. Get it wrong and your framework has gaps. Specialist agents enforce that sequence. Deloitte data: AI compliance programs cut audit prep time by 70% and material findings by 45%.';
+  },
+  realestate: function(b) {
+    return 'Short version: real estate is a sequence — market, underwriting, entitlements, design, construction, leasing, finance — in that exact order. This system has a specialist for each stage. JLL data: AI-driven deal teams improve acquisition ROI by 2.4× and cut time-to-close by 35%.';
+  },
+  interior: function(b) {
+    return 'Short version: great interiors need discovery, concept, space planning, specifications, procurement, and installation done in order with nothing skipped. Each agent owns one phase and passes their work to the next. ASID data: structured digital workflows increase studio throughput by 60% and cut scope creep by 40%.';
+  },
+  airbnb: function(b) {
+    return 'Short version: top hosts don\'t guess — they optimize. Revenue, listing, guest experience, operations — specialist agents cover all of it. AirDNA data: data-driven hosts earn 32% more than average. Superhosts with systemized operations earn 5× more. That\'s the system working for <strong>' + (b.project||'your property') + '</strong>.';
+  },
+};
+
+function launchAgentConv(conv, b, templateId, agent) {
+  if (!conv) { showStaticAgentOutput(agent, templateId); return; }
+  agentSay(conv.intro(b), 1000).then(function() {
+    askQuestion(conv, 0, templateId, agent);
+  });
+}
+
 // ── Orchestration Agent intro for each template ───────────────────────────────
 var ORCH_INTROS = {
   consulting:  function(b) { return 'Welcome to your consulting engagement, <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong> — I\'ll guide you through every step. We have <strong>' + (state.template ? state.template.agents.length : 8) + ' specialist agents</strong> standing by. I\'ll introduce each one, ask them to gather what they need from you, and ensure every deliverable is Guardian-reviewed before we proceed.\n\nYour goal: <em>' + b.goal + '</em>\n\nLet\'s begin with your <strong>Discovery Agent</strong>. They\'ll uncover the real problem beneath the stated one.'; },
@@ -3981,6 +4090,7 @@ function buildChatUI(agent, idx, total) {
         '<div class="chat-agent-role" id="chat-agent-role">Guided by Orchestration Agent</div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;align-items:center;margin-left:auto">' +
+        '<button class="voice-ctrl-btn" onclick="openHIW(state.template&&state.template.id)" title="How this works + industry insights" style="font-size:13px">📊</button>' +
         '<button class="voice-ctrl-btn" id="tts-toggle-btn" onclick="toggleTTS()" title="Toggle agent voice">' +
           (voice.ttsEnabled ? '🔊' : '🔇') +
         '</button>' +
@@ -4049,7 +4159,22 @@ function startAgentConversation(agent, agentIdx, templateId) {
     if (agentIdx === 0) {
       var orchText = (ORCH_INTROS[templateId] || function(b){ return 'Welcome, ' + b.client + '. I am your Orchestration Agent.'; })(b);
       addBubble('agent', orchText, '🎯');
-      delay = 1200;
+      // Offer the "How does this work?" explainer before Phase 2 begins
+      setTimeout(function() {
+        showQuickReplies(['💡 How does this work?', "I'm ready — let's begin →"], function(choice) {
+          if (choice.indexOf('How does this work') !== -1) {
+            var pitch = (SYSTEM_PITCHES[templateId] || function(b){ return 'This system sequences specialist AI agents — each an expert — to deliver professional-grade work fast, with Guardian QA on every output.'; })(b);
+            agentSay(pitch, 800).then(function() {
+              showQuickReplies(["Let's start the workflow →"], function() {
+                launchAgentConv(conv, b, templateId, agent);
+              });
+            });
+          } else {
+            launchAgentConv(conv, b, templateId, agent);
+          }
+        });
+      }, 1600);
+      delay = 999999; // Phase 2 is now handled by the quick-reply callback above
     } else {
       // Brief transition message from Orchestrator
       addBubble('system', '✓ ' + state.template.agents[agentIdx-1].name + ' complete — Guardian QA score ' + (state.scores[state.template.agents[agentIdx-1].id] || 88) + '/100');
@@ -4058,8 +4183,9 @@ function startAgentConversation(agent, agentIdx, templateId) {
       delay = 1300;
     }
 
-    // Phase 2: Agent intro + first question
+    // Phase 2: Agent intro + first question (skipped for agentIdx===0; handled by quick-reply)
     setTimeout(function() {
+      if (agentIdx === 0) return; // already handled above
       if (!conv) {
         // No conversation defined — show static output directly
         showStaticAgentOutput(agent, templateId);
@@ -4478,7 +4604,7 @@ function downloadReport() {
 
 var voice = {
   micEnabled:    true,
-  ttsEnabled:    localStorage.getItem('pi-tts') !== 'off',
+  ttsEnabled:    true,                                             // always on; user can mute per-session
   selectedVoice: localStorage.getItem('pi-oai-voice') || 'nova',  // OpenAI voice model
   openaiKey:     '',       // keys live on the server — not used client-side
   recognition:   null,
@@ -4488,6 +4614,14 @@ var voice = {
   currentAudio:  null,
   serverHasOai:  null,     // cached from /api/status — null = unknown
 };
+
+/* Pre-resolve server TTS capability so the first agentSay doesn't hit a nested async delay */
+if (window.location.protocol !== 'file:') {
+  fetch('/api/status', { signal: AbortSignal.timeout(4000) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) { voice.serverHasOai = !!(d && d.openai); })
+    .catch(function()  { voice.serverHasOai = false; });
+}
 
 
 /* ── Mic toggle ──────────────────────────────────────────────────────────── */
@@ -4503,7 +4637,7 @@ function toggleMicEnabled() {
 /* ── TTS toggle ──────────────────────────────────────────────────────────── */
 function toggleTTS() {
   voice.ttsEnabled = !voice.ttsEnabled;
-  localStorage.setItem('pi-tts', voice.ttsEnabled ? 'on' : 'off');
+  /* session-only mute — TTS resets to on next visit */
   var btn = document.getElementById('tts-toggle-btn');
   if (btn) btn.textContent = voice.ttsEnabled ? '🔊' : '🔇';
   if (!voice.ttsEnabled && voice.currentAudio) {
@@ -4859,10 +4993,11 @@ function speakViaProxy(text) {
     audio.onended = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
     audio.onerror = function() { removeTTSBadge(); URL.revokeObjectURL(url); };
     audio.play().catch(function(playErr) {
-      // Autoplay blocked — most common on first load before a user gesture.
-      // Show a visible "tap to hear" prompt instead of silently using robotic TTS.
+      // Autoplay blocked by browser — fall back to browser TTS immediately
       removeTTSBadge();
-      showTapToPlay(url);
+      URL.revokeObjectURL(url);
+      voice.currentAudio = null;
+      speakBrowser(text);
     });
   })
   .catch(function(err) {
@@ -5624,6 +5759,64 @@ renderTemplates();
     }, { passive: false });
   }
   </script>
+
+<!-- ════ HOW IT WORKS MODAL ════════════════════════════════════════════ -->
+<div id="hiw-modal" onclick="if(event.target===this)closeHIW()">
+  <div class="hiw-card">
+    <div class="hiw-tag">⬡ Product Imagination Agents OS</div>
+    <h2 class="hiw-h" id="hiw-title">How the Orchestration System Works</h2>
+    <p class="hiw-sub" id="hiw-sub">A team of specialized AI agents — each an expert in their domain — executes your project step by step, with built-in quality review at every stage.</p>
+
+    <div class="hiw-steps">
+      <div class="hiw-step">
+        <div class="hiw-step-num">1</div>
+        <div class="hiw-step-body">
+          <div class="hiw-step-title">Brief → Orchestration Agent</div>
+          <div class="hiw-step-desc">You fill in a client brief. The Orchestration Agent activates your specialist team and sequences their work in the right order — nothing gets skipped.</div>
+        </div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-step-num">2</div>
+        <div class="hiw-step-body">
+          <div class="hiw-step-title">Agents Interview You</div>
+          <div class="hiw-step-desc">Each agent asks only the questions that matter for their discipline. No generic questionnaires — every input drives a specific deliverable.</div>
+        </div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-step-num">3</div>
+        <div class="hiw-step-body">
+          <div class="hiw-step-title">Guardian QA Reviews Every Output</div>
+          <div class="hiw-step-desc">Before you see a deliverable, the Guardian scores it against professional standards. Only work that passes gets delivered.</div>
+        </div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-step-num">4</div>
+        <div class="hiw-step-body">
+          <div class="hiw-step-title">You Get Complete, Ready-to-Use Work</div>
+          <div class="hiw-step-desc">Not bullet points. Not suggestions. Full professional deliverables — strategies, plans, copy, analyses — ready to use or share with clients immediately.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hiw-stat-box" id="hiw-stat-box" style="display:none">
+      <div class="hiw-stat-label" id="hiw-stat-label">Industry Insight</div>
+      <div class="hiw-stat-text" id="hiw-stat-text"></div>
+    </div>
+
+    <div class="hiw-benefits">
+      <span class="hiw-benefit">⚡ 10× faster delivery</span>
+      <span class="hiw-benefit">📋 Expert-level outputs</span>
+      <span class="hiw-benefit">🛡️ Built-in QA</span>
+      <span class="hiw-benefit">🔁 Iterates on feedback</span>
+      <span class="hiw-benefit">📊 Industry-tuned</span>
+    </div>
+
+    <div class="hiw-footer">
+      <button class="btn btn-ghost" onclick="closeHIW()">Close</button>
+      <button class="btn btn-primary" onclick="closeHIW();scrollToTemplates()">Choose a Template →</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
