@@ -621,11 +621,13 @@ img{-webkit-user-select:none;user-select:none}
 }
 .tab-item.active .tab-label{color:#FDFAF7}
 
-/* Voice tab — center raised button */
+/* Voice tab — absolutely centered, raised above bar */
 .tab-voice{
-  flex:1;display:flex;flex-direction:column;align-items:center;
+  position:absolute;left:50%;transform:translateX(-50%);top:0;margin-top:-22px;
+  display:flex;flex-direction:column;align-items:center;
   cursor:pointer;border:none;background:none;
-  margin-top:-22px;padding-bottom:calc(4px + var(--sab) * 0.5);
+  padding-bottom:calc(4px + var(--sab) * 0.5);
+  z-index:2;
 }
 .tab-voice-orb{
   width:60px;height:60px;border-radius:50%;
@@ -940,6 +942,8 @@ em{font-style:italic}
       <span class="tab-icon">🤖</span>
       <span class="tab-label">Agents</span>
     </button>
+    <!-- spacer holds the center slot so flanking tabs stay evenly spread -->
+    <div style="flex:1;pointer-events:none" aria-hidden="true"></div>
     <button class="tab-voice" onclick="openVoice()">
       <div class="tab-voice-orb">🎙️</div>
       <span class="tab-voice-label">Voice</span>
@@ -1856,6 +1860,45 @@ function readAsBase64(file){
   });
 }
 
+/* Resize image to max 800px before base64 to avoid HTTP 413 */
+function resizeImageForUpload(file){
+  return new Promise(function(resolve){
+    var img=new Image();
+    var url=URL.createObjectURL(file);
+    img.onload=function(){
+      var maxDim=800,w=img.width,h=img.height;
+      if(w>maxDim||h>maxDim){
+        if(w>h){h=Math.round(h*maxDim/w);w=maxDim;}
+        else{w=Math.round(w*maxDim/h);h=maxDim;}
+      }
+      var canvas=document.createElement('canvas');
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/jpeg',0.75).split(',')[1]);
+    };
+    img.onerror=function(){
+      URL.revokeObjectURL(url);
+      readAsBase64(file).then(resolve).catch(function(){resolve('');});
+    };
+    img.src=url;
+  });
+}
+
+/* Strip markdown/AI formatting markers from text */
+function cleanResponse(text){
+  if(!text)return'';
+  return text
+    .replace(/#{1,6}\s*/g,'')
+    .replace(/\*\*([^*]+)\*\*/g,'$1')
+    .replace(/\*([^*\n]+)\*/g,'$1')
+    .replace(/_{1,2}([^_\n]+)_{1,2}/g,'$1')
+    .replace(/`([^`]*)`/g,'$1')
+    .replace(/^---+\s*$/gm,'')
+    .replace(/\n{3,}/g,'\n\n')
+    .trim();
+}
+
 function readAsText(file){
   return new Promise(function(resolve,reject){
     var r=new FileReader();
@@ -1883,8 +1926,8 @@ async function analyzeUploads(){
     var f=_uploadFiles[i];
     try{
       if(f.type.startsWith('image/')){
-        var b64=await readAsBase64(f);
-        content.push({type:'image',source:{type:'base64',media_type:f.type,data:b64}});
+        var b64=await resizeImageForUpload(f);
+        content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}});
       } else {
         var txt=await readAsText(f);
         content.push({type:'text',text:'--- File: '+f.name+' ---\n'+txt.substring(0,8000)});
@@ -1895,9 +1938,12 @@ async function analyzeUploads(){
   }
   content.push({type:'text',text:'\n'+instructions});
 
-  var sysP='You are an expert business analyst for '+(b.client||'this client')+'.'
-    +(b.goal?' Their goal: '+b.goal+'.':'')
-    +' Request type: '+requestType+'. Be specific, practical, and actionable.';
+  var sysP='You are a trusted advisor and expert business consultant for '+(b.client||'this client')+'.'
+    +(b.goal?' Their goal is '+b.goal+'.':'')
+    +' Request type: '+requestType+'.'
+    +' Write your response in plain conversational prose. No markdown, no bullet points, no section headers, no hashtags, no asterisks, no bold or italic markers, no numbered lists.'
+    +' Be direct, warm, caring and honest. Speak as a trusted advisor who genuinely cares about this client\'s success and wants to see them win.'
+    +' Give specific, practical, actionable guidance they can use immediately.';
 
   var result='';
   try{
@@ -1907,7 +1953,7 @@ async function analyzeUploads(){
     });
     if(!res.ok)throw new Error('HTTP '+res.status);
     var data=await res.json();
-    result=data.content&&data.content[0]&&data.content[0].text;
+    result=cleanResponse(data.content&&data.content[0]&&data.content[0].text||'');
     if(!result)throw new Error('empty');
   }catch(e){
     result='Unable to analyse files right now ('+(e.message||'error')+').\n\nMake sure you\'re connected to the live server.';
