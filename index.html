@@ -3900,9 +3900,8 @@ function agentSay(text, delay, shouldSpeak) {
     setTimeout(function() {
       removeTyping();
       addBubble('agent', text, state.currentAgentIcon);
-      // Only speak if explicitly requested (questions only — not long intros)
-      if (shouldSpeak) {
-        // Cancel anything playing first so voices never overlap
+      // Speak all agent messages (shouldSpeak===false disables, anything else enables)
+      if (shouldSpeak !== false) {
         if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
         if (window.speechSynthesis) window.speechSynthesis.cancel();
         setTimeout(function() { speakText(text, false); }, 150);
@@ -4092,20 +4091,58 @@ function askQuestion(conv, qIdx, templateId, agent) {
   });
 }
 
+/* ── Per-agent system prompt builder ──────────────────────────────────────── */
+function buildAgentSystemPrompt(agent, brief, answers) {
+  var answersText = Object.keys(answers).map(function(k){ return '- ' + k + ': ' + answers[k]; }).join('\n');
+  return 'You are the ' + agent.name + ' AI agent. ' + agent.specialty + '\n\n' +
+    'Client: ' + (brief.client || 'Unknown') + '\n' +
+    'Project: ' + (brief.project || brief.client || 'Unknown') + '\n' +
+    'Goal: ' + (brief.goal || 'Unknown') + '\n' +
+    (brief.industry ? 'Industry: ' + brief.industry + '\n' : '') +
+    (answersText ? '\nClient answers to your questions:\n' + answersText + '\n' : '') +
+    '\nGenerate a professional, detailed, actionable deliverable. Use clear sections and bullet points. Be specific to this client and their situation. No preamble — go straight into the deliverable content.';
+}
+
+/* ── AI call with Anthropic → OpenAI → demo fallback ─────────────────────── */
+function callAgentAPI(systemPrompt, userMessage, onSuccess, onFallback) {
+  fetch('/api/anthropic', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model: 'claude-sonnet-4-6', max_tokens: 2000, system: systemPrompt, messages: [{role:'user', content:userMessage}]})
+  })
+  .then(function(r){ if (!r.ok) throw new Error('ant-' + r.status); return r.json(); })
+  .then(function(d){
+    var txt = d.content && d.content[0] && d.content[0].text;
+    if (txt) { onSuccess(txt); } else { throw new Error('empty'); }
+  })
+  .catch(function(err){
+    console.warn('[Agent API] Anthropic failed:', err.message, '— trying OpenAI');
+    fetch('/api/openai', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({model: 'gpt-4o', max_tokens: 2000, messages: [{role:'system', content:systemPrompt}, {role:'user', content:userMessage}]})
+    })
+    .then(function(r){ if (!r.ok) throw new Error('oai-' + r.status); return r.json(); })
+    .then(function(d){
+      var txt = d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
+      if (txt) { onSuccess(txt); } else { throw new Error('empty'); }
+    })
+    .catch(function(err2){
+      console.warn('[Agent API] OpenAI failed:', err2.message, '— using demo content');
+      onFallback();
+    });
+  });
+}
+
 function processingToOutput(conv, templateId, agent) {
   var b = state.brief;
   var answers = state.convAnswers || {};
 
-  // Closing message from agent
   agentSay(conv.closing(answers, b), 700).then(function() {
-    // Processing animation
     var typing = showTyping();
-    setTimeout(function() {
+
+    function renderOutput(output) {
       removeTyping();
-
-      // Generate the output
-      var output = getDemoContent(templateId, agent.id, b);
-
       addBubble('agent', '<strong>Here is your ' + agent.name + ' deliverable for ' + b.client + ':</strong>', agent.icon);
 
       var msgs = document.getElementById('chat-messages');
@@ -4119,7 +4156,6 @@ function processingToOutput(conv, templateId, agent) {
       msgs.appendChild(wrap);
       chatScrollBottom();
 
-      // Type the output
       var chars = output.split('');
       var ci = 0;
       function typeChar() {
@@ -4129,12 +4165,21 @@ function processingToOutput(conv, templateId, agent) {
           chatScrollBottom();
           setTimeout(typeChar, ci < 200 ? 8 : 2);
         } else {
-          // Show Guardian review panel
           setTimeout(function() { showGuardianPanel(agent, templateId); }, 600);
         }
       }
       typeChar();
-    }, 2200);
+    }
+
+    if (window.location.protocol !== 'file:') {
+      var sysP = buildAgentSystemPrompt(agent, b, answers);
+      var userMsg = 'Generate the complete ' + agent.name + ' deliverable for ' + b.client + '.';
+      callAgentAPI(sysP, userMsg, renderOutput, function() {
+        renderOutput(getDemoContent(templateId, agent.id, b));
+      });
+    } else {
+      setTimeout(function() { renderOutput(getDemoContent(templateId, agent.id, b)); }, 2200);
+    }
   });
 }
 
