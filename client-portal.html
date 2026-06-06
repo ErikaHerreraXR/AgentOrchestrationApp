@@ -501,16 +501,101 @@ img{-webkit-user-select:none;user-select:none}
 /* ════════════════════════════════════════════════
    UPLOADS SCREEN
 ════════════════════════════════════════════════ */
-.uploads-header{
-  flex-shrink:0;padding:calc(20px + var(--sat)) 16px 0;background:var(--bg);
+#screen-uploads{background:var(--ink)}
+.uploads-inner{
+  flex:1;display:flex;flex-direction:column;
+  padding:calc(20px + var(--sat)) 20px 0;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
 }
-.uploads-title{font-family:var(--fh);font-size:28px;font-weight:700;color:var(--ink);margin-bottom:4px}
-.uploads-placeholder{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:40px;text-align:center;color:var(--muted);
+.uploads-inner::-webkit-scrollbar{display:none}
+.uploads-toprow{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.uploads-title{font-family:var(--fh);font-size:26px;font-weight:700;color:#FDFAF7;line-height:1.2;flex:1;padding-right:12px}
+.uploads-close{font-size:14px;color:rgba(255,255,255,.45);cursor:pointer;padding:4px 0;white-space:nowrap;margin-top:6px}
+.uploads-subtitle{font-size:14px;color:rgba(255,255,255,.45);line-height:1.55;margin-bottom:28px}
+.upload-section-label{
+  font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:10px;
 }
-.uploads-placeholder-ico{font-size:48px;margin-bottom:16px}
-.uploads-placeholder-text{font-size:14px;line-height:1.6}
+.upload-input{
+  width:100%;background:transparent;border:none;outline:none;
+  color:var(--teal);font-size:15px;font-family:var(--fb);
+  padding:0 0 10px;border-bottom:1px solid rgba(255,255,255,.1);
+  margin-bottom:24px;caret-color:var(--teal);
+}
+.upload-input::placeholder{color:rgba(42,184,168,.4)}
+.upload-textarea{
+  width:100%;background:transparent;border:none;outline:none;
+  color:var(--teal);font-size:14px;font-family:var(--fb);
+  padding:0;resize:none;line-height:1.65;min-height:80px;
+  caret-color:var(--teal);
+}
+.upload-textarea::placeholder{color:rgba(42,184,168,.4)}
+.upload-file-btns{display:flex;gap:12px;margin:20px 0}
+.upload-file-btn{
+  background:rgba(42,184,168,.25);border:none;color:#FDFAF7;
+  font-size:15px;font-weight:500;padding:13px 24px;border-radius:100px;
+  cursor:pointer;transition:background .15s;
+}
+.upload-file-btn:active{background:rgba(42,184,168,.4)}
+.upload-files-heading{font-size:16px;font-weight:600;color:#FDFAF7;margin-bottom:12px}
+.upload-file-item{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.06);border-radius:12px;
+  padding:12px 14px;margin-bottom:8px;
+}
+.upload-file-ico{font-size:20px;flex-shrink:0}
+.upload-file-name{flex:1;font-size:13px;color:rgba(255,255,255,.8);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload-file-remove{color:rgba(255,255,255,.3);font-size:16px;cursor:pointer;flex-shrink:0;padding:4px}
+.upload-empty{font-size:14px;color:rgba(255,255,255,.25);text-align:center;padding:16px 0}
+.upload-analyze-btn{
+  display:block;width:100%;padding:18px;
+  background:var(--teal);border:none;border-radius:16px;
+  color:#fff;font-size:16px;font-weight:600;cursor:pointer;
+  box-shadow:0 4px 20px rgba(42,184,168,.4);
+  transition:opacity .2s;margin:20px 0 calc(20px + var(--sab));
+}
+.upload-analyze-btn:active{opacity:.8}
+.upload-analyze-btn:disabled{opacity:.4;cursor:not-allowed}
+.upload-result{
+  background:rgba(255,255,255,.06);border-radius:16px;
+  padding:16px;margin-bottom:16px;
+  font-size:13.5px;color:rgba(255,255,255,.85);line-height:1.75;
+  white-space:pre-wrap;
+}
+
+/* ════════════════════════════════════════════════
+   PROFILE TOGGLES
+════════════════════════════════════════════════ */
+.pref-row{
+  display:flex;align-items:center;gap:14px;padding:15px 16px;
+  border-bottom:1px solid var(--border);
+}
+.pref-row:last-child{border-bottom:none}
+.pref-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:rgba(0,0,0,.04)}
+.pref-label{flex:1;font-size:14.5px;color:var(--ink)}
+.pref-toggle{position:relative;width:50px;height:28px;flex-shrink:0}
+.pref-toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{
+  position:absolute;inset:0;background:rgba(0,0,0,.15);border-radius:100px;
+  cursor:pointer;transition:background .25s;
+}
+.toggle-thumb{
+  position:absolute;width:22px;height:22px;
+  left:3px;top:3px;background:#fff;border-radius:50%;
+  transition:transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.25);pointer-events:none;
+}
+.pref-toggle input:checked ~ .toggle-track{background:var(--teal)}
+.pref-toggle input:checked ~ .toggle-thumb{transform:translateX(22px)}
+
+.support-row{
+  display:flex;align-items:center;gap:14px;padding:15px 16px;
+  border-bottom:1px solid var(--border);cursor:pointer;
+}
+.support-row:last-child{border-bottom:none}
+.support-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:rgba(0,0,0,.04)}
+.support-label{flex:1;font-size:14.5px;color:var(--ink)}
+.support-val{font-size:12.5px;color:var(--muted);max-width:44%;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.support-arrow{font-size:16px;color:var(--muted);flex-shrink:0}
 
 /* ════════════════════════════════════════════════
    BOTTOM TAB BAR
@@ -757,6 +842,53 @@ em{font-style:italic}
         <div class="profile-section-label">AI Agents</div>
         <div class="profile-card" id="profile-agents-list"></div>
       </div>
+      <!-- PREFERENCES -->
+      <div class="profile-section" style="margin-top:16px">
+        <div class="profile-section-label">Preferences</div>
+        <div class="profile-card">
+          <div class="pref-row">
+            <div class="pref-ico">🔊</div>
+            <div class="pref-label">Voice Replies</div>
+            <label class="pref-toggle">
+              <input type="checkbox" id="pref-voice" checked onchange="savePref('voice',this.checked)">
+              <div class="toggle-track"></div><div class="toggle-thumb"></div>
+            </label>
+          </div>
+          <div class="pref-row">
+            <div class="pref-ico">⚖️</div>
+            <div class="pref-label">Guardian Scores</div>
+            <label class="pref-toggle">
+              <input type="checkbox" id="pref-guardian" checked onchange="savePref('guardian',this.checked)">
+              <div class="toggle-track"></div><div class="toggle-thumb"></div>
+            </label>
+          </div>
+          <div class="pref-row">
+            <div class="pref-ico">🔔</div>
+            <div class="pref-label">Notifications</div>
+            <label class="pref-toggle">
+              <input type="checkbox" id="pref-notif" checked onchange="savePref('notif',this.checked)">
+              <div class="toggle-track"></div><div class="toggle-thumb"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <!-- SUPPORT -->
+      <div class="profile-section" style="margin-top:16px">
+        <div class="profile-section-label">Support</div>
+        <div class="profile-card">
+          <div class="support-row" onclick="window.location.href='mailto:erika@productimagination.com'">
+            <div class="support-ico">📬</div>
+            <div class="support-label">Email Erika</div>
+            <div class="support-val">erika@productimagination.com</div>
+            <div class="support-arrow">›</div>
+          </div>
+          <div class="support-row" onclick="window.open('https://productimagination.com','_blank')">
+            <div class="support-ico">🌐</div>
+            <div class="support-label">productimagination.com</div>
+            <div class="support-arrow">›</div>
+          </div>
+        </div>
+      </div>
       <div style="padding:16px">
         <button onclick="doLogout()" style="width:100%;padding:14px;border-radius:14px;background:rgba(224,72,56,.1);border:1px solid rgba(224,72,56,.2);color:var(--coral);font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer">Sign Out</button>
       </div>
@@ -766,12 +898,35 @@ em{font-style:italic}
 
   <!-- SCREEN: UPLOADS -->
   <div id="screen-uploads" class="screen">
-    <div class="uploads-header">
-      <div class="uploads-title">Uploads</div>
-    </div>
-    <div class="uploads-placeholder">
-      <div class="uploads-placeholder-ico">📎</div>
-      <div class="uploads-placeholder-text">Document uploads and file sharing<br>coming soon.</div>
+    <div class="uploads-inner">
+      <div class="uploads-toprow">
+        <div class="uploads-title">Client Upload Portal</div>
+        <div class="uploads-close" onclick="showTab('home')">Close</div>
+      </div>
+      <div class="uploads-subtitle">Upload images, PDFs, reports, notes, docs, or CSV files for AI feedback.</div>
+
+      <div class="upload-section-label">Request Type</div>
+      <input id="upload-type" class="upload-input" placeholder="Business operations review" value="Business operations review">
+
+      <div class="upload-section-label">Instructions for the AI</div>
+      <textarea id="upload-instructions" class="upload-textarea" rows="4" placeholder="Review these files and give me practical feedback to improve business operations, client experience, marketing, revenue, and next steps.">Review these files and give me practical feedback to improve business operations, client experience, marketing, revenue, and next steps.</textarea>
+
+      <div class="upload-file-btns">
+        <button class="upload-file-btn" onclick="document.getElementById('upload-img-input').click()">Add Image</button>
+        <button class="upload-file-btn" onclick="document.getElementById('upload-file-input').click()">Add Files</button>
+      </div>
+      <input type="file" id="upload-img-input" accept="image/*" multiple style="display:none" onchange="addUploadFiles(this.files)">
+      <input type="file" id="upload-file-input" accept=".pdf,.csv,.doc,.docx,.txt,.xls,.xlsx" multiple style="display:none" onchange="addUploadFiles(this.files)">
+
+      <div class="upload-files-heading" id="upload-count">Selected files (0)</div>
+      <div id="upload-file-list"><div class="upload-empty">No files selected yet.</div></div>
+
+      <div id="upload-result-wrap" style="display:none">
+        <div class="upload-section-label" style="color:rgba(42,184,168,.7);margin-top:16px">AI Analysis</div>
+        <div class="upload-result" id="upload-result"></div>
+      </div>
+
+      <button class="upload-analyze-btn" id="upload-analyze-btn" onclick="analyzeUploads()">Analyze files with AI</button>
     </div>
   </div>
 
@@ -1090,6 +1245,7 @@ function bootPortal(){
   buildAgentsList();
   buildReports();
   buildProfile();
+  loadPrefs();
 }
 
 function buildGreeting(){
@@ -1649,6 +1805,125 @@ document.getElementById('chat-input').addEventListener('input',function(){
 document.getElementById('chat-input').addEventListener('keydown',function(e){
   if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}
 });
+
+/* ═══════════════════════════════════════════════════════════════
+   UPLOADS
+═══════════════════════════════════════════════════════════════ */
+var _uploadFiles=[];
+
+function addUploadFiles(fileList){
+  Array.from(fileList).forEach(function(f){ _uploadFiles.push(f); });
+  renderUploadFileList();
+}
+
+function removeUploadFile(i){
+  _uploadFiles.splice(i,1);
+  renderUploadFileList();
+}
+
+function renderUploadFileList(){
+  document.getElementById('upload-count').textContent='Selected files ('+_uploadFiles.length+')';
+  if(!_uploadFiles.length){
+    document.getElementById('upload-file-list').innerHTML='<div class="upload-empty">No files selected yet.</div>';
+    return;
+  }
+  document.getElementById('upload-file-list').innerHTML=_uploadFiles.map(function(f,i){
+    var ico=f.type.startsWith('image/')? '🖼️' : f.name.endsWith('.pdf')? '📄' : f.name.endsWith('.csv')? '📊' : '📝';
+    return '<div class="upload-file-item">'
+      +'<div class="upload-file-ico">'+ico+'</div>'
+      +'<div class="upload-file-name">'+escHtml(f.name)+'</div>'
+      +'<div class="upload-file-remove" onclick="removeUploadFile('+i+')">✕</div>'
+      +'</div>';
+  }).join('');
+}
+
+function readAsBase64(file){
+  return new Promise(function(resolve,reject){
+    var r=new FileReader();
+    r.onload=function(e){resolve(e.target.result.split(',')[1]);};
+    r.onerror=reject;
+    r.readAsDataURL(file);
+  });
+}
+
+function readAsText(file){
+  return new Promise(function(resolve,reject){
+    var r=new FileReader();
+    r.onload=function(e){resolve(e.target.result);};
+    r.onerror=reject;
+    r.readAsText(file);
+  });
+}
+
+async function analyzeUploads(){
+  var btn=document.getElementById('upload-analyze-btn');
+  if(!_uploadFiles.length){
+    alert('Please add at least one file first.');return;
+  }
+  btn.disabled=true;
+  btn.textContent='Analysing…';
+  document.getElementById('upload-result-wrap').style.display='none';
+
+  var requestType=document.getElementById('upload-type').value.trim()||'Business operations review';
+  var instructions=document.getElementById('upload-instructions').value.trim()||'Analyse these files and give practical, actionable feedback.';
+  var b=S.brief||{};
+
+  var content=[];
+  for(var i=0;i<_uploadFiles.length;i++){
+    var f=_uploadFiles[i];
+    try{
+      if(f.type.startsWith('image/')){
+        var b64=await readAsBase64(f);
+        content.push({type:'image',source:{type:'base64',media_type:f.type,data:b64}});
+      } else {
+        var txt=await readAsText(f);
+        content.push({type:'text',text:'--- File: '+f.name+' ---\n'+txt.substring(0,8000)});
+      }
+    }catch(e){
+      content.push({type:'text',text:'[Could not read file: '+f.name+']'});
+    }
+  }
+  content.push({type:'text',text:'\n'+instructions});
+
+  var sysP='You are an expert business analyst for '+(b.client||'this client')+'.'
+    +(b.goal?' Their goal: '+b.goal+'.':'')
+    +' Request type: '+requestType+'. Be specific, practical, and actionable.';
+
+  var result='';
+  try{
+    var res=await fetch('/api/anthropic',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,system:sysP,messages:[{role:'user',content:content}]})
+    });
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    var data=await res.json();
+    result=data.content&&data.content[0]&&data.content[0].text;
+    if(!result)throw new Error('empty');
+  }catch(e){
+    result='Unable to analyse files right now ('+(e.message||'error')+').\n\nMake sure you\'re connected to the live server.';
+  }
+
+  document.getElementById('upload-result').textContent=result;
+  document.getElementById('upload-result-wrap').style.display='block';
+  btn.disabled=false;
+  btn.textContent='Analyze files with AI';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PREFERENCES
+═══════════════════════════════════════════════════════════════ */
+function savePref(key,val){
+  try{localStorage.setItem('pi-pref-'+key,val?'1':'0');}catch(e){}
+}
+function loadPrefs(){
+  ['voice','guardian','notif'].forEach(function(key){
+    var el=document.getElementById('pref-'+key);
+    if(!el)return;
+    var stored=localStorage.getItem('pi-pref-'+key);
+    if(stored==='0')el.checked=false;
+    else el.checked=true;
+  });
+}
 
 /* ═══════════════════════════════════════════════════════════════
    BOOT
