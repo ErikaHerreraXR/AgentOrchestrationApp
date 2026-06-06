@@ -3245,6 +3245,13 @@ function startWorkflow() {
     localStorage.setItem('pi-client-brief', JSON.stringify(state.brief));
   } catch(e) {}
 
+  // Reset conversation state for fresh workflow run
+  state.convAnswers = {};
+  state.convPhase   = 'orch_intro';
+  state.questionIdx = 0;
+  state.scores      = {};
+  state.agentIndex  = 0;
+
   renderWorkflow();
   showScreen('workflow');
 }
@@ -3876,10 +3883,10 @@ function renderWorkflow() {
   var agent = t.agents[i];
   var total = t.agents.length;
 
-  // Reset conversation state for this agent
-  state.convAnswers  = state.convAnswers  || {};
-  state.convPhase    = state.convPhase    || 'orch_intro'; // orch_intro | agent_intro | questions | processing | output | guardian
-  state.questionIdx  = state.questionIdx  || 0;
+  // Reset per-agent conversation state fresh on each render
+  if (!state.convAnswers) state.convAnswers = {};
+  state.convPhase   = 'orch_intro';
+  state.questionIdx = 0;
   state.currentAgentIcon = agent.icon;
 
   // Update nav
@@ -4759,12 +4766,8 @@ function speakViaProxy(text) {
   })
   .catch(function(err) {
     removeTTSBadge();
-    if (err.message !== 'no-key') console.warn('[TTS]', err.message);
-    // Only fall back to browser TTS if truly unreachable — don't silently degrade
-    if (err.message === 'no-key' || err.message === 'bad-response') {
-      speakBrowser(text);
-    }
-    // For http errors (4xx/5xx), don't use robotic browser TTS — just stay silent
+    console.warn('[TTS] OpenAI failed, using browser voice:', err.message);
+    speakBrowser(text);
   });
 }
 
