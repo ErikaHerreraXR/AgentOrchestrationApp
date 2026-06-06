@@ -1487,7 +1487,14 @@ function openChat(agentId){
     S.agentHist[agentId]=[];
     clearMessages();
     var b=S.brief||{};
-    var greeting='Hey '+(b.client||'there')+'! I\'m your '+agent.name+' — your dedicated '+agent.specs[0].toLowerCase()+' specialist.\n\nI handle everything for '+(b.client||'you')+': '+agent.specs.join(', ')+'.\n\nWhat do you need today?';
+    var howBest={
+      ops:'Give me a challenge, a goal, or a problem — I\'ll give you a direct plan.',
+      growth:'Share a channel, metric, or campaign and I\'ll build the strategy.',
+      agentops:'Tell me a process or a tool and I\'ll design the automation.',
+      creative:'Give me a brief — audience, goal, tone — and I\'ll create.',
+    };
+    var hint=howBest[agentId]||'Ask me one clear question at a time.';
+    var greeting=agent.name+' here.\n\n'+hint+'\n\nWhat do you need?';
     addMsg('agent',fmtMd(greeting),agent.icon);
     speakPortalText(greeting);
     S.agentHist[agentId].push({role:'assistant',content:greeting});
@@ -1632,10 +1639,11 @@ function buildSystemPrompt(agentId){
   if(!agent)return 'You are a helpful AI agent.';
   return agent.specialty+'\n\n'
     +'Client: '+(b.client||'Client')+'\n'
-    +'Business: '+(b.project||b.client||'Unknown')+'\n'
     +'Goal: '+(b.goal||'Grow and succeed')+'\n'
-    +(b.industry?'Industry: '+b.industry+'\n':'')
-    +'\nBe expert, specific, and directly actionable. Keep responses focused and clear.';
+    +(b.industry?'Industry: '+b.industry+'\n':'')+'\n'
+    +'RESPONSE STYLE: Lead with the answer — no preamble. 2-3 short paragraphs max. '
+    +'No filler ("Great question!", "Certainly!"). No long bullet lists unless asked. '
+    +'Speak like an expert colleague, not a chatbot. Be direct, specific, and actionable.';
 }
 
 async function callAnthropic(agentId,userMsg){
@@ -1643,7 +1651,7 @@ async function callAnthropic(agentId,userMsg){
   var msgs=S.agentHist[agentId]?S.agentHist[agentId].slice(-10):[];
   var res=await fetch('/api/anthropic',{
     method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,system:sysP,messages:msgs})
+    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,system:sysP,messages:msgs})
   });
   if(!res.ok)throw new Error('Anthropic '+res.status);
   var data=await res.json();
@@ -1656,7 +1664,7 @@ async function callOpenAI(agentId,userMsg){
   var msgs=[{role:'system',content:sysP}].concat(hist);
   var res=await fetch('/api/openai',{
     method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'gpt-4o-mini',max_tokens:1200,messages:msgs})
+    body:JSON.stringify({model:'gpt-4o-mini',max_tokens:600,messages:msgs})
   });
   if(!res.ok)throw new Error('OpenAI '+res.status);
   var data=await res.json();
@@ -1693,7 +1701,7 @@ function openReport(reportName,agentId){
   if(!S.agentHist[agentId])S.agentHist[agentId]=[];
   fetch('/api/anthropic',{
     method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,system:buildSystemPrompt(agentId),messages:[{role:'user',content:prompt}]})
+    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:buildSystemPrompt(agentId),messages:[{role:'user',content:prompt}]})
   })
   .then(function(r){return r.json();})
   .then(function(d){
