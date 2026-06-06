@@ -1012,6 +1012,21 @@ select option{background:#FFFFFF;color:#0F172A}
   align-self:center;border-radius:8px;text-align:center;
   max-width:440px;padding:7px 14px;
 }
+/* Centered agent-switch chip shown between agents */
+.agent-divider{
+  display:flex;align-items:center;gap:10px;
+  padding:6px 0 2px;align-self:stretch;
+}
+.agent-divider::before,.agent-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+.agent-divider-chip{
+  background:var(--bg-raised);border:1px solid var(--border-active);
+  color:var(--text-secondary);font-family:var(--fm);
+  font-size:0.67rem;letter-spacing:0.06em;text-transform:uppercase;
+  padding:4px 12px;border-radius:100px;white-space:nowrap;
+  font-weight:600;
+}
 .bubble.output{
   background:var(--bg-card);
   border:1px solid var(--border);
@@ -1374,13 +1389,18 @@ select option{background:#FFFFFF;color:#0F172A}
    MOBILE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 @media(max-width:768px){
-  #screen-workflow{flex-direction:column !important}
+  #screen-workflow{
+    flex-direction:column !important;
+    height:calc(100dvh - 60px - var(--sat,0px));
+    overflow:hidden;
+  }
   .workflow-sidebar{
     width:100%;max-height:none;position:relative;top:0;
     display:flex;flex-direction:column;overflow:visible;
-    padding:10px 0 6px;border-right:none;
+    padding:8px 0 4px;border-right:none;
     border-bottom:1px solid var(--border);
     background:var(--bg-surface);
+    flex-shrink:0;
   }
   #sidebar-agents{
     display:flex;flex-direction:row;align-items:center;
@@ -1413,15 +1433,42 @@ select option{background:#FFFFFF;color:#0F172A}
   }
   .progress-label{font-size:0.63rem;color:var(--text-muted);white-space:nowrap}
   .progress-bar-track{flex:1}
+  /* Make chat fill exactly the space below the sidebar strip */
   .workflow-main,.workflow-main.chat-mode{
-    height:auto;max-height:none;overflow:visible;padding:18px 14px;
+    flex:1;height:0;min-height:0;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    padding:0;
   }
-  .chat-messages{max-height:60vh;max-height:60dvh}
-  .chat-header{padding:12px 14px 10px}
-  .chat-input-area{padding:10px 12px calc(10px + var(--sab,0px))}
-  .bubble-wrap{max-width:92%}
-  .quick-replies{gap:6px}
-  .qr-btn{font-size:0.76rem;padding:8px 12px}
+  /* Chat messages: grow to fill, no artificial cap */
+  .chat-messages{
+    flex:1;max-height:none;
+    padding:16px 14px 8px;
+    gap:10px;
+  }
+  /* Center conversation and constrain width */
+  .bubble-wrap{
+    max-width:min(96%,480px);
+    width:100%;
+  }
+  .bubble-wrap.agent{margin-right:auto}
+  .bubble-wrap.user{margin-left:auto}
+  /* Bigger bubbles, easier to read */
+  .bubble{font-size:0.88rem;line-height:1.65;padding:12px 14px}
+  /* Chat header: tight on mobile */
+  .chat-header{padding:10px 14px 8px}
+  .chat-agent-avatar{width:34px;height:34px;font-size:17px;border-radius:10px}
+  .chat-agent-name{font-size:0.82rem}
+  .chat-agent-role{font-size:0.7rem}
+  /* Quick replies: full-width row, easy to tap */
+  .quick-replies{gap:7px;flex-direction:column}
+  .qr-btn{
+    font-size:0.84rem;padding:12px 16px;min-height:48px;
+    border-radius:14px;text-align:left;width:100%;
+    display:flex;align-items:center;
+  }
+  /* Sticky input bar */
+  .chat-input-area{padding:10px 14px calc(12px + var(--sab,0px))}
   .info-row{grid-template-columns:1fr}
   .workflow-nav{flex-wrap:wrap;gap:10px}
   .workflow-nav > div{flex:1}
@@ -3987,6 +4034,15 @@ function startAgentConversation(agent, agentIdx, templateId) {
   var conv = getAgentConv(templateId, agent.id);
   var b    = state.brief;
 
+  // Inject centered agent divider chip
+  var div = document.createElement('div');
+  div.className = 'agent-divider';
+  var chip = document.createElement('span');
+  chip.className = 'agent-divider-chip';
+  chip.textContent = agent.icon + ' ' + agent.name;
+  div.appendChild(chip);
+  msgs.appendChild(div);
+
   // Phase 1: Orchestration Agent intro (only for first agent or agent transitions)
   var delay = 600;
   setTimeout(function() {
@@ -3997,10 +4053,10 @@ function startAgentConversation(agent, agentIdx, templateId) {
       delay = 1200;
     } else {
       // Brief transition message from Orchestrator
-      addBubble('system', '✓ ' + state.template.agents[agentIdx-1].name + ' approved by Guardian QA — score ' + (state.scores[state.template.agents[agentIdx-1].id] || 88) + '/100');
-      var nextMsg = 'Excellent work. Now I\'m bringing in your <strong>' + agent.name + '</strong> for the next phase. ' + (conv ? conv.intro(b) : 'They\'ll help with ' + agent.specialty.split('.')[0] + '.');
-      setTimeout(function() { addBubble('agent', nextMsg, '🎯'); }, 600);
-      delay = 1500;
+      addBubble('system', '✓ ' + state.template.agents[agentIdx-1].name + ' complete — Guardian QA score ' + (state.scores[state.template.agents[agentIdx-1].id] || 88) + '/100');
+      var nextMsg = 'Now bringing in your <strong>' + agent.name + '</strong>. ' + (conv ? conv.intro(b) : 'They\'ll help with ' + agent.specialty.split('.')[0] + '.');
+      setTimeout(function() { addBubble('agent', nextMsg, '🎯'); }, 500);
+      delay = 1300;
     }
 
     // Phase 2: Agent intro + first question
