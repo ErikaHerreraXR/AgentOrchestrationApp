@@ -1041,7 +1041,6 @@ var S = {
   user:null, client:{}, agents:[], tasks:[], docs:[], goals:[],
   agentHist:{}, agentBusy:{}, agentInit:{},
   currentAgent:null, voiceAgentId:null, recognition:null,
-  oaiKey: 'server', antKey: 'server',  // keys are server-side
   libAgentId:null, libTabFilter:null,
 };
 
@@ -1346,25 +1345,11 @@ async function agentSend(agentId){
   S.agentHist[agentId].push({role:'user',content:txt});
   showTyping(agentId);
   var reply=null;
-  try{
-    var onServer = window.location.protocol !== 'file:';
-    // 1. Server proxy (Render with env keys)
-    if(onServer && (!S.antKey || S.antKey==='server')){
-      try{ reply=await callAnthropic(agentId,txt); }catch(e){}
-    }
-    // 2. User-supplied Anthropic key
-    if(!reply && S.antKey && S.antKey!=='server'){
-      try{ reply=await callAnthropic(agentId,txt); }catch(e){}
-    }
-    // 3. OpenAI server proxy
-    if(!reply && onServer && (!S.oaiKey || S.oaiKey==='server')){
-      try{ reply=await callOpenAI(agentId,txt); }catch(e){}
-    }
-    // 4. User-supplied OpenAI key
-    if(!reply && S.oaiKey && S.oaiKey!=='server'){
-      try{ reply=await callOpenAI(agentId,txt); }catch(e){}
-    }
-  }catch(e){console.warn('API error:',e.message);}
+  if(window.location.protocol !== 'file:'){
+    // Try Anthropic Claude first (highest quality), fall back to OpenAI GPT
+    try{ reply=await callAnthropic(agentId,txt); }catch(e){ console.warn('[Portal] Anthropic error:',e.message); }
+    if(!reply){ try{ reply=await callOpenAI(agentId,txt); }catch(e){ console.warn('[Portal] OpenAI error:',e.message); } }
+  }
   if(!reply)reply=smartFallback(agentId,txt);
   hideTyping(agentId);
   addMsg(agentId,'agent',fmtMd(reply));
@@ -1381,27 +1366,11 @@ async function agentSend(agentId){
 
 async function callAnthropic(agentId,userMsg){
   var sysP=systemPrompt(agentId);
-  var msgs=S.agentHist[agentId].slice(-12);
-  // Use server proxy when hosted (no user key supplied, or key is the 'server' sentinel)
-  var useProxy = window.location.protocol !== 'file:' && (!S.antKey || S.antKey === 'server');
-  var url = useProxy
-    ? '/api/anthropic'
-    : 'https://api.anthropic.com/v1/messages';
-  var headers = {'Content-Type':'application/json'};
-  if(!useProxy){
-    headers['x-api-key']=S.antKey;
-    headers['anthropic-version']='2023-06-01';
-    headers['anthropic-dangerous-direct-browser-access']='true';
-  }
-  var res=await fetch(url,{
+  var msgs=S.agentHist[agentId].slice(-10);
+  var res=await fetch('/api/anthropic',{
     method:'POST',
-    headers:headers,
-    body:JSON.stringify({
-      model:'claude-sonnet-4-5',
-      max_tokens:1500,
-      system:sysP,
-      messages:msgs.slice(-10)
-    })
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,system:sysP,messages:msgs})
   });
   if(!res.ok)throw new Error('Anthropic '+res.status);
   var data=await res.json();
@@ -1411,13 +1380,11 @@ async function callAnthropic(agentId,userMsg){
 async function callOpenAI(agentId,userMsg){
   var sysP=systemPrompt(agentId);
   var msgs=[{role:'system',content:sysP}].concat(S.agentHist[agentId].slice(-10));
-  var useProxy = window.location.protocol !== 'file:' && (!S.oaiKey || S.oaiKey === 'server');
-  var url = useProxy
-    ? '/api/openai'
-    : 'https://api.openai.com/v1/chat/completions';
-  var headers = {'Content-Type':'application/json'};
-  if(!useProxy) headers['Authorization']='Bearer '+S.oaiKey;
-  var res=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({model:'gpt-4o-mini',max_tokens:1200,messages:msgs})});
+  var res=await fetch('/api/openai',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'gpt-4o-mini',max_tokens:1200,messages:msgs})
+  });
   if(!res.ok)throw new Error('OpenAI '+res.status);
   var data=await res.json();
   return data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content;
@@ -2136,7 +2103,7 @@ function speakViaProxy(text){
   // Stop any current audio
   if(S.currentAudio){S.currentAudio.pause();URL.revokeObjectURL(S.currentAudio._url||'');S.currentAudio=null;}
 
-  fetch(window.location.origin+'/api/openai/v1/audio/speech',{
+  fetch('/api/openai/speech',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
@@ -2169,26 +2136,6 @@ function speakViaProxy(text){
   });
 }
 
-function speakOpenAIDirect(text){
-  var key = S.oaiKey;
-  if(!key) return speakBrowser(text);
-  if(S.currentAudio){S.currentAudio.pause();S.currentAudio=null;}
-
-  fetch('/api/openai/speech',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-    body:JSON.stringify({model:'tts-1-hd',input:text,voice:'nova',speed:0.94,response_format:'mp3'})
-  })
-  .then(function(r){return r.blob();})
-  .then(function(blob){
-    var url=URL.createObjectURL(blob);
-    var audio=new Audio(url);
-    S.currentAudio=audio;
-    audio.onended=function(){URL.revokeObjectURL(url);};
-    audio.play().catch(function(){speakBrowser(text);});
-  })
-  .catch(function(){speakBrowser(text);});
-}
 
 function speakBrowser(text){
   // Fallback: browser built-in — picks the most natural available voice
