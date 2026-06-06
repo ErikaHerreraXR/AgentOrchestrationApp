@@ -1907,12 +1907,15 @@ function speakPortalText(text){
   /* Cancel anything already playing */
   if(window.speechSynthesis)window.speechSynthesis.cancel();
 
-  /* Always start browser TTS immediately (guarantees audio on iOS/Safari where
-     gesture context is lost by the time an async fetch completes).
-     If OpenAI audio loads successfully, cancel browser TTS and play that instead. */
-  speakPortalBrowser(spoken);
+  if(window.location.protocol==='file:'){speakPortalBrowser(spoken);return;}
 
-  if(window.location.protocol==='file:') return;
+  /* iOS/Safari requires audio to start within a user gesture. Play a silent stub
+     synchronously to unlock the audio context, then swap in OpenAI audio — one
+     voice only, no overlap. Fall back to browser TTS if OpenAI fails. */
+  var SILENT_WAV='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+  var placeholder=new Audio(SILENT_WAV);
+  placeholder.volume=0;
+  placeholder.play().catch(function(){});
 
   fetch('/api/openai/speech',{
     method:'POST',headers:{'Content-Type':'application/json'},
@@ -1920,14 +1923,13 @@ function speakPortalText(text){
   })
   .then(function(r){if(!r.ok)throw new Error(r.status);return r.blob();})
   .then(function(blob){
-    /* OpenAI audio ready — cancel browser TTS and play the better audio */
-    if(window.speechSynthesis)window.speechSynthesis.cancel();
+    placeholder.pause();
     var url=URL.createObjectURL(blob);
     var audio=new Audio(url);
     audio.onended=function(){URL.revokeObjectURL(url);};
-    audio.play().catch(function(){URL.revokeObjectURL(url);/* browser TTS already speaking, no action needed */});
+    audio.play().catch(function(){URL.revokeObjectURL(url);speakPortalBrowser(spoken);});
   })
-  .catch(function(){/* OpenAI failed — browser TTS is already playing, nothing to do */});
+  .catch(function(){placeholder.pause();speakPortalBrowser(spoken);});
 }
 
 function speakPortalBrowser(text){

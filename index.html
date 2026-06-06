@@ -3400,15 +3400,14 @@ function startWorkflow() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 const AGENT_Q = {
-  // ── CONSULTING ──────────────────────────────────────────────────────────────
+
+  // ── CONSULTING ─────────────────────────────────────────────────────────────
   'consulting.discovery': {
-    intro: b => `I am your Discovery Agent — I uncover the *real* problem beneath the stated one. Before I can map your stakeholders and write the problem statement, I need to understand your situation, ${b.client}.`,
+    intro: b => `Discovery Agent here. My job is to find the <em>real</em> problem — not the stated one. One question, ${b.client}:`,
     questions: [
-      { id:'stakeholders', text:'Who are the most critical stakeholders for this initiative?', opts:['2–5 people (tight core group)','6–15 (cross-functional team)','16–50 (department-wide)','50+ (org-wide initiative)'] },
-      { id:'clarity',      text:'How clearly is the problem defined right now?', opts:['Crystal clear — everyone agrees','Fairly clear — some ambiguity','Murky — stakeholders disagree','Unknown — discovery will define it'] },
-      { id:'prior_work',   text:'Has a similar initiative been attempted before?', opts:['Never tried before','Tried and stalled','Tried and partially succeeded','Multiple attempts — none stuck'] },
+      { id:'situation', text:'What best describes your situation right now?', opts:['Clear problem, unclear solution','Multiple stakeholders, conflicting views','We know what to do — just need the plan','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Perfect. Based on what you have told me — ${a.clarity||'unclear problem definition'}, ${a.stakeholders||'a cross-functional team'}, and ${a.prior_work||'prior experience'} — I am tailoring the discovery report for ${b.client} now.`,
+    closing: (a,b) => `Got it — <strong>${a.situation||'complex situation'}</strong>. That tells me exactly where to focus the discovery. Mapping your stakeholders and writing the problem statement now. ⚡`,
   },
   'consulting.research': {
     intro: b => `I am your Research & Insights Agent. I will synthesize market intelligence into decision-ready insights for ${b.client}. Let me focus the research correctly.`,
@@ -4970,9 +4969,18 @@ function speakViaProxy(text) {
     return;
   }
 
-  // serverHasOai === true — start browser TTS immediately as guarantee (iOS/Safari
-  // loses gesture context by the time a fetch resolves), then upgrade to OpenAI audio
-  speakBrowser(text);
+  // serverHasOai === true — use OpenAI exclusively (no browser TTS pre-start).
+  // iOS/Safari requires audio to be initiated within a user gesture. Play a silent
+  // stub synchronously to unlock the audio context, then swap in the OpenAI audio
+  // when the fetch resolves — one voice, no overlap.
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
+
+  var SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+  var placeholder = new Audio(SILENT_WAV);
+  placeholder.volume = 0;
+  voice.currentAudio = placeholder;
+  placeholder.play().catch(function() {}); // unlocks iOS audio; may silently fail on desktop
 
   fetch('/api/openai/speech', {
     method:  'POST',
@@ -4992,8 +5000,7 @@ function speakViaProxy(text) {
   })
   .then(function(blob) {
     if (!blob.type.includes('audio') && blob.size < 1000) throw new Error('bad-response');
-    // OpenAI audio ready — cancel browser TTS and play the higher-quality audio
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
     var url   = URL.createObjectURL(blob);
     var audio = new Audio(url);
     audio.preload = 'auto';
@@ -5003,7 +5010,6 @@ function speakViaProxy(text) {
     audio.onended = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
     audio.onerror = function() { removeTTSBadge(); URL.revokeObjectURL(url); };
     audio.play().catch(function() {
-      // Play blocked — browser TTS was already cancelled above, restart it
       removeTTSBadge();
       URL.revokeObjectURL(url);
       voice.currentAudio = null;
@@ -5011,8 +5017,9 @@ function speakViaProxy(text) {
     });
   })
   .catch(function(err) {
-    // OpenAI failed — browser TTS is already playing, nothing extra to do
-    console.warn('[TTS] OpenAI unavailable, browser voice active:', err.message);
+    console.warn('[TTS] OpenAI unavailable, falling back to browser TTS:', err.message);
+    if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
+    speakBrowser(text);
   });
 }
 
