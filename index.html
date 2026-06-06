@@ -4004,7 +4004,7 @@ var SYSTEM_PITCHES = {
     return 'Here\'s the short version, <strong>' + b.client + '</strong>: instead of one consultant juggling everything, you get a specialist agent for every discipline — discovery, strategy, financials, implementation — each asking only the questions that matter. A Guardian AI reviews every output before you see it. McKinsey data shows AI-augmented consulting cuts timelines by 40% and delivers 3× ROI. That system is running for you right now.';
   },
   product: function(b) {
-    return 'Short version: every product phase — research, UX, architecture, copy, handoff — gets its own specialist agent. They build on each other\'s work in sequence. Forrester data: AI-assisted product teams ship 2× faster with 30% fewer post-launch defects. That\'s exactly what\'s happening for <strong>' + b.project + '</strong>.';
+    return 'Short version: every product phase — research, UX, architecture, copy, handoff — gets its own specialist agent. They build on each other\'s work in sequence. Forrester data: AI-assisted product teams ship 2× faster with 30% fewer post-launch defects. That\'s exactly what\'s happening for <strong>' + (b.project||b.client||'your product') + '</strong>.';
   },
   marketing: function(b) {
     return 'Short version: brand strategy agent first, then campaign, then copy, then performance — each an expert, each building on the one before. HubSpot data shows AI-orchestrated marketing drives 67% more qualified leads at 40% lower cost. This is that system, tuned for <strong>' + (b.client||'you') + '</strong>.';
@@ -4033,12 +4033,12 @@ function launchAgentConv(conv, b, templateId, agent) {
 // ── Orchestration Agent intro for each template ───────────────────────────────
 var ORCH_INTROS = {
   consulting:  function(b) { return 'Welcome to your consulting engagement, <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong> — I\'ll guide you through every step. We have <strong>' + (state.template ? state.template.agents.length : 8) + ' specialist agents</strong> standing by. I\'ll introduce each one, ask them to gather what they need from you, and ensure every deliverable is Guardian-reviewed before we proceed.\n\nYour goal: <em>' + b.goal + '</em>\n\nLet\'s begin with your <strong>Discovery Agent</strong>. They\'ll uncover the real problem beneath the stated one.'; },
-  product:     function(b) { return 'Welcome, <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. We\'re building <strong>' + b.project + '</strong> — from user research through to engineer-ready handoff. I\'ll activate each specialist at the right moment and make sure their outputs build on each other.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe start with <strong>User Research</strong>. Understanding users before designing anything is non-negotiable.'; },
+  product:     function(b) { return 'Welcome, <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. We\'ll take your product from user research through to engineer-ready handoff — each specialist building on the last.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe start with <strong>User Research</strong>. Understanding users before designing anything is non-negotiable.'; },
   marketing:   function(b) { return 'Hello <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. We\'re building a complete marketing system — from brand strategy through to launch. Every agent I bring in will ask you the questions that matter for their discipline.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe start with <strong>Brand Strategy</strong>. The foundation everything else is built on.'; },
   compliance:  function(b) { return 'Welcome <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. Compliance work is only as good as its structure. I\'ll sequence your specialist agents correctly — regulatory research first, then risk, then policy, then controls.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe begin with your <strong>Regulatory Research Agent</strong> — mapping every applicable rule before we assess anything.'; },
-  realestate:  function(b) { return 'Welcome <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. Real estate development is a sequence — get the order wrong and you pay for it. I\'ll guide you through market research, underwriting, entitlements, design, construction, leasing, and finance in the right order.\n\nProject: <em>' + b.project + '</em>\n\nWe begin with <strong>Market Research</strong> — before any deal is evaluated, the market must be understood.'; },
-  interior:    function(b) { return 'Hello <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. A beautiful interior is a sequence, not a shopping cart. I\'ll guide you and your design team through discovery, concept, space planning, materials, procurement, lighting, styling, and trade coordination — in the right order.\n\nYour space: <em>' + b.project + '</em>\n\nWe begin with <strong>Client Discovery</strong> — finding the real vision before anything is specified.'; },
-  airbnb:      function(b) { return 'Welcome <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. Becoming a high-performing STR host is a system. I\'ll guide you through revenue analysis, listing optimisation, guest experience, property setup, operations, communication, reviews, and finance.\n\nYour property: <em>' + b.project + '</em>\n\nWe start with <strong>Revenue Analysis</strong> — knowing your numbers before optimising anything else.'; },
+  realestate:  function(b) { return 'Welcome <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. Real estate development is a sequence — get the order wrong and you pay for it. I\'ll guide you through market research, underwriting, entitlements, design, construction, leasing, and finance in the right order.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe begin with <strong>Market Research</strong> — before any deal is evaluated, the market must be understood.'; },
+  interior:    function(b) { return 'Hello <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. A beautiful interior is a sequence, not a shopping cart. I\'ll guide you and your design team through discovery, concept, space planning, materials, procurement, lighting, styling, and trade coordination — in the right order.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe begin with <strong>Client Discovery</strong> — finding the real vision before anything is specified.'; },
+  airbnb:      function(b) { return 'Welcome <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. Becoming a high-performing STR host is a system. I\'ll guide you through revenue analysis, listing optimisation, guest experience, property setup, operations, communication, reviews, and finance.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe start with <strong>Revenue Analysis</strong> — knowing your numbers before optimising anything else.'; },
 };
 
 // ── Main conversation render ──────────────────────────────────────────────────
@@ -4168,13 +4168,12 @@ function startAgentConversation(agent, agentIdx, templateId) {
     // Orchestration banner
     if (agentIdx === 0) {
       var orchText = (ORCH_INTROS[templateId] || function(b){ return 'Welcome, ' + b.client + '. I am your Orchestration Agent.'; })(b);
-      addBubble('agent', orchText, '🎯');
-      // Offer the "How does this work?" explainer before Phase 2 begins
-      setTimeout(function() {
+      // Use agentSay so the orchestration intro is spoken, then show quick replies
+      agentSay(orchText, 600).then(function() {
         showQuickReplies(['💡 How does this work?', "I'm ready — let's begin →"], function(choice) {
           if (choice.indexOf('How does this work') !== -1) {
             var pitch = (SYSTEM_PITCHES[templateId] || function(b){ return 'This system sequences specialist AI agents — each an expert — to deliver professional-grade work fast, with Guardian QA on every output.'; })(b);
-            agentSay(pitch, 800).then(function() {
+            agentSay(pitch, 400).then(function() {
               showQuickReplies(["Let's start the workflow →"], function() {
                 launchAgentConv(conv, b, templateId, agent);
               });
@@ -4183,7 +4182,7 @@ function startAgentConversation(agent, agentIdx, templateId) {
             launchAgentConv(conv, b, templateId, agent);
           }
         });
-      }, 1600);
+      });
       delay = 999999; // Phase 2 is now handled by the quick-reply callback above
     } else {
       // Brief transition message from Orchestrator
@@ -4971,7 +4970,10 @@ function speakViaProxy(text) {
     return;
   }
 
-  // serverHasOai === true — fetch real audio from OpenAI via proxy
+  // serverHasOai === true — start browser TTS immediately as guarantee (iOS/Safari
+  // loses gesture context by the time a fetch resolves), then upgrade to OpenAI audio
+  speakBrowser(text);
+
   fetch('/api/openai/speech', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -4989,11 +4991,9 @@ function speakViaProxy(text) {
     return r.blob();
   })
   .then(function(blob) {
-    // Verify we actually got audio (not a JSON error body)
-    if (!blob.type.includes('audio') && blob.size < 1000) {
-      // Got a small non-audio response — probably an error JSON
-      throw new Error('bad-response');
-    }
+    if (!blob.type.includes('audio') && blob.size < 1000) throw new Error('bad-response');
+    // OpenAI audio ready — cancel browser TTS and play the higher-quality audio
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
     var url   = URL.createObjectURL(blob);
     var audio = new Audio(url);
     audio.preload = 'auto';
@@ -5002,8 +5002,8 @@ function speakViaProxy(text) {
     audio.onplay  = function() { showTTSBadge('Speaking…'); };
     audio.onended = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
     audio.onerror = function() { removeTTSBadge(); URL.revokeObjectURL(url); };
-    audio.play().catch(function(playErr) {
-      // Autoplay blocked by browser — fall back to browser TTS immediately
+    audio.play().catch(function() {
+      // Play blocked — browser TTS was already cancelled above, restart it
       removeTTSBadge();
       URL.revokeObjectURL(url);
       voice.currentAudio = null;
@@ -5011,9 +5011,8 @@ function speakViaProxy(text) {
     });
   })
   .catch(function(err) {
-    removeTTSBadge();
-    console.warn('[TTS] OpenAI failed, using browser voice:', err.message);
-    speakBrowser(text);
+    // OpenAI failed — browser TTS is already playing, nothing extra to do
+    console.warn('[TTS] OpenAI unavailable, browser voice active:', err.message);
   });
 }
 
