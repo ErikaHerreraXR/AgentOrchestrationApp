@@ -811,6 +811,30 @@ select option{background:#FFFFFF;color:#0F172A}
 }
 .email-note::before{content:"📧";font-size:0.8rem}
 
+/* ── Simplified 3-field brief ──────────────────────────────────── */
+#screen-brief .container{max-width:600px}
+.brief-form{display:flex;flex-direction:column;gap:20px}
+.brief-tpl-card{
+  display:flex;align-items:center;gap:16px;
+  background:#FFFFFF;border:1.5px solid #CBD5E1;
+  border-radius:12px;padding:16px 20px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.06);
+}
+.brief-tpl-label{
+  font-family:var(--fm);font-size:0.63rem;font-weight:700;
+  letter-spacing:0.09em;text-transform:uppercase;color:#64748B;margin-bottom:8px;
+}
+.brief-tpl-card .template-badge{
+  padding:6px 14px;border-radius:8px;
+  font-family:var(--fm);font-size:0.72rem;font-weight:700;
+}
+/* Natural-language labels for the brief form */
+#screen-brief .brief-form .form-group label{
+  font-size:0.95rem;font-weight:700;
+  letter-spacing:0;text-transform:none;color:#1E293B;
+}
+#screen-brief .brief-form .form-group textarea{min-height:90px}
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    WORKFLOW — sidebar + chat
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -2026,61 +2050,46 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 <!-- ════════════════════════════════════════════════ SCREEN: BRIEF -->
 <div id="screen-brief" class="screen">
   <div class="container">
-    <div class="brief-header">
-      <div class="template-badge" id="brief-badge">—</div>
-      <h2>Client Project Brief</h2>
-      <div style="display:flex;gap:8px;align-items:center;margin-left:auto">
-        <button class="btn btn-ghost btn-sm" id="brief-hiw-btn" onclick="openHIW(state.template&&state.template.id)" title="See industry insights for this template" style="font-size:.7rem;padding:5px 10px">📊 Why This Works</button>
-        <button class="btn btn-ghost btn-sm" onclick="goHome()">← Change Template</button>
+
+    <div class="brief-header" style="margin-bottom:28px">
+      <div style="flex:1">
+        <h2 style="margin-bottom:4px">Let's get started</h2>
+        <p style="font-size:0.82rem;color:#64748B;margin:0;font-weight:400">Two questions and you're in — our agents handle everything else.</p>
       </div>
+      <button class="btn btn-ghost btn-sm" id="brief-hiw-btn" onclick="openHIW(state.template&&state.template.id)" title="See industry insights for this template" style="font-size:.7rem;padding:5px 10px;flex-shrink:0">📊 Why This Works</button>
     </div>
-    <div class="brief-grid">
+
+    <div class="brief-form">
+
+      <!-- Template — pre-filled -->
+      <div class="brief-tpl-card">
+        <div style="flex:1">
+          <div class="brief-tpl-label">Your selected workflow</div>
+          <div class="template-badge" id="brief-badge">—</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="goHome()" style="white-space:nowrap;flex-shrink:0">Change →</button>
+      </div>
+
+      <!-- Company name -->
       <div class="form-group">
-        <label>Client / Company Name <span>*</span></label>
-        <input type="text" id="f-client" placeholder="e.g. Acme Corp" />
+        <label>What's your company name? <span>*</span></label>
+        <input type="text" id="f-client" placeholder="e.g. Acme Corp" autocomplete="organization" />
       </div>
+
+      <!-- Goal -->
       <div class="form-group">
-        <label>Project Name <span>*</span></label>
-        <input type="text" id="f-project" placeholder="e.g. Brand Refresh Q3" />
+        <label>What do you want to achieve? <span>*</span></label>
+        <textarea id="f-goal" placeholder="Describe your main goal in one sentence — our specialist agents will ask for everything else." rows="3"></textarea>
+        <div class="hint">Keep it simple. One sentence is enough.</div>
       </div>
-      <div class="form-group">
-        <label>Primary Deliverable <span>*</span></label>
-        <input type="text" id="f-deliverable" placeholder="e.g. Full campaign with 3 ad variants" />
-      </div>
-      <div class="form-group">
-        <label>Target Completion</label>
-        <input type="text" id="f-deadline" placeholder="e.g. 4 weeks / Aug 15 / Sprint 2" />
-      </div>
-      <div class="form-group full">
-        <label>Primary Goal <span>*</span></label>
-        <input type="text" id="f-goal" placeholder="Describe the main thing this project needs to achieve in one sentence" />
-      </div>
-      <div class="form-group full">
-        <label>Target Audience / End User</label>
-        <input type="text" id="f-audience" placeholder="Who is this for? Be specific." />
-      </div>
-      <div class="form-group">
-        <label>Budget Range</label>
-        <input type="text" id="f-budget" placeholder="e.g. $50k–$100k" />
-      </div>
-      <div class="form-group">
-        <label>Tone / Style</label>
-        <input type="text" id="f-tone" placeholder="e.g. Professional, Bold, Minimalist" />
-      </div>
-      <div class="form-group full">
-        <label>Key Constraints or Must-Haves</label>
-        <textarea id="f-constraints" placeholder="Legal requirements, brand rules, technical limits, non-negotiables..."></textarea>
-      </div>
-      <div class="form-group full">
-        <label>Known Risks or Issues</label>
-        <textarea id="f-risks" placeholder="What could go wrong? Any known blockers, sensitive areas, or dependencies?"></textarea>
-      </div>
+
     </div>
+
     <div class="brief-actions">
-      <span class="email-note">Brief will be sent to erika@productimagination.com</span>
-      <button class="btn btn-ghost" onclick="goHome()">← Back</button>
-      <button class="btn btn-primary btn-lg" onclick="startWorkflow()">Start Workflow →</button>
+      <span class="email-note">Sent to erika@productimagination.com</span>
+      <button class="btn btn-primary btn-lg" onclick="startWorkflow()">Let's begin →</button>
     </div>
+
   </div>
 </div>
 
@@ -3341,25 +3350,26 @@ function selectTemplate(id) {
 
 function startWorkflow() {
   const client = document.getElementById('f-client').value.trim();
-  const project = document.getElementById('f-project').value.trim();
-  const deliverable = document.getElementById('f-deliverable').value.trim();
-  const goal = document.getElementById('f-goal').value.trim();
+  const goal   = document.getElementById('f-goal').value.trim();
 
-  sendBriefByEmail();
-  if (!client || !project || !deliverable || !goal) {
-    alert('Please fill in the required fields (Client Name, Project Name, Primary Deliverable, and Primary Goal) before starting.');
+  if (!client || !goal) {
+    alert('Please fill in your company name and goal to get started.');
     return;
   }
 
+  sendBriefByEmail();
+
   state.brief = {
-    client, project, deliverable,
-    deadline:    document.getElementById('f-deadline').value.trim()    || 'TBD',
+    client,
     goal,
-    audience:    document.getElementById('f-audience').value.trim()    || 'TBD',
-    budget:      document.getElementById('f-budget').value.trim()      || 'TBD',
-    tone:        document.getElementById('f-tone').value.trim()        || 'TBD',
-    constraints: document.getElementById('f-constraints').value.trim() || 'None specified',
-    risks:       document.getElementById('f-risks').value.trim()       || 'None specified',
+    project:     '',
+    deliverable: '',
+    deadline:    'TBD',
+    audience:    'TBD',
+    budget:      'TBD',
+    tone:        'TBD',
+    constraints: 'None specified',
+    risks:       'None specified',
     // ── Portal bridge: template ID so the portal loads the right agent team ──
     template:    state.template ? state.template.id : 'consulting',
   };
