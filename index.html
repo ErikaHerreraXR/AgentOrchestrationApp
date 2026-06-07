@@ -2071,43 +2071,6 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 </div>
 
 <!-- ════════════════════════════════════════════════ SCREEN: BRIEF -->
-<div id="screen-brief" class="screen">
-  <div class="brief-intake">
-
-    <!-- Selected workflow pill -->
-    <div class="brief-tpl-row">
-      <span class="brief-tpl-label">Selected workflow</span>
-      <span class="template-badge" id="brief-badge">—</span>
-      <button class="btn-link" onclick="goHome()">Change →</button>
-    </div>
-
-    <!-- Q1: Company name -->
-    <div class="brief-q">
-      <div class="brief-q-label">What's your company name?</div>
-      <input class="brief-line-input" type="text" id="f-client"
-             placeholder="e.g. Acme Corp" autocomplete="organization"
-             onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('f-goal').focus()}" />
-    </div>
-
-    <!-- Q2: Goal -->
-    <div class="brief-q">
-      <div class="brief-q-label">What do you want to achieve?</div>
-      <textarea class="brief-line-input" id="f-goal" rows="3"
-                placeholder="One sentence is enough — agents ask for everything else."
-                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();startWorkflow()}"></textarea>
-    </div>
-
-    <!-- CTA -->
-    <div class="brief-cta-row">
-      <button class="btn btn-primary btn-lg" onclick="startWorkflow()">Let's begin →</button>
-      <div class="brief-email-note">Results sent to erika@productimagination.com &nbsp;·&nbsp;
-        <button class="btn-link" id="brief-hiw-btn" onclick="openHIW(state.template&&state.template.id)" style="display:inline;font-size:inherit">📊 Why this works</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
 <!-- ════════════════════════════════════════════════ SCREEN: WORKFLOW -->
 <div id="screen-workflow" class="screen">
   <aside class="workflow-sidebar" id="workflow-sidebar">
@@ -3345,20 +3308,15 @@ function selectTemplate(id) {
   state.scores = {};
   state.prCount = 1;
   state.convAnswers = {};
-  state.convPhase = "orch_intro";
+  state.convPhase = 'brief_collect';
+  state.briefStep = 0;
   state.questionIdx = 0;
+  state.pins = [];
   state.currentAgentIcon = state.template && state.template.agents[0] ? state.template.agents[0].icon : "🤖";
   state.brief = {};
-  // Pre-initialize step sets
   state.template.agents.forEach(a => { state.stepChecked[a.id] = new Set(); });
-
-  const badge = document.getElementById('brief-badge');
-  badge.textContent = `${state.template.icon} ${state.template.title}`;
-  badge.style.background = state.template.color + '22';
-  badge.style.color = state.template.color;
-  badge.style.border = `1px solid ${state.template.color}44`;
-
-  showScreen('brief');
+  renderWorkflow();
+  showScreen('workflow');
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -3964,7 +3922,7 @@ function renderWorkflow() {
 
   // Reset per-agent conversation state fresh on each render
   if (!state.convAnswers) state.convAnswers = {};
-  state.convPhase   = 'orch_intro';
+  if (state.convPhase !== 'brief_collect') state.convPhase = 'orch_intro';
   state.questionIdx = 0;
   state.currentAgentIcon = agent.icon;
 
@@ -4062,7 +4020,21 @@ function updateChatHeader(agent, idx, total, pct) {
 function startAgentConversation(agent, agentIdx, templateId) {
   var msgs = document.getElementById('chat-messages');
   if (!msgs) return;
-  msgs.innerHTML = ''; // clear for new agent
+  msgs.innerHTML = '';
+
+  // Brief collection phase — gather company + goal conversationally before workflow
+  if (state.convPhase === 'brief_collect') {
+    var t = state.template;
+    var introDiv = document.createElement('div');
+    introDiv.className = 'agent-divider';
+    var introChip = document.createElement('span');
+    introChip.className = 'agent-divider-chip';
+    introChip.textContent = '🎯 Orchestration Agent';
+    introDiv.appendChild(introChip);
+    msgs.appendChild(introDiv);
+    agentSay('Welcome! I\'m your Orchestration Agent for the <strong>' + t.title + '</strong> workflow. Let\'s get started — what\'s your company name?', 600);
+    return;
+  }
 
   var conv = getAgentConv(templateId, agent.id);
   var b    = state.brief;
@@ -4345,6 +4317,35 @@ function handleChatSend() {
   input.value = '';
   removeQuickReplies();
   addBubble('user', val, '👤');
+
+  // Brief collection — runs before any agent workflow starts
+  if (state.convPhase === 'brief_collect') {
+    if (state.briefStep === 0) {
+      state.brief.client = val;
+      state.briefStep = 1;
+      agentSay('Great to have you, <strong>' + val + '</strong>! What\'s the main goal you want to achieve with this project?', 400);
+    } else {
+      state.brief.goal = val;
+      state.brief = Object.assign(state.brief, {
+        project:     '',
+        deliverable: '',
+        deadline:    'TBD',
+        audience:    'TBD',
+        budget:      'TBD',
+        tone:        'TBD',
+        constraints: 'None specified',
+        risks:       'None specified',
+        template:    state.template ? state.template.id : 'consulting',
+      });
+      try { localStorage.setItem('pi-client-brief', JSON.stringify(state.brief)); } catch(e) {}
+      sendBriefByEmail();
+      state.convPhase  = 'orch_intro';
+      state.questionIdx = 0;
+      state.convAnswers = {};
+      startAgentConversation(state.template.agents[0], 0, state.template.id);
+    }
+    return;
+  }
 
   var b = state.brief;
   var agent = state.template ? state.template.agents[state.agentIndex] : null;
