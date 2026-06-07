@@ -147,7 +147,7 @@ body{
   font-family:var(--fb);
   font-size:15px;
   line-height:1.6;
-  overflow-x:hidden;
+  overflow-x:clip;   /* clip prevents horizontal overflow without creating a scroll container */
   -webkit-font-smoothing:antialiased;
 }
 a{color:inherit;text-decoration:none}
@@ -720,26 +720,45 @@ nav{
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CLIENT PROJECT BRIEF — white page, dark text
+   CLIENT BRIEF — conversational intake, dark theme
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#screen-brief{
-  padding:40px 24px 60px;
-  background:#F0F4F8;  /* slightly deeper tint so white cards pop */
+#screen-brief{background:var(--bg-base);}
+.brief-intake{
+  max-width:620px;margin:0 auto;
+  padding:80px 28px 80px;
+  display:flex;flex-direction:column;gap:44px;
 }
-
-.brief-header{
-  display:flex;align-items:center;gap:16px;
-  margin-bottom:36px;padding-bottom:24px;
-  border-bottom:2px solid #CBD5E1;
+.brief-tpl-row{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
 }
-.brief-header .template-badge{
-  padding:6px 14px;border-radius:8px;
-  font-family:var(--fm);font-size:0.70rem;font-weight:700;
+.brief-tpl-row .brief-tpl-label{
+  font-family:var(--fm);font-size:0.58rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);
 }
-.brief-header h2{
-  flex:1;font-weight:800;font-size:clamp(1.2rem,2.5vw,1.7rem);
-  color:#0F172A;letter-spacing:-0.03em;
+.brief-tpl-row .btn-link{
+  background:none;border:none;color:var(--text-muted);font-size:0.8rem;
+  cursor:pointer;font-family:inherit;padding:0;margin-left:auto;
+  transition:color 0.15s;
 }
+.brief-tpl-row .btn-link:hover{color:var(--accent);}
+.brief-q{display:flex;flex-direction:column;gap:14px;}
+.brief-q-label{
+  font-size:clamp(1.15rem,2.8vw,1.55rem);
+  font-weight:700;color:var(--text-primary);letter-spacing:-0.02em;line-height:1.3;
+}
+.brief-line-input{
+  background:transparent;border:none;
+  border-bottom:2px solid var(--border-active);
+  padding:12px 0;width:100%;outline:none;
+  font-size:1.05rem;font-family:inherit;color:var(--text-primary);
+  transition:border-color 0.18s;
+  resize:none;
+}
+.brief-line-input:focus{border-bottom-color:var(--accent);}
+.brief-line-input::placeholder{color:var(--text-secondary);}
+@media(max-width:768px){.brief-intake{padding:60px 20px 60px;}}
+.brief-cta-row{display:flex;flex-direction:column;gap:10px;}
+.brief-email-note{font-size:0.73rem;color:var(--text-muted);}
 
 .brief-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:700px){.brief-grid{grid-template-columns:1fr}}
@@ -1569,7 +1588,7 @@ select option{background:#FFFFFF;color:#0F172A}
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left,   0px);
 }
-body{-webkit-overflow-scrolling:touch;-webkit-tap-highlight-color:transparent;overscroll-behavior:none;touch-action:manipulation}
+body{-webkit-overflow-scrolling:touch;-webkit-tap-highlight-color:transparent;}
 nav{padding-top:var(--sat);height:calc(60px + var(--sat))}
 .nav-inner{height:60px}
 .workflow-sidebar{top:calc(60px + var(--sat));max-height:calc(100vh - 60px - var(--sat));max-height:calc(100dvh - 60px - var(--sat))}
@@ -1583,7 +1602,7 @@ input,textarea,select{-webkit-appearance:none;appearance:none;border-radius:8px;
 @media all and (display-mode:standalone){#ios-status-bar-spacer{display:block}}
 @media(max-width:768px){
   .workflow-sidebar{padding-left:max(6px,var(--sal));padding-right:max(6px,var(--sar));top:0}
-  #screen-brief{padding-bottom:calc(60px + var(--sab))}
+  .brief-intake{padding-bottom:calc(60px + var(--sab))}
   .templates-grid{padding-bottom:calc(24px + var(--sab))}
   .btn{min-height:44px}.agent-item{min-height:44px}
 }
@@ -2053,45 +2072,37 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 
 <!-- ════════════════════════════════════════════════ SCREEN: BRIEF -->
 <div id="screen-brief" class="screen">
-  <div class="container">
+  <div class="brief-intake">
 
-    <div class="brief-header" style="margin-bottom:28px">
-      <div style="flex:1">
-        <h2 style="margin-bottom:4px">Let's get started</h2>
-        <p style="font-size:0.82rem;color:#64748B;margin:0;font-weight:400">Two questions and you're in — our agents handle everything else.</p>
-      </div>
-      <button class="btn btn-ghost btn-sm" id="brief-hiw-btn" onclick="openHIW(state.template&&state.template.id)" title="See industry insights for this template" style="font-size:.7rem;padding:5px 10px;flex-shrink:0">📊 Why This Works</button>
+    <!-- Selected workflow pill -->
+    <div class="brief-tpl-row">
+      <span class="brief-tpl-label">Selected workflow</span>
+      <span class="template-badge" id="brief-badge">—</span>
+      <button class="btn-link" onclick="goHome()">Change →</button>
     </div>
 
-    <div class="brief-form">
-
-      <!-- Template — pre-filled -->
-      <div class="brief-tpl-card">
-        <div style="flex:1">
-          <div class="brief-tpl-label">Your selected workflow</div>
-          <div class="template-badge" id="brief-badge">—</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="goHome()" style="white-space:nowrap;flex-shrink:0">Change →</button>
-      </div>
-
-      <!-- Company name -->
-      <div class="form-group">
-        <label>What's your company name? <span>*</span></label>
-        <input type="text" id="f-client" placeholder="e.g. Acme Corp" autocomplete="organization" />
-      </div>
-
-      <!-- Goal -->
-      <div class="form-group">
-        <label>What do you want to achieve? <span>*</span></label>
-        <textarea id="f-goal" placeholder="Describe your main goal in one sentence — our specialist agents will ask for everything else." rows="3"></textarea>
-        <div class="hint">Keep it simple. One sentence is enough.</div>
-      </div>
-
+    <!-- Q1: Company name -->
+    <div class="brief-q">
+      <div class="brief-q-label">What's your company name?</div>
+      <input class="brief-line-input" type="text" id="f-client"
+             placeholder="e.g. Acme Corp" autocomplete="organization"
+             onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('f-goal').focus()}" />
     </div>
 
-    <div class="brief-actions">
-      <span class="email-note">Sent to erika@productimagination.com</span>
+    <!-- Q2: Goal -->
+    <div class="brief-q">
+      <div class="brief-q-label">What do you want to achieve?</div>
+      <textarea class="brief-line-input" id="f-goal" rows="3"
+                placeholder="One sentence is enough — agents ask for everything else."
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();startWorkflow()}"></textarea>
+    </div>
+
+    <!-- CTA -->
+    <div class="brief-cta-row">
       <button class="btn btn-primary btn-lg" onclick="startWorkflow()">Let's begin →</button>
+      <div class="brief-email-note">Results sent to erika@productimagination.com &nbsp;·&nbsp;
+        <button class="btn-link" id="brief-hiw-btn" onclick="openHIW(state.template&&state.template.id)" style="display:inline;font-size:inherit">📊 Why this works</button>
+      </div>
     </div>
 
   </div>
