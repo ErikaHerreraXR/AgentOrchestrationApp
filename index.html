@@ -1560,7 +1560,7 @@ select option{background:#FFFFFF;color:#0F172A}
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   TRY ME — floating chat widget
+   TRY ME — floating widget + quick demo modal
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #try-me-widget{
   position:fixed;bottom:28px;right:24px;z-index:9000;
@@ -1568,126 +1568,84 @@ select option{background:#FFFFFF;color:#0F172A}
   pointer-events:none;
 }
 #try-me-widget.visible{pointer-events:auto;}
-
-/* Speech bubble */
 #try-me-bubble{
-  background:#ffffff;
-  border-radius:20px 20px 4px 20px;
-  padding:16px 20px;
-  max-width:280px;
+  background:#ffffff;border-radius:20px 20px 4px 20px;padding:14px 18px;max-width:260px;
   box-shadow:0 8px 32px rgba(0,0,0,0.22),0 2px 8px rgba(0,0,0,0.12);
   opacity:0;transform:translateY(12px) scale(0.96);
   transition:opacity 0.35s ease,transform 0.35s cubic-bezier(.34,1.56,.64,1);
-  pointer-events:none;
-  position:relative;
+  pointer-events:none;position:relative;
 }
-#try-me-widget.show-bubble #try-me-bubble{
-  opacity:1;transform:translateY(0) scale(1);
-  pointer-events:auto;
-}
-#try-me-bubble::after{
-  content:'';position:absolute;bottom:-10px;right:24px;
-  border:6px solid transparent;
-  border-top-color:#ffffff;
-  border-bottom:0;
-}
-#try-me-bubble-name{
-  font-size:0.72rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;
-  color:#0EA5E9;margin-bottom:6px;display:flex;align-items:center;gap:6px;
-}
-#try-me-bubble-name::before{
-  content:'';width:8px;height:8px;border-radius:50%;
-  background:#22C55E;display:inline-block;
-  box-shadow:0 0 0 3px rgba(34,197,94,0.2);
-  animation:try-pulse 1.8s ease-in-out infinite;
-}
-#try-me-bubble-text{
-  font-size:0.9rem;line-height:1.55;color:#0F172A;font-weight:500;
-  margin-bottom:14px;
-}
-#try-me-bubble-cta{
-  display:inline-flex;align-items:center;gap:8px;
-  background:linear-gradient(135deg,#0EA5E9,#7C3AED);
-  color:#ffffff;border:none;border-radius:100px;
-  padding:10px 20px;font-size:0.85rem;font-weight:700;
-  cursor:pointer;width:100%;justify-content:center;
-  box-shadow:0 4px 14px rgba(14,165,233,0.35);
-  transition:transform 0.15s ease,box-shadow 0.15s ease;
-}
-#try-me-bubble-cta:hover{
-  transform:translateY(-1px);box-shadow:0 6px 20px rgba(14,165,233,0.45);
-}
-#try-me-bubble-cta:active{transform:translateY(0);}
-
-/* Floating avatar button */
-#try-me-btn{
-  width:62px;height:62px;border-radius:50%;
-  background:linear-gradient(135deg,#0EA5E9 0%,#7C3AED 100%);
-  border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 6px 24px rgba(14,165,233,0.45),0 2px 8px rgba(0,0,0,0.2);
-  transition:transform 0.2s cubic-bezier(.34,1.56,.64,1),box-shadow 0.2s ease;
-  position:relative;
-  animation:try-float 3.2s ease-in-out infinite;
-  opacity:0;transform:scale(0);
-}
-#try-me-widget.visible #try-me-btn{
-  opacity:1;transform:scale(1);
-  animation:try-float 3.2s ease-in-out infinite 0.2s;
-  transition:opacity 0.4s ease,transform 0.4s cubic-bezier(.34,1.56,.64,1);
-}
-#try-me-btn:hover{
-  transform:scale(1.1)!important;
-  box-shadow:0 10px 32px rgba(14,165,233,0.55),0 2px 8px rgba(0,0,0,0.2);
-  animation:none;
-}
-#try-me-btn:active{transform:scale(0.97)!important;}
-#try-me-btn-inner{font-size:1.6rem;line-height:1;}
-
-/* Online dot on avatar */
-#try-me-dot{
-  position:absolute;top:2px;right:2px;
-  width:16px;height:16px;border-radius:50%;
-  background:#22C55E;border:2.5px solid #ffffff;
-  box-shadow:0 0 0 0 rgba(34,197,94,0.5);
-  animation:try-ping 1.8s ease-in-out infinite;
-}
-
-/* Typing dots (shown while typing indicator plays) */
-.try-typing-dots{display:inline-flex;align-items:center;gap:4px;margin-top:2px;}
-.try-typing-dots span{
-  width:6px;height:6px;border-radius:50%;background:#94A3B8;
-  animation:try-dot-bounce 1.2s ease-in-out infinite;
-}
-.try-typing-dots span:nth-child(2){animation-delay:0.2s;}
-.try-typing-dots span:nth-child(3){animation-delay:0.4s;}
-
-@keyframes try-ping{
-  0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);}
-  50%{box-shadow:0 0 0 6px rgba(34,197,94,0);}
-}
-@keyframes try-pulse{
-  0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.2);}
-  50%{box-shadow:0 0 0 5px rgba(34,197,94,0);}
-}
-@keyframes try-float{
-  0%,100%{transform:translateY(0) scale(1);}
-  50%{transform:translateY(-6px) scale(1);}
-}
-@keyframes try-dot-bounce{
-  0%,60%,100%{transform:translateY(0);}
-  30%{transform:translateY(-5px);}
-}
-
-/* Hide widget when in workflow/brief/complete */
+#try-me-widget.show-bubble #try-me-bubble{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+#try-me-bubble::after{content:'';position:absolute;bottom:-10px;right:22px;border:6px solid transparent;border-top-color:#ffffff;border-bottom:0;}
+#try-me-bubble-name{font-size:0.68rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#0EA5E9;margin-bottom:5px;display:flex;align-items:center;gap:6px;}
+#try-me-bubble-name::before{content:'';width:7px;height:7px;border-radius:50%;background:#22C55E;display:inline-block;animation:try-pulse 1.8s ease-in-out infinite;}
+#try-me-bubble-text{font-size:0.85rem;line-height:1.5;color:#0F172A;font-weight:500;margin-bottom:12px;}
+#try-me-bubble-cta{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#0EA5E9,#7C3AED);color:#fff;border:none;border-radius:100px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;width:100%;justify-content:center;box-shadow:0 4px 14px rgba(14,165,233,0.35);transition:transform 0.15s ease,box-shadow 0.15s ease;}
+#try-me-bubble-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(14,165,233,0.45);}
+#try-me-btn{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#0EA5E9 0%,#7C3AED 100%);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(14,165,233,0.45),0 2px 8px rgba(0,0,0,0.2);position:relative;opacity:0;transform:scale(0);}
+#try-me-widget.visible #try-me-btn{opacity:1;transform:scale(1);animation:try-float 3.2s ease-in-out infinite 0.2s;transition:opacity 0.4s ease,transform 0.4s cubic-bezier(.34,1.56,.64,1);}
+#try-me-btn:hover{transform:scale(1.1)!important;box-shadow:0 10px 32px rgba(14,165,233,0.55),0 2px 8px rgba(0,0,0,0.2);animation:none;}
+#try-me-btn-inner{font-size:1.5rem;line-height:1;}
+#try-me-dot{position:absolute;top:2px;right:2px;width:15px;height:15px;border-radius:50%;background:#22C55E;border:2.5px solid #fff;animation:try-ping 1.8s ease-in-out infinite;}
+@keyframes try-ping{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);}50%{box-shadow:0 0 0 6px rgba(34,197,94,0);}}
+@keyframes try-pulse{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.2);}50%{box-shadow:0 0 0 5px rgba(34,197,94,0);}}
+@keyframes try-float{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-5px) scale(1);}}
 body.in-workflow #try-me-widget{display:none;}
+@media(max-width:600px){#try-me-widget{bottom:18px;right:14px;}#try-me-bubble{max-width:230px;}#try-me-btn{width:52px;height:52px;}}
 
-/* Mobile adjustments */
-@media(max-width:600px){
-  #try-me-widget{bottom:20px;right:16px;}
-  #try-me-bubble{max-width:240px;}
-  #try-me-btn{width:54px;height:54px;}
+/* Quick demo modal */
+#try-demo-modal{
+  position:fixed;inset:0;z-index:9100;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(8,14,26,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;
+  transition:opacity 0.28s ease;
 }
+#try-demo-modal.open{opacity:1;pointer-events:auto;}
+#try-demo-card{
+  background:#0D1829;border:1px solid rgba(56,189,248,0.18);
+  border-radius:24px;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;
+  box-shadow:0 24px 80px rgba(0,0,0,0.55),0 0 0 1px rgba(14,165,233,0.08);
+  transform:translateY(20px) scale(0.97);
+  transition:transform 0.32s cubic-bezier(.34,1.56,.64,1);
+  margin:16px;
+}
+#try-demo-modal.open #try-demo-card{transform:translateY(0) scale(1);}
+#try-demo-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 26px 0;
+}
+#try-demo-header h3{font-size:1.1rem;font-weight:800;color:#F8FAFC;letter-spacing:-0.02em;margin:0;}
+#try-demo-close{background:rgba(148,163,184,0.1);border:none;color:#94A3B8;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:background 0.15s,color 0.15s;}
+#try-demo-close:hover{background:rgba(148,163,184,0.2);color:#F8FAFC;}
+#try-demo-body{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:20px 26px 26px;}
+@media(max-width:600px){#try-demo-body{grid-template-columns:1fr;}#try-demo-card{border-radius:18px;margin:10px;}}
+.try-demo-col-label{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#38BDF8;margin-bottom:10px;}
+.try-demo-section{display:flex;flex-direction:column;}
+
+/* Brand card preview area */
+#try-brand-preview{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(148,163,184,0.1);
+  border-radius:14px;overflow:hidden;min-height:160px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s ease;
+}
+#try-brand-preview svg{width:100%;height:auto;display:block;}
+#try-brand-preview.generating{animation:try-shimmer 1.2s ease-in-out infinite;}
+@keyframes try-shimmer{0%,100%{opacity:0.7;}50%{opacity:1;}}
+.try-example-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);border-radius:100px;padding:3px 10px;font-size:0.68rem;font-weight:700;color:#34D399;letter-spacing:0.04em;margin-bottom:8px;width:fit-content;}
+
+/* Input form */
+.try-field{margin-bottom:14px;}
+.try-field label{display:block;font-size:0.72rem;font-weight:700;color:#94A3B8;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px;}
+.try-field input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(148,163,184,0.2);border-radius:10px;padding:11px 14px;font-size:0.9rem;color:#F8FAFC;font-family:inherit;outline:none;transition:border-color 0.18s,box-shadow 0.18s;box-sizing:border-box;}
+.try-field input::placeholder{color:rgba(148,163,184,0.45);}
+.try-field input:focus{border-color:#38BDF8;box-shadow:0 0 0 3px rgba(56,189,248,0.12);}
+#try-generate-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#0EA5E9,#7C3AED);color:#fff;border:none;border-radius:12px;padding:13px 20px;font-size:0.92rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(14,165,233,0.3);transition:transform 0.15s,box-shadow 0.15s;margin-bottom:10px;}
+#try-generate-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(14,165,233,0.42);}
+#try-generate-btn:active{transform:translateY(0);}
+#try-full-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:transparent;border:1px solid rgba(148,163,184,0.2);color:#94A3B8;border-radius:12px;padding:11px 20px;font-size:0.84rem;font-weight:600;cursor:pointer;transition:border-color 0.18s,color 0.18s;}
+#try-full-btn:hover{border-color:rgba(56,189,248,0.4);color:#38BDF8;}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    iOS PWA — Safe Areas & Touch
@@ -2185,22 +2143,47 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 
 <!-- ════════════════════════════════════════════════ TRY ME WIDGET -->
 <div id="try-me-widget" aria-label="Chat with an AI agent now">
-  <div id="try-me-bubble" role="dialog" aria-modal="false">
-    <div id="try-me-bubble-name">
-      <span>AI Agent System</span>
-    </div>
-    <div id="try-me-bubble-text">
-      👋 Hey! I'm your AI agent system.<br>
-      Want to see what I can do for your project? <strong>I'm ready right now</strong> — no setup needed.
-    </div>
-    <button id="try-me-bubble-cta" onclick="quickStartDemo()">
-      ✨ Let's Try It — Show Me Live
-    </button>
+  <div id="try-me-bubble">
+    <div id="try-me-bubble-name"><span>AI Agent — Online Now</span></div>
+    <div id="try-me-bubble-text">👋 Enter your company &amp; goal — I'll build your brand image in seconds.</div>
+    <button id="try-me-bubble-cta" onclick="quickStartDemo()">✨ Try Me Free — See It Live</button>
   </div>
-  <button id="try-me-btn" onclick="toggleTryMeBubble()" title="Talk to an AI agent now" aria-label="Open demo chat">
+  <button id="try-me-btn" onclick="toggleTryMeBubble()" title="Try me now" aria-label="Open demo">
     <span id="try-me-btn-inner">⬡</span>
     <span id="try-me-dot"></span>
   </button>
+</div>
+
+<!-- ════════════════════════════════════════════════ QUICK DEMO MODAL -->
+<div id="try-demo-modal" role="dialog" aria-modal="true" aria-label="Quick Brand Demo">
+  <div id="try-demo-card">
+    <div id="try-demo-header">
+      <h3>✨ See What I Build For You — In Seconds</h3>
+      <button id="try-demo-close" onclick="closeTryDemo()" aria-label="Close">✕</button>
+    </div>
+    <div id="try-demo-body">
+      <!-- Left: brand image preview -->
+      <div class="try-demo-section">
+        <div class="try-demo-col-label">Your Brand Image</div>
+        <div class="try-example-tag">✦ Example — NovaSkin Cosmetics</div>
+        <div id="try-brand-preview"></div>
+      </div>
+      <!-- Right: 2-field form -->
+      <div class="try-demo-section">
+        <div class="try-demo-col-label">Your Turn — 2 Fields Only</div>
+        <div class="try-field">
+          <label for="try-company">Company Name</label>
+          <input id="try-company" type="text" placeholder="e.g. NovaSkin Cosmetics" maxlength="40" autocomplete="off"/>
+        </div>
+        <div class="try-field">
+          <label for="try-goal">Your Main Goal</label>
+          <input id="try-goal" type="text" placeholder="e.g. Launch a clean beauty brand" maxlength="80" autocomplete="off"/>
+        </div>
+        <button id="try-generate-btn" onclick="generateBrandDemo()">✨ Generate My Brand Image →</button>
+        <button id="try-full-btn" onclick="launchFullDemo()">🚀 Start Full AI Workflow →</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ════════════════════════════════════════════════ SCREEN: BRIEF -->
@@ -6104,19 +6087,13 @@ renderTemplates();
     });
 })();
 
-// ── Try Me Widget ─────────────────────────────────────────────────────────────
+// ── Try Me Widget + Quick Brand Demo ─────────────────────────────────────────
 (function initTryMeWidget() {
   var widget = document.getElementById('try-me-widget');
+  var modal  = document.getElementById('try-demo-modal');
   if (!widget) return;
 
-  var messages = [
-    '👋 Hey! I\'m your AI agent system.<br>Want to see what I can do for your project? <strong>I\'m ready right now</strong> — no setup needed.',
-    '💬 I can run a full strategy, marketing, or product workflow for any client. <strong>Try a live demo in 60 seconds</strong> — totally free.',
-    '🚀 Got a client project? Let me show you how I\'d handle it — <strong>discovery to deliverable, all orchestrated by AI.</strong>',
-    '✨ Most people are surprised how fast this works. <strong>Pick any template and watch the agents go</strong> — no sign-up required.',
-  ];
-  var msgIdx = 0;
-
+  // ── Floating widget ──────────────────────────────────────────────────────
   function showWidget() {
     var homeEl = document.getElementById('screen-home');
     if (!homeEl || !homeEl.classList.contains('active')) {
@@ -6124,57 +6101,145 @@ renderTemplates();
     }
     widget.classList.add('visible');
     setTimeout(function() {
-      var homeEl2 = document.getElementById('screen-home');
-      if (homeEl2 && homeEl2.classList.contains('active')) {
-        widget.classList.add('show-bubble');
-      }
+      var h = document.getElementById('screen-home');
+      if (h && h.classList.contains('active')) widget.classList.add('show-bubble');
     }, 2500);
   }
 
-  setInterval(function() {
-    if (!widget.classList.contains('show-bubble')) return;
-    msgIdx = (msgIdx + 1) % messages.length;
-    var el = document.getElementById('try-me-bubble-text');
-    if (!el) return;
-    el.style.opacity = '0';
-    setTimeout(function() {
-      el.innerHTML = messages[msgIdx];
-      el.style.transition = 'opacity 0.4s ease';
-      el.style.opacity = '1';
-    }, 300);
-  }, 9000);
+  window.toggleTryMeBubble = function() { widget.classList.toggle('show-bubble'); };
 
-  window.toggleTryMeBubble = function() {
-    widget.classList.toggle('show-bubble');
-  };
+  document.addEventListener('click', function(e) {
+    if (!widget.contains(e.target)) widget.classList.remove('show-bubble');
+  });
 
+  // ── Open/close demo modal ────────────────────────────────────────────────
   window.quickStartDemo = function() {
     widget.classList.remove('show-bubble');
-    var first = (typeof TEMPLATES !== 'undefined' ? TEMPLATES : []).find(function(t){ return t.active; })
-                || (typeof TEMPLATES !== 'undefined' ? TEMPLATES[0] : null);
-    if (first) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(function() { selectTemplate(first.id); }, 200);
-    } else {
-      scrollToTemplates();
+    modal.classList.add('open');
+    // Render example card on first open
+    if (!modal._exampleRendered) {
+      modal._exampleRendered = true;
+      document.getElementById('try-brand-preview').innerHTML = makeBrandSVG('NovaSkin Cosmetics','Launch a clean beauty skincare brand','#EC4899','#7C3AED','NC');
     }
+    // Focus company input
+    setTimeout(function() {
+      var inp = document.getElementById('try-company');
+      if (inp) inp.focus();
+    }, 320);
   };
 
+  window.closeTryDemo = function() { modal.classList.remove('open'); };
+
+  // Close on backdrop click
+  modal && modal.addEventListener('click', function(e) {
+    if (e.target === modal) modal.classList.remove('open');
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') modal.classList.remove('open');
+  });
+
+  // ── Generate brand image from user input ─────────────────────────────────
+  window.generateBrandDemo = function() {
+    var company = (document.getElementById('try-company').value || '').trim();
+    var goal    = (document.getElementById('try-goal').value    || '').trim();
+    if (!company && !goal) {
+      document.getElementById('try-company').focus(); return;
+    }
+    var name = company || 'Your Brand';
+    var g    = goal    || 'Build your brand';
+    // Derive accent colors from first char of company name
+    var palette = [
+      ['#0EA5E9','#7C3AED'],['#EC4899','#F59E0B'],['#10B981','#0EA5E9'],
+      ['#8B5CF6','#EC4899'],['#F59E0B','#EF4444'],['#06B6D4','#10B981'],
+      ['#7C3AED','#06B6D4'],['#EF4444','#F59E0B'],
+    ];
+    var pi = name.charCodeAt(0) % palette.length;
+    var initials = name.replace(/[^A-Za-z0-9 ]/g,'').split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2) || 'YB';
+    var preview = document.getElementById('try-brand-preview');
+    preview.classList.add('generating');
+    // Show example tag changes to "Your Brand"
+    var tag = document.querySelector('.try-example-tag');
+    if (tag) tag.textContent = '✦ ' + name;
+    setTimeout(function() {
+      preview.innerHTML = makeBrandSVG(name, g, palette[pi][0], palette[pi][1], initials);
+      preview.classList.remove('generating');
+    }, 600);
+  };
+
+  // Enter key triggers generate
+  ['try-company','try-goal'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') generateBrandDemo();
+    });
+  });
+
+  // ── Launch full workflow ──────────────────────────────────────────────────
+  window.launchFullDemo = function() {
+    modal.classList.remove('open');
+    var first = (typeof TEMPLATES !== 'undefined' ? TEMPLATES : []).find(function(t){ return t.active; })
+                || (typeof TEMPLATES !== 'undefined' ? TEMPLATES[0] : null);
+    if (first) { window.scrollTo({top:0,behavior:'smooth'}); setTimeout(function(){ selectTemplate(first.id); },200); }
+    else scrollToTemplates();
+  };
+
+  // ── SVG brand card generator ──────────────────────────────────────────────
+  function makeBrandSVG(name, goal, accent, accent2, initials) {
+    var shortName = name.length > 26 ? name.slice(0,24)+'…' : name;
+    var shortGoal = goal.length > 55 ? goal.slice(0,53)+'…' : goal;
+    var safeN = shortName.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    var safeG = shortGoal.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 230">'
+      +'<defs>'
+        +'<linearGradient id="dmb" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#080F1E"/><stop offset="100%" stop-color="#0D1829"/></linearGradient>'
+        +'<linearGradient id="dma" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="'+accent+'"/><stop offset="100%" stop-color="'+accent2+'"/></linearGradient>'
+        +'<clipPath id="dmc"><rect width="400" height="230" rx="14"/></clipPath>'
+      +'</defs>'
+      +'<rect width="400" height="230" rx="14" fill="url(#dmb)" clip-path="url(#dmc)"/>'
+      +'<circle cx="340" cy="-10" r="110" fill="'+accent+'" opacity="0.08"/>'
+      +'<circle cx="40" cy="260" r="90" fill="'+accent2+'" opacity="0.07"/>'
+      +'<rect x="0" y="0" width="4" height="230" fill="url(#dma)" rx="2"/>'
+      +'<circle cx="42" cy="48" r="22" fill="url(#dma)" opacity="0.2"/>'
+      +'<circle cx="42" cy="48" r="16" fill="url(#dma)"/>'
+      +'<text x="42" y="53" font-family="system-ui,sans-serif" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">'+initials+'</text>'
+      +'<text x="72" y="42" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#F8FAFC" letter-spacing="0.2">'+safeN+'</text>'
+      +'<text x="72" y="58" font-family="system-ui,sans-serif" font-size="8" fill="'+accent+'" letter-spacing="1.4" font-weight="700">BRAND CONCEPT</text>'
+      +'<line x1="20" y1="80" x2="380" y2="80" stroke="rgba(148,163,184,0.1)" stroke-width="1"/>'
+      +'<text x="20" y="104" font-family="system-ui,sans-serif" font-size="9" fill="rgba(148,163,184,0.6)" letter-spacing="0.8">CAMPAIGN DIRECTION</text>'
+      +'<text x="20" y="122" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#F1F5F9">'+safeG+'</text>'
+      +'<rect x="20" y="138" width="174" height="32" rx="8" fill="'+accent+'" opacity="0.1"/>'
+      +'<rect x="202" y="138" width="174" height="32" rx="8" fill="rgba(148,163,184,0.05)"/>'
+      +'<text x="107" y="150" font-family="system-ui,sans-serif" font-size="7" fill="'+accent+'" text-anchor="middle" font-weight="700" letter-spacing="0.8">VOICE</text>'
+      +'<text x="107" y="163" font-family="system-ui,sans-serif" font-size="9" fill="#CBD5E1" text-anchor="middle">Bold · Clear · Authentic</text>'
+      +'<text x="289" y="150" font-family="system-ui,sans-serif" font-size="7" fill="rgba(148,163,184,0.55)" text-anchor="middle" font-weight="700" letter-spacing="0.8">CHANNEL MIX</text>'
+      +'<text x="289" y="163" font-family="system-ui,sans-serif" font-size="9" fill="#CBD5E1" text-anchor="middle">Social · Content · Paid</text>'
+      +'<line x1="20" y1="184" x2="380" y2="184" stroke="rgba(148,163,184,0.1)" stroke-width="1"/>'
+      +'<circle cx="30" cy="206" r="5" fill="'+accent+'"/>'
+      +'<circle cx="44" cy="206" r="5" fill="'+accent2+'" opacity="0.6"/>'
+      +'<circle cx="58" cy="206" r="5" fill="'+accent+'" opacity="0.3"/>'
+      +'<circle cx="72" cy="206" r="5" fill="'+accent2+'" opacity="0.15"/>'
+      +'<text x="88" y="210" font-family="system-ui,sans-serif" font-size="8" fill="rgba(148,163,184,0.4)">Brand palette — Product Imagination AI</text>'
+      +'<rect x="326" y="196" width="54" height="20" rx="10" fill="url(#dma)" opacity="0.15"/>'
+      +'<text x="353" y="210" font-family="system-ui,sans-serif" font-size="8" fill="'+accent+'" text-anchor="middle" font-weight="700">READY ✓</text>'
+      +'</svg>';
+  }
+
+  // ── showScreen hook: hide widget during workflow ──────────────────────────
   var origShowScreen = window.showScreen;
   window.showScreen = function(id) {
     origShowScreen(id);
     if (id === 'home') {
       document.body.classList.remove('in-workflow');
+      modal.classList.remove('open');
       setTimeout(showWidget, 600);
     } else {
       document.body.classList.add('in-workflow');
       widget.classList.remove('show-bubble','visible');
+      modal.classList.remove('open');
     }
   };
-
-  document.addEventListener('click', function(e) {
-    if (!widget.contains(e.target)) widget.classList.remove('show-bubble');
-  });
 
   setTimeout(showWidget, 800);
 })();
