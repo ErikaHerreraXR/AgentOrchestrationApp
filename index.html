@@ -1657,7 +1657,7 @@ select option{background:#FFFFFF;color:#0F172A}
 @keyframes try-pulse{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.2);}50%{box-shadow:0 0 0 5px rgba(34,197,94,0);}}
 @keyframes try-float{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-5px) scale(1);}}
 body.in-workflow #try-me-widget{display:none;}
-@media(max-width:600px){#try-me-widget{bottom:18px;right:14px;}#try-me-bubble{max-width:230px;}#try-me-btn{width:52px;height:52px;}}
+@media(max-width:860px){#try-me-widget{bottom:calc(72px + var(--sab) + 14px);right:14px;}#try-me-bubble{max-width:230px;}#try-me-btn{width:52px;height:52px;}}
 
 /* Quick demo modal */
 #try-demo-modal{
@@ -2064,7 +2064,55 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 @media(max-width:860px){.nav-links{display:none}}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   PROOF BAR
+   MOBILE BOTTOM NAV
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#mobile-bottom-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:9050;
+  padding-bottom:var(--sab);
+}
+@media(max-width:860px){
+  #mobile-bottom-nav{display:flex;}
+  #screen-home{padding-bottom:calc(72px + var(--sab));}
+}
+.mobile-nav-inner{
+  width:100%;
+  display:flex;align-items:stretch;
+  background:#FFFFFF;
+  border-top:1px solid rgba(203,213,225,0.70);
+  box-shadow:0 -4px 24px rgba(0,0,0,0.08),0 -1px 4px rgba(0,0,0,0.04);
+}
+[data-theme="dark"] .mobile-nav-inner{
+  background:rgba(18,21,43,0.97);
+  border-top-color:rgba(255,255,255,0.08);
+  box-shadow:0 -4px 24px rgba(0,0,0,0.40);
+}
+.mob-nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;padding:10px 4px 8px;
+  font-family:var(--fm);font-size:0.50rem;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--text-muted);
+  background:none;border:none;cursor:pointer;
+  transition:color 0.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mob-nav-item:active{opacity:0.7}
+.mob-nav-icon{font-size:1.25rem;line-height:1;transition:transform 0.15s;}
+.mob-nav-item:active .mob-nav-icon{transform:scale(0.88);}
+.mob-nav-item.active,.mob-nav-item:hover{color:var(--accent);}
+.mob-nav-try{
+  flex:1.4;
+  background:var(--brand-g);
+  color:#FFFFFF !important;
+  border-radius:0;
+  box-shadow:none;
+}
+.mob-nav-try .mob-nav-icon{font-size:1.1rem;}
+[data-theme="light"] .mob-nav-item{color:#8896A4;}
+[data-theme="light"] .mob-nav-item.active,
+[data-theme="light"] .mob-nav-item:hover{color:var(--accent);}
+body.in-workflow #mobile-bottom-nav{display:none;}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .proof-bar{
   border-top:1px solid var(--border);border-bottom:1px solid var(--border);
@@ -7158,6 +7206,28 @@ renderTemplates();
 
   <!-- iOS status bar background spacer -->
   <div id="ios-status-bar-spacer"></div>
+
+  <!-- Mobile bottom navigation -->
+  <div id="mobile-bottom-nav" role="navigation" aria-label="Mobile navigation">
+    <div class="mobile-nav-inner">
+      <button class="mob-nav-item active" id="mob-nav-home" onclick="goHome()" aria-label="Home">
+        <span class="mob-nav-icon">🏠</span>
+        <span>Home</span>
+      </button>
+      <button class="mob-nav-item" onclick="showScreen('home');setTimeout(()=>document.getElementById('templates-section')?.scrollIntoView({behavior:'smooth'}),80)" aria-label="Templates">
+        <span class="mob-nav-icon">🎯</span>
+        <span>Templates</span>
+      </button>
+      <button class="mob-nav-item" onclick="showScreen('home');setTimeout(()=>document.getElementById('pricing-section')?.scrollIntoView({behavior:'smooth'}),80)" aria-label="Pricing">
+        <span class="mob-nav-icon">💳</span>
+        <span>Pricing</span>
+      </button>
+      <button class="mob-nav-item mob-nav-try" onclick="quickStartDemo()" aria-label="Try free">
+        <span class="mob-nav-icon">✨</span>
+        <span>Try Free</span>
+      </button>
+    </div>
+  </div>
 
   <script>
   // ── Service Worker registration ─────────────────────────────────────────────
