@@ -1566,6 +1566,9 @@ select option{background:#FFFFFF;color:#0F172A}
   .workflow-nav{flex-wrap:wrap;gap:10px}
   .workflow-nav > div{flex:1}
   .hero{padding:68px 14px 52px;min-height:420px}
+  /* Brief collection: hide agent strip so chat fills the screen */
+  #screen-workflow.brief-mode .workflow-sidebar{display:none}
+  #screen-workflow.brief-mode .workflow-main{height:calc(100dvh - 60px - var(--sat,0px))}
 }
 @media(max-width:600px){
   nav{padding:0 14px}
@@ -3315,6 +3318,11 @@ function selectTemplate(id) {
   state.currentAgentIcon = state.template && state.template.agents[0] ? state.template.agents[0].icon : "🤖";
   state.brief = {};
   state.template.agents.forEach(a => { state.stepChecked[a.id] = new Set(); });
+  // Unlock iOS audio context immediately at the user gesture point
+  var _iosUnlock = new Audio(SILENT_WAV); _iosUnlock.volume = 0; _iosUnlock.play().catch(function(){});
+  // Hide agent sidebar on mobile during brief collection
+  var _ws = document.getElementById('screen-workflow');
+  if (_ws) _ws.classList.add('brief-mode');
   renderWorkflow();
   showScreen('workflow');
 }
@@ -4349,6 +4357,9 @@ function handleChatSend() {
       });
       try { localStorage.setItem('pi-client-brief', JSON.stringify(state.brief)); } catch(e) {}
       sendBriefByEmail();
+      // Restore sidebar now that brief collection is done
+      var _wsEl = document.getElementById('screen-workflow');
+      if (_wsEl) _wsEl.classList.remove('brief-mode');
       state.convPhase  = 'orch_intro';
       state.questionIdx = 0;
       state.convAnswers = {};
