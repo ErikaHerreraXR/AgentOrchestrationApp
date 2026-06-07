@@ -4198,7 +4198,7 @@ function startAgentConversation(agent, agentIdx, templateId) {
       // Brief transition message from Orchestrator
       addBubble('system', '✓ ' + state.template.agents[agentIdx-1].name + ' complete — Guardian QA score ' + (state.scores[state.template.agents[agentIdx-1].id] || 88) + '/100');
       var nextMsg = 'Now bringing in your <strong>' + agent.name + '</strong>. ' + (conv ? conv.intro(b) : 'They\'ll help with ' + agent.specialty.split('.')[0] + '.');
-      setTimeout(function() { addBubble('agent', nextMsg, '🎯'); }, 500);
+      agentSay(nextMsg, 500);
       delay = 1300;
     }
 
@@ -4288,7 +4288,9 @@ function processingToOutput(conv, templateId, agent) {
 
     function renderOutput(output) {
       removeTyping();
-      addBubble('agent', '<strong>Here is your ' + agent.name + ' deliverable for ' + b.client + ':</strong>', agent.icon);
+      var headerText = 'Here is your ' + agent.name + ' deliverable for ' + b.client + '.';
+      addBubble('agent', '<strong>' + headerText + '</strong>', agent.icon);
+      if (voice.ttsEnabled) speakViaProxy(headerText);
 
       var msgs = document.getElementById('chat-messages');
       var wrap = document.createElement('div');
@@ -4310,6 +4312,14 @@ function processingToOutput(conv, templateId, agent) {
           chatScrollBottom();
           setTimeout(typeChar, ci < 200 ? 8 : 2);
         } else {
+          // Read the first 3 sentences of the deliverable after typing completes
+          if (voice.ttsEnabled) {
+            var preview = firstSentences(cleanTextForSpeech(output), 3);
+            if (preview.trim()) {
+              stopCurrentSpeech();
+              speakViaProxy(preview);
+            }
+          }
           setTimeout(function() { showGuardianPanel(agent, templateId); }, 600);
         }
       }
@@ -4330,7 +4340,7 @@ function processingToOutput(conv, templateId, agent) {
 
 function showStaticAgentOutput(agent, templateId) {
   var b = state.brief;
-  addBubble('agent', agent.specialty, agent.icon);
+  agentSay(agent.specialty, 400);
   var output = getDemoContent(templateId, agent.id, b);
   var msgs = document.getElementById('chat-messages');
   var wrap = document.createElement('div');
