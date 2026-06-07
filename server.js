@@ -14,8 +14,9 @@
 'use strict';
 
 // ── Load .env ─────────────────────────────────────────────────────
-const fs   = require('fs');
-const path = require('path');
+const fs         = require('fs');
+const path       = require('path');
+const nodemailer = require('nodemailer');
 
 // Simple .env loader (no extra dependency needed)
 try {
@@ -213,6 +214,48 @@ app.post('/api/openai/transcribe', async (req, res) => {
   } catch (err) {
     console.error('[Whisper]', err.message);
     res.status(502).json({ error: err.message });
+  }
+});
+
+// ── Send email (brief / deliverable / report) ────────────────────
+// Requires EMAIL_USER and EMAIL_PASS in env (Gmail App Password works).
+// Falls back to logging only when credentials are missing.
+app.post('/api/send-email', async (req, res) => {
+  const { subject, body, type } = req.body || {};
+  if (!subject || !body) {
+    return res.status(400).json({ error: 'subject and body are required.' });
+  }
+
+  const to   = process.env.EMAIL_TO   || 'erika@productimagination.com';
+  const user = process.env.EMAIL_USER;
+  const pass = process.env.EMAIL_PASS;
+
+  if (!user || !pass) {
+    // No SMTP credentials — log to server console only
+    console.log(`\n[EMAIL — not sent, no credentials]\nTo: ${to}\nSubject: ${subject}\n${body}\n`);
+    return res.json({ ok: true, sent: false, reason: 'EMAIL_USER / EMAIL_PASS not configured.' });
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      host:   process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port:   parseInt(process.env.EMAIL_PORT || '587', 10),
+      secure: false,
+      auth:   { user, pass },
+    });
+
+    await transporter.sendMail({
+      from:    `"Product Imagination Agents OS" <${user}>`,
+      to,
+      subject,
+      text: body,
+    });
+
+    console.log(`[EMAIL] Sent "${subject}" → ${to}`);
+    res.json({ ok: true, sent: true });
+  } catch (err) {
+    console.error('[EMAIL] Failed:', err.message);
+    res.status(502).json({ ok: false, error: err.message });
   }
 });
 
