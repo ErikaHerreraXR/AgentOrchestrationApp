@@ -1670,6 +1670,30 @@ body.in-workflow #try-me-widget{display:none;}
 #try-full-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:transparent;border:1px solid rgba(148,163,184,0.2);color:#94A3B8;border-radius:12px;padding:11px 20px;font-size:0.84rem;font-weight:600;cursor:pointer;transition:border-color 0.18s,color 0.18s;}
 #try-full-btn:hover{border-color:rgba(56,189,248,0.4);color:#38BDF8;}
 
+/* Inspire message */
+#try-inspire-msg{
+  margin-top:12px;border-radius:12px;overflow:hidden;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 0.5s ease,transform 0.5s cubic-bezier(.34,1.26,.64,1);
+  pointer-events:none;
+}
+#try-inspire-msg.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
+#try-inspire-msg.loading{opacity:1;transform:translateY(0);}
+.try-inspire-inner{
+  background:linear-gradient(135deg,rgba(14,165,233,0.08),rgba(124,58,237,0.08));
+  border:1px solid rgba(56,189,248,0.18);
+  border-radius:12px;padding:14px 16px;
+}
+.try-inspire-who{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.try-inspire-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0EA5E9,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;color:#fff;flex-shrink:0;}
+.try-inspire-name{font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#38BDF8;}
+.try-inspire-text{font-size:0.84rem;line-height:1.6;color:#CBD5E1;font-style:italic;}
+.try-inspire-dots{display:inline-flex;gap:4px;align-items:center;height:18px;}
+.try-inspire-dots span{width:5px;height:5px;border-radius:50%;background:#94A3B8;animation:try-dot-b 1.1s ease-in-out infinite;}
+.try-inspire-dots span:nth-child(2){animation-delay:0.18s;}
+.try-inspire-dots span:nth-child(3){animation-delay:0.36s;}
+@keyframes try-dot-b{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-4px);}}
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    iOS PWA — Safe Areas & Touch
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -2190,6 +2214,7 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
         <div class="try-demo-col-label">Your Brand Image</div>
         <div class="try-example-tag">✦ Example — NovaSkin Cosmetics</div>
         <div id="try-brand-preview"></div>
+        <div id="try-inspire-msg"></div>
       </div>
       <!-- Right: 2-field form -->
       <div class="try-demo-section">
@@ -6005,7 +6030,6 @@ renderTemplates();
     }
     var name = company || 'Your Brand';
     var g    = goal    || 'Build your brand';
-    // Derive accent colors from first char of company name
     var palette = [
       ['#0EA5E9','#7C3AED'],['#EC4899','#F59E0B'],['#10B981','#0EA5E9'],
       ['#8B5CF6','#EC4899'],['#F59E0B','#EF4444'],['#06B6D4','#10B981'],
@@ -6014,14 +6038,90 @@ renderTemplates();
     var pi = name.charCodeAt(0) % palette.length;
     var initials = name.replace(/[^A-Za-z0-9 ]/g,'').split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2) || 'YB';
     var preview = document.getElementById('try-brand-preview');
+    var inspireEl = document.getElementById('try-inspire-msg');
     preview.classList.add('generating');
-    // Show example tag changes to "Your Brand"
     var tag = document.querySelector('.try-example-tag');
     if (tag) tag.textContent = '✦ ' + name;
+
+    // Show brand card after brief shimmer
     setTimeout(function() {
       preview.innerHTML = makeBrandSVG(name, g, palette[pi][0], palette[pi][1], initials);
       preview.classList.remove('generating');
     }, 600);
+
+    // Show typing indicator immediately in inspire slot
+    if (inspireEl) {
+      inspireEl.classList.remove('visible');
+      inspireEl.innerHTML =
+        '<div class="try-inspire-inner">' +
+          '<div class="try-inspire-who">' +
+            '<div class="try-inspire-avatar">⬡</div>' +
+            '<div class="try-inspire-name">Your AI Agent</div>' +
+          '</div>' +
+          '<div class="try-inspire-text"><div class="try-inspire-dots"><span></span><span></span><span></span></div></div>' +
+        '</div>';
+      inspireEl.classList.add('loading');
+      // Small delay so the card renders first, then message slides in
+      setTimeout(function() { inspireEl.classList.add('visible'); }, 700);
+    }
+
+    // Fetch inspiring message from AI
+    var sysPrompt = 'You are a warm, enthusiastic brand strategist and mentor. ' +
+      'A founder just shared their company and goal with you. ' +
+      'Write 2 short sentences (max 30 words total) that are genuinely inspiring, supportive, and motivating. ' +
+      'Reference their specific goal naturally. Sound human, not corporate. ' +
+      'No quotes, no bullet points, no sign-off. Just the two sentences.';
+    var userMsg = 'Company: ' + name + '. Goal: ' + g + '.';
+
+    function showInspireText(text) {
+      if (!inspireEl) return;
+      inspireEl.innerHTML =
+        '<div class="try-inspire-inner">' +
+          '<div class="try-inspire-who">' +
+            '<div class="try-inspire-avatar">⬡</div>' +
+            '<div class="try-inspire-name">Your AI Agent</div>' +
+          '</div>' +
+          '<div class="try-inspire-text">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+        '</div>';
+      inspireEl.classList.add('visible');
+    }
+
+    function fallbackInspire() {
+      // Graceful fallback if API is unavailable
+      var phrases = [
+        'What you\'re building with ' + name + ' is exactly the kind of venture that changes things — keep going.',
+        'The goal to ' + g.toLowerCase() + ' is bold and absolutely worth pursuing. You\'re already ahead for starting.',
+        name + ' has a real story to tell. The clarity of your goal is your biggest competitive advantage.',
+        'Most people never start. You did — and that goal to ' + g.toLowerCase() + ' is just the beginning.',
+      ];
+      showInspireText(phrases[name.charCodeAt(0) % phrases.length]);
+    }
+
+    if (window.location.protocol === 'file:') { setTimeout(fallbackInspire, 1200); return; }
+
+    fetch('/api/qwen/chat', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ max_tokens: 80, messages: [{role:'system',content:sysPrompt},{role:'user',content:userMsg}] })
+    })
+    .then(function(r){ if(!r.ok) throw new Error('q'+r.status); return r.json(); })
+    .then(function(d){
+      var t = d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+      if(t) { showInspireText(t.trim()); } else { throw new Error('empty'); }
+    })
+    .catch(function(err){
+      // 503 = not configured → try Anthropic; other = Qwen failed → fallback
+      if(err.message.indexOf('503') === -1) { fallbackInspire(); return; }
+      fetch('/api/anthropic', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:80, system:sysPrompt, messages:[{role:'user',content:userMsg}] })
+      })
+      .then(function(r){ if(!r.ok) throw new Error('a'+r.status); return r.json(); })
+      .then(function(d){
+        var t = d.content&&d.content[0]&&d.content[0].text;
+        if(t) { showInspireText(t.trim()); } else { throw new Error('empty'); }
+      })
+      .catch(function(){ fallbackInspire(); });
+    });
   };
 
   // Enter key triggers generate
