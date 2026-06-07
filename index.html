@@ -1583,6 +1583,136 @@ select option{background:#FFFFFF;color:#0F172A}
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TRY ME — floating chat widget
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#try-me-widget{
+  position:fixed;bottom:28px;right:24px;z-index:9000;
+  display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+  pointer-events:none;
+}
+#try-me-widget.visible{pointer-events:auto;}
+
+/* Speech bubble */
+#try-me-bubble{
+  background:#ffffff;
+  border-radius:20px 20px 4px 20px;
+  padding:16px 20px;
+  max-width:280px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.22),0 2px 8px rgba(0,0,0,0.12);
+  opacity:0;transform:translateY(12px) scale(0.96);
+  transition:opacity 0.35s ease,transform 0.35s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;
+  position:relative;
+}
+#try-me-widget.show-bubble #try-me-bubble{
+  opacity:1;transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+#try-me-bubble::after{
+  content:'';position:absolute;bottom:-10px;right:24px;
+  border:6px solid transparent;
+  border-top-color:#ffffff;
+  border-bottom:0;
+}
+#try-me-bubble-name{
+  font-size:0.72rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;
+  color:#0EA5E9;margin-bottom:6px;display:flex;align-items:center;gap:6px;
+}
+#try-me-bubble-name::before{
+  content:'';width:8px;height:8px;border-radius:50%;
+  background:#22C55E;display:inline-block;
+  box-shadow:0 0 0 3px rgba(34,197,94,0.2);
+  animation:try-pulse 1.8s ease-in-out infinite;
+}
+#try-me-bubble-text{
+  font-size:0.9rem;line-height:1.55;color:#0F172A;font-weight:500;
+  margin-bottom:14px;
+}
+#try-me-bubble-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#0EA5E9,#7C3AED);
+  color:#ffffff;border:none;border-radius:100px;
+  padding:10px 20px;font-size:0.85rem;font-weight:700;
+  cursor:pointer;width:100%;justify-content:center;
+  box-shadow:0 4px 14px rgba(14,165,233,0.35);
+  transition:transform 0.15s ease,box-shadow 0.15s ease;
+}
+#try-me-bubble-cta:hover{
+  transform:translateY(-1px);box-shadow:0 6px 20px rgba(14,165,233,0.45);
+}
+#try-me-bubble-cta:active{transform:translateY(0);}
+
+/* Floating avatar button */
+#try-me-btn{
+  width:62px;height:62px;border-radius:50%;
+  background:linear-gradient(135deg,#0EA5E9 0%,#7C3AED 100%);
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 24px rgba(14,165,233,0.45),0 2px 8px rgba(0,0,0,0.2);
+  transition:transform 0.2s cubic-bezier(.34,1.56,.64,1),box-shadow 0.2s ease;
+  position:relative;
+  animation:try-float 3.2s ease-in-out infinite;
+  opacity:0;transform:scale(0);
+}
+#try-me-widget.visible #try-me-btn{
+  opacity:1;transform:scale(1);
+  animation:try-float 3.2s ease-in-out infinite 0.2s;
+  transition:opacity 0.4s ease,transform 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+#try-me-btn:hover{
+  transform:scale(1.1)!important;
+  box-shadow:0 10px 32px rgba(14,165,233,0.55),0 2px 8px rgba(0,0,0,0.2);
+  animation:none;
+}
+#try-me-btn:active{transform:scale(0.97)!important;}
+#try-me-btn-inner{font-size:1.6rem;line-height:1;}
+
+/* Online dot on avatar */
+#try-me-dot{
+  position:absolute;top:2px;right:2px;
+  width:16px;height:16px;border-radius:50%;
+  background:#22C55E;border:2.5px solid #ffffff;
+  box-shadow:0 0 0 0 rgba(34,197,94,0.5);
+  animation:try-ping 1.8s ease-in-out infinite;
+}
+
+/* Typing dots (shown while typing indicator plays) */
+.try-typing-dots{display:inline-flex;align-items:center;gap:4px;margin-top:2px;}
+.try-typing-dots span{
+  width:6px;height:6px;border-radius:50%;background:#94A3B8;
+  animation:try-dot-bounce 1.2s ease-in-out infinite;
+}
+.try-typing-dots span:nth-child(2){animation-delay:0.2s;}
+.try-typing-dots span:nth-child(3){animation-delay:0.4s;}
+
+@keyframes try-ping{
+  0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);}
+  50%{box-shadow:0 0 0 6px rgba(34,197,94,0);}
+}
+@keyframes try-pulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.2);}
+  50%{box-shadow:0 0 0 5px rgba(34,197,94,0);}
+}
+@keyframes try-float{
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-6px) scale(1);}
+}
+@keyframes try-dot-bounce{
+  0%,60%,100%{transform:translateY(0);}
+  30%{transform:translateY(-5px);}
+}
+
+/* Hide widget when in workflow/brief/complete */
+body.in-workflow #try-me-widget{display:none;}
+
+/* Mobile adjustments */
+@media(max-width:600px){
+  #try-me-widget{bottom:20px;right:16px;}
+  #try-me-bubble{max-width:240px;}
+  #try-me-btn{width:54px;height:54px;}
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    iOS PWA — Safe Areas & Touch
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 :root{
@@ -1875,10 +2005,13 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
     <h1>Every Project. Every Agent.<br><span>Fully Orchestrated.</span></h1>
     <p>Select an industry template. Fill in your client brief. Watch a team of specialized AI agents execute your project step by step — reviewed and scored by Guardian QA at every stage.</p>
 
-    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-      <button class="btn btn-primary btn-lg" onclick="scrollToTemplates()">Choose a Template →</button>
-      <button class="btn btn-ghost btn-lg" onclick="openHIW()">See How It Works</button>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;">
+      <button class="btn btn-primary btn-lg" onclick="quickStartDemo()" style="background:linear-gradient(135deg,#0EA5E9,#7C3AED);box-shadow:0 6px 24px rgba(14,165,233,0.40);font-size:1rem;padding:15px 32px;letter-spacing:-0.01em;">
+        ✨ Try Me Now — It's Free
+      </button>
+      <button class="btn btn-ghost btn-lg" onclick="scrollToTemplates()">Browse Templates →</button>
     </div>
+    <div style="font-size:0.78rem;color:rgba(148,163,184,0.7);margin-bottom:4px;">No sign-up · No credit card · See AI agents live in 60 seconds</div>
 
     <div class="hero-pipeline">
       <div class="pipeline-node active">
@@ -2071,6 +2204,26 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
       </div>
     </div>
   </div>
+</div>
+
+<!-- ════════════════════════════════════════════════ TRY ME WIDGET -->
+<div id="try-me-widget" aria-label="Chat with an AI agent now">
+  <div id="try-me-bubble" role="dialog" aria-modal="false">
+    <div id="try-me-bubble-name">
+      <span>AI Agent System</span>
+    </div>
+    <div id="try-me-bubble-text">
+      👋 Hey! I'm your AI agent system.<br>
+      Want to see what I can do for your project? <strong>I'm ready right now</strong> — no setup needed.
+    </div>
+    <button id="try-me-bubble-cta" onclick="quickStartDemo()">
+      ✨ Let's Try It — Show Me Live
+    </button>
+  </div>
+  <button id="try-me-btn" onclick="toggleTryMeBubble()" title="Talk to an AI agent now" aria-label="Open demo chat">
+    <span id="try-me-btn-inner">⬡</span>
+    <span id="try-me-dot"></span>
+  </button>
 </div>
 
 <!-- ════════════════════════════════════════════════ SCREEN: BRIEF -->
@@ -5805,6 +5958,81 @@ renderTemplates();
         'color:orange;font-size:13px'
       );
     });
+})();
+
+// ── Try Me Widget ─────────────────────────────────────────────────────────────
+(function initTryMeWidget() {
+  var widget = document.getElementById('try-me-widget');
+  if (!widget) return;
+
+  var messages = [
+    '👋 Hey! I\'m your AI agent system.<br>Want to see what I can do for your project? <strong>I\'m ready right now</strong> — no setup needed.',
+    '💬 I can run a full strategy, marketing, or product workflow for any client. <strong>Try a live demo in 60 seconds</strong> — totally free.',
+    '🚀 Got a client project? Let me show you how I\'d handle it — <strong>discovery to deliverable, all orchestrated by AI.</strong>',
+    '✨ Most people are surprised how fast this works. <strong>Pick any template and watch the agents go</strong> — no sign-up required.',
+  ];
+  var msgIdx = 0;
+
+  function showWidget() {
+    var homeEl = document.getElementById('screen-home');
+    if (!homeEl || !homeEl.classList.contains('active')) {
+      widget.classList.remove('visible','show-bubble'); return;
+    }
+    widget.classList.add('visible');
+    setTimeout(function() {
+      var homeEl2 = document.getElementById('screen-home');
+      if (homeEl2 && homeEl2.classList.contains('active')) {
+        widget.classList.add('show-bubble');
+      }
+    }, 2500);
+  }
+
+  setInterval(function() {
+    if (!widget.classList.contains('show-bubble')) return;
+    msgIdx = (msgIdx + 1) % messages.length;
+    var el = document.getElementById('try-me-bubble-text');
+    if (!el) return;
+    el.style.opacity = '0';
+    setTimeout(function() {
+      el.innerHTML = messages[msgIdx];
+      el.style.transition = 'opacity 0.4s ease';
+      el.style.opacity = '1';
+    }, 300);
+  }, 9000);
+
+  window.toggleTryMeBubble = function() {
+    widget.classList.toggle('show-bubble');
+  };
+
+  window.quickStartDemo = function() {
+    widget.classList.remove('show-bubble');
+    var first = (typeof TEMPLATES !== 'undefined' ? TEMPLATES : []).find(function(t){ return t.active; })
+                || (typeof TEMPLATES !== 'undefined' ? TEMPLATES[0] : null);
+    if (first) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(function() { selectTemplate(first.id); }, 200);
+    } else {
+      scrollToTemplates();
+    }
+  };
+
+  var origShowScreen = window.showScreen;
+  window.showScreen = function(id) {
+    origShowScreen(id);
+    if (id === 'home') {
+      document.body.classList.remove('in-workflow');
+      setTimeout(showWidget, 600);
+    } else {
+      document.body.classList.add('in-workflow');
+      widget.classList.remove('show-bubble','visible');
+    }
+  };
+
+  document.addEventListener('click', function(e) {
+    if (!widget.contains(e.target)) widget.classList.remove('show-bubble');
+  });
+
+  setTimeout(showWidget, 800);
 })();
 </script>
 
