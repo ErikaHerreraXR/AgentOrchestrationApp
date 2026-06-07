@@ -3990,11 +3990,9 @@ function agentSay(text, delay, shouldSpeak) {
     setTimeout(function() {
       removeTyping();
       addBubble('agent', text, state.currentAgentIcon);
-      // Speak all agent messages (shouldSpeak===false disables, anything else enables)
+      // Queue speech — never interrupt a message that is currently playing
       if (shouldSpeak !== false) {
-        if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
-        setTimeout(function() { speakText(text); }, 150);
+        setTimeout(function() { enqueueTTS(text); }, 150);
       }
       resolve();
     }, delay || 900);
@@ -4318,7 +4316,7 @@ function processingToOutput(conv, templateId, agent) {
       removeTyping();
       var headerText = 'Here is your ' + agent.name + ' deliverable for ' + b.client + '.';
       addBubble('agent', '<strong>' + headerText + '</strong>', agent.icon);
-      if (voice.ttsEnabled) speakViaProxy(headerText);
+      if (voice.ttsEnabled) enqueueTTS(headerText);
 
       var msgs = document.getElementById('chat-messages');
       var wrap = document.createElement('div');
@@ -4343,10 +4341,7 @@ function processingToOutput(conv, templateId, agent) {
           // Read the full deliverable after typing completes
           if (voice.ttsEnabled) {
             var fullClean = cleanTextForSpeech(output);
-            if (fullClean.trim()) {
-              stopCurrentSpeech();
-              speakViaProxy(fullClean);
-            }
+            if (fullClean.trim()) enqueueTTS(fullClean);
           }
           setTimeout(function() { showGuardianPanel(agent, templateId); }, 600);
         }
@@ -5004,48 +4999,72 @@ function pickNaturalVoice(voices) {
    Fallback: Web Speech API (browser built-in)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-function speakText(text) {
+var TTS_MAX_CHARS = 4000;
+var SILENT_WAV    = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+
+/* ── TTS queue — each message waits for the previous to finish ───────────── */
+var ttsQueue   = [];
+var ttsPlaying = false;
+
+function enqueueTTS(text) {
   if (!voice.ttsEnabled) return;
-
-  // Stop anything already playing — never overlap
-  stopCurrentSpeech();
-
   var clean = cleanTextForSpeech(text);
   if (!clean.trim()) return;
+  ttsQueue.push(clean);
+  if (!ttsPlaying) playTTSQueue();
+}
 
-  speakViaProxy(clean);
+function playTTSQueue() {
+  if (!voice.ttsEnabled || ttsQueue.length === 0) {
+    ttsPlaying = false;
+    removeTTSBadge();
+    return;
+  }
+  ttsPlaying = true;
+  playTTSChunk(chunkForTTS(ttsQueue.shift()), 0);
 }
 
 function stopCurrentSpeech() {
-  if (voice.currentAudio) {
-    voice.currentAudio.pause();
-    voice.currentAudio = null;
-  }
+  ttsQueue   = [];
+  ttsPlaying = false;
+  if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
   if (window.speechSynthesis) window.speechSynthesis.cancel();
   removeTTSBadge();
 }
 
-function speakViaProxy(text) {
-  // If server has no OpenAI key, fall back to browser speech synthesis
-  if (voice.serverHasOai === false) {
-    speakBrowser(text);
+function speakText(text) {
+  if (!voice.ttsEnabled) return;
+  var clean = cleanTextForSpeech(text);
+  if (!clean.trim()) return;
+  enqueueTTS(clean);
+}
+
+/* Split text at sentence boundaries to stay within OpenAI's 4096-char limit */
+function chunkForTTS(text) {
+  if (text.length <= TTS_MAX_CHARS) return [text];
+  var chunks = [], cur = '';
+  var segs = text.match(/[^.!?\n]+[.!?\n]+\s*/g) || [text];
+  segs.forEach(function(s) {
+    if (cur.length + s.length > TTS_MAX_CHARS && cur) { chunks.push(cur.trim()); cur = s; }
+    else cur += s;
+  });
+  if (cur.trim()) chunks.push(cur.trim());
+  return chunks.length ? chunks : [text.slice(0, TTS_MAX_CHARS)];
+}
+
+/* Play one chunk — when done, advance the queue */
+function playTTSChunk(chunks, idx) {
+  if (!voice.ttsEnabled || idx >= chunks.length) {
+    ttsPlaying = false;
+    playTTSQueue();
     return;
   }
 
-  // If status unknown, check now then speak
-  if (voice.serverHasOai === null) {
-    fetch('/api/status', { signal: AbortSignal.timeout(3000) })
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        voice.serverHasOai = !!(d && d.openai);
-        speakViaProxy(text); // retry with known status
-      })
-      .catch(function() {
-        voice.serverHasOai = false;
-        speakBrowser(text);
-      });
-    return;
-  }
+  // iOS/Safari audio-context unlock: play silent stub synchronously before async fetch
+  var placeholder = new Audio(SILENT_WAV);
+  placeholder.volume = 0;
+  voice.currentAudio = placeholder;
+  placeholder.play().catch(function() {});
 
   // serverHasOai === true — fetch real audio from OpenAI via proxy
   fetch('/api/openai/speech', {
@@ -5083,17 +5102,29 @@ function speakViaProxy(text) {
       removeTTSBadge();
       URL.revokeObjectURL(url);
       voice.currentAudio = null;
-      speakBrowser(text);
+      playTTSChunk(chunks, idx + 1);
+    };
+    audio.onerror = function() {
+      removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null;
+      ttsPlaying = false; playTTSQueue();
+    };
+    audio.play().catch(function() {
+      removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null;
+      ttsPlaying = false; playTTSQueue();
     });
   })
   .catch(function(err) {
-    removeTTSBadge();
-    console.warn('[TTS] OpenAI failed, using browser voice:', err.message);
-    speakBrowser(text);
+    console.warn('[TTS] chunk', idx, 'failed:', err.message);
+    if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
+    ttsPlaying = false; playTTSQueue();
   });
 }
 
-// Alias
+function speakViaProxy(text) {
+  stopCurrentSpeech();
+  enqueueTTS(text);
+}
+
 var speakOpenAI = speakViaProxy;
 
 
