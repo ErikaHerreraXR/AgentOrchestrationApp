@@ -303,21 +303,22 @@ nav{
 .hero{
   background: linear-gradient(160deg, #FAFAFE 0%, #F5F3FF 55%, #FBFBFD 100%);
 }
-/* Dark mode: photo bg + dark overlay */
+/* Dark mode: illustrated SVG background at 70% opacity */
 [data-theme="dark"] .hero::before{
   content:'';position:absolute;inset:0;
-  background:url('hero.jpg') center 18% / cover no-repeat;
+  background:url('hero-night.svg') center bottom / cover no-repeat;
+  opacity:0.70;
   z-index:0;
 }
 [data-theme="dark"] .hero::after{
   content:'';position:absolute;inset:0;
   background:
-    radial-gradient(ellipse 90% 55% at 50% -5%, rgba(255,61,154,0.18) 0%, rgba(138,92,246,0.10) 45%, transparent 72%),
+    radial-gradient(ellipse 90% 45% at 50% -5%, rgba(255,61,154,0.14) 0%, rgba(138,92,246,0.08) 45%, transparent 72%),
     linear-gradient(180deg,
-      rgba(11,13,30,0.70) 0%,
-      rgba(11,13,30,0.30) 35%,
-      rgba(11,13,30,0.65) 68%,
-      rgba(11,13,30,1)    100%);
+      rgba(4,5,26,0.55) 0%,
+      rgba(4,5,26,0.15) 40%,
+      rgba(4,5,26,0.50) 72%,
+      rgba(4,5,26,0.92) 100%);
   z-index:1;
 }
 [data-theme="dark"] .hero > *{position:relative;z-index:2}
@@ -2143,6 +2144,83 @@ body.in-workflow #mobile-bottom-nav{display:none;}
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BLUE + YELLOW ACCENT SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* Section header tags — royal blue pill */
+[data-theme="light"] .section-header .tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(37,99,235,0.07);
+  border:1px solid rgba(37,99,235,0.22);
+  color:#1D4ED8;
+  border-radius:100px;padding:4px 14px;
+  font-size:0.59rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+}
+[data-theme="dark"] .section-header .tag{
+  background:rgba(59,130,246,0.10);
+  border:1px solid rgba(59,130,246,0.25);
+  color:#60A5FA;
+  border-radius:100px;padding:4px 14px;
+}
+/* Yellow star highlight badge — for key callouts */
+.star-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(245,196,0,0.13);
+  border:1px solid rgba(245,196,0,0.45);
+  color:#92700A;
+  border-radius:100px;padding:3px 11px;
+  font-family:var(--fm);font-size:0.58rem;font-weight:800;
+  letter-spacing:0.08em;text-transform:uppercase;
+}
+[data-theme="dark"] .star-badge{color:#F5C400;background:rgba(245,196,0,0.12);border-color:rgba(245,196,0,0.35);}
+/* Yellow inline accent — wraps key numbers/stats */
+.stat-yellow{
+  background:linear-gradient(135deg,#F5C400,#FF9A00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  font-weight:800;
+}
+/* Blue accent on output cards */
+[data-theme="light"] .output-card{
+  border-color:rgba(37,99,235,0.14);
+}
+[data-theme="light"] .output-card:hover{
+  border-color:rgba(37,99,235,0.35);
+  box-shadow:0 4px 20px rgba(37,99,235,0.12);
+}
+/* Blue tint on proof bar */
+[data-theme="light"] .proof-bar{
+  background:linear-gradient(90deg,rgba(37,99,235,0.03),rgba(139,92,246,0.03),rgba(37,99,235,0.03));
+  border-color:rgba(37,99,235,0.12);
+}
+/* Blue accent on how-section */
+[data-theme="light"] .how-section{
+  background:linear-gradient(180deg,rgba(37,99,235,0.035) 0%,rgba(255,255,255,0) 60%);
+}
+/* Blue card-activate-btn on light mode */
+[data-theme="light"] .card-activate-btn{
+  background:linear-gradient(135deg,rgba(37,99,235,0.08) 0%,rgba(139,92,246,0.06) 100%);
+  border-color:rgba(37,99,235,0.30);
+  color:#1D4ED8;
+}
+[data-theme="light"] .template-card:hover .card-activate-btn{
+  background:linear-gradient(135deg,#2563EB 0%,#7C3AED 60%,#FF3D9A 100%);
+  color:#FFFFFF;
+  border-color:transparent;
+}
+/* Blue pricing highlights */
+[data-theme="light"] .pricing-card.featured{
+  border-color:rgba(37,99,235,0.35);
+  box-shadow:0 0 0 3px rgba(37,99,235,0.10),0 12px 40px rgba(37,99,235,0.15);
+}
+/* Blue QA Guardian badge */
+[data-theme="light"] .guardian-score-label{color:#1D4ED8}
+/* Section dividers with blue tint */
+[data-theme="light"] .outputs-section,
+[data-theme="light"] .studio-section,
+[data-theme="light"] .pricing-section{
+  border-color:rgba(37,99,235,0.10);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    OUTPUT SHOWCASE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .outputs-section{padding:80px 0;border-bottom:1px solid var(--border)}
@@ -2272,7 +2350,7 @@ body.in-workflow #mobile-bottom-nav{display:none;}
   display:flex;align-items:flex-start;gap:9px;
   font-size:0.81rem;color:var(--text-body);line-height:1.4;
 }
-.pricing-feat-icon{flex-shrink:0;font-size:0.85rem;margin-top:1px}
+.pricing-feat-icon{flex-shrink:0;font-size:0.85rem;margin-top:1px;color:#F5C400;text-shadow:0 0 8px rgba(245,196,0,0.45);}
 .pricing-cta{
   display:flex;align-items:center;justify-content:center;gap:8px;
   padding:13px 20px;border-radius:12px;font-size:0.88rem;font-weight:700;
@@ -2481,10 +2559,10 @@ body.in-workflow #mobile-bottom-nav{display:none;}
       </div>
       <div class="proof-stat">
         <div class="proof-stat-num" style="background:linear-gradient(135deg,#F5C400,#FF9A00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">100%</div>
-        <div class="proof-stat-label">⭐ QA Reviewed</div>
+        <div class="proof-stat-label">✦ QA Reviewed</div>
       </div>
       <div class="proof-stat">
-        <div class="proof-stat-num">0</div>
+        <div class="proof-stat-num" style="background:linear-gradient(135deg,#2563EB,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">0</div>
         <div class="proof-stat-label">Sign-up Required</div>
       </div>
     </div>
@@ -2497,6 +2575,7 @@ body.in-workflow #mobile-bottom-nav{display:none;}
         <div class="tag">How It Works</div>
         <h2>Three steps.<br><span style="color:var(--accent)">Infinite output.</span></h2>
         <p style="max-width:480px;margin:0 auto">Brief one agent. A coordinated team executes your project — each step QA-reviewed before the next begins.</p>
+        <div style="margin-top:14px"><span class="star-badge">✦ No prompting skills needed</span></div>
       </div>
 
       <!-- 3-step process flow -->
@@ -2633,6 +2712,10 @@ body.in-workflow #mobile-bottom-nav{display:none;}
         <div class="tag">What Gets Built</div>
         <h2>Real deliverables.<br><em style="font-style:normal;color:var(--accent)">Not just summaries.</em></h2>
         <p>Every project produces a complete, structured output — ready to present, publish, or ship.</p>
+        <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <span class="star-badge">✦ Client-ready quality</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.22);color:#1D4ED8;border-radius:100px;padding:3px 11px;font-family:var(--fm);font-size:0.58rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;">⬡ AI + QA Checked</span>
+        </div>
       </div>
       <div class="outputs-grid">
         <div class="output-card">
@@ -2760,6 +2843,7 @@ body.in-workflow #mobile-bottom-nav{display:none;}
         <div class="tag">Pricing</div>
         <h2>Start free.<br><em style="font-style:normal;color:var(--accent)">Scale when you're ready.</em></h2>
         <p>No credit card. No lock-in. Try the full system before you commit to anything.</p>
+        <div style="margin-top:14px"><span class="star-badge">✦ Starter plan — free forever</span></div>
       </div>
       <div class="pricing-grid">
         <!-- Free -->
@@ -7249,22 +7333,24 @@ renderTemplates();
     setTimeout(() => {
       const banner = document.createElement('div');
       banner.id = 'ios-install-banner';
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       banner.innerHTML = `
         <div style="
           position:fixed;top:calc(64px + env(safe-area-inset-top,0px));
           left:50%;transform:translateX(-50%);
-          background:rgba(28,14,4,0.97);border:1px solid rgba(255,112,48,0.4);
-          border-radius:14px;padding:12px 18px;
-          font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.06em;
-          color:rgba(255,240,220,0.85);text-align:center;
-          box-shadow:0 8px 32px rgba(0,0,0,0.6);
-          z-index:8999;max-width:300px;white-space:nowrap;backdrop-filter:blur(16px);
+          background:${isDark ? 'rgba(14,18,50,0.97)' : 'rgba(255,255,255,0.98)'};
+          border:1.5px solid ${isDark ? 'rgba(99,160,255,0.30)' : 'rgba(255,61,154,0.22)'};
+          border-radius:16px;padding:12px 16px;
+          font-family:'Space Grotesk','Space Mono',system-ui,sans-serif;font-size:12px;letter-spacing:0.02em;
+          color:${isDark ? 'rgba(220,230,255,0.90)' : '#1B2068'};text-align:center;
+          box-shadow:${isDark ? '0 8px 32px rgba(0,0,0,0.55)' : '0 8px 32px rgba(0,0,0,0.12),0 2px 8px rgba(0,0,0,0.06)'};
+          z-index:8999;max-width:300px;white-space:nowrap;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
           display:flex;align-items:center;gap:10px;
         ">
           <span style="font-size:18px;flex-shrink:0">📲</span>
-          <span>Tap <strong style="color:#FF7030">Share</strong> then <strong style="color:#FF7030">Add to Home Screen</strong></span>
+          <span>Tap <strong style="color:#FF3D9A">Share</strong> then <strong style="color:#8A5CF6">Add to Home Screen</strong></span>
           <button onclick="this.parentElement.parentElement.remove()" style="
-            background:none;border:none;color:rgba(255,154,96,0.7);
+            background:none;border:none;color:${isDark ? 'rgba(140,160,220,0.7)' : 'rgba(100,116,139,0.6)'};
             font-size:18px;cursor:pointer;line-height:1;flex-shrink:0;padding:4px;
           ">×</button>
         </div>`;

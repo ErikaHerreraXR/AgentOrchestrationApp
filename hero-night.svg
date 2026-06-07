@@ -1,0 +1,150 @@
+<svg viewBox="0 0 1080 1920" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- Deep navy background gradient -->
+    <linearGradient id="bg" x1="540" y1="0" x2="540" y2="1920" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#04051A"/>
+      <stop offset="45%" stop-color="#060920"/>
+      <stop offset="72%" stop-color="#0A0D2E"/>
+      <stop offset="100%" stop-color="#0E0820"/>
+    </linearGradient>
+    <!-- Orange glow behind logo -->
+    <radialGradient id="og" cx="50%" cy="62%" r="28%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#FF6535" stop-opacity="0.65"/>
+      <stop offset="40%" stop-color="#FF3D9A" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#FF3D9A" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Blue ambient glow -->
+    <radialGradient id="bg2" cx="50%" cy="65%" r="52%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#1E40FF" stop-opacity="0.30"/>
+      <stop offset="55%" stop-color="#3B82F6" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Purple side glow left -->
+    <radialGradient id="pleft" cx="0%" cy="68%" r="45%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Purple side glow right -->
+    <radialGradient id="pright" cx="100%" cy="68%" r="45%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#6D28D9" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#6D28D9" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Logo gradient -->
+    <linearGradient id="lg" x1="480" y1="1040" x2="600" y2="1180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF6535"/>
+      <stop offset="38%" stop-color="#FF3D9A"/>
+      <stop offset="72%" stop-color="#8A5CF6"/>
+      <stop offset="100%" stop-color="#4A8FD9"/>
+    </linearGradient>
+    <!-- Road gradient -->
+    <linearGradient id="road" x1="540" y1="1600" x2="540" y2="1200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF6535" stop-opacity="0.6"/>
+      <stop offset="40%" stop-color="#8A5CF6" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#4A8FD9" stop-opacity="0.2"/>
+    </linearGradient>
+    <!-- Road glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow2" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softglow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="32" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Base background -->
+  <rect width="1080" height="1920" fill="url(#bg)"/>
+  <!-- Color overlays -->
+  <rect width="1080" height="1920" fill="url(#bg2)"/>
+  <rect width="1080" height="1920" fill="url(#og)"/>
+  <rect width="1080" height="1920" fill="url(#pleft)"/>
+  <rect width="1080" height="1920" fill="url(#pright)"/>
+
+  <!-- Stars -->
+  <g fill="white">
+    <circle cx="120" cy="180" r="1.5" opacity="0.6"/>
+    <circle cx="280" cy="95" r="1" opacity="0.4"/>
+    <circle cx="820" cy="140" r="1.5" opacity="0.5"/>
+    <circle cx="960" cy="220" r="1" opacity="0.35"/>
+    <circle cx="450" cy="310" r="1" opacity="0.3"/>
+    <circle cx="700" cy="260" r="1.5" opacity="0.45"/>
+    <circle cx="180" cy="420" r="1" opacity="0.25"/>
+    <circle cx="880" cy="380" r="1" opacity="0.3"/>
+    <circle cx="350" cy="550" r="1.2" opacity="0.2"/>
+    <circle cx="760" cy="490" r="1" opacity="0.25"/>
+    <circle cx="55" cy="650" r="1" opacity="0.2"/>
+    <circle cx="1025" cy="580" r="1.2" opacity="0.22"/>
+  </g>
+
+  <!-- Concentric blue rings centered at logo (540, 1120) -->
+  <circle cx="540" cy="1120" r="220" stroke="rgba(59,130,246,0.22)" stroke-width="1.5" fill="none"/>
+  <circle cx="540" cy="1120" r="340" stroke="rgba(59,130,246,0.16)" stroke-width="1.2" fill="none"/>
+  <circle cx="540" cy="1120" r="460" stroke="rgba(59,130,246,0.10)" stroke-width="1" fill="none"/>
+  <circle cx="540" cy="1120" r="580" stroke="rgba(59,130,246,0.07)" stroke-width="1" fill="none"/>
+  <circle cx="540" cy="1120" r="700" stroke="rgba(59,130,246,0.05)" stroke-width="1" fill="none"/>
+
+  <!-- Bright inner ring -->
+  <circle cx="540" cy="1120" r="190" stroke="rgba(99,160,255,0.35)" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Winding road/path -->
+  <path d="M540 1920 Q480 1800 460 1720 Q440 1640 500 1580 Q540 1540 540 1480 Q540 1420 510 1380 Q490 1350 510 1300 Q525 1270 540 1240"
+        stroke="url(#road)" stroke-width="28" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M540 1920 Q480 1800 460 1720 Q440 1640 500 1580 Q540 1540 540 1480 Q540 1420 510 1380 Q490 1350 510 1300 Q525 1270 540 1240"
+        stroke="rgba(255,101,53,0.7)" stroke-width="4" stroke-linecap="round" fill="none" filter="url(#glow)"/>
+  <!-- Road edge lines -->
+  <path d="M510 1920 Q450 1800 430 1720 Q410 1640 472 1578"
+        stroke="rgba(138,92,246,0.25)" stroke-width="1.5" stroke-dasharray="12 8" fill="none"/>
+  <path d="M570 1920 Q510 1800 490 1720 Q470 1640 528 1578"
+        stroke="rgba(138,92,246,0.25)" stroke-width="1.5" stroke-dasharray="12 8" fill="none"/>
+
+  <!-- Purple clouds — left -->
+  <ellipse cx="80" cy="1380" rx="190" ry="100" fill="rgba(88,28,135,0.55)"/>
+  <ellipse cx="30" cy="1320" rx="120" ry="70" fill="rgba(88,28,135,0.45)"/>
+  <ellipse cx="160" cy="1310" rx="140" ry="80" fill="rgba(109,40,217,0.40)"/>
+  <ellipse cx="220" cy="1420" rx="160" ry="85" fill="rgba(76,29,149,0.50)"/>
+  <!-- Cloud highlights -->
+  <ellipse cx="80" cy="1360" rx="120" ry="50" fill="rgba(139,92,246,0.18)"/>
+  <ellipse cx="160" cy="1290" rx="90" ry="40" fill="rgba(167,139,250,0.12)"/>
+
+  <!-- Purple clouds — right -->
+  <ellipse cx="1000" cy="1380" rx="190" ry="100" fill="rgba(88,28,135,0.55)"/>
+  <ellipse cx="1050" cy="1320" rx="120" ry="70" fill="rgba(88,28,135,0.45)"/>
+  <ellipse cx="920" cy="1310" rx="140" ry="80" fill="rgba(109,40,217,0.40)"/>
+  <ellipse cx="860" cy="1420" rx="160" ry="85" fill="rgba(76,29,149,0.50)"/>
+  <!-- Cloud highlights right -->
+  <ellipse cx="1000" cy="1360" rx="120" ry="50" fill="rgba(139,92,246,0.18)"/>
+  <ellipse cx="920" cy="1290" rx="90" ry="40" fill="rgba(167,139,250,0.12)"/>
+
+  <!-- Platform base -->
+  <ellipse cx="540" cy="1280" rx="180" ry="30" fill="rgba(30,64,175,0.30)"/>
+  <ellipse cx="540" cy="1278" rx="140" ry="20" fill="rgba(59,130,246,0.22)"/>
+
+  <!-- Orange soft glow behind logo -->
+  <circle cx="540" cy="1110" r="120" fill="rgba(255,101,53,0.18)" filter="url(#softglow)"/>
+  <circle cx="540" cy="1110" r="80" fill="rgba(255,61,154,0.14)" filter="url(#softglow)"/>
+
+  <!-- ── CIRCUIT CLOUD LOGO centered at (540, 1080) ── -->
+  <!-- scale = 5× from 60×60 SVG (center 30,30) → here center 540,1080 -->
+  <!-- Connector lines -->
+  <line x1="540" y1="930" x2="540" y2="878" stroke="rgba(180,200,255,0.80)" stroke-width="10" stroke-linecap="round"/>
+  <line x1="690" y1="1080" x2="742" y2="1080" stroke="rgba(180,200,255,0.80)" stroke-width="10" stroke-linecap="round"/>
+  <line x1="540" y1="1230" x2="540" y2="1282" stroke="rgba(180,200,255,0.80)" stroke-width="10" stroke-linecap="round"/>
+  <line x1="390" y1="1080" x2="338" y2="1080" stroke="rgba(180,200,255,0.80)" stroke-width="10" stroke-linecap="round"/>
+  <!-- Node circles -->
+  <circle cx="540" cy="862" r="20" stroke="rgba(180,200,255,0.80)" stroke-width="9" fill="none"/>
+  <circle cx="760" cy="1080" r="20" stroke="rgba(180,200,255,0.80)" stroke-width="9" fill="none"/>
+  <circle cx="540" cy="1298" r="20" stroke="rgba(180,200,255,0.80)" stroke-width="9" fill="none"/>
+  <circle cx="320" cy="1080" r="20" stroke="rgba(180,200,255,0.80)" stroke-width="9" fill="none"/>
+  <!-- Cloud outline polygon (scaled ×5 from logo viewBox 60, center 30→540, 30→1080) -->
+  <polygon stroke="rgba(120,160,255,0.90)" stroke-width="10" stroke-linejoin="round" fill="rgba(10,15,50,0.55)"
+    points="540,930 581.7,983 612,1051 666.5,1030 761.5,1024 755,1116 728,1182 777.5,1203 840,1080 777.5,957 728,978 755,1044 761.5,1136 666.5,1130 612,1109 581.7,1177 540,1230 498.3,1177 468,1109 373.5,1130 318.5,1136 325,1044 352,978 302.5,957 240,1080 302.5,1203 352,1182 325,1116 318.5,1024 373.5,1030 468,1051 498.3,983"/>
+  <!-- Gradient fill circle -->
+  <circle cx="540" cy="1080" r="142" fill="url(#lg)" filter="url(#glow2)"/>
+  <!-- Star sparkle -->
+  <path d="M540 990 L558 1064 L632 1080 L558 1096 L540 1170 L522 1096 L448 1080 L522 1064 Z" fill="white" opacity="0.95"/>
+</svg>
