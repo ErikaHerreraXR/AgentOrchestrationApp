@@ -303,25 +303,6 @@ nav{
 .hero{
   background: linear-gradient(160deg, #FAFAFE 0%, #F5F3FF 55%, #FBFBFD 100%);
 }
-/* Dark mode: illustrated SVG background at 70% opacity */
-[data-theme="dark"] .hero::before{
-  content:'';position:absolute;inset:0;
-  background:url('hero-night.svg') center bottom / cover no-repeat;
-  opacity:0.70;
-  z-index:0;
-}
-[data-theme="dark"] .hero::after{
-  content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 90% 45% at 50% -5%, rgba(255,61,154,0.14) 0%, rgba(138,92,246,0.08) 45%, transparent 72%),
-    linear-gradient(180deg,
-      rgba(4,5,26,0.55) 0%,
-      rgba(4,5,26,0.15) 40%,
-      rgba(4,5,26,0.50) 72%,
-      rgba(4,5,26,0.92) 100%);
-  z-index:1;
-}
-[data-theme="dark"] .hero > *{position:relative;z-index:2}
 
 .hero-tag{
   display:inline-flex;align-items:center;gap:8px;
