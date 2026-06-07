@@ -237,6 +237,7 @@ nav{
   border:1px solid rgba(255,61,154,0.24);
   color:var(--accent);padding:3px 10px;border-radius:20px;
 }
+@media(max-width:860px){.nav-badge{display:none}}
 .nav-right{display:flex;align-items:center;gap:12px}
 .nav-pr-count{
   font-family:var(--fm);font-size:0.66rem;
@@ -338,7 +339,7 @@ nav{
   color:#4A5568;
   text-shadow:none;
 }
-[data-theme="dark"] .hero p{color:rgba(200,195,188,0.85);text-shadow:0 1px 8px rgba(0,0,0,0.5)}
+[data-theme="dark"] .hero p{color:rgba(220,215,210,0.92);}
 
 /* Pipeline nodes */
 .hero-pipeline{
@@ -4227,8 +4228,11 @@ function scrollToId(id) {
   var el = document.getElementById(id);
   if (!el) return;
   var navH = (document.querySelector('nav') || {}).offsetHeight || 64;
-  var top  = el.getBoundingClientRect().top + window.pageYOffset - navH - 8;
-  window.scrollTo({top: Math.max(0, top), behavior: 'smooth'});
+  var dest = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - navH - 8);
+  try { window.scrollTo({top: dest, behavior: 'smooth'}); } catch(e) { window.scrollTo(0, dest); }
+  if (document.scrollingElement && document.scrollingElement !== document.documentElement) {
+    try { document.scrollingElement.scrollTo({top: dest, behavior: 'smooth'}); } catch(e) { document.scrollingElement.scrollTop = dest; }
+  }
 }
 function scrollToTemplates() { scrollToId('templates-section'); }
 function scrollToPricing()   { scrollToId('pricing-section'); }
