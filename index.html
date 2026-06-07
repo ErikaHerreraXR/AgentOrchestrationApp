@@ -1617,30 +1617,61 @@ select option{background:#FFFFFF;color:#0F172A}
   pointer-events:none;
 }
 #try-me-widget.visible #try-me-btn{pointer-events:auto;}
+/* ── Erika chat bubble ── */
 #try-me-bubble{
-  background:#ffffff;border-radius:20px 20px 4px 20px;padding:14px 18px;max-width:260px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.22),0 2px 8px rgba(0,0,0,0.12);
-  opacity:0;transform:translateY(12px) scale(0.96);
+  background:#fff;border-radius:16px;max-width:290px;overflow:hidden;
+  box-shadow:0 8px 36px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.10);
+  opacity:0;transform:translateY(14px) scale(0.96);
   transition:opacity 0.35s ease,transform 0.35s cubic-bezier(.34,1.56,.64,1);
-  pointer-events:none;position:relative;
+  pointer-events:none;
 }
 #try-me-widget.show-bubble #try-me-bubble{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
-#try-me-bubble::after{content:'';position:absolute;bottom:-10px;right:22px;border:6px solid transparent;border-top-color:#ffffff;border-bottom:0;}
-#try-me-bubble-name{font-size:0.68rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#C4006A;margin-bottom:5px;display:flex;align-items:center;gap:6px;}
-#try-me-bubble-name::before{content:'';width:7px;height:7px;border-radius:50%;background:#22C55E;display:inline-block;animation:try-pulse 1.8s ease-in-out infinite;}
-#try-me-bubble-text{font-size:0.85rem;line-height:1.5;color:#0F172A;font-weight:500;margin-bottom:12px;}
-#try-me-bubble-cta{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#FF6535 0%,#FF3D9A 50%,#8A5CF6 100%);color:#fff;border:none;border-radius:100px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;width:100%;justify-content:center;box-shadow:0 4px 14px rgba(255,61,154,0.35);transition:transform 0.15s ease,box-shadow 0.15s ease;}
-#try-me-bubble-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,61,154,0.45);}
-#try-me-btn{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FF6535 0%,#FF3D9A 50%,#8A5CF6 100%);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(255,61,154,0.45),0 2px 8px rgba(0,0,0,0.2);position:relative;opacity:0;transform:scale(0);}
-#try-me-widget.visible #try-me-btn{opacity:1;transform:scale(1);animation:try-float 3.2s ease-in-out infinite 0.2s;transition:opacity 0.4s ease,transform 0.4s cubic-bezier(.34,1.56,.64,1);}
-#try-me-btn:hover{transform:scale(1.1)!important;box-shadow:0 10px 32px rgba(255,61,154,0.55),0 2px 8px rgba(0,0,0,0.2);animation:none;}
-#try-me-btn-inner{font-size:1.5rem;line-height:1;}
-#try-me-dot{position:absolute;top:2px;right:2px;width:15px;height:15px;border-radius:50%;background:#22C55E;border:2.5px solid #fff;animation:try-ping 1.8s ease-in-out infinite;}
-@keyframes try-ping{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);}50%{box-shadow:0 0 0 6px rgba(34,197,94,0);}}
+/* Chat header bar */
+#try-me-chat-header{
+  display:flex;align-items:center;gap:9px;padding:11px 14px;
+  background:#F8F9FA;border-bottom:1px solid rgba(0,0,0,0.07);
+}
+#try-me-chat-av-wrap{position:relative;flex-shrink:0;}
+#try-me-chat-av{width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:top center;display:block;}
+#try-me-chat-online-dot{position:absolute;bottom:1px;right:1px;width:10px;height:10px;border-radius:50%;background:#22C55E;border:2px solid #F8F9FA;}
+#try-me-chat-name{font-size:0.85rem;font-weight:800;color:#0F172A;line-height:1.2;}
+#try-me-chat-status{font-size:0.64rem;color:#22C55E;font-weight:700;margin-top:1px;}
+#try-me-chat-time{font-size:0.6rem;color:#94A3B8;margin-left:auto;flex-shrink:0;align-self:flex-start;padding-top:2px;}
+/* Message row */
+#try-me-chat-msg-row{display:flex;align-items:flex-end;gap:8px;padding:12px 14px 10px;}
+#try-me-chat-msg-av{width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:top center;flex-shrink:0;display:block;}
+#try-me-chat-msg{
+  background:#F1F5F9;border-radius:18px 18px 18px 4px;
+  padding:10px 13px;font-size:0.84rem;line-height:1.45;color:#1E293B;font-weight:500;
+}
+/* CTA button */
+#try-me-bubble-cta{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  background:linear-gradient(135deg,#FF6535 0%,#FF3D9A 50%,#8A5CF6 100%);
+  color:#fff;border:none;border-radius:0 0 16px 16px;padding:11px 18px;
+  font-size:0.83rem;font-weight:700;cursor:pointer;width:100%;
+  box-shadow:0 -1px 0 rgba(0,0,0,0.06);
+  transition:filter 0.15s ease;
+}
+#try-me-bubble-cta:hover{filter:brightness(1.08);}
+/* Erika avatar button */
+#try-me-btn{
+  width:64px;height:64px;border-radius:50%;
+  border:none;cursor:pointer;padding:0;
+  position:relative;opacity:0;transform:scale(0);
+  overflow:hidden;
+  box-shadow:0 0 0 3px #fff,0 0 0 5px rgba(255,61,154,0.5),0 8px 24px rgba(0,0,0,0.22);
+  background:#F0EDE8;
+}
+#try-me-erika-photo{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;}
+#try-me-widget.visible #try-me-btn{opacity:1;transform:scale(1);animation:try-float 3.2s ease-in-out infinite 0.2s;transition:opacity 0.4s ease,transform 0.4s cubic-bezier(.34,1.56,.64,1);pointer-events:auto;}
+#try-me-btn:hover{transform:scale(1.07)!important;box-shadow:0 0 0 3px #fff,0 0 0 5px rgba(255,61,154,0.7),0 10px 28px rgba(0,0,0,0.25);animation:none;}
+#try-me-dot{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:#22C55E;border:2.5px solid #fff;animation:try-ping 1.8s ease-in-out infinite;z-index:1;}
+@keyframes try-ping{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);}50%{box-shadow:0 0 0 5px rgba(34,197,94,0);}}
 @keyframes try-pulse{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.2);}50%{box-shadow:0 0 0 5px rgba(34,197,94,0);}}
 @keyframes try-float{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-5px) scale(1);}}
 body.in-workflow #try-me-widget{display:none;}
-@media(max-width:860px){#try-me-widget{bottom:calc(72px + var(--sab) + 14px);right:14px;}#try-me-bubble{max-width:230px;}#try-me-btn{width:52px;height:52px;}}
+@media(max-width:860px){#try-me-widget{bottom:calc(72px + var(--sab) + 14px);right:14px;}#try-me-bubble{max-width:260px;}#try-me-btn{width:56px;height:56px;}}
 
 /* Quick demo modal */
 #try-demo-modal{
@@ -1722,11 +1753,11 @@ body.in-workflow #try-me-widget{display:none;}
 
 /* ── Personable modal header ────────────────────────────────── */
 #try-agent-avatar{
-  width:40px;height:40px;border-radius:50%;flex-shrink:0;
-  background:var(--brand-g);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.15rem;box-shadow:0 0 0 3px rgba(255,61,154,0.2);
+  width:46px;height:46px;border-radius:50%;flex-shrink:0;
+  overflow:hidden;padding:0;
+  box-shadow:0 0 0 2px rgba(255,61,154,0.35),0 0 0 4px rgba(255,61,154,0.12);
   animation:try-avatar-pulse 2.8s ease-in-out infinite;
+  background:#F0EDE8;
 }
 @keyframes try-avatar-pulse{0%,100%{box-shadow:0 0 0 3px rgba(255,61,154,0.2);}50%{box-shadow:0 0 0 6px rgba(255,61,154,0.08);}}
 #try-agent-sub{font-size:0.73rem;color:#64748B;margin-top:3px;line-height:1.4;}
@@ -3010,14 +3041,27 @@ body.in-workflow #mobile-bottom-nav{display:none;}
 </div>
 
 <!-- ════════════════════════════════════════════════ TRY ME WIDGET -->
-<div id="try-me-widget" aria-label="Chat with an AI agent now">
+<div id="try-me-widget" aria-label="Chat with AI Erika">
   <div id="try-me-bubble">
-    <div id="try-me-bubble-name"><span>AI Agent — Online Now</span></div>
-    <div id="try-me-bubble-text">👋 Enter your company &amp; goal — I'll build your brand image in seconds.</div>
-    <button id="try-me-bubble-cta" onclick="quickStartDemo()">✨ Try Me Free — See It Live</button>
+    <div id="try-me-chat-header">
+      <div id="try-me-chat-av-wrap">
+        <img src="/erika.webp" id="try-me-chat-av" alt="AI Erika"/>
+        <span id="try-me-chat-online-dot"></span>
+      </div>
+      <div>
+        <div id="try-me-chat-name">AI Erika</div>
+        <div id="try-me-chat-status">● Online · Brand Agent</div>
+      </div>
+      <div id="try-me-chat-time">now</div>
+    </div>
+    <div id="try-me-chat-msg-row">
+      <img src="/erika.webp" id="try-me-chat-msg-av" alt=""/>
+      <div id="try-me-chat-msg">👋 Hi! Drop your company name &amp; goal — I'll build your brand image in seconds!</div>
+    </div>
+    <button id="try-me-bubble-cta" onclick="quickStartDemo()">✨ Try Me Free — See It Live →</button>
   </div>
-  <button id="try-me-btn" onclick="toggleTryMeBubble()" title="Try me now" aria-label="Open demo">
-    <span id="try-me-btn-inner">⬡</span>
+  <button id="try-me-btn" onclick="toggleTryMeBubble()" title="Chat with AI Erika" aria-label="Chat with AI Erika">
+    <img src="/erika.webp" id="try-me-erika-photo" alt="AI Erika"/>
     <span id="try-me-dot"></span>
   </button>
 </div>
@@ -3027,10 +3071,10 @@ body.in-workflow #mobile-bottom-nav{display:none;}
   <div id="try-demo-card">
     <div id="try-demo-header">
       <div id="try-demo-header-inner">
-        <div id="try-agent-avatar">⬡</div>
+        <div id="try-agent-avatar"><img src="/erika.webp" alt="AI Erika" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;display:block;"/></div>
         <div>
           <h3>✨ See What I Build For You — In Seconds</h3>
-          <div id="try-agent-sub">Hi! I'm Aria, your AI Brand Agent &middot; No sign-up &middot; Watch the magic 👀</div>
+          <div id="try-agent-sub">Hi! I'm AI Erika, your Brand Agent &middot; No sign-up &middot; Watch the magic 👀</div>
         </div>
       </div>
       <button id="try-demo-close" onclick="closeTryDemo()" aria-label="Close">✕</button>
