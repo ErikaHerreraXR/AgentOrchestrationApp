@@ -1598,9 +1598,13 @@ async function sendChat(){
 
   var reply=null;
   if(window.location.protocol!=='file:'){
-    try{reply=await callQwen(id,txt);}catch(e){console.warn('[Portal] Qwen:',e.message);}
-    if(!reply){try{reply=await callAnthropic(id,txt);}catch(e){console.warn('[Portal] Anthropic:',e.message);}}
-    if(!reply){try{reply=await callOpenAI(id,txt);}catch(e){console.warn('[Portal] OpenAI:',e.message);}}
+    var qwenErr=null;
+    try{reply=await callQwen(id,txt);}catch(e){qwenErr=e;console.warn('[Portal] Qwen:',e.message);}
+    // Only fall back to censored models if Qwen is not configured (503)
+    if(!reply && qwenErr && qwenErr.message.indexOf('503')!==-1){
+      try{reply=await callAnthropic(id,txt);}catch(e){console.warn('[Portal] Anthropic:',e.message);}
+      if(!reply){try{reply=await callOpenAI(id,txt);}catch(e){console.warn('[Portal] OpenAI:',e.message);}}
+    }
   }
   if(!reply)reply=smartFallback(id,txt);
 

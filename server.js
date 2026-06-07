@@ -69,15 +69,10 @@ app.get('/api/status', (req, res) => {
 });
 
 // ── Qwen / Ollama Chat proxy ──────────────────────────────────────
-// Proxies to a self-hosted Ollama or vLLM endpoint (e.g. Runpod).
-// Set QWEN_API_URL to your Runpod public URL, e.g.:
-//   https://abc123-11434.proxy.runpod.net
-// Set QWEN_MODEL to override the model name (default: the HF repo slug).
-// Set QWEN_API_KEY if your endpoint requires bearer auth.
 app.post('/api/qwen/chat', async (req, res) => {
   const url = process.env.QWEN_API_URL;
   if (!url) {
-    return res.status(503).json({ error: 'Qwen endpoint not configured (QWEN_API_URL missing).' });
+    return res.status(503).json({ error: 'QWEN_API_URL not set in Render environment variables.' });
   }
   const body = Object.assign({}, req.body, {
     model: process.env.QWEN_MODEL || 'hf.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive',
@@ -95,6 +90,33 @@ app.post('/api/qwen/chat', async (req, res) => {
   } catch (err) {
     console.error('[Qwen]', err.message);
     res.status(502).json({ error: err.message });
+  }
+});
+
+// ── Qwen connectivity test ────────────────────────────────────────
+app.get('/api/qwen/test', async (req, res) => {
+  const url = process.env.QWEN_API_URL;
+  const model = process.env.QWEN_MODEL || 'hf.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive';
+  if (!url) {
+    return res.json({ ok: false, reason: 'QWEN_API_URL not set in Render environment variables.' });
+  }
+  const headers = { 'Content-Type': 'application/json' };
+  if (process.env.QWEN_API_KEY) headers['Authorization'] = `Bearer ${process.env.QWEN_API_KEY}`;
+  try {
+    const upstream = await fetch(`${url.replace(/\/$/, '')}/v1/chat/completions`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model,
+        max_tokens: 30,
+        messages: [{ role: 'user', content: 'Reply with only the word READY.' }],
+      }),
+    });
+    const data = await upstream.json();
+    const reply = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+    res.json({ ok: !!reply, model, url, reply: reply || null, raw: data });
+  } catch (err) {
+    res.json({ ok: false, model, url, reason: err.message });
   }
 });
 
