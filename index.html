@@ -4256,39 +4256,10 @@ function buildAgentSystemPrompt(agent, brief, answers) {
     '\nGenerate a professional, detailed, actionable deliverable. Use clear sections and bullet points. Be specific to this client and their situation. No preamble — go straight into the deliverable content.';
 }
 
-/* ── AI call: Qwen → Anthropic → OpenAI → demo fallback ──────────────────── */
+/* ── AI call ──────────────────────────────────────────────────────────────── */
+// When QWEN_API_URL is configured on the server, Qwen is used exclusively.
+// Anthropic/OpenAI are only used when Qwen is not configured (503 = not set).
 function callAgentAPI(systemPrompt, userMessage, onSuccess, onFallback) {
-  function tryAnthropic() {
-    fetch('/api/anthropic', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({model: 'claude-sonnet-4-6', max_tokens: 2000, system: systemPrompt, messages: [{role:'user', content:userMessage}]})
-    })
-    .then(function(r){ if (!r.ok) throw new Error('ant-' + r.status); return r.json(); })
-    .then(function(d){
-      var txt = d.content && d.content[0] && d.content[0].text;
-      if (txt) { onSuccess(txt); } else { throw new Error('empty'); }
-    })
-    .catch(function(err){
-      console.warn('[Agent API] Anthropic failed:', err.message, '— trying OpenAI');
-      fetch('/api/openai', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({model: 'gpt-4o', max_tokens: 2000, messages: [{role:'system', content:systemPrompt}, {role:'user', content:userMessage}]})
-      })
-      .then(function(r){ if (!r.ok) throw new Error('oai-' + r.status); return r.json(); })
-      .then(function(d){
-        var txt = d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
-        if (txt) { onSuccess(txt); } else { throw new Error('empty'); }
-      })
-      .catch(function(err2){
-        console.warn('[Agent API] OpenAI failed:', err2.message, '— using demo content');
-        onFallback();
-      });
-    });
-  }
-
-  // Try Qwen (self-hosted uncensored model) first; fall back to Anthropic/OpenAI
   fetch('/api/qwen/chat', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -4297,11 +4268,42 @@ function callAgentAPI(systemPrompt, userMessage, onSuccess, onFallback) {
   .then(function(r){ if (!r.ok) throw new Error('qwen-' + r.status); return r.json(); })
   .then(function(d){
     var txt = d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
-    if (txt) { onSuccess(txt); } else { throw new Error('empty'); }
+    if (txt) { onSuccess(txt); } else { throw new Error('empty-qwen'); }
   })
   .catch(function(err){
-    console.warn('[Agent API] Qwen failed:', err.message, '— trying Anthropic');
-    tryAnthropic();
+    // Only fall back to Anthropic if Qwen is not configured (503)
+    // Any other error means Qwen IS configured but failed — show error, don't silently use a censored model
+    var notConfigured = err.message.indexOf('503') !== -1;
+    if (!notConfigured) {
+      console.error('[Agent API] Qwen error:', err.message);
+      onFallback();
+      return;
+    }
+    console.warn('[Agent API] Qwen not configured — falling back to Anthropic');
+    fetch('/api/anthropic', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({model: 'claude-sonnet-4-6', max_tokens: 2000, system: systemPrompt, messages: [{role:'user', content:userMessage}]})
+    })
+    .then(function(r){ if (!r.ok) throw new Error('ant-' + r.status); return r.json(); })
+    .then(function(d){
+      var txt = d.content && d.content[0] && d.content[0].text;
+      if (txt) { onSuccess(txt); } else { throw new Error('empty-ant'); }
+    })
+    .catch(function(err2){
+      console.warn('[Agent API] Anthropic failed:', err2.message, '— trying OpenAI');
+      fetch('/api/openai', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({model: 'gpt-4o', max_tokens: 2000, messages: [{role:'system', content:systemPrompt}, {role:'user', content:userMessage}]})
+      })
+      .then(function(r){ if (!r.ok) throw new Error('oai-' + r.status); return r.json(); })
+      .then(function(d){
+        var txt = d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
+        if (txt) { onSuccess(txt); } else { throw new Error('empty-oai'); }
+      })
+      .catch(function(){ onFallback(); });
+    });
   });
 }
 
