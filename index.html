@@ -4320,9 +4320,14 @@ function callAgentAPI(systemPrompt, userMessage, onSuccess, onFallback) {
 function processingToOutput(conv, templateId, agent) {
   var b = state.brief;
   var answers = state.convAnswers || {};
+  var closingText = conv.closing(answers, b);
 
-  agentSay(conv.closing(answers, b), 700).then(function() {
+  // Pass false so agentSay doesn't enqueue speech itself; we enqueue it
+  // manually right after resolve so it goes into the queue BEFORE headerText/fullClean
+  agentSay(closingText, 400, false).then(function() {
+    if (voice.ttsEnabled) enqueueTTS(closingText);
     var typing = showTyping();
+    var agentIdxAtStart = state.agentIndex;
 
     function renderOutput(output) {
       removeTyping();
@@ -4354,12 +4359,11 @@ function processingToOutput(conv, templateId, agent) {
           chatScrollBottom();
           setTimeout(typeChar, ci < 200 ? 8 : 2);
         } else {
-          // Read the full deliverable after typing completes
-          if (voice.ttsEnabled) {
+          // Guard: only enqueue if the user hasn't approved and moved to the next agent
+          if (voice.ttsEnabled && state.agentIndex === agentIdxAtStart) {
             var fullClean = cleanTextForSpeech(output);
             if (fullClean.trim()) enqueueTTS(fullClean);
           }
-          // Email the deliverable silently to erika@productimagination.com
           sendDeliverableByEmail(agent.name, output);
           setTimeout(function() { showGuardianPanel(agent, templateId); }, 600);
         }
@@ -4443,30 +4447,38 @@ function showContentBrandImage(agent, b) {
 
 function showStaticAgentOutput(agent, templateId) {
   var b = state.brief;
-  agentSay(agent.specialty, 400);
-  var output = getDemoContent(templateId, agent.id, b);
-  var msgs = document.getElementById('chat-messages');
-  var headerText = 'Here is your ' + agent.name + ' deliverable for ' + b.client + '.';
-  addBubble('agent', '<strong>' + headerText + '</strong>', agent.icon);
-  if (voice.ttsEnabled) enqueueTTS(headerText);
-  // For content agents, show a brand visual concept card
-  if (agent.id === 'content' || agent.id === 'copy' || agent.id === 'creative') {
-    setTimeout(function() { showContentBrandImage(agent, b); }, 300);
-  }
-  var wrap = document.createElement('div');
-  wrap.className = 'bubble-wrap agent';
-  var b2 = document.createElement('div');
-  b2.className = 'bubble output';
-  b2.textContent = output;
-  wrap.appendChild(b2);
-  msgs.appendChild(wrap);
-  chatScrollBottom();
-  if (voice.ttsEnabled) {
-    var fullClean = cleanTextForSpeech(output);
-    if (fullClean.trim()) enqueueTTS(fullClean);
-  }
-  sendDeliverableByEmail(agent.name, output);
-  setTimeout(function() { showGuardianPanel(agent, templateId); }, 800);
+  // Pass false — we enqueue all speech manually below so order matches visual display
+  agentSay(agent.specialty, 400, false).then(function() {
+    // specialty bubble is now visible; enqueue it first so it speaks first
+    if (voice.ttsEnabled) enqueueTTS(agent.specialty);
+
+    var output = getDemoContent(templateId, agent.id, b);
+    var msgs = document.getElementById('chat-messages');
+    var headerText = 'Here is your ' + agent.name + ' deliverable for ' + b.client + '.';
+    addBubble('agent', '<strong>' + headerText + '</strong>', agent.icon);
+    if (voice.ttsEnabled) enqueueTTS(headerText);
+
+    // For content agents, show a brand visual concept card
+    if (agent.id === 'content' || agent.id === 'copy' || agent.id === 'creative') {
+      setTimeout(function() { showContentBrandImage(agent, b); }, 300);
+    }
+
+    var wrap = document.createElement('div');
+    wrap.className = 'bubble-wrap agent';
+    var b2 = document.createElement('div');
+    b2.className = 'bubble output';
+    b2.textContent = output;
+    wrap.appendChild(b2);
+    msgs.appendChild(wrap);
+    chatScrollBottom();
+
+    if (voice.ttsEnabled) {
+      var fullClean = cleanTextForSpeech(output);
+      if (fullClean.trim()) enqueueTTS(fullClean);
+    }
+    sendDeliverableByEmail(agent.name, output);
+    setTimeout(function() { showGuardianPanel(agent, templateId); }, 800);
+  });
 }
 
 function showGuardianPanel(agent, templateId) {
