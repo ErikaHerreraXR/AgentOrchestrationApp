@@ -1709,17 +1709,37 @@ function openReport(reportName,agentId){
   var prompt='Generate a comprehensive '+reportName+' for '+( b.client||'Client')+'. Business: '+(b.project||b.client)+'. Goal: '+(b.goal||'Grow')+'. Include specific metrics, insights, and actionable recommendations. Format clearly with sections.';
 
   if(!S.agentHist[agentId])S.agentHist[agentId]=[];
-  fetch('/api/anthropic',{
+
+  function setReport(text){
+    document.getElementById('rpt-output').textContent=text;
+    speakPortalText(text);
+  }
+
+  function tryReportAnthropic(){
+    fetch('/api/anthropic',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,system:buildSystemPrompt(agentId),messages:[{role:'user',content:prompt}]})
+    })
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var text=d.content&&d.content[0]&&d.content[0].text;
+      setReport(text||'Unable to generate report right now.');
+    })
+    .catch(function(){setReport('Report generation requires a live server connection.');});
+  }
+
+  fetch('/api/qwen/chat',{
     method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,system:buildSystemPrompt(agentId),messages:[{role:'user',content:prompt}]})
+    body:JSON.stringify({max_tokens:700,messages:[{role:'system',content:buildSystemPrompt(agentId)},{role:'user',content:prompt}]})
   })
-  .then(function(r){return r.json();})
+  .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
   .then(function(d){
-    var text=d.content&&d.content[0]&&d.content[0].text;
-    document.getElementById('rpt-output').textContent=text||'Unable to generate report right now.';
+    var text=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+    if(text){setReport(text);}else{tryReportAnthropic();}
   })
-  .catch(function(){
-    document.getElementById('rpt-output').textContent='Report generation requires a live server connection.';
+  .catch(function(err){
+    if(err.message.indexOf('503')!==-1){tryReportAnthropic();}
+    else{setReport('Unable to generate report right now.');}
   });
 }
 
@@ -1730,6 +1750,7 @@ function openDoc(docName){
 function closeReport(e,force){
   if(force||(e&&e.target===document.getElementById('report-overlay'))){
     document.getElementById('report-overlay').classList.remove('open');
+    stopPortalSpeech();
   }
 }
 
@@ -1923,7 +1944,16 @@ function stopPortalSpeech(){
 function enqueuePortalTTS(text){
   var prefEl=document.getElementById('pref-voice');
   if(prefEl&&!prefEl.checked)return;
-  var clean=text.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  var clean=text
+    .replace(/<[^>]+>/g,' ')
+    .replace(/\*\*([^*]+)\*\*/g,'$1')
+    .replace(/\*([^*]+)\*/g,'$1')
+    .replace(/`([^`]+)`/g,'$1')
+    .replace(/```[\s\S]*?```/gm,' ')
+    .replace(/^#+\s+(.+)$/gm,'$1.')
+    .replace(/^\s*[-•·*]\s+/gm,'')
+    .replace(/^\s*\d+\.\s+/gm,'')
+    .replace(/\s+/g,' ').trim();
   if(!clean)return;
   _portalQueue.push(clean);
   if(!_portalPlaying)playPortalQueue();
