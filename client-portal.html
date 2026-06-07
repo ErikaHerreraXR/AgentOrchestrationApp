@@ -1598,7 +1598,8 @@ async function sendChat(){
 
   var reply=null;
   if(window.location.protocol!=='file:'){
-    try{reply=await callAnthropic(id,txt);}catch(e){console.warn('[Portal] Anthropic:',e.message);}
+    try{reply=await callQwen(id,txt);}catch(e){console.warn('[Portal] Qwen:',e.message);}
+    if(!reply){try{reply=await callAnthropic(id,txt);}catch(e){console.warn('[Portal] Anthropic:',e.message);}}
     if(!reply){try{reply=await callOpenAI(id,txt);}catch(e){console.warn('[Portal] OpenAI:',e.message);}}
   }
   if(!reply)reply=smartFallback(id,txt);
@@ -1644,6 +1645,19 @@ function buildSystemPrompt(agentId){
     +'RESPONSE STYLE: Lead with the answer — no preamble. 2-3 short paragraphs max. '
     +'No filler ("Great question!", "Certainly!"). No long bullet lists unless asked. '
     +'Speak like an expert colleague, not a chatbot. Be direct, specific, and actionable.';
+}
+
+async function callQwen(agentId,userMsg){
+  var sysP=buildSystemPrompt(agentId);
+  var hist=S.agentHist[agentId]?S.agentHist[agentId].slice(-10):[];
+  var msgs=[{role:'system',content:sysP}].concat(hist);
+  var res=await fetch('/api/qwen/chat',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({max_tokens:600,messages:msgs})
+  });
+  if(!res.ok)throw new Error('Qwen '+res.status);
+  var data=await res.json();
+  return data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content;
 }
 
 async function callAnthropic(agentId,userMsg){

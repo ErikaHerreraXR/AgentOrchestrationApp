@@ -4141,34 +4141,52 @@ function buildAgentSystemPrompt(agent, brief, answers) {
     '\nGenerate a professional, detailed, actionable deliverable. Use clear sections and bullet points. Be specific to this client and their situation. No preamble — go straight into the deliverable content.';
 }
 
-/* ── AI call with Anthropic → OpenAI → demo fallback ─────────────────────── */
+/* ── AI call: Qwen → Anthropic → OpenAI → demo fallback ──────────────────── */
 function callAgentAPI(systemPrompt, userMessage, onSuccess, onFallback) {
-  fetch('/api/anthropic', {
+  function tryAnthropic() {
+    fetch('/api/anthropic', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({model: 'claude-sonnet-4-6', max_tokens: 2000, system: systemPrompt, messages: [{role:'user', content:userMessage}]})
+    })
+    .then(function(r){ if (!r.ok) throw new Error('ant-' + r.status); return r.json(); })
+    .then(function(d){
+      var txt = d.content && d.content[0] && d.content[0].text;
+      if (txt) { onSuccess(txt); } else { throw new Error('empty'); }
+    })
+    .catch(function(err){
+      console.warn('[Agent API] Anthropic failed:', err.message, '— trying OpenAI');
+      fetch('/api/openai', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({model: 'gpt-4o', max_tokens: 2000, messages: [{role:'system', content:systemPrompt}, {role:'user', content:userMessage}]})
+      })
+      .then(function(r){ if (!r.ok) throw new Error('oai-' + r.status); return r.json(); })
+      .then(function(d){
+        var txt = d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
+        if (txt) { onSuccess(txt); } else { throw new Error('empty'); }
+      })
+      .catch(function(err2){
+        console.warn('[Agent API] OpenAI failed:', err2.message, '— using demo content');
+        onFallback();
+      });
+    });
+  }
+
+  // Try Qwen (self-hosted uncensored model) first; fall back to Anthropic/OpenAI
+  fetch('/api/qwen/chat', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({model: 'claude-sonnet-4-6', max_tokens: 2000, system: systemPrompt, messages: [{role:'user', content:userMessage}]})
+    body: JSON.stringify({max_tokens: 2000, messages: [{role:'system', content:systemPrompt}, {role:'user', content:userMessage}]})
   })
-  .then(function(r){ if (!r.ok) throw new Error('ant-' + r.status); return r.json(); })
+  .then(function(r){ if (!r.ok) throw new Error('qwen-' + r.status); return r.json(); })
   .then(function(d){
-    var txt = d.content && d.content[0] && d.content[0].text;
+    var txt = d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
     if (txt) { onSuccess(txt); } else { throw new Error('empty'); }
   })
   .catch(function(err){
-    console.warn('[Agent API] Anthropic failed:', err.message, '— trying OpenAI');
-    fetch('/api/openai', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({model: 'gpt-4o', max_tokens: 2000, messages: [{role:'system', content:systemPrompt}, {role:'user', content:userMessage}]})
-    })
-    .then(function(r){ if (!r.ok) throw new Error('oai-' + r.status); return r.json(); })
-    .then(function(d){
-      var txt = d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
-      if (txt) { onSuccess(txt); } else { throw new Error('empty'); }
-    })
-    .catch(function(err2){
-      console.warn('[Agent API] OpenAI failed:', err2.message, '— using demo content');
-      onFallback();
-    });
+    console.warn('[Agent API] Qwen failed:', err.message, '— trying Anthropic');
+    tryAnthropic();
   });
 }
 
