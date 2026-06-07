@@ -4188,19 +4188,24 @@ function startAgentConversation(agent, agentIdx, templateId) {
       setTimeout(function() {
         showQuickReplies(['💡 How does this work?', "I'm ready — let's begin →"], function(choice) {
           if (choice.indexOf('How does this work') !== -1) {
+            stopCurrentSpeech();
             var pitch = (SYSTEM_PITCHES[templateId] || function(b){ return 'This system sequences specialist AI agents — each an expert — to deliver professional-grade work fast, with Guardian QA on every output.'; })(b);
             agentSay(pitch, 800).then(function() {
               showQuickReplies(["Let's start the workflow →"], function() {
+                stopCurrentSpeech();
                 launchAgentConv(conv, b, templateId, agent);
               });
             });
           } else {
+            stopCurrentSpeech();
             launchAgentConv(conv, b, templateId, agent);
           }
         });
       }, 1600);
       delay = 999999; // Phase 2 is now handled by the quick-reply callback above
     } else {
+      // Clear previous agent's queued speech before starting the next one
+      stopCurrentSpeech();
       // Brief transition message from Orchestrator
       addBubble('system', '✓ ' + state.template.agents[agentIdx-1].name + ' complete — Guardian QA score ' + (state.scores[state.template.agents[agentIdx-1].id] || 88) + '/100');
       var nextMsg = 'Now bringing in your <strong>' + agent.name + '</strong>. ' + (conv ? conv.intro(b) : 'They\'ll help with ' + agent.specialty.split('.')[0] + '.');
@@ -4428,6 +4433,9 @@ function approveAgent(agentId) {
   state.convAnswers = {};
 
   addBubble('system', '✓ Guardian QA Approved — ' + agentId + ' scored ' + score + '/100', null);
+
+  // Stop current agent's voice before starting the next agent
+  stopCurrentSpeech();
 
   var t      = state.template;
   var agents = t.agents;
