@@ -1,0 +1,140 @@
+<svg viewBox="0 0 1440 720" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- Logo gradient -->
+    <linearGradient id="lg" x1="688" y1="320" x2="752" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF6535"/>
+      <stop offset="38%" stop-color="#FF3D9A"/>
+      <stop offset="72%" stop-color="#8A5CF6"/>
+      <stop offset="100%" stop-color="#4A8FD9"/>
+    </linearGradient>
+    <!-- Warm orange glow -->
+    <radialGradient id="og" cx="30%" cy="50%" r="55%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#FF8040" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#FF8040" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Pink glow -->
+    <radialGradient id="pg" cx="72%" cy="52%" r="50%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#FF3D9A" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#FF3D9A" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Center purple glow -->
+    <radialGradient id="cg" cx="50%" cy="50%" r="42%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#8A5CF6" stop-opacity="0.13"/>
+      <stop offset="100%" stop-color="#8A5CF6" stop-opacity="0"/>
+    </radialGradient>
+    <!-- White halo behind logo -->
+    <radialGradient id="wh" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.90"/>
+      <stop offset="60%" stop-color="white" stop-opacity="0.50"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Base background: soft lavender -->
+  <rect width="1440" height="720" fill="#EDEDF8"/>
+  <!-- Color overlays -->
+  <rect width="1440" height="720" fill="url(#og)"/>
+  <rect width="1440" height="720" fill="url(#pg)"/>
+  <rect width="1440" height="720" fill="url(#cg)"/>
+
+  <!-- Dashed concentric rings from logo center (720, 360) -->
+  <circle cx="720" cy="360" r="170" stroke="rgba(80,80,180,0.18)" stroke-width="1.5" stroke-dasharray="9 7" fill="none"/>
+  <circle cx="720" cy="360" r="248" stroke="rgba(80,80,180,0.13)" stroke-width="1.2" stroke-dasharray="9 9" fill="none"/>
+  <circle cx="720" cy="360" r="326" stroke="rgba(80,80,180,0.09)" stroke-width="1" stroke-dasharray="9 11" fill="none"/>
+  <circle cx="720" cy="360" r="404" stroke="rgba(80,80,180,0.06)" stroke-width="1" stroke-dasharray="9 14" fill="none"/>
+
+  <!-- ── CIRCUIT TRACES ── navy at low opacity, L-shaped with rounded corners -->
+  <!-- Top-left cluster -->
+  <path d="M 706 216 L 706 158 L 560 158 L 560 96 L 432 96" stroke="rgba(27,32,104,0.24)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M 672 228 L 672 186 L 510 186 L 510 268 L 384 268" stroke="rgba(27,32,104,0.18)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Top-left endpoint circle (large dashed) -->
+  <circle cx="432" cy="96" r="18" stroke="rgba(27,32,104,0.20)" stroke-width="1.4" stroke-dasharray="5 5" fill="white" fill-opacity="0.65"/>
+  <circle cx="432" cy="96" r="6" fill="#4A8FD9"/>
+  <!-- Top-left small dot -->
+  <circle cx="384" cy="268" r="4.5" fill="rgba(255,61,154,0.55)"/>
+
+  <!-- Top-right cluster -->
+  <path d="M 734 216 L 734 158 L 880 158 L 880 96 L 1008 96" stroke="rgba(27,32,104,0.24)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M 768 228 L 768 186 L 930 186 L 930 268 L 1056 268" stroke="rgba(27,32,104,0.18)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Top-right endpoint circle -->
+  <circle cx="1008" cy="96" r="18" stroke="rgba(27,32,104,0.20)" stroke-width="1.4" stroke-dasharray="5 5" fill="white" fill-opacity="0.65"/>
+  <circle cx="1008" cy="96" r="6" fill="#4A8FD9"/>
+  <!-- Top-right small dot -->
+  <circle cx="1056" cy="268" r="4.5" fill="rgba(255,101,53,0.5)"/>
+
+  <!-- Right cluster -->
+  <path d="M 834 344 L 924 344 L 924 268 L 1036 268 L 1036 228" stroke="rgba(27,32,104,0.22)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M 834 376 L 1020 376 L 1020 468 L 1120 468" stroke="rgba(27,32,104,0.18)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Right endpoint circle (large dashed) -->
+  <circle cx="1120" cy="468" r="18" stroke="rgba(27,32,104,0.18)" stroke-width="1.4" stroke-dasharray="5 5" fill="white" fill-opacity="0.65"/>
+  <circle cx="1120" cy="468" r="6" fill="#FF3D9A"/>
+  <!-- Right small node -->
+  <circle cx="1036" cy="228" r="4.5" fill="rgba(74,143,217,0.6)"/>
+
+  <!-- Bottom-right cluster -->
+  <path d="M 734 504 L 734 562 L 880 562 L 880 624 L 1008 624" stroke="rgba(27,32,104,0.24)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M 768 492 L 930 492 L 930 572 L 1056 572" stroke="rgba(27,32,104,0.16)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Bottom-right endpoint circle -->
+  <circle cx="1008" cy="624" r="18" stroke="rgba(27,32,104,0.20)" stroke-width="1.4" stroke-dasharray="5 5" fill="white" fill-opacity="0.65"/>
+  <circle cx="1008" cy="624" r="6" fill="#8A5CF6"/>
+
+  <!-- Bottom-left cluster -->
+  <path d="M 706 504 L 706 562 L 560 562 L 560 624 L 432 624" stroke="rgba(27,32,104,0.24)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M 672 492 L 510 492 L 510 572 L 384 572" stroke="rgba(27,32,104,0.16)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Bottom-left endpoint circle -->
+  <circle cx="432" cy="624" r="18" stroke="rgba(27,32,104,0.20)" stroke-width="1.4" stroke-dasharray="5 5" fill="white" fill-opacity="0.65"/>
+  <circle cx="432" cy="624" r="6" fill="#8A5CF6"/>
+
+  <!-- Left cluster -->
+  <path d="M 606 344 L 516 344 L 516 268 L 404 268 L 404 228" stroke="rgba(27,32,104,0.22)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M 606 376 L 420 376 L 420 468 L 320 468" stroke="rgba(27,32,104,0.18)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Left endpoint circle -->
+  <circle cx="320" cy="468" r="18" stroke="rgba(27,32,104,0.18)" stroke-width="1.4" stroke-dasharray="5 5" fill="white" fill-opacity="0.65"/>
+  <circle cx="320" cy="468" r="6" fill="#FF6535"/>
+  <!-- Left small node -->
+  <circle cx="404" cy="228" r="4.5" fill="rgba(138,92,246,0.55)"/>
+
+  <!-- Dot grid patterns (3×3 grids) -->
+  <g fill="rgba(80,80,180,0.28)">
+    <circle cx="492" cy="196" r="2.2"/><circle cx="503" cy="196" r="2.2"/><circle cx="514" cy="196" r="2.2"/>
+    <circle cx="492" cy="207" r="2.2"/><circle cx="503" cy="207" r="2.2"/><circle cx="514" cy="207" r="2.2"/>
+    <circle cx="492" cy="218" r="2.2"/><circle cx="503" cy="218" r="2.2"/><circle cx="514" cy="218" r="2.2"/>
+  </g>
+  <g fill="rgba(80,80,180,0.28)">
+    <circle cx="926" cy="196" r="2.2"/><circle cx="937" cy="196" r="2.2"/><circle cx="948" cy="196" r="2.2"/>
+    <circle cx="926" cy="207" r="2.2"/><circle cx="937" cy="207" r="2.2"/><circle cx="948" cy="207" r="2.2"/>
+    <circle cx="926" cy="218" r="2.2"/><circle cx="937" cy="218" r="2.2"/><circle cx="948" cy="218" r="2.2"/>
+  </g>
+  <g fill="rgba(80,80,180,0.22)">
+    <circle cx="492" cy="502" r="2.2"/><circle cx="503" cy="502" r="2.2"/><circle cx="514" cy="502" r="2.2"/>
+    <circle cx="492" cy="513" r="2.2"/><circle cx="503" cy="513" r="2.2"/><circle cx="514" cy="513" r="2.2"/>
+    <circle cx="492" cy="524" r="2.2"/><circle cx="503" cy="524" r="2.2"/><circle cx="514" cy="524" r="2.2"/>
+  </g>
+  <g fill="rgba(80,80,180,0.22)">
+    <circle cx="926" cy="502" r="2.2"/><circle cx="937" cy="502" r="2.2"/><circle cx="948" cy="502" r="2.2"/>
+    <circle cx="926" cy="513" r="2.2"/><circle cx="937" cy="513" r="2.2"/><circle cx="948" cy="513" r="2.2"/>
+    <circle cx="926" cy="524" r="2.2"/><circle cx="937" cy="524" r="2.2"/><circle cx="948" cy="524" r="2.2"/>
+  </g>
+
+  <!-- White glow halo behind central logo -->
+  <circle cx="720" cy="360" r="200" fill="url(#wh)"/>
+
+  <!-- ══ CENTRAL LOGO (scaled ×3, centered at 720,360) ══ -->
+  <!-- connector lines -->
+  <line x1="720" y1="313" x2="720" y2="289" stroke="#1B2068" stroke-width="5.5" stroke-linecap="round"/>
+  <line x1="763" y1="360" x2="787" y2="360" stroke="#1B2068" stroke-width="5.5" stroke-linecap="round"/>
+  <line x1="720" y1="407" x2="720" y2="431" stroke="#1B2068" stroke-width="5.5" stroke-linecap="round"/>
+  <line x1="677" y1="360" x2="653" y2="360" stroke="#1B2068" stroke-width="5.5" stroke-linecap="round"/>
+  <!-- connector node circles -->
+  <circle cx="720" cy="282" r="8" stroke="#1B2068" stroke-width="5" fill="none"/>
+  <circle cx="795" cy="360" r="8" stroke="#1B2068" stroke-width="5" fill="none"/>
+  <circle cx="720" cy="438" r="8" stroke="#1B2068" stroke-width="5" fill="none"/>
+  <circle cx="645" cy="360" r="8" stroke="#1B2068" stroke-width="5" fill="none"/>
+  <!-- Scalloped 8-lobe cloud -->
+  <polygon stroke="#1B2068" stroke-width="5.5" stroke-linejoin="round" fill="white"
+    points="720,313 727.0,321.7 730.9,330.7 740.0,327.1 750.8,326.2 750.0,337.0 746.3,346.1 755.3,350.0 763.0,360 755.3,370.0 746.3,373.9 750.0,383.0 750.8,393.8 740.0,392.9 730.9,389.3 727.0,398.3 720,406 713.0,398.3 709.1,389.3 700.0,392.9 689.2,393.8 690.0,383.0 693.7,373.9 684.7,370.0 677.0,360 684.7,350.0 693.7,346.1 690.0,337.0 689.2,326.2 700.0,327.1 709.1,330.7 713.0,321.7"/>
+  <!-- Gradient center circle -->
+  <circle cx="720" cy="360" r="30" fill="url(#lg)"/>
+  <!-- 4-pointed star sparkle (white) -->
+  <path d="M720 337 L724.5 356 L744 360 L724.5 364 L720 383 L715.5 364 L696 360 L715.5 356 Z" fill="white"/>
+</svg>

@@ -294,15 +294,28 @@ nav{
   min-height:520px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
-/* Hero image layer */
+/* Hero background — light mode: circuit cloud SVG */
 .hero::before{
   content:'';position:absolute;inset:0;
-  background:url('hero.jpg') center 18% / cover no-repeat;
+  background:url('hero-bg.svg') center center / cover no-repeat;
   z-index:0;
 }
-/* Overlay — brand warm glow + dark fade */
+/* Light overlay — lets SVG pattern show subtly */
 .hero::after{
   content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,
+    rgba(255,255,255,0.78) 0%,
+    rgba(255,255,255,0.62) 40%,
+    rgba(255,255,255,0.74) 100%);
+  z-index:1;
+}
+.hero > *{position:relative;z-index:2}
+
+/* Dark mode: restore original photo bg + dark overlay */
+[data-theme="dark"] .hero::before{
+  background:url('hero.jpg') center 18% / cover no-repeat;
+}
+[data-theme="dark"] .hero::after{
   background:
     radial-gradient(ellipse 90% 55% at 50% -5%, rgba(255,61,154,0.18) 0%, rgba(138,92,246,0.10) 45%, transparent 72%),
     linear-gradient(180deg,
@@ -310,9 +323,7 @@ nav{
       rgba(11,13,30,0.30) 35%,
       rgba(11,13,30,0.65) 68%,
       rgba(11,13,30,1)    100%);
-  z-index:1;
 }
-.hero > *{position:relative;z-index:2}
 
 .hero-tag{
   display:inline-flex;align-items:center;gap:8px;
@@ -327,10 +338,11 @@ nav{
 .hero h1{
   font-size:clamp(2.4rem,5.5vw,4.2rem);
   font-weight:800;line-height:1.04;
-  letter-spacing:-0.04em;color:#FFFFFF;
-  text-shadow:0 2px 40px rgba(0,0,0,0.7);
+  letter-spacing:-0.04em;color:var(--brand-navy);
+  text-shadow:none;
   margin-bottom:20px;
 }
+[data-theme="dark"] .hero h1{color:#FFFFFF;text-shadow:0 2px 40px rgba(0,0,0,0.7)}
 .hero h1 span{
   background:var(--brand-g);
   -webkit-background-clip:text;
@@ -340,9 +352,10 @@ nav{
 .hero p{
   max-width:520px;margin:0 auto 40px;
   font-size:1.05rem;line-height:1.72;
-  color:rgba(200,195,188,0.85);
-  text-shadow:0 1px 8px rgba(0,0,0,0.5);
+  color:#4A5568;
+  text-shadow:none;
 }
+[data-theme="dark"] .hero p{color:rgba(200,195,188,0.85);text-shadow:0 1px 8px rgba(0,0,0,0.5)}
 
 /* Pipeline nodes */
 .hero-pipeline{
