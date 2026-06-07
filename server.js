@@ -63,8 +63,39 @@ app.get('/api/status', (req, res) => {
     commit:    GIT_COMMIT,
     openai:    !!process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.startsWith('sk-...'),
     anthropic: !!process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY.startsWith('sk-ant-...'),
+    qwen:      !!process.env.QWEN_API_URL,
     voice:     process.env.OPENAI_VOICE || 'nova',
   });
+});
+
+// ── Qwen / Ollama Chat proxy ──────────────────────────────────────
+// Proxies to a self-hosted Ollama or vLLM endpoint (e.g. Runpod).
+// Set QWEN_API_URL to your Runpod public URL, e.g.:
+//   https://abc123-11434.proxy.runpod.net
+// Set QWEN_MODEL to override the model name (default: the HF repo slug).
+// Set QWEN_API_KEY if your endpoint requires bearer auth.
+app.post('/api/qwen/chat', async (req, res) => {
+  const url = process.env.QWEN_API_URL;
+  if (!url) {
+    return res.status(503).json({ error: 'Qwen endpoint not configured (QWEN_API_URL missing).' });
+  }
+  const body = Object.assign({}, req.body, {
+    model: process.env.QWEN_MODEL || 'hf.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive',
+  });
+  const headers = { 'Content-Type': 'application/json' };
+  if (process.env.QWEN_API_KEY) headers['Authorization'] = `Bearer ${process.env.QWEN_API_KEY}`;
+  try {
+    const upstream = await fetch(`${url.replace(/\/$/, '')}/v1/chat/completions`, {
+      method:  'POST',
+      headers,
+      body:    JSON.stringify(body),
+    });
+    const data = await upstream.json();
+    res.status(upstream.status).json(data);
+  } catch (err) {
+    console.error('[Qwen]', err.message);
+    res.status(502).json({ error: err.message });
+  }
 });
 
 // ── OpenAI Chat proxy ─────────────────────────────────────────────
