@@ -4232,10 +4232,6 @@ function askQuestion(conv, qIdx, templateId, agent) {
   // Pass shouldSpeak=true ONLY for questions so the user hears what to answer
   agentSay(q.text, 800, true).then(function() {
     showQuickReplies(q.opts, function(answer) {
-      // Clear the queue so a pending question doesn't play after the user already answered,
-      // but don't pause mid-word — stopCurrentSpeech clears the queue cleanly
-      stopCurrentSpeech();
-
       if (answer === '📌 Pin for later') {
         if (!state.pins) state.pins = [];
         state.pins.push({ icon: state.currentAgentIcon, topic: q.id, question: q.text });
