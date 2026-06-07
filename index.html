@@ -3986,7 +3986,7 @@ function agentSay(text, delay, shouldSpeak) {
       if (shouldSpeak !== false) {
         if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
         if (window.speechSynthesis) window.speechSynthesis.cancel();
-        setTimeout(function() { speakText(text, false); }, 150);
+        setTimeout(function() { speakText(text); }, 150);
       }
       resolve();
     }, delay || 900);
@@ -4312,12 +4312,12 @@ function processingToOutput(conv, templateId, agent) {
           chatScrollBottom();
           setTimeout(typeChar, ci < 200 ? 8 : 2);
         } else {
-          // Read the first 3 sentences of the deliverable after typing completes
+          // Read the full deliverable after typing completes
           if (voice.ttsEnabled) {
-            var preview = firstSentences(cleanTextForSpeech(output), 3);
-            if (preview.trim()) {
+            var fullClean = cleanTextForSpeech(output);
+            if (fullClean.trim()) {
               stopCurrentSpeech();
-              speakViaProxy(preview);
+              speakViaProxy(fullClean);
             }
           }
           setTimeout(function() { showGuardianPanel(agent, templateId); }, 600);
@@ -4973,20 +4973,16 @@ function pickNaturalVoice(voices) {
    Fallback: Web Speech API (browser built-in)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-function speakText(text, isFullDoc) {
+function speakText(text) {
   if (!voice.ttsEnabled) return;
 
   // Stop anything already playing — never overlap
   stopCurrentSpeech();
 
-  var clean  = cleanTextForSpeech(text);
+  var clean = cleanTextForSpeech(text);
   if (!clean.trim()) return;
 
-  // Speak at most 2 sentences for questions; 1 for document readouts
-  var spoken = isFullDoc ? firstSentences(clean, 1) : firstSentences(clean, 2);
-  if (!spoken.trim()) return;
-
-  speakViaProxy(spoken);
+  speakViaProxy(clean);
 }
 
 function stopCurrentSpeech() {
