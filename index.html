@@ -54,7 +54,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Mono:wght@400;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;overflow-x:hidden}
+html{scroll-behavior:smooth}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    DESIGN TOKENS — clean dark-mode palette
@@ -68,6 +68,7 @@ html{scroll-behavior:smooth;overflow-x:hidden}
   --brand-purple: #8A5CF6;
   --brand-blue:   #4A8FD9;
   --brand-navy:   #1B2068;   /* logo cloud outline */
+  --brand-yellow: #F5C400;   /* golden accent */
 
   /* ── Backgrounds — deep brand navy ───────────────────────────────────── */
   --bg-base:     #0B0D1E;
@@ -156,7 +157,7 @@ body{
   font-family:var(--fb);
   font-size:15px;
   line-height:1.6;
-  overflow-x:hidden;
+  overflow-x:clip;   /* clip prevents horizontal overflow without creating a scroll container */
   -webkit-font-smoothing:antialiased;
 }
 a{color:inherit;text-decoration:none}
@@ -167,12 +168,16 @@ button{font-family:var(--fb)}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.10);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.18)}
 
-.screen{display:none;min-height:100vh;min-height:100dvh}
-.screen.active{display:flex;flex-direction:column}
-/* Desktop scroll — allow non-workflow screens to scroll naturally */
+.screen{display:none}
+.screen.active{display:block}
+/* Non-workflow screens grow with content; window is the scroll container on desktop */
 #screen-home.active,#screen-brief.active,#screen-complete.active{
-  overflow-y:auto;
-  height:auto;
+  min-height:100vh;min-height:100dvh;
+}
+/* Workflow screen keeps flex row so sidebar+main sit side-by-side */
+#screen-workflow.active{
+  display:flex;flex-direction:row;
+  min-height:calc(100vh - 60px);min-height:calc(100dvh - 60px);
 }
 .container{max-width:1160px;margin:0 auto;padding:0 24px}
 
@@ -294,28 +299,18 @@ nav{
   min-height:520px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
-/* Hero background — light mode: circuit cloud SVG */
-.hero::before{
+/* Hero — light mode: clean gradient, no image */
+.hero{
+  background: linear-gradient(160deg, #FAFAFE 0%, #F5F3FF 55%, #FBFBFD 100%);
+}
+/* Dark mode: photo bg + dark overlay */
+[data-theme="dark"] .hero::before{
   content:'';position:absolute;inset:0;
-  background:url('hero-bg.svg') center center / cover no-repeat;
+  background:url('hero.jpg') center 18% / cover no-repeat;
   z-index:0;
 }
-/* Light overlay — lets SVG pattern show subtly */
-.hero::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,
-    rgba(255,255,255,0.78) 0%,
-    rgba(255,255,255,0.62) 40%,
-    rgba(255,255,255,0.74) 100%);
-  z-index:1;
-}
-.hero > *{position:relative;z-index:2}
-
-/* Dark mode: restore original photo bg + dark overlay */
-[data-theme="dark"] .hero::before{
-  background:url('hero.jpg') center 18% / cover no-repeat;
-}
 [data-theme="dark"] .hero::after{
+  content:'';position:absolute;inset:0;
   background:
     radial-gradient(ellipse 90% 55% at 50% -5%, rgba(255,61,154,0.18) 0%, rgba(138,92,246,0.10) 45%, transparent 72%),
     linear-gradient(180deg,
@@ -323,17 +318,23 @@ nav{
       rgba(11,13,30,0.30) 35%,
       rgba(11,13,30,0.65) 68%,
       rgba(11,13,30,1)    100%);
+  z-index:1;
 }
+[data-theme="dark"] .hero > *{position:relative;z-index:2}
 
 .hero-tag{
   display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,61,154,0.10);
-  border:1px solid rgba(255,61,154,0.30);
-  color:var(--accent);
+  background:rgba(245,196,0,0.11);
+  border:1px solid rgba(245,196,0,0.40);
+  color:#9A7800;
   font-family:var(--fm);font-size:0.62rem;font-weight:700;
   letter-spacing:0.12em;text-transform:uppercase;
   padding:6px 16px;border-radius:100px;margin-bottom:28px;
-  box-shadow:0 0 16px rgba(255,61,154,0.12);
+  box-shadow:0 0 16px rgba(245,196,0,0.12);
+}
+[data-theme="dark"] .hero-tag{
+  background:rgba(245,196,0,0.13);border-color:rgba(245,196,0,0.35);color:#F5C400;
+  box-shadow:0 0 20px rgba(245,196,0,0.15);
 }
 .hero h1{
   font-size:clamp(2.4rem,5.5vw,4.2rem);
@@ -381,6 +382,13 @@ nav{
   background:rgba(255,61,154,0.10);
   box-shadow:var(--glow-accent);
 }
+.pipeline-node-qa .node-icon-qa{
+  border-color:rgba(245,196,0,0.50) !important;
+  background:rgba(245,196,0,0.12) !important;
+  box-shadow:0 0 14px rgba(245,196,0,0.20) !important;
+}
+[data-theme="light"] .pipeline-node-qa{color:#7A5F00;}
+[data-theme="light"] .pipeline-node-qa .node-icon-qa{background:rgba(245,196,0,0.15) !important;}
 .pipeline-arrow{
   color:rgba(148,163,184,0.28);font-size:0.85rem;
   margin:0 2px;padding-bottom:22px;
@@ -749,26 +757,45 @@ nav{
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CLIENT PROJECT BRIEF — white page, dark text
+   CLIENT BRIEF — conversational intake, dark theme
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#screen-brief{
-  padding:40px 24px 60px;
-  background:#F0F4F8;  /* slightly deeper tint so white cards pop */
+#screen-brief{background:var(--bg-base);}
+.brief-intake{
+  max-width:620px;margin:0 auto;
+  padding:80px 28px 80px;
+  display:flex;flex-direction:column;gap:44px;
 }
-
-.brief-header{
-  display:flex;align-items:center;gap:16px;
-  margin-bottom:36px;padding-bottom:24px;
-  border-bottom:2px solid #CBD5E1;
+.brief-tpl-row{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
 }
-.brief-header .template-badge{
-  padding:6px 14px;border-radius:8px;
-  font-family:var(--fm);font-size:0.70rem;font-weight:700;
+.brief-tpl-row .brief-tpl-label{
+  font-family:var(--fm);font-size:0.58rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);
 }
-.brief-header h2{
-  flex:1;font-weight:800;font-size:clamp(1.2rem,2.5vw,1.7rem);
-  color:#0F172A;letter-spacing:-0.03em;
+.brief-tpl-row .btn-link{
+  background:none;border:none;color:var(--text-muted);font-size:0.8rem;
+  cursor:pointer;font-family:inherit;padding:0;margin-left:auto;
+  transition:color 0.15s;
 }
+.brief-tpl-row .btn-link:hover{color:var(--accent);}
+.brief-q{display:flex;flex-direction:column;gap:14px;}
+.brief-q-label{
+  font-size:clamp(1.15rem,2.8vw,1.55rem);
+  font-weight:700;color:var(--text-primary);letter-spacing:-0.02em;line-height:1.3;
+}
+.brief-line-input{
+  background:transparent;border:none;
+  border-bottom:2px solid var(--border-active);
+  padding:12px 0;width:100%;outline:none;
+  font-size:1.05rem;font-family:inherit;color:var(--text-primary);
+  transition:border-color 0.18s;
+  resize:none;
+}
+.brief-line-input:focus{border-bottom-color:var(--accent);}
+.brief-line-input::placeholder{color:var(--text-secondary);}
+@media(max-width:768px){.brief-intake{padding:60px 20px 60px;}}
+.brief-cta-row{display:flex;flex-direction:column;gap:10px;}
+.brief-email-note{font-size:0.73rem;color:var(--text-muted);}
 
 .brief-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:700px){.brief-grid{grid-template-columns:1fr}}
@@ -871,7 +898,7 @@ select option{background:#FFFFFF;color:#0F172A}
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    WORKFLOW — sidebar + chat
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#screen-workflow{flex-direction:row !important;min-height:calc(100vh - 60px);min-height:calc(100dvh - 60px)}
+/* #screen-workflow layout handled in .screen.active overrides above */
 
 .workflow-sidebar{
   width:268px;flex-shrink:0;
@@ -1642,9 +1669,9 @@ body.in-workflow #try-me-widget{display:none;}
 }
 #try-demo-modal.open{opacity:1;pointer-events:auto;}
 #try-demo-card{
-  background:#1C1916;border:1px solid rgba(255,61,154,0.18);
+  background:#FFFFFF;border:1px solid rgba(255,61,154,0.22);
   border-radius:24px;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;
-  box-shadow:0 24px 80px rgba(0,0,0,0.55),0 0 0 1px rgba(255,61,154,0.08);
+  box-shadow:0 24px 80px rgba(0,0,0,0.18),0 0 0 1px rgba(255,61,154,0.10);
   transform:translateY(20px) scale(0.97);
   transition:transform 0.32s cubic-bezier(.34,1.56,.64,1);
   margin:16px;
@@ -1654,9 +1681,9 @@ body.in-workflow #try-me-widget{display:none;}
   display:flex;align-items:center;justify-content:space-between;
   padding:22px 26px 0;
 }
-#try-demo-header h3{font-size:1.1rem;font-weight:800;color:#F5F0EB;letter-spacing:-0.02em;margin:0;}
-#try-demo-close{background:rgba(148,163,184,0.1);border:none;color:#94A3B8;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:background 0.15s,color 0.15s;}
-#try-demo-close:hover{background:rgba(148,163,184,0.2);color:#F8FAFC;}
+#try-demo-header h3{font-size:1.1rem;font-weight:800;color:var(--brand-navy);letter-spacing:-0.02em;margin:0;}
+#try-demo-close{background:rgba(100,116,139,0.08);border:none;color:#64748B;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:background 0.15s,color 0.15s;}
+#try-demo-close:hover{background:rgba(255,61,154,0.10);color:var(--accent);}
 #try-demo-body{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:20px 26px 26px;}
 @media(max-width:600px){#try-demo-body{grid-template-columns:1fr;}#try-demo-card{border-radius:18px;margin:10px;}}
 .try-demo-col-label{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
@@ -1664,7 +1691,7 @@ body.in-workflow #try-me-widget{display:none;}
 
 /* Brand card preview area */
 #try-brand-preview{
-  background:rgba(255,255,255,0.03);border:1px solid rgba(148,163,184,0.1);
+  background:#F8FAFC;border:1.5px solid rgba(203,213,225,0.7);
   border-radius:14px;overflow:hidden;min-height:160px;
   display:flex;align-items:center;justify-content:center;
   transition:all 0.3s ease;
@@ -1676,15 +1703,15 @@ body.in-workflow #try-me-widget{display:none;}
 
 /* Input form */
 .try-field{margin-bottom:14px;}
-.try-field label{display:block;font-size:0.72rem;font-weight:700;color:#94A3B8;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px;}
-.try-field input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(148,163,184,0.2);border-radius:10px;padding:11px 14px;font-size:0.9rem;color:#F8FAFC;font-family:inherit;outline:none;transition:border-color 0.18s,box-shadow 0.18s;box-sizing:border-box;}
-.try-field input::placeholder{color:rgba(148,163,184,0.45);}
-.try-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,61,154,0.12);}
+.try-field label{display:block;font-size:0.72rem;font-weight:700;color:#64748B;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px;}
+.try-field input{width:100%;background:#F8FAFC;border:1.5px solid rgba(203,213,225,0.9);border-radius:10px;padding:11px 14px;font-size:0.9rem;color:#1E293B;font-family:inherit;outline:none;transition:border-color 0.18s,box-shadow 0.18s;box-sizing:border-box;}
+.try-field input::placeholder{color:#94A3B8;}
+.try-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,61,154,0.10);background:#FFFFFF;}
 #try-generate-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--brand-g);color:#fff;border:none;border-radius:12px;padding:13px 20px;font-size:0.92rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(255,61,154,0.3);transition:transform 0.15s,box-shadow 0.15s;margin-bottom:10px;}
 #try-generate-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(255,61,154,0.42);}
 #try-generate-btn:active{transform:translateY(0);}
-#try-full-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:transparent;border:1px solid rgba(148,163,184,0.2);color:#94A3B8;border-radius:12px;padding:11px 20px;font-size:0.84rem;font-weight:600;cursor:pointer;transition:border-color 0.18s,color 0.18s;}
-#try-full-btn:hover{border-color:rgba(255,61,154,0.4);color:var(--accent);}
+#try-full-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:transparent;border:1.5px solid rgba(203,213,225,0.9);color:#64748B;border-radius:12px;padding:11px 20px;font-size:0.84rem;font-weight:600;cursor:pointer;transition:border-color 0.18s,color 0.18s;}
+#try-full-btn:hover{border-color:rgba(255,61,154,0.45);color:var(--accent);}
 
 /* Inspire message */
 #try-inspire-msg{
@@ -1703,7 +1730,7 @@ body.in-workflow #try-me-widget{display:none;}
 .try-inspire-who{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .try-inspire-avatar{width:28px;height:28px;border-radius:50%;background:var(--brand-g);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;color:#fff;flex-shrink:0;}
 .try-inspire-name{font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);}
-.try-inspire-text{font-size:0.84rem;line-height:1.6;color:#CBD5E1;font-style:italic;}
+.try-inspire-text{font-size:0.84rem;line-height:1.6;color:#475569;font-style:italic;}
 .try-inspire-dots{display:inline-flex;gap:4px;align-items:center;height:18px;}
 .try-inspire-dots span{width:5px;height:5px;border-radius:50%;background:#94A3B8;animation:try-dot-b 1.1s ease-in-out infinite;}
 .try-inspire-dots span:nth-child(2){animation-delay:0.18s;}
@@ -1720,6 +1747,8 @@ body.in-workflow #try-me-widget{display:none;}
 }
 @keyframes try-avatar-pulse{0%,100%{box-shadow:0 0 0 3px rgba(255,61,154,0.2);}50%{box-shadow:0 0 0 6px rgba(255,61,154,0.08);}}
 #try-agent-sub{font-size:0.73rem;color:#64748B;margin-top:3px;line-height:1.4;}
+.try-inspire-inner{background:linear-gradient(135deg,rgba(255,61,154,0.05),rgba(138,92,246,0.05));border:1px solid rgba(255,61,154,0.15);border-radius:12px;padding:14px 16px;}
+.try-inspire-text{font-size:0.84rem;line-height:1.6;color:#475569;font-style:italic;}
 #try-demo-header-inner{display:flex;align-items:center;gap:12px;min-width:0;}
 
 /* ── Logo generator ─────────────────────────────────────────── */
@@ -1728,7 +1757,7 @@ body.in-workflow #try-me-widget{display:none;}
 .try-logo-col-label{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#A78BFA;}
 .try-logo-style-tag{display:inline-flex;align-items:center;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.22);border-radius:100px;padding:2px 8px;font-size:0.6rem;font-weight:700;color:#A78BFA;letter-spacing:0.04em;}
 #try-logo-preview{
-  background:rgba(255,255,255,0.02);border:1px solid rgba(148,163,184,0.09);
+  background:#F8FAFC;border:1.5px solid rgba(203,213,225,0.7);
   border-radius:12px;overflow:hidden;min-height:72px;
   display:flex;align-items:center;justify-content:center;
   transition:all 0.3s ease;
@@ -1761,7 +1790,7 @@ body.in-workflow #try-me-widget{display:none;}
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left,   0px);
 }
-body{-webkit-overflow-scrolling:touch;-webkit-tap-highlight-color:transparent;overscroll-behavior:none;touch-action:manipulation}
+body{-webkit-overflow-scrolling:touch;-webkit-tap-highlight-color:transparent;}
 nav{padding-top:var(--sat);height:calc(60px + var(--sat))}
 .nav-inner{height:60px}
 .workflow-sidebar{top:calc(60px + var(--sat));max-height:calc(100vh - 60px - var(--sat));max-height:calc(100dvh - 60px - var(--sat))}
@@ -1775,7 +1804,7 @@ input,textarea,select{-webkit-appearance:none;appearance:none;border-radius:8px;
 @media all and (display-mode:standalone){#ios-status-bar-spacer{display:block}}
 @media(max-width:768px){
   .workflow-sidebar{padding-left:max(6px,var(--sal));padding-right:max(6px,var(--sar));top:0}
-  #screen-brief{padding-bottom:calc(60px + var(--sab))}
+  .brief-intake{padding-bottom:calc(60px + var(--sab))}
   .templates-grid{padding-bottom:calc(24px + var(--sab))}
   .btn{min-height:44px}.agent-item{min-height:44px}
 }
@@ -2172,10 +2201,11 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 .pricing-card.featured::before{background:var(--brand-g-h)}
 .pricing-badge{
   position:absolute;top:16px;right:16px;
-  background:var(--brand-g);color:#FFFFFF;
+  background:linear-gradient(135deg,#F5C400,#FF9A00);color:#3D2B00;
   font-family:var(--fm);font-size:0.50rem;font-weight:800;
   letter-spacing:0.10em;text-transform:uppercase;
   padding:3px 10px;border-radius:100px;
+  box-shadow:0 2px 8px rgba(245,196,0,0.30);
 }
 .pricing-tier{
   font-family:var(--fm);font-size:0.60rem;font-weight:700;
@@ -2376,8 +2406,8 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
         <div class="node-icon">🎯</div>Orchestrate
       </div>
       <div class="pipeline-arrow">→</div>
-      <div class="pipeline-node active">
-        <div class="node-icon">🛡️</div>QA Review
+      <div class="pipeline-node active pipeline-node-qa">
+        <div class="node-icon node-icon-qa">🛡️</div>QA Review
       </div>
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-node active">
@@ -2402,8 +2432,8 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
         <div class="proof-stat-label">Time to Output</div>
       </div>
       <div class="proof-stat">
-        <div class="proof-stat-num">100%</div>
-        <div class="proof-stat-label">QA Reviewed</div>
+        <div class="proof-stat-num" style="background:linear-gradient(135deg,#F5C400,#FF9A00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">100%</div>
+        <div class="proof-stat-label">⭐ QA Reviewed</div>
       </div>
       <div class="proof-stat">
         <div class="proof-stat-num">0</div>
@@ -2931,51 +2961,6 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 </div>
 
 <!-- ════════════════════════════════════════════════ SCREEN: BRIEF -->
-<div id="screen-brief" class="screen">
-  <div class="container">
-
-    <div class="brief-header" style="margin-bottom:28px">
-      <div style="flex:1">
-        <h2 style="margin-bottom:4px">Let's get started</h2>
-        <p style="font-size:0.82rem;color:#64748B;margin:0;font-weight:400">Two questions and you're in — our agents handle everything else.</p>
-      </div>
-      <button class="btn btn-ghost btn-sm" id="brief-hiw-btn" onclick="openHIW(state.template&&state.template.id)" title="See industry insights for this template" style="font-size:.7rem;padding:5px 10px;flex-shrink:0">📊 Why This Works</button>
-    </div>
-
-    <div class="brief-form">
-
-      <!-- Template — pre-filled -->
-      <div class="brief-tpl-card">
-        <div style="flex:1">
-          <div class="brief-tpl-label">Your selected workflow</div>
-          <div class="template-badge" id="brief-badge">—</div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="goHome()" style="white-space:nowrap;flex-shrink:0">Change →</button>
-      </div>
-
-      <!-- Company name -->
-      <div class="form-group">
-        <label>What's your company name? <span>*</span></label>
-        <input type="text" id="f-client" placeholder="e.g. Acme Corp" autocomplete="organization" />
-      </div>
-
-      <!-- Goal -->
-      <div class="form-group">
-        <label>What do you want to achieve? <span>*</span></label>
-        <textarea id="f-goal" placeholder="Describe your main goal in one sentence — our specialist agents will ask for everything else." rows="3"></textarea>
-        <div class="hint">Keep it simple. One sentence is enough.</div>
-      </div>
-
-    </div>
-
-    <div class="brief-actions">
-      <span class="email-note">Sent to erika@productimagination.com</span>
-      <button class="btn btn-primary btn-lg" onclick="startWorkflow()">Let's begin →</button>
-    </div>
-
-  </div>
-</div>
-
 <!-- ════════════════════════════════════════════════ SCREEN: WORKFLOW -->
 <div id="screen-workflow" class="screen">
   <aside class="workflow-sidebar" id="workflow-sidebar">
@@ -4113,6 +4098,8 @@ let state = {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(`screen-${id}`).classList.add('active');
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
   window.scrollTo(0, 0);
 }
 
@@ -4275,6 +4262,7 @@ function startWorkflow() {
   state.questionIdx = 0;
   state.scores      = {};
   state.agentIndex  = 0;
+  state.pins        = [];
 
   renderWorkflow();
   showScreen('workflow');
@@ -4290,496 +4278,392 @@ function startWorkflow() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 const AGENT_Q = {
-  // ── CONSULTING ──────────────────────────────────────────────────────────────
+
+  // ── CONSULTING ─────────────────────────────────────────────────────────────
   'consulting.discovery': {
-    intro: b => `I am your Discovery Agent — I uncover the *real* problem beneath the stated one. Before I can map your stakeholders and write the problem statement, I need to understand your situation, ${b.client}.`,
+    intro: b => `Discovery Agent — finding the real problem, not the stated one.`,
     questions: [
-      { id:'stakeholders', text:'Who are the most critical stakeholders for this initiative?', opts:['2–5 people (tight core group)','6–15 (cross-functional team)','16–50 (department-wide)','50+ (org-wide initiative)'] },
-      { id:'clarity',      text:'How clearly is the problem defined right now?', opts:['Crystal clear — everyone agrees','Fairly clear — some ambiguity','Murky — stakeholders disagree','Unknown — discovery will define it'] },
-      { id:'prior_work',   text:'Has a similar initiative been attempted before?', opts:['Never tried before','Tried and stalled','Tried and partially succeeded','Multiple attempts — none stuck'] },
+      { id:'situation', text:'What best describes your situation right now?', opts:['Clear problem, unclear solution','Multiple stakeholders, conflicting views','We know what to do — just need the plan','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Perfect. Based on what you have told me — ${a.clarity||'unclear problem definition'}, ${a.stakeholders||'a cross-functional team'}, and ${a.prior_work||'prior experience'} — I am tailoring the discovery report for ${b.client} now.`,
+    closing: (a,b) => `Got it — <strong>${a.situation||'complex situation'}</strong>. That tells me exactly where to focus the discovery. Mapping your stakeholders and writing the problem statement now. ⚡`,
   },
   'consulting.research': {
-    intro: b => `I am your Research & Insights Agent. I will synthesize market intelligence into decision-ready insights for ${b.client}. Let me focus the research correctly.`,
+    intro: b => `Research Agent — market noise into decisions you can defend.`,
     questions: [
-      { id:'market_known',   text:'How well do you know the competitive landscape?', opts:['Very well — we track it closely','Somewhat — we know the big players','Barely — limited visibility','Not at all — blank slate'] },
-      { id:'data_access',    text:'What data or research do you already have?', opts:['Extensive internal data','Some internal research','A few reports / benchmarks','Starting from scratch'] },
-      { id:'urgency',        text:'How quickly do you need actionable insights?', opts:['This week (rapid synthesis)','2–4 weeks (thorough analysis)','1–2 months (deep research)','No hard deadline'] },
+      { id:'landscape', text:'How well do you know your competitive landscape?', opts:['We track it closely','Know the big players — gaps exist','Limited visibility','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. I will focus the research on your competitive gaps and prioritize insights you can act on given your ${a.urgency||'timeline'}. Building now.`,
+    closing: (a,b) => `Perfect. <strong>${a.landscape||'competitive gaps'}</strong> — I know exactly where to focus. Building your intelligence brief now. ⚡`,
   },
   'consulting.strategy': {
-    intro: b => `I am your Strategy Agent. My job is to build 3 genuinely distinct strategic paths for ${b.client} and recommend the right one — with a clear logic chain, not just a slide.`,
+    intro: b => `Strategy Agent — 3 real options, not one dressed up as three.`,
     questions: [
-      { id:'risk_appetite',  text:'What is your organization\'s risk appetite right now?', opts:['Low — preserve stability','Moderate — measured bets','High — bold moves acceptable','Variable — depends on the option'] },
-      { id:'time_horizon',   text:'What time horizon matters most for results?', opts:['90 days (quick wins needed)','6 months (mid-term horizon)','1–2 years (strategic build)','3+ years (long-term transformation)'] },
-      { id:'constraints',    text:'What is the single biggest constraint on your options?', opts:['Budget / resources','People / capability','Time / urgency','Regulatory or political factors'] },
+      { id:'driver', text:"What's driving this initiative right now?", opts:['Growth opportunity','Competitive threat','Internal inefficiency','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Understood. Given a ${a.risk_appetite||'moderate risk'} appetite, ${a.time_horizon||'6-month'} horizon, and ${a.constraints||'resource'} constraints, I will build 3 options that are genuine choices for ${b.client} — not straw men.`,
+    closing: (a,b) => `Clear. A <strong>${a.driver||'strategic'}</strong>-driven initiative needs a different set of options than a defensive one. Building 3 distinct paths with a clear recommendation now. ⚡`,
   },
   'consulting.financial': {
-    intro: b => `I am your Financial Modeling Agent. I will build the business case and ROI model for ${b.client}'s initiative. A few questions to calibrate the numbers.`,
+    intro: b => `Financial Modeling Agent — the business case that gets the yes.`,
     questions: [
-      { id:'benefit_type',   text:'What is the primary financial benefit you are expecting?', opts:['Revenue growth','Cost reduction','Risk avoidance / compliance','Operational efficiency (time/capacity)'] },
-      { id:'confidence',     text:'How confident are you in the cost estimates?', opts:['High confidence — detailed quotes','Medium — rough estimates','Low — order-of-magnitude only','Unknown — need baseline'] },
-      { id:'decision_maker', text:'Who needs to approve this business case?', opts:['CEO / Board (executive level)','CFO / Finance committee','Department head / Director','Small team — informal approval'] },
+      { id:'outcome', text:'What financial outcome matters most?', opts:['Revenue growth','Cost reduction','Risk mitigation','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Perfect. I will build the model around ${a.benefit_type||'efficiency gains'} with ${a.confidence||'medium'} confidence levels, structured for a ${a.decision_maker||'leadership'} audience.`,
+    closing: (a,b) => `Got it. Structuring the model around <strong>${a.outcome||'financial impact'}</strong>. Your CFO will be able to defend every number. Building now. ⚡`,
   },
   'consulting.change': {
-    intro: b => `I am your Change Management Agent. Even the best strategy fails without people adoption. Let me assess what ${b.client} is up against.`,
+    intro: b => `Change Management Agent — the best strategy fails without people.`,
     questions: [
-      { id:'resistance',     text:'Where is the primary source of potential resistance?', opts:['Senior leadership buy-in','Middle management adoption','Frontline / end-user adoption','External stakeholders (customers, partners)'] },
-      { id:'culture',        text:'How change-ready is the organization right now?', opts:['Very ready — change-positive culture','Somewhat ready — cautious optimism','Low readiness — change fatigue present','Unknown — never been measured'] },
-      { id:'comms_channel',  text:'What is your primary internal communication channel?', opts:['All-hands / town halls','Email and intranet','Manager cascade','Slack / Teams / chat tools'] },
+      { id:'risk', text:"Where's the biggest adoption risk?", opts:['Leadership buy-in','Middle management','Frontline adoption','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear picture. With resistance concentrated at ${a.resistance||'the team level'}, ${a.culture||'moderate'} change readiness, and ${a.comms_channel||'manager cascade'} as the primary channel, I am building your engagement plan now.`,
+    closing: (a,b) => `Exactly. <strong>${a.risk||'People adoption'}</strong> is where most transformations stall — I'm building your engagement plan to address that head-on. Coming now. ⚡`,
   },
   'consulting.presentation': {
-    intro: b => `I am your Presentation Agent. I will structure the executive narrative for ${b.client} — the story that earns a yes. I need to know your audience.`,
+    intro: b => `Presentation Agent — the narrative that earns the yes.`,
     questions: [
-      { id:'audience_type',  text:'Who is in the room for this presentation?', opts:['Board / investors','CEO and C-suite','Department heads / Directors','Mixed levels including frontline'] },
-      { id:'goal',           text:'What decision do you need from this presentation?', opts:['Approve budget / resources','Align on strategic direction','Greenlight execution','Inform — no decision required yet'] },
-      { id:'format',         text:'What format is expected?', opts:['10-slide executive deck','Detailed written report','30-second elevator pitch','Live workshop / working session'] },
+      { id:'decision_maker', text:"Who's making the decision in the room?", opts:['Board / Investors','CEO / C-suite','Department leadership','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. I am building a ${a.format||'10-slide deck'} for a ${a.audience_type||'C-suite'} audience, structured to deliver a ${a.goal||'budget approval'} for ${b.client}.`,
+    closing: (a,b) => `Perfect. Every slide calibrated for a <strong>${a.decision_maker||'leadership'}</strong> audience. Building the deck now. ⚡`,
   },
   'consulting.implementation': {
-    intro: b => `I am your Implementation Planner. I turn the approved strategy into an executable plan with clear ownership and zero ambiguity. Let me scope the delivery correctly.`,
+    intro: b => `Implementation Agent — strategy into an executable plan.`,
     questions: [
-      { id:'team_size',      text:'How large is the implementation team?', opts:['Solo or 2–3 people','Small team (4–10)','Mid-size team (10–25)','Large program (25+)'] },
-      { id:'timeline_flex',  text:'How flexible is the delivery timeline?', opts:['Hard deadline — non-negotiable','Some flex — prefer on-time','Flexible — quality over speed','No deadline set yet'] },
-      { id:'governance',     text:'What level of governance and oversight is expected?', opts:['Lightweight — weekly check-in','Standard project management','Formal PMO / steering committee','Full program governance board'] },
+      { id:'constraint', text:"What's the hardest constraint on delivery?", opts:['Hard deadline','Limited team capacity','Budget ceiling','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Understood. ${a.team_size||'Mid-size team'}, ${a.timeline_flex||'target timeline'}, ${a.governance||'standard'} governance. Building the workstream plan and RACI for ${b.client} now.`,
+    closing: (a,b) => `Clear. <strong>${a.constraint||'Constraints'}</strong> noted — building the workstream plan and RACI around it. Zero ambiguity. Coming now. ⚡`,
   },
   'consulting.comms': {
-    intro: b => `I am your Client Communications Agent. I make sure every interaction with ${b.client} is documented, every decision is logged, and nothing falls through the cracks. Let me calibrate.`,
+    intro: b => `Communications Agent — nothing falls through the cracks.`,
     questions: [
-      { id:'cadence',        text:'How frequently should formal status updates be delivered?', opts:['Daily (fast-moving initiative)','Weekly (standard cadence)','Bi-weekly (steady pace)','Monthly (light oversight)'] },
-      { id:'format_pref',    text:'What format does your client prefer for updates?', opts:['Executive email summary','Live status meeting','Shared dashboard / tracker','Slack / Teams messages'] },
-      { id:'decision_log',   text:'How are decisions currently being tracked?', opts:['Formal decision log in place','Meeting notes only','Email threads','Nothing structured yet'] },
+      { id:'format', text:'How does your client prefer to receive updates?', opts:['Email summaries','Live status meetings','Shared live dashboard','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Perfect. I will set up ${a.cadence||'weekly'} ${a.format_pref||'email'} updates and a structured decision log for ${b.client}. Drafting the first status update now.`,
+    closing: (a,b) => `Got it. <strong>${a.format||'Regular updates'}</strong> with decision logs and status tracking. Setting it all up now. ⚡`,
   },
 
-  // ── PRODUCT DESIGN ──────────────────────────────────────────────────────────
+  // ── PRODUCT ────────────────────────────────────────────────────────────────
   'product.research': {
-    intro: b => `I am your Research Agent. I find out what users actually need — not what they say they need. Let me focus the research for ${b.project}.`,
+    intro: b => `Research Agent — finding what users actually need, not what they say.`,
     questions: [
-      { id:'users_access',   text:'Do you have access to real users to talk to?', opts:['Yes — easy to schedule interviews','Yes — but hard to recruit','Limited — proxy users / internal only','No — need to recruit from scratch'] },
-      { id:'research_done',  text:'What research has already been done?', opts:['None — starting fresh','Some surveys or analytics','Prior usability tests','Extensive research on file'] },
-      { id:'biggest_unknown',text:'What is the biggest unknown about your users right now?', opts:['What they truly need (vs. want)','How they currently solve the problem','What would make them switch','How much they\'d pay / commit'] },
+      { id:'user_type', text:"Who's your primary user?", opts:['B2B professionals','B2C consumers','Internal teams / employees','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Good. With ${a.users_access||'some'} user access, ${a.research_done||'limited'} prior research, and the key unknown being "${a.biggest_unknown||'user needs'}", I am building the research plan for ${b.project} now.`,
+    closing: (a,b) => `Got it — <strong>${a.user_type||'target users'}</strong>. Tailoring the research methodology specifically for them. User insights report coming now. ⚡`,
   },
   'product.ux': {
-    intro: b => `I am your UX Strategy Agent. I will map the information architecture and define what gets built first. Let me understand the product scope.`,
+    intro: b => `UX Agent — flows that feel obvious in hindsight.`,
     questions: [
-      { id:'platform',       text:'What platform is this being designed for?', opts:['Mobile iOS (iPhone / iPad)','Mobile Android','Web / desktop browser','All platforms (responsive)'] },
-      { id:'user_type',      text:'How technically sophisticated are your users?', opts:['Very technical (developers, power users)','Moderately tech-savvy','General consumer audience','Non-technical / first-time users'] },
-      { id:'complexity',     text:'How complex is the core user flow?', opts:['Simple — 1–3 steps','Moderate — 4–8 steps','Complex — 9+ steps or branching','Highly complex — many user types'] },
+      { id:'platform', text:"What's your target platform?", opts:['Mobile-first','Web app / desktop','Both mobile and web','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Understood. ${a.platform||'Multi-platform'} product, ${a.user_type||'general'} audience, ${a.complexity||'moderate'} flow complexity. Building the IA and user flows for ${b.project} now.`,
+    closing: (a,b) => `Clear. <strong>${a.platform||'Multi-platform'}</strong> shapes the entire IA approach. User flows and architecture coming now. ⚡`,
   },
   'product.wireframe': {
-    intro: b => `I am your Wireframe Agent. I build the structural blueprint — layout, hierarchy, interaction logic — before any visual polish. Let me scope the screens.`,
+    intro: b => `Wireframe Agent — concepts into testable screens.`,
     questions: [
-      { id:'screen_count',   text:'How many distinct screens does the product need?', opts:['Under 10 (focused MVP)','10–25 (standard app)','25–50 (complex product)','50+ (enterprise scope)'] },
-      { id:'fidelity',       text:'What fidelity level is needed right now?', opts:['Rough sketches (concepts only)','Lo-fi wireframes (structure, no style)','Mid-fi (some detail, no final design)','High-fi (detailed, near-final layouts)'] },
-      { id:'stakeholders_w', text:'Who needs to sign off on wireframes before design?', opts:['Just the product team','Product + engineering','Product + client / founder','Full cross-functional review'] },
+      { id:'critical_flow', text:"What's the most critical user flow to get right?", opts:['Onboarding','Core feature / main action','Checkout / conversion','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. ${a.screen_count||'Standard'} scope, ${a.fidelity||'lo-fi'} fidelity, ${a.stakeholders_w||'product team'} sign-off. Building the screen inventory and wireframe set for ${b.project}.`,
+    closing: (a,b) => `Perfect. <strong>${a.critical_flow||'Core flow'}</strong> is where user friction kills products — leading with that. Wireframes coming now. ⚡`,
   },
   'product.visual': {
-    intro: b => `I am your Visual Design Agent. I create the design system and hi-fi screens for ${b.project}. Let me understand your visual starting point.`,
+    intro: b => `Visual Design Agent — the system everything runs on.`,
     questions: [
-      { id:'brand_exists',   text:'Does a brand / visual identity already exist?', opts:['Full brand guide exists','Partial branding (logo, colors only)','Rough direction — nothing formal','Starting from scratch'] },
-      { id:'design_tool',    text:'What design tool is being used?', opts:['Figma (preferred)','Adobe XD','Sketch','Other / no preference'] },
-      { id:'style_feel',     text:'What visual direction resonates most?', opts:['Clean & minimal (white space, precision)','Bold & expressive (color, personality)','Professional & trustworthy (corporate)','Warm & approachable (friendly, human)'] },
+      { id:'brand_status', text:"Where does your brand sit right now?", opts:['No brand — starting fresh','Basic brand, needs expansion','Established — needs consistency','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Perfect. ${a.brand_exists||'Partial branding'} to work from, ${a.design_tool||'Figma'}, ${a.style_feel||'clean minimal'} direction. Building the design token set and component library for ${b.project} now.`,
+    closing: (a,b) => `Got it. Working from your <strong>${a.brand_status||'current brand'}</strong> starting point. Token set and component library coming now. ⚡`,
   },
-  'product.content': {
-    intro: b => `I am your Content & Copy Agent. I write every word your users see — labels, errors, empty states, CTAs. Let me understand the voice.`,
+  'product.copy': {
+    intro: b => `Copy Agent — every word your users see.`,
     questions: [
-      { id:'voice',          text:'How should the product sound to users?', opts:['Friendly and casual (like a friend)','Professional and clear (like a guide)','Bold and direct (like a coach)','Warm and reassuring (like support)'] },
-      { id:'jargon',         text:'How familiar is your audience with industry terminology?', opts:['Very familiar — use technical terms freely','Somewhat — use sparingly','Avoid it — plain language only','Mixed audience — explain terms inline'] },
-      { id:'content_vol',    text:'How much content needs to be written?', opts:['Core screens only (10–15 screens)','Full app copy (all states)','Marketing site + app','Entire product suite'] },
+      { id:'voice', text:"What's the primary brand voice?", opts:['Friendly and approachable','Professional and clear','Bold and direct','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Understood. ${a.voice||'Professional and clear'} voice, ${a.jargon||'minimal jargon'}, ${a.content_vol||'full app copy'}. Writing the UX copy spec for ${b.project} now.`,
+    closing: (a,b) => `Clear. Everything written in a <strong>${a.voice||'consistent'}</strong> voice. UX copy spec coming now. ⚡`,
   },
   'product.handoff': {
-    intro: b => `I am your Handoff Agent. I make sure engineering gets specs so clear there are zero "let me ask the designer" moments. Let me understand your engineering setup.`,
+    intro: b => `Handoff Agent — engineers build exactly what was designed.`,
     questions: [
-      { id:'eng_team',       text:'Who is receiving the handoff?', opts:['In-house iOS/Android developer','In-house web team','External contractor / agency','Offshore development team'] },
-      { id:'handoff_tool',   text:'What handoff tool or method is preferred?', opts:['Figma dev mode / inspect','Zeplin','Storybook / component docs','Direct PDF / Notion spec'] },
-      { id:'accessibility',  text:'What accessibility standard must be met?', opts:['WCAG 2.1 AA (recommended)','WCAG 2.1 AAA (strict)','Basic accessibility only','No formal requirement'] },
+      { id:'handoff_tool', text:"What's your primary design handoff tool?", opts:['Figma','Zeplin / other tool','No tool — direct comms','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Handing off to ${a.eng_team||'in-house team'} via ${a.handoff_tool||'Figma'}, targeting ${a.accessibility||'WCAG AA'}. Building the dev spec for ${b.project} now.`,
+    closing: (a,b) => `Got it. Structuring the dev spec for <strong>${a.handoff_tool||'your toolchain'}</strong>. Nothing left to interpretation. Coming now. ⚡`,
   },
   'product.testing': {
-    intro: b => `I am your Usability Testing Agent. I validate the design with real users before a single line of code is written. Let me plan the sessions.`,
+    intro: b => `Testing Agent — validating before launch, not after.`,
     questions: [
-      { id:'participants',   text:'How many participants can you recruit for testing?', opts:['3–5 (guerrilla / fast)','6–10 (standard round)','10–20 (robust dataset)','20+ (quantitative scale)'] },
-      { id:'test_method',    text:'What testing method fits your situation?', opts:['Moderated remote (live sessions)','Unmoderated remote (async tools)','In-person moderated','A/B test on live product'] },
-      { id:'urgency_t',      text:'When does testing need to be complete?', opts:['This week (fast turnaround)','2–3 weeks (standard)','1 month+','Before next sprint — flexible date'] },
+      { id:'urgency', text:'How fast do you need test results?', opts:['This week — rapid round','2–3 weeks — thorough','No hard deadline','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. ${a.participants||'6–10'} participants, ${a.test_method||'moderated remote'}, targeting completion ${a.urgency_t||'in 2–3 weeks'}. Building the test plan for ${b.project} now.`,
+    closing: (a,b) => `Perfect. <strong>${a.urgency||'Testing'}</strong> timeline confirmed. User test plan and script coming now. ⚡`,
   },
 
-  // ── MARKETING ───────────────────────────────────────────────────────────────
+  // ── MARKETING ──────────────────────────────────────────────────────────────
   'marketing.brand': {
-    intro: b => `I am your Brand Strategy Agent. I will build the positioning and messaging that makes everything else more effective for ${b.client}. Let me understand where you stand.`,
+    intro: b => `Brand Agent — the positioning everything else runs on.`,
     questions: [
-      { id:'differentiator', text:'What makes ${b.client} genuinely different from competitors?', opts:['Speed / faster to outcome','Price / better value','Quality / superior result','Specialisation / niche expertise'] },
-      { id:'trust_gap',      text:'What is the biggest obstacle to your audience trusting you?', opts:['They don\'t know we exist yet','They know us but don\'t understand us','They understand us but doubt we can deliver','They tried us before and had a bad experience'] },
-      { id:'brand_maturity', text:'How developed is your brand right now?', opts:['Strong, established brand','Known but inconsistent','Early stage — limited brand equity','Starting from scratch'] },
+      { id:'differentiator', text:'What makes you genuinely different from competitors?', opts:['Speed / faster outcome','Quality / superior result','Price / better value','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. ${b.client}'s differentiator is ${a.differentiator||'specialisation'}, trust gap is "${a.trust_gap||'awareness'}", brand is ${a.brand_maturity||'early stage'}. Building the positioning framework now.`,
+    closing: (a,b) => `Strong position. <strong>${a.differentiator||'Your edge'}</strong> is a real differentiator — building the messaging framework around it now. ⚡`,
   },
-  'marketing.creative': {
-    intro: b => `I am your Creative Director Agent. I will develop the campaign concept that unites everything. Let me understand the creative space.`,
+  'marketing.campaign': {
+    intro: b => `Campaign Agent — the concept that makes people stop.`,
     questions: [
-      { id:'tone_creative',  text:'What emotional territory should the campaign own?', opts:['Confidence / empowerment','Relief / simplicity','Excitement / energy','Trust / reassurance'] },
-      { id:'competitor_ads', text:'What is competitor advertising doing right now?', opts:['Rational / feature-focused','Emotional / story-driven','Humorous / playful','Boring — clear opportunity to stand out'] },
-      { id:'budget_creative',text:'What is the creative production budget?', opts:['Under $10K (DIY / low-fi)','$10K–$50K (targeted production)','$50K–$200K (full campaign)','$200K+ (major campaign)'] },
+      { id:'awareness', text:'Where is your audience in the buying journey?', opts:['Not aware of you yet','Aware but not convinced','Considering — needs a nudge','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Owning "${a.tone_creative||'confidence'}", competitors are ${a.competitor_ads||'rational'}, budget is ${a.budget_creative||'mid-range'}. Developing 3 distinct concepts for ${b.client} now.`,
+    closing: (a,b) => `Got it. A <strong>${a.awareness||'cold'}</strong> audience needs a completely different campaign. Building 3 concepts for that stage now. ⚡`,
   },
   'marketing.copy': {
-    intro: b => `I am your Copywriting Agent. I write the words that stop the scroll and close the sale. Let me understand the placements and objectives.`,
+    intro: b => `Copy Agent — words that turn interest into action.`,
     questions: [
-      { id:'channels_copy',  text:'Which channels need copy?', opts:['Paid social ads (Meta, TikTok)','Search ads (Google, Bing)','Email sequences','Landing page + website'] },
-      { id:'cta_goal',       text:'What is the single most important action you want from the audience?', opts:['Book a call / demo','Buy / subscribe now','Sign up for free trial','Download / get the resource'] },
-      { id:'copy_urgency',   text:'Is there a time-sensitive element to leverage?', opts:['Yes — strong deadline or scarcity','Soft urgency — limited availability','No time pressure','Creating urgency from scratch'] },
+      { id:'cta', text:"What's your primary conversion goal?", opts:['Book a call / demo','Sign up / create account','Buy now','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Perfect. Writing for ${a.channels_copy||'paid social + email'}, primary CTA is "${a.cta_goal||'book a demo'}", ${a.copy_urgency||'soft urgency'}. Writing the full copy suite for ${b.client} now.`,
+    closing: (a,b) => `Clear. Every headline, CTA, and email built to drive <strong>${a.cta||'conversion'}</strong>. Full copy suite coming now. ⚡`,
   },
-  'marketing.media': {
-    intro: b => `I am your Paid Media Agent. I will design the distribution strategy that reaches the right people at the right moment. Let me scope the media plan.`,
+  'marketing.performance': {
+    intro: b => `Performance Agent — paid strategy that compounds.`,
     questions: [
-      { id:'monthly_spend',  text:'What is the total monthly paid media budget?', opts:['Under $2K/mo (test stage)','$2K–$10K/mo (growth stage)','$10K–$50K/mo (scale stage)','$50K+/mo (mature program)'] },
-      { id:'best_platform',  text:'Where does your audience spend the most time?', opts:['Instagram / TikTok (visual, social)','Google Search (intent-based)','LinkedIn (professional, B2B)','YouTube (long-form, awareness)'] },
-      { id:'funnel_stage',   text:'Which funnel stage needs the most attention?', opts:['Top of funnel (awareness)','Middle (consideration, education)','Bottom (conversion, purchase)','Retention (repeat, upsell)'] },
+      { id:'budget', text:"What's your monthly ad budget?", opts:['Under $5K','$5K–$25K','$25K–$100K+','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. ${a.monthly_spend||'Growth stage'} budget, primary platform is ${a.best_platform||'Meta'}, focusing on ${a.funnel_stage||'top-of-funnel'}. Building the media plan and KPI targets for ${b.client} now.`,
+    closing: (a,b) => `Got it. At <strong>${a.budget||'your budget'}</strong>, I know exactly how to structure the channel mix for maximum returns. Media plan coming now. ⚡`,
   },
   'marketing.content': {
-    intro: b => `I am your Content Agent. I will build the organic content engine that compounds audience over time for ${b.client}. Let me understand your content capacity.`,
+    intro: b => `Content Agent — the engine that builds audience over time.`,
     questions: [
-      { id:'content_team',   text:'Who creates the content?', opts:['In-house writer / creator','Freelancer / contractor','AI-assisted (internal team edits)','No one yet — building from scratch'] },
-      { id:'publish_freq',   text:'How frequently can you realistically publish?', opts:['Daily (high volume)','3–5x per week','1–2x per week','1–2x per month'] },
-      { id:'seo_priority',   text:'How important is SEO / organic search to your strategy?', opts:['Critical — primary traffic source','Important — part of the mix','Secondary — nice to have','Not a priority right now'] },
+      { id:'frequency', text:'How often can your team realistically publish?', opts:['Daily','3–5× per week','1–2× per week','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Understood. ${a.content_team||'In-house team'}, publishing ${a.publish_freq||'2–3x/week'}, SEO is ${a.seo_priority||'important'}. Building the 90-day content calendar for ${b.client} now.`,
+    closing: (a,b) => `Perfect. Realistic frequency beats ambitious inconsistency — every time. <strong>${a.frequency||'Consistent'}</strong> cadence. 90-day content calendar coming now. ⚡`,
   },
   'marketing.analytics': {
-    intro: b => `I am your Analytics Agent. I design the measurement system that tells you what's working and what is not — before you waste another dollar. Let me calibrate.`,
+    intro: b => `Analytics Agent — every dollar and post accountable.`,
     questions: [
-      { id:'tracking_current',text:'What analytics and tracking do you have in place today?', opts:['GA4 + Meta Pixel (solid foundation)','GA4 only (limited)','Some tags — inconsistent setup','Nothing — starting from zero'] },
-      { id:'reporting_for',   text:'Who are the reports primarily for?', opts:['Founder / CEO (executive view)','Marketing team (operational)','Board / investors','Client — external reporting'] },
-      { id:'key_metric',      text:'What is the single metric that defines marketing success for this campaign?', opts:['Revenue / ROAS','Leads / pipeline','Brand awareness / reach','Customer acquisition cost (CAC)'] },
+      { id:'metric', text:"What's your north star metric?", opts:['Revenue / conversions','Leads / sign-ups','Traffic / brand reach','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Building on ${a.tracking_current||'existing GA4'}, reporting for ${a.reporting_for||'marketing team'}, with ${a.key_metric||'ROAS'} as the north star. Setting up the KPI framework for ${b.client} now.`,
+    closing: (a,b) => `Clear. Building the KPI framework around <strong>${a.metric||'your key metric'}</strong>. No vanity metrics. Dashboard spec coming now. ⚡`,
   },
-  'marketing.production': {
-    intro: b => `I am your Production Agent. I manage the final mile — specs, trafficking, QA, and launch readiness. Nothing launches without my sign-off. Let me check your readiness.`,
+  'marketing.launch': {
+    intro: b => `Launch Agent — making sure go-live goes right.`,
     questions: [
-      { id:'launch_date',    text:'When is the campaign going live?', opts:['This week (urgent)','2–3 weeks out','1 month+','Date not yet confirmed'] },
-      { id:'assets_ready',   text:'What is the status of creative assets?', opts:['All final and approved','In progress — almost done','Early drafts only','Not started yet'] },
-      { id:'team_roles',     text:'Who handles trafficking and platform setup?', opts:['In-house media buyer','Agency handles it','I do it myself','Needs to be assigned'] },
+      { id:'timeline', text:"When are you launching?", opts:['Within 2 weeks','1–2 months out','3+ months out','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. Launch ${a.launch_date||'in ~2 weeks'}, assets are ${a.assets_ready||'in progress'}, trafficking done by ${a.team_roles||'in-house'}. Building the production tracker and launch checklist for ${b.client} now.`,
+    closing: (a,b) => `Got it — <strong>${a.timeline||'launch'}</strong> timeline locked. Production tracker and launch checklist coming now. ⚡`,
   },
 
-  // ── COMPLIANCE ──────────────────────────────────────────────────────────────
+  // ── COMPLIANCE ─────────────────────────────────────────────────────────────
   'compliance.regulatory': {
-    intro: b => `I am your Regulatory Research Agent. I map every rule that applies to your business — so you know exactly what you are up against. Let me scope the universe.`,
+    intro: b => `Regulatory Agent — mapping the rules before anything is built.`,
     questions: [
-      { id:'industry_comp',  text:'What industry is the compliance program for?', opts:['Financial services / fintech','Healthcare / medtech','Technology / SaaS','Consumer products / retail'] },
-      { id:'geography',      text:'What geographic scope applies?', opts:['US only','EU only (GDPR focus)','US + EU (dual jurisdiction)','Global / multi-jurisdiction'] },
-      { id:'comp_trigger',   text:'What triggered this compliance initiative?', opts:['Regulatory change / new law','Upcoming audit or examination','Investor / board requirement','Proactive — building from scratch'] },
+      { id:'concern', text:"What's your primary compliance area?", opts:['Data privacy (GDPR/CCPA)','Financial regulation','Healthcare (HIPAA/FDA)','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Understood. ${a.industry_comp||'Technology'} sector, ${a.geography||'US + EU'} scope, triggered by ${a.comp_trigger||'proactive initiative'}. Building your regulatory universe map for ${b.client} now.`,
+    closing: (a,b) => `Clear. <strong>${a.concern||'Regulatory'}</strong> frameworks drive a specific universe of obligations. Mapping yours now. ⚡`,
   },
   'compliance.risk': {
-    intro: b => `I am your Risk Assessment Agent. I quantify compliance risk so your remediation effort goes where it matters most. Let me calibrate the risk landscape.`,
+    intro: b => `Risk Agent — finding gaps before regulators do.`,
     questions: [
-      { id:'risk_area',      text:'Which risk domain keeps leadership up at night?', opts:['Data privacy / breach risk','Financial crime (fraud, AML)','Employment / HR compliance','Regulatory reporting / filings'] },
-      { id:'controls_exist', text:'What controls do you have in place today?', opts:['Comprehensive control framework','Some controls — gaps known','Minimal controls in place','Starting from scratch'] },
-      { id:'incident_history',text:'Has the organization had any compliance incidents?', opts:['No incidents in 3+ years','Minor incidents — resolved','Significant incident in past 12 months','Ongoing regulatory matter'] },
+      { id:'exposure', text:"Where's your highest compliance exposure?", opts:['Data handling / security','Third-party / vendor risk','Process controls','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. Primary risk is ${a.risk_area||'data privacy'}, ${a.controls_exist||'some controls'} in place, ${a.incident_history||'no recent incidents'}. Building your risk register and heat map for ${b.client} now.`,
+    closing: (a,b) => `Got it. <strong>${a.exposure||'Risk areas'}</strong> is where most audit failures originate. Building your risk register now. ⚡`,
   },
   'compliance.policy': {
-    intro: b => `I am your Policy Drafting Agent. I write clear, enforceable policies in plain language — for the people who must follow them, not the lawyers who advise. Let me inventory what's needed.`,
+    intro: b => `Policy Agent — policies people actually follow.`,
     questions: [
-      { id:'policy_gap',     text:'How current is your policy library?', opts:['Up to date — minor gaps only','Mostly current — 20–30% needs refresh','Significantly outdated — 50%+ needs work','Non-existent — build from zero'] },
-      { id:'policy_audience',text:'Who primarily reads and follows these policies?', opts:['All employees (company-wide)','Technical / IT teams','Customer-facing teams','Management / leadership only'] },
-      { id:'format_pref',    text:'What format do policies need to be in?', opts:['Plain-language employee guide','Formal legal / regulatory format','Digital wiki / Notion / Confluence','PDF library'] },
+      { id:'audience', text:'Who is your primary policy audience?', opts:['All employees','Technical teams only','Customer-facing staff','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Policy library is ${a.policy_gap||'partially current'}, primary audience is ${a.policy_audience||'all employees'}, format is ${a.format_pref||'plain-language'}. Drafting the priority policies for ${b.client} now.`,
+    closing: (a,b) => `Perfect. <strong>${a.audience||'Your team'}</strong> needs plain-language, practical policies — not legal documents. Writing them now. ⚡`,
   },
   'compliance.training': {
-    intro: b => `I am your Training & Awareness Agent. I turn policy knowledge into behaviour. A policy nobody reads is not a control. Let me design the training program.`,
+    intro: b => `Training Agent — compliance fluency, not just awareness.`,
     questions: [
-      { id:'employee_count', text:'How many employees need to complete compliance training?', opts:['Under 25','25–100','100–500','500+'] },
-      { id:'training_method',text:'What training delivery method works best for your team?', opts:['E-learning / LMS platform','Live instructor-led sessions','Manager-led team meetings','Self-serve guides and quizzes'] },
-      { id:'training_freq',  text:'How often does training need to be delivered?', opts:['One-time (onboarding only)','Annual recertification','Quarterly refreshers','Continuous (always-on)'] },
+      { id:'format', text:'How does your team learn best?', opts:['E-learning / online modules','Live workshops','Manager-led sessions','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Perfect. ${a.employee_count||'100–500'} employees, ${a.training_method||'e-learning'} format, ${a.training_freq||'annual'} cadence. Building the compliance curriculum for ${b.client} now.`,
+    closing: (a,b) => `Got it. <strong>${a.format||'Training'}</strong> format, properly sequenced. Curriculum and delivery plan coming now. ⚡`,
   },
   'compliance.audit': {
-    intro: b => `I am your Audit & Monitoring Agent. I build the surveillance program that keeps the compliance program real — not just documented. Let me scope the audit function.`,
+    intro: b => `Audit Agent — turning audits from fire drills into routines.`,
     questions: [
-      { id:'audit_resource', text:'Who will conduct the internal audits?', opts:['Dedicated internal audit team','Compliance officer (part of their role)','External auditor / third party','No one assigned yet'] },
-      { id:'audit_freq_q',   text:'What audit frequency is required?', opts:['Continuous monitoring (real-time)','Quarterly audits','Annual audits','Ad-hoc / risk-driven'] },
-      { id:'evidence_system',text:'Where is compliance evidence currently stored?', opts:['Dedicated GRC platform (Vanta, Drata)','SharePoint / Google Drive','Email threads and screenshots','Nothing formal yet'] },
+      { id:'frequency', text:'How often are you audited?', opts:['Annually','Quarterly','On demand / irregularly','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Understood. Audits by ${a.audit_resource||'compliance officer'}, ${a.audit_freq_q||'quarterly'} frequency, evidence in ${a.evidence_system||'shared drive'}. Building the audit plan for ${b.client} now.`,
+    closing: (a,b) => `Clear. <strong>${a.frequency||'Regular'}</strong> audit cycle. Evidence system and prep calendar coming now. ⚡`,
   },
   'compliance.incident': {
-    intro: b => `I am your Incident Response Agent. When something goes wrong, you have 72 hours or less to respond correctly. Let me make sure ${b.client} is ready.`,
+    intro: b => `Incident Response Agent — when something goes wrong, hours matter.`,
     questions: [
-      { id:'incident_risk',  text:'What type of incident are you most at risk for?', opts:['Data breach / cyber attack','Employee misconduct','Regulatory investigation','Financial fraud or error'] },
-      { id:'response_team',  text:'Do you have a designated incident response team?', opts:['Yes — fully defined and trained','Partial — roles identified but not practiced','No — but leadership is aware','No plan exists yet'] },
-      { id:'notification_obligation', text:'Do you have regulatory notification obligations?', opts:['Yes — GDPR (72-hour rule)','Yes — HIPAA / sector-specific','Yes — multiple jurisdictions','Not sure — need to identify'] },
+      { id:'risk', text:"What's your biggest breach / incident risk?", opts:['Data breach / leak','System failure / downtime','Regulatory violation','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Primary risk is ${a.incident_risk||'data breach'}, response team is ${a.response_team||'partial'}, notification obligations include ${a.notification_obligation||'GDPR'}. Building the playbooks for ${b.client} now.`,
+    closing: (a,b) => `Got it. <strong>${a.risk||'Incident'}</strong> scenarios require specific playbooks. Building yours — including escalation paths — now. ⚡`,
   },
   'compliance.reporting': {
-    intro: b => `I am your Compliance Reporting Agent. I translate operational compliance data into executive intelligence that drives decisions. Let me design the right reports.`,
+    intro: b => `Reporting Agent — compliance visible to the right people.`,
     questions: [
-      { id:'report_audience_c', text:'Who receives compliance reports?', opts:['Board / Audit Committee','C-suite / CEO','Department heads','Regulator / external examiner'] },
-      { id:'report_freq_c',  text:'What reporting cadence is expected?', opts:['Monthly','Quarterly','Semi-annual','Annual only'] },
-      { id:'dashboard_tool', text:'What tool will host the compliance dashboard?', opts:['GRC platform (Vanta, Drata, LogicGate)','Power BI / Tableau','Google Sheets / Excel','PDF reports only'] },
+      { id:'audience', text:'Who receives your compliance reports?', opts:['Board / C-suite','Regulators directly','Internal management only','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. Reports for ${a.report_audience_c||'board'}, ${a.report_freq_c||'quarterly'} cadence, delivered via ${a.dashboard_tool||'GRC platform'}. Building the compliance reporting templates for ${b.client} now.`,
+    closing: (a,b) => `Perfect. <strong>${a.audience||'Stakeholder'}</strong> reporting needs a specific format and cadence. Templates and dashboard coming now. ⚡`,
   },
 
-  // ── REAL ESTATE ─────────────────────────────────────────────────────────────
+  // ── REAL ESTATE ────────────────────────────────────────────────────────────
   'realestate.market': {
-    intro: b => `I am your Market Research Agent. Good deals start with good data. Let me scope the analysis for ${b.project}.`,
+    intro: b => `Market Research Agent — good deals start with real data.`,
     questions: [
-      { id:'product_type',   text:'What type of real estate project is this?', opts:['Multifamily residential (apartments)','For-sale residential (condos/homes)','Commercial / retail / office','Mixed-use'] },
-      { id:'market_size',    text:'What is the target market/submarket?', opts:['Urban core (high density)','Urban infill (transitional area)','Suburban (established suburb)','Emerging / value-add market'] },
-      { id:'investment_type',text:'What type of investment strategy applies?', opts:['Ground-up development','Value-add / renovation','Stabilised asset acquisition','Land banking / entitlement play'] },
+      { id:'property_type', text:'What type of property are you analyzing?', opts:['Multifamily / residential','Commercial / retail','Mixed-use development','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. ${a.product_type||'Multifamily'}, ${a.market_size||'urban'} market, ${a.investment_type||'ground-up development'} strategy. Pulling comps and building the market report for ${b.project} now.`,
+    closing: (a,b) => `Perfect. <strong>${a.property_type||'Property'}</strong> market dynamics are distinct. Pulling comps and building the analysis now. ⚡`,
   },
   'realestate.underwriting': {
-    intro: b => `I am your Acquisitions & Underwriting Agent. I will tell you whether this deal makes money — and under what conditions it does not. Let me build the model.`,
+    intro: b => `Underwriting Agent — numbers that hold up to scrutiny.`,
     questions: [
-      { id:'tdc_range',      text:'What is the estimated Total Development Cost (TDC)?', opts:['Under $5M','$5M–$25M','$25M–$100M','$100M+'] },
-      { id:'return_target',  text:'What return threshold must this deal hit?', opts:['IRR 15–20% (market rate)','IRR 20–25% (above market)','IRR 25%+ (high return / value-add)','Cash-on-cash yield focused'] },
-      { id:'hold_period',    text:'What is the target hold period?', opts:['2–3 years (short-term flip/sale)','4–5 years (standard)','7–10 years (long hold)','Indefinite (generational hold)'] },
+      { id:'return', text:"What's your target return?", opts:['IRR 15–20%','IRR 20–25%+','Cash flow / yield focused','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. TDC ~${a.tdc_range||'$25M–$100M'}, targeting ${a.return_target||'IRR 20–25%'}, ${a.hold_period||'5-year'} hold. Building the pro forma and returns analysis for ${b.project} now.`,
+    closing: (a,b) => `Got it. Modeling around <strong>${a.return||'your target'}</strong>. Pro forma and sensitivity analysis coming now. ⚡`,
   },
   'realestate.entitlements': {
-    intro: b => `I am your Entitlements & Permitting Agent. Entitlement risk is the #1 cause of project failure. Let me map your approval path for ${b.project}.`,
+    intro: b => `Entitlements Agent — entitlement risk kills more deals than bad numbers.`,
     questions: [
-      { id:'zoning_current', text:'What is the current zoning status of the site?', opts:['By-right — no discretionary approval needed','Requires minor variance only','Requires CUP / conditional use permit','Requires full rezoning'] },
-      { id:'timeline_ent',   text:'How long can the entitlement process realistically take?', opts:['Under 6 months','6–12 months','12–24 months','24+ months (complex approval)'] },
-      { id:'political_risk', text:'What is the political/community risk level?', opts:['Low — supportive jurisdiction','Moderate — some opposition likely','High — contested project','Unknown — need to assess'] },
+      { id:'zoning', text:"What's your current zoning situation?", opts:['By-right — no variances needed','Needs rezoning / CUP','Unknown — needs assessment','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Zoning is ${a.zoning_current||'requires CUP'}, timeline ${a.timeline_ent||'12–24 months'}, political risk is ${a.political_risk||'moderate'}. Building your entitlement strategy for ${b.project} now.`,
+    closing: (a,b) => `Clear. <strong>${a.zoning||'Zoning'}</strong> significantly drives timeline risk. Strategy and approval path coming now. ⚡`,
   },
-  'realestate.architecture': {
-    intro: b => `I am your Architecture & Design Brief Agent. I translate your development program into a brief that gets the architect started correctly. Let me scope the building.`,
+  'realestate.design': {
+    intro: b => `Architecture Agent — the building program before any architect draws a line.`,
     questions: [
-      { id:'unit_count',     text:'How many units / how much SF is the target program?', opts:['Under 50 units / 50K SF','50–150 units / 50K–150K SF','150–400 units / 150K–400K SF','400+ units / 400K+ SF'] },
-      { id:'parking_type',   text:'What parking solution is being considered?', opts:['Surface parking (most cost-effective)','Podium parking (ground + structured)','Underground parking (expensive)','Minimal / no parking (urban/transit)'] },
-      { id:'finish_level',   text:'What interior finish level is being targeted?', opts:['Affordable / workforce housing','Market rate (standard)','Luxury / premium','Luxury ultra (top of market)'] },
+      { id:'mix_driver', text:"What's driving your unit mix decisions?", opts:['Market demand / comps','Financing requirements','Developer preference','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. ${a.unit_count||'50–150 units'}, ${a.parking_type||'podium parking'}, ${a.finish_level||'market rate'} finishes. Writing the building program and design brief for ${b.project} now.`,
+    closing: (a,b) => `Got it. <strong>${a.mix_driver||'Market-driven'}</strong> mix. Building the program and design brief now. ⚡`,
   },
   'realestate.construction': {
-    intro: b => `I am your Construction Management Agent. I will structure the GC procurement and manage the build to protect your budget and schedule. Let me understand the project.`,
+    intro: b => `Construction Agent — no surprises on the GC relationship.`,
     questions: [
-      { id:'contract_type_c',text:'What construction contract structure do you prefer?', opts:['GMP (Guaranteed Maximum Price)','Lump sum fixed-price','Cost-plus with fee','Design-build (single entity)'] },
-      { id:'gc_relationships',text:'Do you have existing GC relationships?', opts:['Yes — preferred GC in mind','Yes — multiple relationships to leverage','Some relationships — need to expand','No relationships — open bid process'] },
-      { id:'schedule_priority',text:'What drives the schedule — speed or cost?', opts:['Speed is critical (revenue drives timeline)','Cost is critical (budget is tight)','Balance — neither can be sacrificed','Flexible — quality is the priority'] },
+      { id:'gc', text:'Do you have a GC relationship?', opts:['Yes — established relationship','Competitive bid process','Not selected yet','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. ${a.contract_type_c||'GMP'} contract, ${a.gc_relationships||'open bid'} process, ${a.schedule_priority||'balanced'} priority. Building the GC bid package and procurement plan for ${b.project} now.`,
+    closing: (a,b) => `Clear. <strong>${a.gc||'GC status'}</strong> determines procurement strategy. Bid package and schedule coming now. ⚡`,
   },
   'realestate.leasing': {
-    intro: b => `I am your Sales & Leasing Agent. I will design the go-to-market that fills your building. Pricing and velocity are my targets. Let me understand the product.`,
+    intro: b => `Leasing Agent — where the pro forma becomes real.`,
     questions: [
-      { id:'comp_rents',     text:'How do your target rents compare to the market?', opts:['Below market (affordable play)','At market (competitive)','10–15% above market (premium)','20%+ above market (luxury)'] },
-      { id:'preleasing_goal',text:'What pre-leasing target are you targeting at CO?', opts:['0–10% (lease after CO)','10–25% (light pre-leasing)','25–50% (active pre-leasing)','50%+ (aggressive pre-leasing)'] },
-      { id:'broker_strategy',text:'Will you use a broker network or in-house leasing?', opts:['In-house leasing team','Third-party leasing agent','Co-op broker network','Hybrid — in-house + brokers'] },
+      { id:'tenant', text:"What's your target tenant profile?", opts:['Market rate — broad appeal','Workforce / affordable housing','Luxury / premium','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. Targeting ${a.comp_rents||'market rate'} rents, ${a.preleasing_goal||'10–25%'} pre-leasing, using ${a.broker_strategy||'in-house + brokers'}. Building the pricing matrix and leasing plan for ${b.project} now.`,
+    closing: (a,b) => `Perfect. <strong>${a.tenant||'Target tenants'}</strong> drive pricing, amenities, and marketing. Leasing plan coming now. ⚡`,
   },
-  'realestate.propmanagement': {
-    intro: b => `I am your Property Management Agent. I design the operations system that protects NOI at stabilisation. Let me understand your management setup.`,
+  'realestate.ops': {
+    intro: b => `Operations Agent — the best NOI is the one you actually collect.`,
     questions: [
-      { id:'pm_structure',   text:'Who will manage the property at stabilisation?', opts:['Owner-operated (in-house PM)','Third-party PM company','Hybrid — in-house + PM oversight','Not yet decided'] },
-      { id:'tech_stack',     text:'What property management software will you use?', opts:['Yardi','AppFolio','Buildium / Rent Manager','No system yet — need recommendation'] },
-      { id:'noi_target',     text:'What NOI margin are you underwriting to?', opts:['Under 55% (high OpEx area)','55–65% (typical residential)','65–75% (well-run, stable)','75%+ (very efficient operations)'] },
+      { id:'management', text:'How will you manage the property?', opts:['In-house management team','Third-party property manager','Hybrid model','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Understood. ${a.pm_structure||'In-house PM'}, ${a.tech_stack||'Yardi'}, targeting ${a.noi_target||'55–65%'} NOI margin. Building the operations manual and annual budget template for ${b.project} now.`,
+    closing: (a,b) => `Got it. <strong>${a.management||'Management'}</strong> model confirmed. Operations manual and annual budget template coming now. ⚡`,
   },
   'realestate.finance': {
-    intro: b => `I am your Finance & Capital Agent. I will structure the capital stack and source the debt and equity for ${b.project}. Let me understand your capital position.`,
+    intro: b => `Finance Agent — structuring the capital stack and finding the money.`,
     questions: [
-      { id:'equity_source',  text:'Where is the equity coming from?', opts:['100% sponsor equity (own money)','Joint venture with institutional partner','Private equity raise (fund / family offices)','Crowdfunding / 506(b) raise'] },
-      { id:'debt_preference',text:'What debt structure are you targeting?', opts:['Bank construction loan (cheapest)','Debt fund / bridge (faster, more flexible)','HUD / GSE (lowest rate, most complex)','No debt — all equity deal'] },
-      { id:'investor_return', text:'What returns are you promising equity investors?', opts:['8–12% preferred return','12–18% IRR target','18–25%+ (value-add/opportunistic)','Return of capital + upside (profit-share only)'] },
+      { id:'equity', text:"What's your equity position?", opts:['Fully funded internally','Seeking JV equity partner','Need both debt and equity','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. Equity from ${a.equity_source||'JV partner'}, ${a.debt_preference||'bank construction loan'}, targeting ${a.investor_return||'12–18% IRR'}. Building the capital stack model and investor materials for ${b.project} now.`,
+    closing: (a,b) => `Clear. <strong>${a.equity||'Capital structure'}</strong> confirmed. Stack model and investor materials coming now. ⚡`,
   },
 
-  // ── INTERIOR DESIGN ─────────────────────────────────────────────────────────
+  // ── INTERIOR DESIGN ────────────────────────────────────────────────────────
   'interior.discovery': {
-    intro: b => `I am your Client Discovery Agent. My job is to find the authentic design vision beneath the Pinterest board. Let me understand ${b.client}'s real life in this space.`,
+    intro: b => `Discovery Agent — finding the real vision before anything is specified.`,
     questions: [
-      { id:'how_live',       text:'How do you primarily use this space?', opts:['Daily living and entertaining','Professional workspace (home office)','Short-term rental / investment','Seasonal / vacation use'] },
-      { id:'pain_point',     text:'What frustrates you most about the current space?', opts:['It\'s dark and cramped','It\'s cold and impersonal','It\'s cluttered and disorganised','It just doesn\'t feel like me'] },
-      { id:'non_negotiable', text:'What is your absolute non-negotiable for this project?', opts:['More storage — I need it badly','Better natural light and flow','A specific room or area totally transformed','A cohesive look that finally makes sense'] },
+      { id:'use', text:'How do you primarily use this space?', opts:['Relaxing / unwinding','Entertaining guests','Working from home','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Perfect. You use the space for ${a.how_live||'daily living'}, the main pain point is "${a.pain_point||'disorganised'}", and the non-negotiable is ${a.non_negotiable||'storage + flow'}. Writing the design brief for ${b.client} now.`,
+    closing: (a,b) => `Beautiful. A space for <strong>${a.use||'living'}</strong> has completely different priorities than any other. Writing your design brief now. ⚡`,
   },
   'interior.concept': {
-    intro: b => `I am your Concept & Creative Direction Agent. I will develop the design concept that gives every selection a unifying logic. Let me understand your aesthetic direction.`,
+    intro: b => `Concept Agent — the direction that makes everything coherent.`,
     questions: [
-      { id:'style_feel_i',   text:'Which visual direction resonates most with you?', opts:['Warm & organic (natural materials, earthy)','Clean & minimal (white space, restraint)','Bold & dramatic (dark tones, statement pieces)','Eclectic & layered (collected over time)'] },
-      { id:'colour_comfort', text:'How comfortable are you with colour?', opts:['Love colour — the bolder the better','Some colour — with a strong neutral base','Subtle — I prefer tones and texture','Neutral only — colour makes me anxious'] },
-      { id:'reference',      text:'What is the closest reference that captures the vibe?', opts:['Japandi / Wabi-sabi (calm, natural)','Californian Modern (warm, relaxed luxury)','European Classic (tailored, timeless)','Contemporary Urban (graphic, architectural)'] },
+      { id:'style', text:'What style direction resonates most?', opts:['Warm & organic','Clean & minimal','Bold & expressive','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Wonderful. ${a.style_feel_i||'Warm & organic'}, ${a.colour_comfort||'neutral-led'} palette, ${a.reference||'Californian modern'} reference. Developing 2 concept directions for ${b.client} now.`,
+    closing: (a,b) => `Wonderful. <strong>${a.style||'Your vision'}</strong> is a strong anchor. Developing 2 concept directions for your review now. ⚡`,
   },
-  'interior.space': {
-    intro: b => `I am your Space Planning Agent. Before anything is ordered or designed, the layout has to work. Let me understand the spatial parameters.`,
+  'interior.space_planning': {
+    intro: b => `Space Planning Agent — great rooms start with smart layouts.`,
     questions: [
-      { id:'rooms_scope',    text:'Which rooms are in scope for this project?', opts:['Single room (focused refresh)','2–3 rooms (main living areas)','Full apartment / small home','Whole house (5+ rooms)'] },
-      { id:'existing_keep',  text:'What existing furniture are you keeping?', opts:['Starting fresh — selling everything','Keeping a few key pieces','Keeping majority — supplementing','Keeping everything — reconfiguring only'] },
-      { id:'flow_issue',     text:'What is the main spatial challenge to solve?', opts:['Too dark — no natural light','Awkward layout — furniture never fits','Open plan with no definition','Small space that needs to do more'] },
+      { id:'issue', text:"What's the biggest layout issue right now?", opts:['Poor flow between rooms','Not enough storage','Underused / wasted space','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. ${a.rooms_scope||'Main living areas'}, ${a.existing_keep||'keeping some pieces'}, primary challenge is "${a.flow_issue||'awkward layout'}". Building the scaled floor plan for ${b.client} now.`,
+    closing: (a,b) => `Exactly. <strong>${a.issue||'Layout issues'}</strong> — that's fixable with the right plan. Scaled floor plan and furniture arrangement coming now. ⚡`,
   },
-  'interior.materials': {
-    intro: b => `I am your Material & Finish Agent. I specify every surface in the project with precision — so contractors can quote and install from my documents alone. Let me scope the finishes.`,
+  'interior.finishes': {
+    intro: b => `Finishes Agent — the right materials make a design timeless.`,
     questions: [
-      { id:'budget_finishes', text:'What is the budget for materials and finishes?', opts:['Under $15K (selective upgrades)','$15K–$50K (full refresh)','$50K–$150K (significant renovation)','$150K+ (full transformation)'] },
-      { id:'durability',      text:'What durability level do the finishes need?', opts:['High durability (kids, pets, heavy use)','Standard durability (typical household)','Aesthetic priority (luxury feel)','STR / rental (durability + ease of cleaning)'] },
-      { id:'sourcing_pref',   text:'Do you have a preference for where materials come from?', opts:['Local / domestic where possible','Sustainable / eco-certified','Trade discount showrooms (designer access)','Mass-market + specific hero pieces'] },
+      { id:'priority', text:'What matters most in your material choices?', opts:['Durability / low maintenance','Aesthetics / how it looks','Sustainability / eco-friendly','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Budget ${a.budget_finishes||'$50K–$150K'}, ${a.durability||'standard'} durability, ${a.sourcing_pref||'trade showroom'} sourcing. Writing the full finish schedule for ${b.client} now.`,
+    closing: (a,b) => `Clear. <strong>${a.priority||'Quality'}</strong> priority — building the full finish schedule with specific specs now. ⚡`,
   },
-  'interior.procurement': {
-    intro: b => `I am your Furniture & Procurement Agent. I manage FF&E from specification through white-glove delivery. Nothing arrives wrong on my watch. Let me understand the procurement scope.`,
+  'interior.ffe': {
+    intro: b => `FF&E Agent — furniture, fixtures, equipment, sourced right.`,
     questions: [
-      { id:'ffe_budget',     text:'What is the budget allocated for furniture and accessories?', opts:['Under $20K','$20K–$60K','$60K–$150K','$150K+'] },
-      { id:'lead_time_tolerance', text:'How flexible is your installation timeline?', opts:['Flexible — quality over speed','Fixed — must be done by specific date','Tight — 4 weeks or less','Medium — 6–10 weeks is fine'] },
-      { id:'custom_appetite', text:'How much custom / bespoke furniture are you open to?', opts:['All stock (fastest, cost-effective)','Mostly stock, 1–2 custom pieces','Mix — custom for key pieces','Mostly custom (maximum investment)'] },
+      { id:'approach', text:"What's your furniture approach?", opts:['All custom / bespoke','Mix of custom and retail','Primarily retail sourcing','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. Budget ${a.ffe_budget||'$60K–$150K'}, ${a.lead_time_tolerance||'medium timeline'}, ${a.custom_appetite||'mixed'} custom appetite. Writing the FF&E specification and procurement tracker for ${b.client} now.`,
+    closing: (a,b) => `Got it. <strong>${a.approach||'Mixed'}</strong> approach. FF&E specification and procurement tracker coming now. ⚡`,
   },
   'interior.lighting': {
-    intro: b => `I am your Lighting Design Agent. Lighting is the single design element that changes everything — and is always the last thing clients budget for. Let me fix that for ${b.client}.`,
+    intro: b => `Lighting Agent — lighting changes everything.`,
     questions: [
-      { id:'lighting_current',text:'What is the current lighting situation?', opts:['Builder grade — basic overhead only','Some decorative fixtures exist','Good bones — needs design direction','Starting from scratch (new construction)'] },
-      { id:'smart_lighting',  text:'Are you interested in smart / controlled lighting?', opts:['Yes — full smart system (Lutron, Control4)','Yes — basic smart (Philips Hue / Caseta)','Dimmer switches only — keep it simple','No smart lighting — purely aesthetic'] },
-      { id:'lighting_budget', text:'What is the lighting budget (fixtures + controls)?', opts:['Under $5K','$5K–$20K','$20K–$60K','$60K+'] },
+      { id:'current', text:"What's your current lighting situation?", opts:['Builder-grade / basic','Some upgrades done','Starting completely fresh','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Currently ${a.lighting_current||'builder grade'}, ${a.smart_lighting||'dimmers only'}, budget ${a.lighting_budget||'$5K–$20K'}. Designing the 3-layer lighting plan and specifying fixtures for ${b.client} now.`,
+    closing: (a,b) => `Perfect. Working from <strong>${a.current||'your current setup'}</strong>. Three-layer lighting plan and fixture specs coming now. ⚡`,
   },
-  'interior.styling': {
-    intro: b => `I am your Styling & Accessories Agent. I curate the final layer — art, objects, textiles, plants — that makes a well-designed room feel *lived in* and complete. Let me understand the client's personality.`,
+  'interior.art': {
+    intro: b => `Art & Styling Agent — the details that make a space feel finished.`,
     questions: [
-      { id:'art_comfort',    text:'How do you feel about art on the walls?', opts:['Love art — the more the better','Open to it — guided curation please','Hesitant — nervous about getting it wrong','Minimal — one statement piece at most'] },
-      { id:'object_style',   text:'What kind of decorative objects feel right to you?', opts:['Natural / organic (ceramics, wood, stone)','Modern / sculptural (abstract, graphic)','Collected / meaningful (personal pieces)','Minimal — negative space is the decor'] },
-      { id:'plants',         text:'Are you open to incorporating plants?', opts:['Yes — love plants, have a green thumb','Yes — but low-maintenance only','Maybe — if they look good','No plants please'] },
+      { id:'comfort', text:'How do you feel about art curation?', opts:['Love it — open to bold choices','Some guidance appreciated','Prefer safe / classic pieces','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Wonderful. ${a.art_comfort||'Open to guided curation'}, ${a.object_style||'natural/organic'} objects, ${a.plants||'low-maintenance plants'} preferred. Curating the art strategy and accessory plan for ${b.client} now.`,
+    closing: (a,b) => `Wonderful. <strong>${a.comfort||'Guided curation'}</strong> approach. Art strategy and accessory plan tailored to your space — coming now. ⚡`,
   },
-  'interior.installation': {
-    intro: b => `I am your Contractor & Trade Coordination Agent. I make sure every trade is in the right sequence, with the right specs, and no surprises. Let me understand the construction scope.`,
+  'interior.trade': {
+    intro: b => `Trade Coordination Agent — keeping contractors aligned so nothing slips.`,
     questions: [
-      { id:'reno_scope',     text:'What is the scope of construction work involved?', opts:['No construction — furniture and styling only','Light work (painting, lighting swap)','Moderate renovation (kitchens, baths)','Full renovation (gut + rebuild)'] },
-      { id:'gc_relationship',text:'Do you have a contractor already?', opts:['Yes — trusted GC in place','Shortlisted — need final selection','No contractor — need to find one','DIY — no contractor planned'] },
-      { id:'timeline_i',     text:'When does the project need to be complete?', opts:['Under 4 weeks (urgent)','4–8 weeks','2–4 months','4–6 months (relaxed timeline)'] },
+      { id:'scope', text:"What's your renovation scope?", opts:['Full renovation','Partial — specific rooms only','Cosmetic only','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. ${a.reno_scope||'Moderate renovation'}, contractor is ${a.gc_relationship||'not yet selected'}, timeline is ${a.timeline_i||'2–4 months'}. Building the trade coordination schedule and punch list template for ${b.client} now.`,
+    closing: (a,b) => `Clear. <strong>${a.scope||'Renovation scope'}</strong> confirmed. Trade coordination schedule and contractor brief coming now. ⚡`,
   },
 
-  // ── AIRBNB ──────────────────────────────────────────────────────────────────
+  // ── AIRBNB ─────────────────────────────────────────────────────────────────
   'airbnb.revenue': {
-    intro: b => `I am your Market & Revenue Analysis Agent. I will tell you exactly what your property can earn and how to get there. Let me understand what you are working with.`,
+    intro: b => `Revenue Agent — data-driven hosts earn 32% more.`,
     questions: [
-      { id:'property_type_a',text:'What type of property is this?', opts:['Private room (in home you occupy)','Entire apartment / condo','Entire house (standalone)','Unique stay (tiny home, cabin, boat, etc.)'] },
-      { id:'location_type',  text:'What best describes the location?', opts:['Urban / city centre (high demand)','Beach / lakefront (seasonal peak)','Mountain / rural (nature-focused)','Suburban / neighbourhood'] },
-      { id:'current_status', text:'What is the current status of the listing?', opts:['Not listed yet — starting fresh','Listed but underperforming','Listed and doing okay — want to optimise','Superhost — want to scale'] },
+      { id:'performance', text:'How is your property performing right now?', opts:['New listing — no data yet','Below market — underperforming','At or above market average','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. ${a.property_type_a||'Entire apartment'}, ${a.location_type||'urban'} location, currently ${a.current_status||'listed but underperforming'}. Pulling comps and building your revenue projection for ${b.project} now.`,
+    closing: (a,b) => `Got it. <strong>${a.performance||'Current performance'}</strong> tells me exactly where the biggest gains are. Revenue projection and pricing strategy coming now. ⚡`,
   },
   'airbnb.listing': {
-    intro: b => `I am your Listing Optimisation Agent. Your listing is your storefront. I will make it convert. Let me audit what you are working with.`,
+    intro: b => `Listing Agent — most hosts lose guests in 8 seconds.`,
     questions: [
-      { id:'current_title',  text:'How would you rate your current listing title?', opts:['Never thought about it — probably generic','Decent but not great','Good — but could be sharper','We have no listing yet'] },
-      { id:'photos_q',       text:'How are your current photos?', opts:['Professional photography — recent','Good phone photos but not professional','Old or low-quality photos','No photos yet'] },
-      { id:'superhost_now',  text:'What is your current Superhost status?', opts:['Active Superhost','Was Superhost — lost it','Never achieved Superhost','New host — no history yet'] },
+      { id:'asset', text:"What's your strongest asset as a host?", opts:['Exceptional location','Unique / standout property design','Outstanding amenities','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Understood. Title is ${a.current_title||'generic'}, photos are ${a.photos_q||'not professional'}, Superhost status is ${a.superhost_now||'never achieved'}. Optimising your full listing for ${b.project} now.`,
+    closing: (a,b) => `Perfect. Leading with <strong>${a.asset||'your best asset'}</strong>. Title, description, and photo brief coming now. ⚡`,
   },
-  'airbnb.guestexperience': {
-    intro: b => `I am your Guest Experience Agent. The review is written in the first 90 minutes of a guest's stay. Let me design the experience that earns a 5-star every time.`,
+  'airbnb.guest': {
+    intro: b => `Guest Experience Agent — reviews are your most valuable asset.`,
     questions: [
-      { id:'guest_type',     text:'Who is your primary guest type?', opts:['Business travellers (weeknight stays)','Couples / romantic getaways','Families with children','Groups / friend trips'] },
-      { id:'checkin_type',   text:'What check-in method do you use?', opts:['Smart lock / keypad (self check-in)','Lockbox (self check-in)','In-person key handoff','Managed by a co-host or property manager'] },
-      { id:'welcome_current',text:'What do guests currently receive on arrival?', opts:['Nothing — just a clean space','A note / welcome card','A welcome basket with snacks/drinks','Full welcome kit (guide, local tips, basket)'] },
+      { id:'guest_type', text:'What type of guest do you mainly attract?', opts:['Couples / romantic getaways','Business travelers','Families with kids','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Perfect. Primarily ${a.guest_type||'couples'}, ${a.checkin_type||'smart lock'} check-in, currently offering ${a.welcome_current||'a welcome card'}. Building your full guest experience system for ${b.project} now.`,
+    closing: (a,b) => `Got it. <strong>${a.guest_type||'Your guests'}</strong> have specific expectations — building the full experience system around them now. ⚡`,
   },
   'airbnb.setup': {
-    intro: b => `I am your Property Setup & Staging Agent. The difference between 4 stars and 5 stars is almost always the setup, not the property. Let me audit yours.`,
+    intro: b => `Property Setup Agent — the right setup earns 5-star reviews.`,
     questions: [
-      { id:'amenities_level',text:'How would you rate your current amenity offering?', opts:['Basic — bed, bath, wifi only','Standard — most essentials covered','Good — above average amenities','Premium — hotel-level amenities'] },
-      { id:'linens_quality', text:'What is the quality of your linens and towels?', opts:['Hotel-quality white linens','Good quality — not hotel grade','Mixed — some good, some not','Basic — due for an upgrade'] },
-      { id:'photo_ready',    text:'Is the property photo-ready and staged?', opts:['Yes — professional staging done','Mostly — a few things to tidy','Partly — needs more work','No — needs full staging'] },
+      { id:'gap', text:"What's your biggest amenity gap right now?", opts:['Kitchen / essentials','Comfort / bedding quality','Entertainment / tech setup','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Amenities are ${a.amenities_level||'standard'}, linens are ${a.linens_quality||'good but not hotel grade'}, staging is ${a.photo_ready||'partly done'}. Building your complete setup checklist and par level guide for ${b.project} now.`,
+    closing: (a,b) => `Exactly. <strong>${a.gap||'Amenity gaps'}</strong> — guests notice that immediately. Setup checklist and par level guide coming now. ⚡`,
   },
-  'airbnb.operations': {
-    intro: b => `I am your Operations & Housekeeping Agent. Consistent 5-star Cleanliness ratings come from systems, not hoping your cleaner has a good day. Let me build yours.`,
+  'airbnb.ops': {
+    intro: b => `Operations Agent — systems that run without you.`,
     questions: [
-      { id:'cleaner_current',text:'Who handles cleaning and turnovers right now?', opts:['Professional cleaning service','Independent cleaner (vetted)','I clean it myself','No system yet — need to set one up'] },
-      { id:'turnover_time',  text:'How much time is available for turnovers?', opts:['Under 2 hours (tight schedule)','2–4 hours (typical)','4–6 hours (comfortable)','Same-day turnovers are rare / flexible'] },
-      { id:'supply_mgmt',    text:'How do you manage supplies and restocking?', opts:['Automated delivery subscriptions','I personally restock between stays','Cleaner handles restocking','No system — ad hoc'] },
+      { id:'cleaning', text:'How are you handling cleaning and turnovers?', opts:['DIY — I clean myself','Dedicated cleaner, no system','Managed — has some process','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. Using ${a.cleaner_current||'independent cleaner'}, ${a.turnover_time||'2–4 hours'} turnover window, restocking via ${a.supply_mgmt||'personal restock'}. Building your room-by-room turnover checklist for ${b.project} now.`,
+    closing: (a,b) => `Clear. <strong>${a.cleaning||'Current ops'}</strong> has specific optimization opportunities. Turnover checklist and system coming now. ⚡`,
   },
-  'airbnb.communication': {
-    intro: b => `I am your Guest Communication Agent. Your response time and message quality directly determine your Superhost status. Let me build your message library.`,
+  'airbnb.messaging': {
+    intro: b => `Messaging Agent — fast, warm responses are the #1 Superhost driver.`,
     questions: [
-      { id:'response_time_a',text:'What is your current average response time?', opts:['Under 1 hour (Superhost level)','1–4 hours','4–24 hours','Longer than 24 hours'] },
-      { id:'msg_pain',       text:'What guest situation causes you the most communication stress?', opts:['Pre-booking questions (too many, too similar)','Early check-in / late checkout requests','Complaints during the stay','Handling negative reviews'] },
-      { id:'automation_level',text:'How much message automation do you currently have?', opts:['Fully automated (co-host tool in use)','Some automation via Airbnb scheduled messages','Manual — I write everything myself','Nothing — starting fresh'] },
+      { id:'response_time', text:"What's your average response time right now?", opts:['Under 1 hour ⚡','1–4 hours','Over 4 hours / inconsistent','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Current response time is ${a.response_time_a||'1–4 hours'}, biggest pain is "${a.msg_pain||'complaints'}", automation level is ${a.automation_level||'manual'}. Building your full message template library for ${b.project} now.`,
+    closing: (a,b) => `Got it. <strong>${a.response_time||'Response time'}</strong> noted. Full message template library and automation rules coming now. ⚡`,
   },
   'airbnb.reviews': {
-    intro: b => `I am your Review & Reputation Agent. Your star rating is your most valuable asset. Let me protect and grow it for ${b.project}.`,
+    intro: b => `Reviews Agent — your star rating is your most valuable business asset.`,
     questions: [
-      { id:'current_rating', text:'What is your current overall Airbnb star rating?', opts:['4.9–5.0 (Superhost range)','4.7–4.8 (good, needs improvement)','4.0–4.6 (significant concern)','No reviews yet — new listing'] },
-      { id:'low_score_cat',  text:'Which review category is your lowest right now?', opts:['Cleanliness','Communication','Check-in','Accuracy of listing description'] },
-      { id:'review_resp',    text:'Do you currently respond to guest reviews?', opts:['Yes — respond to all','Yes — only to negative ones','Sometimes — inconsistently','No — never respond'] },
+      { id:'rating', text:"What's your current average rating?", opts:['4.9–5.0 ⭐ (protecting it)','4.7–4.8 ⭐ (growing it)','Under 4.7 ⭐ (fixing it)','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Clear. Current rating ${a.current_rating||'4.7–4.8'}, weakest category is ${a.low_score_cat||'cleanliness'}, review response is ${a.review_resp||'inconsistent'}. Building your Superhost tracker and review response system for ${b.project} now.`,
+    closing: (a,b) => `Perfect. At <strong>${a.rating||'your rating'}</strong>, the strategy is clear. Superhost tracker and review response system coming now. ⚡`,
   },
   'airbnb.finance': {
-    intro: b => `I am your Finance & Reporting Agent. I make sure you know your real numbers — not just your gross bookings. Let me understand your financial setup.`,
+    intro: b => `Finance Agent — your P&L, so you know exactly what you're making.`,
     questions: [
-      { id:'bookkeeping',    text:'How do you currently track your STR income and expenses?', opts:['Accounting software (QuickBooks, Wave)','Spreadsheet (Excel / Google Sheets)','Bank statements only','Nothing formal yet'] },
-      { id:'tax_aware',      text:'Are you aware of your lodging tax obligations?', opts:['Yes — fully registered and paying','Partially — not sure what Airbnb remits vs. what I owe','Not sure — need to investigate','No — starting fresh'] },
-      { id:'profit_goal',    text:'What is your financial goal for this property?', opts:['Cover mortgage / break even','Generate $500–$2K/month profit','Generate $2K–$5K/month profit','Replace full-time income ($5K+/month)'] },
+      { id:'goal', text:"What's your monthly profit goal?", opts:['Cover costs / break even','$500–$2K/month profit','$2K–$5K+/month','📌 Pin for later'] },
     ],
-    closing: (a,b) => `Got it. Tracking via ${a.bookkeeping||'spreadsheet'}, tax awareness is ${a.tax_aware||'partial'}, goal is ${a.profit_goal||'$2K–$5K/month profit'}. Building your monthly P&L and tax prep structure for ${b.project} now.`,
+    closing: (a,b) => `Got it. <strong>${a.goal||'Your target'}</strong> — monthly P&L template and tax prep structure coming now. ⚡`,
   },
+
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -4882,7 +4766,7 @@ function agentSay(text, delay, shouldSpeak) {
         setTimeout(function() { enqueueTTS(text); }, 150);
       }
       resolve();
-    }, delay || 900);
+    }, delay !== undefined ? delay : 500);
   });
 }
 
@@ -4892,7 +4776,7 @@ var SYSTEM_PITCHES = {
     return 'Here\'s the short version, <strong>' + b.client + '</strong>: instead of one consultant juggling everything, you get a specialist agent for every discipline — discovery, strategy, financials, implementation — each asking only the questions that matter. A Guardian AI reviews every output before you see it. McKinsey data shows AI-augmented consulting cuts timelines by 40% and delivers 3× ROI. That system is running for you right now.';
   },
   product: function(b) {
-    return 'Short version: every product phase — research, UX, architecture, copy, handoff — gets its own specialist agent. They build on each other\'s work in sequence. Forrester data: AI-assisted product teams ship 2× faster with 30% fewer post-launch defects. That\'s exactly what\'s happening for <strong>' + b.project + '</strong>.';
+    return 'Short version: every product phase — research, UX, architecture, copy, handoff — gets its own specialist agent. They build on each other\'s work in sequence. Forrester data: AI-assisted product teams ship 2× faster with 30% fewer post-launch defects. That\'s exactly what\'s happening for <strong>' + (b.project||b.client||'your product') + '</strong>.';
   },
   marketing: function(b) {
     return 'Short version: brand strategy agent first, then campaign, then copy, then performance — each an expert, each building on the one before. HubSpot data shows AI-orchestrated marketing drives 67% more qualified leads at 40% lower cost. This is that system, tuned for <strong>' + (b.client||'you') + '</strong>.';
@@ -4921,12 +4805,12 @@ function launchAgentConv(conv, b, templateId, agent) {
 // ── Orchestration Agent intro for each template ───────────────────────────────
 var ORCH_INTROS = {
   consulting:  function(b) { return 'Welcome to your consulting engagement, <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong> — I\'ll guide you through every step. We have <strong>' + (state.template ? state.template.agents.length : 8) + ' specialist agents</strong> standing by. I\'ll introduce each one, ask them to gather what they need from you, and ensure every deliverable is Guardian-reviewed before we proceed.\n\nYour goal: <em>' + b.goal + '</em>\n\nLet\'s begin with your <strong>Discovery Agent</strong>. They\'ll uncover the real problem beneath the stated one.'; },
-  product:     function(b) { return 'Welcome, <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. We\'re building <strong>' + b.project + '</strong> — from user research through to engineer-ready handoff. I\'ll activate each specialist at the right moment and make sure their outputs build on each other.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe start with <strong>User Research</strong>. Understanding users before designing anything is non-negotiable.'; },
+  product:     function(b) { return 'Welcome, <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. We\'ll take your product from user research through to engineer-ready handoff — each specialist building on the last.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe start with <strong>User Research</strong>. Understanding users before designing anything is non-negotiable.'; },
   marketing:   function(b) { return 'Hello <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. We\'re building a complete marketing system — from brand strategy through to launch. Every agent I bring in will ask you the questions that matter for their discipline.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe start with <strong>Brand Strategy</strong>. The foundation everything else is built on.'; },
   compliance:  function(b) { return 'Welcome <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. Compliance work is only as good as its structure. I\'ll sequence your specialist agents correctly — regulatory research first, then risk, then policy, then controls.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe begin with your <strong>Regulatory Research Agent</strong> — mapping every applicable rule before we assess anything.'; },
-  realestate:  function(b) { return 'Welcome <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. Real estate development is a sequence — get the order wrong and you pay for it. I\'ll guide you through market research, underwriting, entitlements, design, construction, leasing, and finance in the right order.\n\nProject: <em>' + b.project + '</em>\n\nWe begin with <strong>Market Research</strong> — before any deal is evaluated, the market must be understood.'; },
-  interior:    function(b) { return 'Hello <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. A beautiful interior is a sequence, not a shopping cart. I\'ll guide you and your design team through discovery, concept, space planning, materials, procurement, lighting, styling, and trade coordination — in the right order.\n\nYour space: <em>' + b.project + '</em>\n\nWe begin with <strong>Client Discovery</strong> — finding the real vision before anything is specified.'; },
-  airbnb:      function(b) { return 'Welcome <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. Becoming a high-performing STR host is a system. I\'ll guide you through revenue analysis, listing optimisation, guest experience, property setup, operations, communication, reviews, and finance.\n\nYour property: <em>' + b.project + '</em>\n\nWe start with <strong>Revenue Analysis</strong> — knowing your numbers before optimising anything else.'; },
+  realestate:  function(b) { return 'Welcome <strong>' + b.client + '</strong>. I\'m your <strong>Orchestration Agent</strong>. Real estate development is a sequence — get the order wrong and you pay for it. I\'ll guide you through market research, underwriting, entitlements, design, construction, leasing, and finance in the right order.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe begin with <strong>Market Research</strong> — before any deal is evaluated, the market must be understood.'; },
+  interior:    function(b) { return 'Hello <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. A beautiful interior is a sequence, not a shopping cart. I\'ll guide you and your design team through discovery, concept, space planning, materials, procurement, lighting, styling, and trade coordination — in the right order.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe begin with <strong>Client Discovery</strong> — finding the real vision before anything is specified.'; },
+  airbnb:      function(b) { return 'Welcome <strong>' + b.client + '</strong>! I\'m your <strong>Orchestration Agent</strong>. Becoming a high-performing STR host is a system. I\'ll guide you through revenue analysis, listing optimisation, guest experience, property setup, operations, communication, reviews, and finance.\n\nYour goal: <em>' + b.goal + '</em>\n\nWe start with <strong>Revenue Analysis</strong> — knowing your numbers before optimising anything else.'; },
 };
 
 // ── Main conversation render ──────────────────────────────────────────────────
@@ -4943,7 +4827,8 @@ function renderWorkflow() {
   state.currentAgentIcon = agent.icon;
 
   // Update nav
-  document.getElementById('nav-pr').textContent = 'PR-' + String(state.prCount).padStart(3, '0');
+  var _navPr = document.getElementById('nav-pr');
+  if (_navPr) _navPr.textContent = 'PR-' + String(state.prCount).padStart(3, '0');
 
   // Update progress
   var pct = (i / total * 100).toFixed(0);
@@ -5070,14 +4955,13 @@ function startAgentConversation(agent, agentIdx, templateId) {
     // Orchestration banner
     if (agentIdx === 0) {
       var orchText = (ORCH_INTROS[templateId] || function(b){ return 'Welcome, ' + b.client + '. I am your Orchestration Agent.'; })(b);
-      addBubble('agent', orchText, '🎯');
-      // Offer the "How does this work?" explainer before Phase 2 begins
-      setTimeout(function() {
+      // Use agentSay so the orchestration intro is spoken, then show quick replies
+      agentSay(orchText, 600).then(function() {
         showQuickReplies(['💡 How does this work?', "I'm ready — let's begin →"], function(choice) {
           if (choice.indexOf('How does this work') !== -1) {
             stopCurrentSpeech();
             var pitch = (SYSTEM_PITCHES[templateId] || function(b){ return 'This system sequences specialist AI agents — each an expert — to deliver professional-grade work fast, with Guardian QA on every output.'; })(b);
-            agentSay(pitch, 800).then(function() {
+            agentSay(pitch, 400).then(function() {
               showQuickReplies(["Let's start the workflow →"], function() {
                 stopCurrentSpeech();
                 launchAgentConv(conv, b, templateId, agent);
@@ -5088,7 +4972,7 @@ function startAgentConversation(agent, agentIdx, templateId) {
             launchAgentConv(conv, b, templateId, agent);
           }
         });
-      }, 1600);
+      });
       delay = 999999; // Phase 2 is now handled by the quick-reply callback above
     } else {
       // Clear previous agent's queued speech before starting the next one
@@ -5121,8 +5005,7 @@ function askQuestion(conv, qIdx, templateId, agent) {
     return;
   }
   var q = conv.questions[qIdx];
-  // Pass shouldSpeak=true ONLY for questions so the user hears what to answer
-  agentSay(q.text, 800, true).then(function() {
+  agentSay(q.text, 500, true).then(function() {
     showQuickReplies(q.opts, function(answer) {
       if (answer === '📌 Pin for later') {
         if (!state.pins) state.pins = [];
@@ -5136,7 +5019,7 @@ function askQuestion(conv, qIdx, templateId, agent) {
 
       state.convAnswers[q.id] = answer;
       addBubble('user', answer, '👤');
-      setTimeout(function() { askQuestion(conv, qIdx + 1, templateId, agent); }, 500);
+      setTimeout(function() { askQuestion(conv, qIdx + 1, templateId, agent); }, 400);
     });
   });
 }
@@ -5492,18 +5375,48 @@ function handleChatSend() {
     return;
   }
 
-  setTimeout(function() {
-    agentSay('Thank you — I\'ve noted that. Is there anything else, or shall we proceed?', 900).then(function() {
-      showQuickReplies(['Continue to next step →', 'I have another question'], function(opt) {
-        if (opt.indexOf('Continue') >= 0) {
-          var agent = state.template.agents[state.agentIndex];
-          showGuardianPanel(agent, state.template.id);
-        } else {
-          document.getElementById('chat-input').focus();
-        }
+  var b = state.brief;
+  var agent = state.template ? state.template.agents[state.agentIndex] : null;
+  var agentName = agent ? agent.name : 'AI Agent';
+  var sysPrompt = 'You are ' + agentName + ' — a specialist AI agent in an orchestration system. ' +
+    'Client: ' + (b && b.client || 'Client') + '. Goal: ' + (b && b.goal || 'grow') + '. ' +
+    'The user just said something off-script during their onboarding: "' + val + '". ' +
+    'Give a genuinely helpful, specific, confident 1-2 sentence response addressing their point. ' +
+    'Be warm, direct, energetic. End by offering to continue the workflow.';
+
+  var typing = showTyping();
+  callAgentAPI(sysPrompt, val,
+    function(reply) {
+      removeTyping();
+      agentSay(reply, 300).then(function() {
+        showQuickReplies(['Continue →', 'Another question'], function(opt) {
+          if (opt === 'Continue →') {
+            showGuardianPanel(agent, state.template.id);
+          } else {
+            setTimeout(function() {
+              var inp = document.getElementById('chat-input');
+              if (inp) inp.focus();
+            }, 100);
+          }
+        });
       });
-    });
-  }, 400);
+    },
+    function() {
+      removeTyping();
+      agentSay('Great point — noted for your deliverable. Ready to move on?', 300).then(function() {
+        showQuickReplies(['Continue →', 'One more thing'], function(opt) {
+          if (opt === 'Continue →') {
+            showGuardianPanel(agent, state.template.id);
+          } else {
+            setTimeout(function() {
+              var inp = document.getElementById('chat-input');
+              if (inp) inp.focus();
+            }, 100);
+          }
+        });
+      });
+    }
+  );
 }
 
 function scoreColor(s) {
@@ -5560,7 +5473,7 @@ function jumpToAgent(idx) {
           '<div class="agent-ico">'+a.icon+'</div><div class="agent-num">'+(i2+1)+'</div><div class="agent-name">'+a.name+'</div><div class="agent-status">'+(done?'✓':active?'▶':'·')+'</div></div></div>';
       }).join('');
     }
-    document.getElementById('nav-pr').textContent = 'PR-' + String(state.prCount).padStart(3,'0');
+    var _np2 = document.getElementById('nav-pr'); if (_np2) _np2.textContent = 'PR-' + String(state.prCount).padStart(3,'0');
     var pct = (idx / state.template.agents.length * 100).toFixed(0);
     var pf = document.getElementById('progress-fill');
     if (pf) pf.style.width = pct + '%';
@@ -5991,11 +5904,8 @@ function pickNaturalVoice(voices) {
       || voices[0] || null;
 }
 
-/* Main entry — decide what and how much to speak */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   VOICE ENGINE
-   Primary:  OpenAI TTS-HD via /api/openai/speech (server proxy)
-   Fallback: Web Speech API (browser built-in)
+   VOICE ENGINE — OpenAI TTS-HD only, chunked for long texts
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 var TTS_MAX_CHARS = 4000;
@@ -6065,40 +5975,30 @@ function playTTSChunk(chunks, idx) {
   voice.currentAudio = placeholder;
   placeholder.play().catch(function() {});
 
-  // serverHasOai === true — fetch real audio from OpenAI via proxy
   fetch('/api/openai/speech', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model:           'tts-1-hd',
-      input:           text,
+      input:           chunks[idx],
       voice:           voice.selectedVoice || 'nova',
       speed:           0.92,
       response_format: 'mp3',
     }),
   })
   .then(function(r) {
-    if (r.status === 503) { voice.serverHasOai = false; throw new Error('no-key'); }
     if (!r.ok) throw new Error('http-' + r.status);
     return r.blob();
   })
   .then(function(blob) {
-    // Verify we actually got audio (not a JSON error body)
-    if (!blob.type.includes('audio') && blob.size < 1000) {
-      // Got a small non-audio response — probably an error JSON
-      throw new Error('bad-response');
-    }
+    if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
     var url   = URL.createObjectURL(blob);
     var audio = new Audio(url);
     audio.preload = 'auto';
     audio.volume  = 1.0;
     voice.currentAudio = audio;
-    audio.onplay  = function() { showTTSBadge('Speaking…'); };
-    audio.onended = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
-    audio.onerror = function() { removeTTSBadge(); URL.revokeObjectURL(url); };
-    audio.play().catch(function(playErr) {
-      // Autoplay blocked by browser — fall back to browser TTS immediately
-      removeTTSBadge();
+    if (idx === 0) audio.onplay = function() { showTTSBadge('Speaking…'); };
+    audio.onended = function() {
       URL.revokeObjectURL(url);
       voice.currentAudio = null;
       playTTSChunk(chunks, idx + 1);
@@ -6125,42 +6025,6 @@ function speakViaProxy(text) {
 }
 
 var speakOpenAI = speakViaProxy;
-
-
-/* Browser SpeechSynthesis — natural voice, proper pacing */
-function speakBrowser(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-
-  // Voices load asynchronously — wait if needed
-  function doSpeak() {
-    var voices   = window.speechSynthesis.getVoices();
-    var bestVoice = pickNaturalVoice(voices);
-
-    var utt      = new SpeechSynthesisUtterance(text);
-    utt.rate     = 0.90;   // Natural, unhurried pace
-    utt.pitch    = 1.05;   // Very slightly warm
-    utt.volume   = 1.0;
-    utt.lang     = 'en-US';
-    if (bestVoice) utt.voice = bestVoice;
-
-    utt.onstart = function() { showTTSBadge('Speaking…'); };
-    utt.onend   = function() { removeTTSBadge(); };
-    utt.onerror = function() { removeTTSBadge(); };
-    window.speechSynthesis.speak(utt);
-  }
-
-  var voices = window.speechSynthesis.getVoices();
-  if (voices.length) {
-    doSpeak();
-  } else {
-    // Voices not loaded yet — wait for the event
-    window.speechSynthesis.onvoiceschanged = function() {
-      window.speechSynthesis.onvoiceschanged = null;
-      doSpeak();
-    };
-  }
-}
 
 /* Tap-to-play fallback when autoplay is blocked (iOS) */
 function showTapToPlay(url) {
