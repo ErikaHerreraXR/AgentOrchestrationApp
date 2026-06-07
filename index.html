@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 
@@ -205,15 +205,21 @@ nav{
   color:var(--text-primary);cursor:pointer;
 }
 .nav-logo .logo-icon{
-  width:46px;height:38px;flex-shrink:0;
+  width:38px;height:38px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
+  color:var(--brand-navy);
 }
-.nav-logo .logo-icon svg{width:46px;height:38px;display:block}
+.nav-logo .logo-icon svg{width:38px;height:38px;display:block;overflow:visible}
+[data-theme="dark"] .nav-logo .logo-icon{color:rgba(255,255,255,0.85)}
 .nav-logo .logo-wordmark{display:flex;flex-direction:column;gap:1px}
 .nav-logo .logo-title{
   font-size:1.05rem;font-weight:800;letter-spacing:-0.03em;line-height:1.1;
   background:var(--brand-g);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+[data-theme="light"] .nav-logo .logo-title{
+  background:none;-webkit-background-clip:unset;background-clip:unset;
+  -webkit-text-fill-color:var(--brand-navy);color:var(--brand-navy);
 }
 .nav-logo .logo-sub{
   font-size:0.585rem;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;
@@ -2280,38 +2286,32 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
   <div class="nav-inner">
     <div class="nav-logo" onclick="goHome()">
       <div class="logo-icon">
-        <svg viewBox="0 0 46 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="PI Agent OS">
+        <svg viewBox="0 0 60 60" fill="none" overflow="visible" xmlns="http://www.w3.org/2000/svg" aria-label="PI Agent OS">
           <defs>
-            <linearGradient id="ng" x1="0" y1="0" x2="46" y2="38" gradientUnits="userSpaceOnUse">
+            <linearGradient id="ng" x1="16" y1="16" x2="44" y2="44" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stop-color="#FF6535"/>
               <stop offset="38%" stop-color="#FF3D9A"/>
               <stop offset="72%" stop-color="#8A5CF6"/>
               <stop offset="100%" stop-color="#4A8FD9"/>
             </linearGradient>
-            <linearGradient id="ng2" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
-              <stop offset="0%" stop-color="#FF6535"/>
-              <stop offset="100%" stop-color="#8A5CF6"/>
-            </linearGradient>
           </defs>
-          <!-- Cloud body outline with gradient stroke -->
-          <path d="M34 30H11C7.69 30 5 27.31 5 24C5 21.14 6.99 18.75 9.7 18.15C9.57 17.62 9.5 17.07 9.5 16.5C9.5 13.46 11.96 11 15 11C16.44 11 17.75 11.56 18.72 12.47C19.71 10.36 21.87 9 24.3 9C27.75 9 30.5 11.65 30.5 15C30.5 15.05 30.5 15.1 30.49 15.15C32.55 15.78 34 17.72 34 20V30Z" stroke="url(#ng)" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
-          <!-- Circuit horizontal rail -->
-          <line x1="10" y1="21.5" x2="29" y2="21.5" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-          <!-- Vertical branches -->
-          <line x1="14.5" y1="21.5" x2="14.5" y2="16.5" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-          <line x1="20" y1="21.5" x2="20" y2="27" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-          <line x1="25.5" y1="21.5" x2="25.5" y2="16.5" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-          <!-- Horizontal top bar -->
-          <line x1="14.5" y1="16.5" x2="25.5" y2="16.5" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-          <!-- Circuit nodes — gradient colored -->
-          <circle cx="14.5" cy="21.5" r="2" fill="#FF6535"/>
-          <circle cx="20" cy="21.5" r="2" fill="#FF3D9A"/>
-          <circle cx="25.5" cy="21.5" r="2" fill="#8A5CF6"/>
-          <circle cx="14.5" cy="16.5" r="1.5" fill="#FF6535" opacity="0.6"/>
-          <circle cx="25.5" cy="16.5" r="1.5" fill="#8A5CF6" opacity="0.6"/>
-          <circle cx="20" cy="27" r="1.5" fill="#4A8FD9" opacity="0.6"/>
-          <!-- 4-pointed star sparkle (top-right corner) -->
-          <path d="M41 3 L41.85 6.15 L45 7 L41.85 7.85 L41 11 L40.15 7.85 L37 7 L40.15 6.15 Z" fill="url(#ng2)" opacity="0.9"/>
+          <!-- Cardinal connector lines -->
+          <line x1="30" y1="15.5" x2="30" y2="6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="44.5" y1="30" x2="53.5" y2="30" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="30" y1="44.5" x2="30" y2="53.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="15.5" y1="30" x2="6.5" y2="30" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          <!-- Connector node circles -->
+          <circle cx="30" cy="4" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/>
+          <circle cx="56" cy="30" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/>
+          <circle cx="30" cy="56" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/>
+          <circle cx="4" cy="30" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/>
+          <!-- Scalloped 8-lobe cloud outline -->
+          <polygon stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" fill="none"
+            points="30,15.5 32.34,18.23 33.64,21.22 36.67,20.02 40.25,19.75 39.98,23.33 38.78,26.36 41.77,27.66 44.5,30 41.77,32.34 38.78,33.64 39.98,36.67 40.25,40.25 36.67,39.98 33.64,38.78 32.34,41.77 30,44.5 27.66,41.77 26.36,38.78 23.33,39.98 19.75,40.25 20.02,36.67 21.22,33.64 18.23,32.34 15.5,30 18.23,27.66 21.22,26.36 20.02,23.33 19.75,19.75 23.33,20.02 26.36,21.22 27.66,18.23"/>
+          <!-- Gradient center circle -->
+          <circle cx="30" cy="30" r="9.5" fill="url(#ng)"/>
+          <!-- 4-pointed star sparkle (white) -->
+          <path d="M30 22 L31.4 28.6 L38 30 L31.4 31.4 L30 38 L28.6 31.4 L22 30 L28.6 28.6 Z" fill="white"/>
         </svg>
       </div>
       <div class="logo-wordmark">
@@ -2326,7 +2326,6 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
       <button class="nav-cta" onclick="quickStartDemo()">✨ Try It Free</button>
     </div>
     <div class="nav-right">
-      <div class="nav-pr-count" id="nav-pr">PR-000</div>
       <a href="client-portal.html" class="btn btn-sm" style="border:1px solid var(--border-accent);background:rgba(255,61,154,0.08);color:var(--accent);font-family:var(--fm);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;padding:6px 13px;border-radius:8px;text-decoration:none;display:flex;align-items:center;gap:6px" title="Open Client Portal">
         ⚡ Client Portal
       </a>
@@ -6204,13 +6203,13 @@ function stopTTS() {
 
 (function() {
   // Apply saved preference immediately to avoid flash
-  var saved = localStorage.getItem('pi-agents-theme') || 'dark';
+  var saved = localStorage.getItem('pi-agents-theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
 })();
 
 function toggleTheme() {
   var html    = document.documentElement;
-  var current = html.getAttribute('data-theme') || 'dark';
+  var current = html.getAttribute('data-theme') || 'light';
   var next    = current === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   localStorage.setItem('pi-agents-theme', next);
