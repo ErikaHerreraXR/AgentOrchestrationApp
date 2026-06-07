@@ -1907,15 +1907,10 @@ function speakPortalText(text){
   var clean=text.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
   if(!clean)return;
 
-  /* Speak first 2 sentences max — keep it conversational */
-  var sentences=clean.match(/[^.!?]+[.!?]+/g)||[clean];
-  var spoken=sentences.slice(0,2).join(' ').trim();
-  if(!spoken)return;
-
   /* Cancel anything already playing */
   if(window.speechSynthesis)window.speechSynthesis.cancel();
 
-  if(window.location.protocol==='file:'){speakPortalBrowser(spoken);return;}
+  if(window.location.protocol==='file:'){speakPortalBrowser(clean);return;}
 
   /* iOS/Safari requires audio to start within a user gesture. Play a silent stub
      synchronously to unlock the audio context, then swap in OpenAI audio — one
@@ -1927,7 +1922,7 @@ function speakPortalText(text){
 
   fetch('/api/openai/speech',{
     method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'tts-1',input:spoken,voice:'nova',speed:0.92,response_format:'mp3'})
+    body:JSON.stringify({model:'tts-1',input:clean,voice:'nova',speed:0.92,response_format:'mp3'})
   })
   .then(function(r){if(!r.ok)throw new Error(r.status);return r.blob();})
   .then(function(blob){
@@ -1935,9 +1930,9 @@ function speakPortalText(text){
     var url=URL.createObjectURL(blob);
     var audio=new Audio(url);
     audio.onended=function(){URL.revokeObjectURL(url);};
-    audio.play().catch(function(){URL.revokeObjectURL(url);speakPortalBrowser(spoken);});
+    audio.play().catch(function(){URL.revokeObjectURL(url);speakPortalBrowser(clean);});
   })
-  .catch(function(){placeholder.pause();speakPortalBrowser(spoken);});
+  .catch(function(){placeholder.pause();speakPortalBrowser(clean);});
 }
 
 function speakPortalBrowser(text){
