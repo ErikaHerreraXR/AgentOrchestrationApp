@@ -4354,6 +4354,8 @@ function processingToOutput(conv, templateId, agent) {
             var fullClean = cleanTextForSpeech(output);
             if (fullClean.trim()) enqueueTTS(fullClean);
           }
+          // Email the deliverable silently to erika@productimagination.com
+          sendDeliverableByEmail(agent.name, output);
           setTimeout(function() { showGuardianPanel(agent, templateId); }, 600);
         }
       }
@@ -4392,6 +4394,7 @@ function showStaticAgentOutput(agent, templateId) {
     var fullClean = cleanTextForSpeech(output);
     if (fullClean.trim()) enqueueTTS(fullClean);
   }
+  sendDeliverableByEmail(agent.name, output);
   setTimeout(function() { showGuardianPanel(agent, templateId); }, 800);
 }
 
@@ -5758,14 +5761,14 @@ function sendBriefByEmail() {
   var b = state.brief;
   var t = state.template;
   if (!b || !b.client) return;
-  var subject = encodeURIComponent('Product Imagination Agents OS — New Brief: ' + b.project + ' (' + (t?t.title:'') + ')');
-  var body = encodeURIComponent(
+  var subject = 'Product Imagination Agents OS — New Brief: ' + (b.project||b.client) + ' (' + (t?t.title:'') + ')';
+  var body =
     'Product Imagination Agents OS — New Project Brief\n' +
-    '━'.repeat(38) + '\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
     'Template:      ' + (t?t.title:'—') + '\n' +
     'Client:        ' + b.client + '\n' +
-    'Project:       ' + b.project + '\n' +
-    'Deliverable:   ' + b.deliverable + '\n' +
+    'Project:       ' + (b.project||'—') + '\n' +
+    'Deliverable:   ' + (b.deliverable||'—') + '\n' +
     'Goal:          ' + b.goal + '\n' +
     'Audience:      ' + (b.audience||'—') + '\n' +
     'Deadline:      ' + (b.deadline||'—') + '\n' +
@@ -5774,11 +5777,31 @@ function sendBriefByEmail() {
     'Constraints:   ' + (b.constraints||'—') + '\n' +
     'Risks:         ' + (b.risks||'—') + '\n' +
     'Submitted:     ' + new Date().toLocaleString() + '\n' +
-    '━'.repeat(38) + '\n' +
-    'Submitted via Product Imagination Agents OS\n' +
-    'erika@productimagination.com'
-  );
-  window.open('mailto:erika@productimagination.com?subject=' + subject + '&body=' + body);
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    'Product Imagination Agents OS';
+  fetch('/api/send-email', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ subject: subject, body: body, type: 'brief' })
+  }).catch(function(e) { console.warn('[Email] Brief send failed:', e.message); });
+}
+
+function sendDeliverableByEmail(agentName, output) {
+  var b = state.brief;
+  if (!b || !b.client) return;
+  var subject = 'PI Agents OS — ' + agentName + ' Deliverable for ' + b.client;
+  var body =
+    agentName + ' — Deliverable\n' +
+    'Client: ' + b.client + '\n' +
+    'Goal:   ' + (b.goal||'—') + '\n' +
+    'Date:   ' + new Date().toLocaleString() + '\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+    output;
+  fetch('/api/send-email', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ subject: subject, body: body, type: 'deliverable' })
+  }).catch(function(e) { console.warn('[Email] Deliverable send failed:', e.message); });
 }
 
 // INIT
