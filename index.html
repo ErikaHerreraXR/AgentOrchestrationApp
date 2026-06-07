@@ -4881,148 +4881,95 @@ function pickNaturalVoice(voices) {
       || voices[0] || null;
 }
 
-/* Main entry — decide what and how much to speak */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   VOICE ENGINE
-   Primary:  OpenAI TTS-HD via /api/openai/speech (server proxy)
-   Fallback: Web Speech API (browser built-in)
+   VOICE ENGINE — OpenAI TTS-HD only, chunked for long texts
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+var TTS_MAX_CHARS = 4000;
+var SILENT_WAV    = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 
 function speakText(text) {
   if (!voice.ttsEnabled) return;
-
-  // Stop anything already playing — never overlap
   stopCurrentSpeech();
-
   var clean = cleanTextForSpeech(text);
   if (!clean.trim()) return;
-
   speakViaProxy(clean);
 }
 
 function stopCurrentSpeech() {
-  if (voice.currentAudio) {
-    voice.currentAudio.pause();
-    voice.currentAudio = null;
-  }
+  if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
   if (window.speechSynthesis) window.speechSynthesis.cancel();
   removeTTSBadge();
 }
 
-function speakViaProxy(text) {
-  // If server has no OpenAI key, fall back to browser speech synthesis
-  if (voice.serverHasOai === false) {
-    speakBrowser(text);
-    return;
-  }
+/* Split text at sentence boundaries to stay within OpenAI's 4096-char limit */
+function chunkForTTS(text) {
+  if (text.length <= TTS_MAX_CHARS) return [text];
+  var chunks = [], cur = '';
+  var segs = text.match(/[^.!?\n]+[.!?\n]+\s*/g) || [text];
+  segs.forEach(function(s) {
+    if (cur.length + s.length > TTS_MAX_CHARS && cur) { chunks.push(cur.trim()); cur = s; }
+    else cur += s;
+  });
+  if (cur.trim()) chunks.push(cur.trim());
+  return chunks.length ? chunks : [text.slice(0, TTS_MAX_CHARS)];
+}
 
-  // If status unknown, check now then speak
-  if (voice.serverHasOai === null) {
-    fetch('/api/status', { signal: AbortSignal.timeout(3000) })
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        voice.serverHasOai = !!(d && d.openai);
-        speakViaProxy(text); // retry with known status
-      })
-      .catch(function() {
-        voice.serverHasOai = false;
-        speakBrowser(text);
-      });
-    return;
-  }
+/* Play one chunk, then queue the next — always OpenAI TTS-HD, no browser fallback */
+function playTTSChunk(chunks, idx) {
+  if (!voice.ttsEnabled || idx >= chunks.length) { removeTTSBadge(); return; }
 
-  // serverHasOai === true — use OpenAI exclusively (no browser TTS pre-start).
-  // iOS/Safari requires audio to be initiated within a user gesture. Play a silent
-  // stub synchronously to unlock the audio context, then swap in the OpenAI audio
-  // when the fetch resolves — one voice, no overlap.
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
-
-  var SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+  // iOS/Safari audio-context unlock: play silent stub synchronously before async fetch
   var placeholder = new Audio(SILENT_WAV);
   placeholder.volume = 0;
   voice.currentAudio = placeholder;
-  placeholder.play().catch(function() {}); // unlocks iOS audio; may silently fail on desktop
+  placeholder.play().catch(function() {});
 
   fetch('/api/openai/speech', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model:           'tts-1-hd',
-      input:           text,
+      input:           chunks[idx],
       voice:           voice.selectedVoice || 'nova',
       speed:           0.92,
       response_format: 'mp3',
     }),
   })
   .then(function(r) {
-    if (r.status === 503) { voice.serverHasOai = false; throw new Error('no-key'); }
     if (!r.ok) throw new Error('http-' + r.status);
     return r.blob();
   })
   .then(function(blob) {
-    if (!blob.type.includes('audio') && blob.size < 1000) throw new Error('bad-response');
     if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
     var url   = URL.createObjectURL(blob);
     var audio = new Audio(url);
     audio.preload = 'auto';
     audio.volume  = 1.0;
     voice.currentAudio = audio;
-    audio.onplay  = function() { showTTSBadge('Speaking…'); };
-    audio.onended = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
-    audio.onerror = function() { removeTTSBadge(); URL.revokeObjectURL(url); };
-    audio.play().catch(function() {
-      removeTTSBadge();
+    if (idx === 0) audio.onplay = function() { showTTSBadge('Speaking…'); };
+    audio.onended = function() {
       URL.revokeObjectURL(url);
       voice.currentAudio = null;
-      speakBrowser(text);
-    });
+      playTTSChunk(chunks, idx + 1);
+    };
+    audio.onerror = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
+    audio.play().catch(function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; });
   })
   .catch(function(err) {
-    console.warn('[TTS] OpenAI unavailable, falling back to browser TTS:', err.message);
+    console.warn('[TTS] chunk', idx, 'failed:', err.message);
     if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
-    speakBrowser(text);
+    removeTTSBadge();
   });
 }
 
-// Alias
-var speakOpenAI = speakViaProxy;
-
-
-/* Browser SpeechSynthesis — natural voice, proper pacing */
-function speakBrowser(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-
-  // Voices load asynchronously — wait if needed
-  function doSpeak() {
-    var voices   = window.speechSynthesis.getVoices();
-    var bestVoice = pickNaturalVoice(voices);
-
-    var utt      = new SpeechSynthesisUtterance(text);
-    utt.rate     = 0.90;   // Natural, unhurried pace
-    utt.pitch    = 1.05;   // Very slightly warm
-    utt.volume   = 1.0;
-    utt.lang     = 'en-US';
-    if (bestVoice) utt.voice = bestVoice;
-
-    utt.onstart = function() { showTTSBadge('Speaking…'); };
-    utt.onend   = function() { removeTTSBadge(); };
-    utt.onerror = function() { removeTTSBadge(); };
-    window.speechSynthesis.speak(utt);
-  }
-
-  var voices = window.speechSynthesis.getVoices();
-  if (voices.length) {
-    doSpeak();
-  } else {
-    // Voices not loaded yet — wait for the event
-    window.speechSynthesis.onvoiceschanged = function() {
-      window.speechSynthesis.onvoiceschanged = null;
-      doSpeak();
-    };
-  }
+function speakViaProxy(text) {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
+  playTTSChunk(chunkForTTS(text), 0);
 }
+
+var speakOpenAI = speakViaProxy;
 
 /* Tap-to-play fallback when autoplay is blocked (iOS) */
 function showTapToPlay(url) {
