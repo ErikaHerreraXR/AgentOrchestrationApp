@@ -6270,22 +6270,21 @@ renderTemplates();
       banner.id = 'ios-install-banner';
       banner.innerHTML = `
         <div style="
-          position:fixed;bottom:calc(12px + env(safe-area-inset-bottom,0px));
+          position:fixed;top:calc(64px + env(safe-area-inset-top,0px));
           left:50%;transform:translateX(-50%);
           background:rgba(28,14,4,0.97);border:1px solid rgba(255,112,48,0.4);
-          border-radius:14px;padding:14px 20px;
+          border-radius:14px;padding:12px 18px;
           font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.06em;
           color:rgba(255,240,220,0.85);text-align:center;
           box-shadow:0 8px 32px rgba(0,0,0,0.6);
-          z-index:9999;max-width:320px;backdrop-filter:blur(16px);
-          display:flex;align-items:center;gap:12px;
+          z-index:8999;max-width:300px;white-space:nowrap;backdrop-filter:blur(16px);
+          display:flex;align-items:center;gap:10px;
         ">
-          <span style="font-size:20px">📲</span>
-          <span>Tap <strong style="color:#FF7030">Share</strong> then <strong style="color:#FF7030">Add to Home Screen</strong> for the full app</span>
+          <span style="font-size:18px;flex-shrink:0">📲</span>
+          <span>Tap <strong style="color:#FF7030">Share</strong> then <strong style="color:#FF7030">Add to Home Screen</strong></span>
           <button onclick="this.parentElement.parentElement.remove()" style="
             background:none;border:none;color:rgba(255,154,96,0.7);
-            font-size:18px;cursor:pointer;line-height:1;flex-shrink:0;
-            padding:4px;
+            font-size:18px;cursor:pointer;line-height:1;flex-shrink:0;padding:4px;
           ">×</button>
         </div>`;
       document.body.appendChild(banner);
