@@ -2016,6 +2016,284 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 .report-stat,.agent-score-row,#screen-complete,#screen-brief{
   transition:background-color 0.22s ease, border-color 0.22s ease, color 0.22s ease;
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   NAV LINKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
+.nav-link{
+  background:none;border:none;cursor:pointer;font-family:inherit;
+  font-size:0.82rem;font-weight:500;color:var(--text-secondary);
+  padding:6px 13px;border-radius:8px;transition:color 0.15s,background 0.15s;
+  white-space:nowrap;text-decoration:none;
+}
+.nav-link:hover{color:var(--text-primary);background:rgba(255,255,255,0.05)}
+.nav-cta{
+  background:var(--brand-g);color:#FFFFFF;font-weight:700;
+  padding:8px 18px;border-radius:10px;border:none;cursor:pointer;
+  font-size:0.82rem;font-family:inherit;letter-spacing:-0.01em;
+  box-shadow:0 2px 12px rgba(255,61,154,0.32);
+  transition:opacity 0.15s,transform 0.15s;white-space:nowrap;
+}
+.nav-cta:hover{opacity:0.88;transform:translateY(-1px)}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PROOF BAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.proof-bar{
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:18px 0;background:rgba(255,255,255,0.015);
+}
+.proof-bar-inner{
+  max-width:960px;margin:0 auto;padding:0 24px;
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+}
+.proof-stat{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:8px 28px;border-right:1px solid var(--border);
+}
+.proof-stat:last-child{border-right:none}
+.proof-stat-num{
+  font-size:1.5rem;font-weight:800;letter-spacing:-0.035em;
+  background:var(--brand-g);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.proof-stat-label{
+  font-family:var(--fm);font-size:0.56rem;font-weight:700;
+  letter-spacing:0.10em;text-transform:uppercase;color:var(--text-muted);
+  white-space:nowrap;
+}
+@media(max-width:600px){
+  .proof-stat{padding:6px 16px}
+  .proof-stat-num{font-size:1.2rem}
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   OUTPUT SHOWCASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.outputs-section{padding:80px 0;border-bottom:1px solid var(--border)}
+.outputs-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:14px;margin-top:40px;
+}
+.output-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:16px;padding:22px 18px;cursor:default;
+  transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;
+}
+.output-card:hover{
+  border-color:rgba(255,61,154,0.28);transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.20),0 0 0 1px rgba(255,61,154,0.08);
+}
+.output-icon{font-size:1.75rem;margin-bottom:12px;line-height:1;display:block}
+.output-name{font-size:0.875rem;font-weight:700;color:var(--text-primary);margin-bottom:4px;letter-spacing:-0.01em}
+.output-desc{font-size:0.72rem;color:var(--text-secondary);line-height:1.5;margin-bottom:10px}
+.output-tag{
+  display:inline-flex;align-items:center;
+  background:rgba(255,61,154,0.08);border:1px solid rgba(255,61,154,0.15);
+  border-radius:100px;padding:2px 9px;
+  font-family:var(--fm);font-size:0.52rem;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   STUDIO TRUST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.studio-section{
+  padding:88px 0;
+  background:linear-gradient(160deg,rgba(255,101,53,0.04) 0%,rgba(255,61,154,0.05) 45%,rgba(138,92,246,0.04) 100%);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.studio-inner{
+  max-width:1080px;margin:0 auto;padding:0 24px;
+  display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;
+}
+@media(max-width:768px){.studio-inner{grid-template-columns:1fr;gap:40px}}
+.studio-tag{
+  font-family:var(--fm);font-size:0.60rem;font-weight:700;
+  letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;
+}
+.studio-h{
+  font-size:clamp(1.9rem,3.5vw,2.7rem);font-weight:800;
+  color:var(--text-primary);letter-spacing:-0.03em;line-height:1.08;margin-bottom:18px;
+}
+.studio-h span{
+  background:var(--brand-g);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.studio-body{font-size:0.92rem;color:var(--text-body);line-height:1.72;margin-bottom:26px}
+.studio-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.studio-pill{
+  background:rgba(255,255,255,0.04);border:1px solid var(--border-active);
+  border-radius:100px;padding:5px 14px;
+  font-size:0.76rem;font-weight:600;color:var(--text-secondary);
+}
+.studio-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:20px;padding:32px;position:relative;overflow:hidden;
+}
+.studio-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--brand-g-h);
+}
+.studio-metrics{display:flex;flex-direction:column;gap:0}
+.studio-metric{padding:20px 0;border-bottom:1px solid var(--border)}
+.studio-metric:last-child{border-bottom:none;padding-bottom:0}
+.studio-metric:first-child{padding-top:0}
+.studio-metric-num{
+  font-size:2.2rem;font-weight:800;letter-spacing:-0.04em;
+  background:var(--brand-g);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.studio-metric-label{font-size:0.80rem;color:var(--text-secondary);margin-top:3px}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PRICING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.pricing-section{padding:88px 0;border-bottom:1px solid var(--border)}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:18px;margin-top:48px;align-items:start;
+}
+@media(max-width:860px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}}
+.pricing-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:20px;padding:32px 26px;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.pricing-card.featured{
+  border-color:rgba(255,61,154,0.35);
+  background:linear-gradient(160deg,rgba(255,101,53,0.05),rgba(255,61,154,0.06),rgba(138,92,246,0.04));
+  box-shadow:0 0 0 1px rgba(255,61,154,0.18),0 20px 56px rgba(0,0,0,0.28);
+}
+@media(min-width:861px){.pricing-card.featured{transform:scale(1.04)}}
+.pricing-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:rgba(255,255,255,0.06);border-radius:20px 20px 0 0;
+}
+.pricing-card.featured::before{background:var(--brand-g-h)}
+.pricing-badge{
+  position:absolute;top:16px;right:16px;
+  background:var(--brand-g);color:#FFFFFF;
+  font-family:var(--fm);font-size:0.50rem;font-weight:800;
+  letter-spacing:0.10em;text-transform:uppercase;
+  padding:3px 10px;border-radius:100px;
+}
+.pricing-tier{
+  font-family:var(--fm);font-size:0.60rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;
+}
+.pricing-price{
+  font-size:2.5rem;font-weight:800;letter-spacing:-0.04em;
+  color:var(--text-primary);line-height:1;margin-bottom:4px;
+}
+.pricing-price sup{font-size:1.1rem;vertical-align:super;font-weight:700;letter-spacing:0}
+.pricing-price sub{font-size:0.74rem;color:var(--text-secondary);font-weight:500;letter-spacing:0}
+.pricing-desc{font-size:0.78rem;color:var(--text-secondary);margin-bottom:22px;line-height:1.5}
+.pricing-divider{height:1px;background:var(--border);margin:20px 0}
+.pricing-features{flex:1;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.pricing-feat{
+  display:flex;align-items:flex-start;gap:9px;
+  font-size:0.81rem;color:var(--text-body);line-height:1.4;
+}
+.pricing-feat-icon{flex-shrink:0;font-size:0.85rem;margin-top:1px}
+.pricing-cta{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 20px;border-radius:12px;font-size:0.88rem;font-weight:700;
+  cursor:pointer;border:1.5px solid var(--border-active);
+  background:transparent;color:var(--text-primary);font-family:inherit;
+  transition:0.18s ease;text-decoration:none;
+}
+.pricing-cta:hover{border-color:rgba(255,61,154,0.40);color:var(--accent)}
+.pricing-card.featured .pricing-cta{
+  background:var(--brand-g);color:#FFFFFF;border:none;
+  box-shadow:0 4px 18px rgba(255,61,154,0.38);
+}
+.pricing-card.featured .pricing-cta:hover{opacity:0.88;transform:translateY(-1px)}
+.pricing-note{
+  text-align:center;margin-top:20px;
+  font-size:0.74rem;color:var(--text-muted);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FAQ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.faq-section{padding:80px 0;border-bottom:1px solid var(--border)}
+.faq-list{max-width:700px;margin:40px auto 0}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-item:first-child{border-top:1px solid var(--border)}
+.faq-q{
+  width:100%;background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:20px 0;font-family:inherit;text-align:left;
+}
+.faq-q-text{font-size:0.93rem;font-weight:700;color:var(--text-primary);line-height:1.4}
+.faq-arrow{
+  flex-shrink:0;width:24px;height:24px;border-radius:50%;
+  background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.68rem;color:var(--text-muted);
+  transition:transform 0.22s ease,background 0.18s,border-color 0.18s;
+}
+.faq-item.open .faq-arrow{
+  transform:rotate(180deg);
+  background:rgba(255,61,154,0.10);border-color:rgba(255,61,154,0.25);color:var(--accent);
+}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.35s cubic-bezier(0,1,0.5,1)}
+.faq-item.open .faq-a{max-height:400px}
+.faq-a-inner{font-size:0.87rem;color:var(--text-body);line-height:1.72;padding-bottom:20px}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FINAL CTA + FOOTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.final-cta-section{
+  padding:96px 24px;text-align:center;
+  background:linear-gradient(160deg,rgba(255,101,53,0.06) 0%,rgba(255,61,154,0.08) 50%,rgba(138,92,246,0.05) 100%);
+  border-top:1px solid var(--border);
+}
+.final-cta-h{
+  font-size:clamp(2rem,4vw,3.2rem);font-weight:800;
+  color:var(--text-primary);letter-spacing:-0.035em;line-height:1.08;margin-bottom:14px;
+}
+.final-cta-h span{
+  background:var(--brand-g);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.final-cta-sub{font-size:1rem;color:var(--text-secondary);max-width:440px;margin:0 auto 36px;line-height:1.6}
+.final-cta-proof{font-size:0.76rem;color:var(--text-muted);margin-top:14px}
+.site-footer{
+  background:var(--bg-surface);border-top:1px solid var(--border);padding:56px 0 32px;
+}
+.footer-inner{max-width:1160px;margin:0 auto;padding:0 24px}
+.footer-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:48px;margin-bottom:48px;
+}
+@media(max-width:900px){.footer-top{grid-template-columns:1fr 1fr;gap:32px}}
+@media(max-width:520px){.footer-top{grid-template-columns:1fr;gap:28px}}
+.footer-brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer}
+.footer-brand p{font-size:0.80rem;color:var(--text-secondary);line-height:1.65;max-width:260px;margin-bottom:0}
+.footer-col-h{
+  font-family:var(--fm);font-size:0.56rem;font-weight:800;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;
+}
+.footer-links{display:flex;flex-direction:column;gap:9px}
+.footer-link{
+  font-size:0.81rem;color:var(--text-secondary);background:none;border:none;
+  cursor:pointer;text-align:left;padding:0;font-family:inherit;
+  transition:color 0.15s;text-decoration:none;
+}
+.footer-link:hover{color:var(--text-primary)}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;padding-top:24px;border-top:1px solid var(--border);
+}
+.footer-copy{font-size:0.72rem;color:var(--text-muted)}
+.footer-legal{display:flex;gap:18px}
+.footer-legal a{font-size:0.72rem;color:var(--text-muted);text-decoration:none;transition:color 0.15s}
+.footer-legal a:hover{color:var(--text-secondary)}
 </style>
 </head>
 <body>
@@ -2064,6 +2342,12 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
         <div class="logo-sub">by Product Imagination</div>
       </div>
     </div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="document.getElementById('how-section-anchor').scrollIntoView({behavior:'smooth'})">How It Works</button>
+      <button class="nav-link" onclick="document.getElementById('templates-section').scrollIntoView({behavior:'smooth'})">Templates</button>
+      <button class="nav-link" onclick="document.getElementById('pricing-section').scrollIntoView({behavior:'smooth'})">Pricing</button>
+      <button class="nav-cta" onclick="quickStartDemo()">✨ Try It Free</button>
+    </div>
     <div class="nav-right">
       <div class="nav-pr-count" id="nav-pr">PR-000</div>
       <a href="client-portal.html" class="btn btn-sm" style="border:1px solid var(--border-accent);background:rgba(255,61,154,0.08);color:var(--accent);font-family:var(--fm);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;padding:6px 13px;border-radius:8px;text-decoration:none;display:flex;align-items:center;gap:6px" title="Open Client Portal">
@@ -2082,9 +2366,9 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 <div id="screen-home" class="screen active">
 
   <div class="hero">
-    <div class="hero-tag">✦ PI Agent OS · by Product Imagination</div>
-    <h1>Every Project. Every Agent.<br><span>Fully Orchestrated.</span></h1>
-    <p>Select an industry template. Fill in your client brief. Watch a team of specialized AI agents execute your project step by step — reviewed and scored by Guardian QA at every stage.</p>
+    <div class="hero-tag">✦ Built by Product Imagination</div>
+    <h1>Your entire project team.<br><span>Briefed once. Delivered in minutes.</span></h1>
+    <p>Tell PI Agent OS your goal. A coordinated team of specialist AI agents executes every step — researched, written, QA-reviewed, and ready to ship.</p>
 
     <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;">
       <button class="btn btn-primary btn-lg" onclick="quickStartDemo()" style="background:linear-gradient(135deg,#FF6535 0%,#FF3D9A 38%,#8A5CF6 72%,#4A8FD9 100%);box-shadow:0 6px 24px rgba(255,61,154,0.40);font-size:1rem;padding:15px 32px;letter-spacing:-0.01em;">
@@ -2113,50 +2397,62 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
     </div>
   </div>
 
+  <!-- ── PROOF BAR ── -->
+  <div class="proof-bar">
+    <div class="proof-bar-inner">
+      <div class="proof-stat">
+        <div class="proof-stat-num">10+</div>
+        <div class="proof-stat-label">Industries</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-stat-num">28</div>
+        <div class="proof-stat-label">Agent Steps</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-stat-num">60s</div>
+        <div class="proof-stat-label">Time to Output</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-stat-num">100%</div>
+        <div class="proof-stat-label">QA Reviewed</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-stat-num">0</div>
+        <div class="proof-stat-label">Sign-up Required</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── HOW IT WORKS ── -->
-  <div class="how-section">
+  <div id="how-section-anchor" class="how-section">
     <div class="container">
       <div class="section-header" style="margin-bottom:40px">
         <div class="tag">How It Works</div>
-        <h2>From Brief to Delivered<br><span style="color:var(--accent)">in One Session</span></h2>
-        <p style="max-width:520px;margin:0 auto">A team of specialist AI agents executes your project step by step — each output reviewed and scored by Guardian QA before the next agent starts.</p>
+        <h2>Three steps.<br><span style="color:var(--accent)">Infinite output.</span></h2>
+        <p style="max-width:480px;margin:0 auto">Brief one agent. A coordinated team executes your project — each step QA-reviewed before the next begins.</p>
       </div>
 
-      <!-- 5-step process flow -->
+      <!-- 3-step process flow -->
       <div class="how-flow">
         <div class="how-step">
           <div class="how-step-num">Step 01</div>
           <div class="how-step-icon">📋</div>
-          <div class="how-step-title">Client Brief</div>
-          <div class="how-step-desc">Name your client, set the goal, budget, and deadline in 60 seconds.</div>
+          <div class="how-step-title">Brief It</div>
+          <div class="how-step-desc">Name your project, goal, and industry. Takes 60 seconds.</div>
         </div>
         <div class="how-connector">→</div>
         <div class="how-step accent">
           <div class="how-step-num">Step 02</div>
-          <div class="how-step-icon">🎯</div>
-          <div class="how-step-title">Orchestrate</div>
-          <div class="how-step-desc">Master agent reads the brief and sequences the right specialists.</div>
-        </div>
-        <div class="how-connector">→</div>
-        <div class="how-step">
-          <div class="how-step-num">Step 03</div>
           <div class="how-step-icon">⚡</div>
-          <div class="how-step-title">Agents Execute</div>
-          <div class="how-step-desc">Each specialist produces its deliverable and passes to the next.</div>
-        </div>
-        <div class="how-connector">→</div>
-        <div class="how-step qa">
-          <div class="how-step-num">Step 04</div>
-          <div class="how-step-icon">🛡️</div>
-          <div class="how-step-title">Guardian QA</div>
-          <div class="how-step-desc">Every output is scored before the next agent starts. Nothing ships below standard.</div>
+          <div class="how-step-title">Agents Run</div>
+          <div class="how-step-desc">Specialists execute every step — researched, written, and QA-reviewed automatically.</div>
         </div>
         <div class="how-connector">→</div>
         <div class="how-step done">
-          <div class="how-step-num">Step 05</div>
+          <div class="how-step-num">Step 03</div>
           <div class="how-step-icon">✅</div>
-          <div class="how-step-title">Delivered</div>
-          <div class="how-step-desc">All deliverables packaged and ready — strategy, copy, models, or plans.</div>
+          <div class="how-step-title">Output Ready</div>
+          <div class="how-step-desc">Download your complete deliverable — strategy, copy, plan, or brand kit.</div>
         </div>
       </div>
 
@@ -2263,6 +2559,67 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
     </div>
   </div>
 
+  <!-- ── OUTPUT SHOWCASE ── -->
+  <div class="outputs-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag">What Gets Built</div>
+        <h2>Real deliverables.<br><em style="font-style:normal;color:var(--accent)">Not just summaries.</em></h2>
+        <p>Every project produces a complete, structured output — ready to present, publish, or ship.</p>
+      </div>
+      <div class="outputs-grid">
+        <div class="output-card">
+          <span class="output-icon">📊</span>
+          <div class="output-name">Brand Strategy Report</div>
+          <div class="output-desc">Positioning, voice, audience, and competitive landscape — fully written.</div>
+          <span class="output-tag">Brand</span>
+        </div>
+        <div class="output-card">
+          <span class="output-icon">📣</span>
+          <div class="output-name">Campaign Brief</div>
+          <div class="output-desc">Messaging, channels, timeline, and KPIs structured for execution.</div>
+          <span class="output-tag">Marketing</span>
+        </div>
+        <div class="output-card">
+          <span class="output-icon">✍️</span>
+          <div class="output-name">Website Copy</div>
+          <div class="output-desc">Hero, about, services, and CTAs — written to convert.</div>
+          <span class="output-tag">Content</span>
+        </div>
+        <div class="output-card">
+          <span class="output-icon">🔍</span>
+          <div class="output-name">Market Analysis</div>
+          <div class="output-desc">Industry landscape, competitor review, and opportunity map.</div>
+          <span class="output-tag">Research</span>
+        </div>
+        <div class="output-card">
+          <span class="output-icon">🚀</span>
+          <div class="output-name">Product Launch Kit</div>
+          <div class="output-desc">Go-to-market plan, press angles, and launch sequence.</div>
+          <span class="output-tag">Strategy</span>
+        </div>
+        <div class="output-card">
+          <span class="output-icon">📰</span>
+          <div class="output-name">PR Plan</div>
+          <div class="output-desc">Media targets, story angles, and pitch templates — ready to send.</div>
+          <span class="output-tag">PR</span>
+        </div>
+        <div class="output-card">
+          <span class="output-icon">💼</span>
+          <div class="output-name">Consulting Deck</div>
+          <div class="output-desc">Slide-ready strategy with financial model, timeline, and recommendations.</div>
+          <span class="output-tag">Consulting</span>
+        </div>
+        <div class="output-card">
+          <span class="output-icon">🎨</span>
+          <div class="output-name">Brand Identity Kit</div>
+          <div class="output-desc">Logo concepts, color palette, typography, and usage guide.</div>
+          <span class="output-tag">Design</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container" id="templates-section">
     <div class="section-header">
       <div class="tag">Step 1 — Select your project type</div>
@@ -2285,6 +2642,239 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
       </div>
     </div>
   </div>
+
+  <!-- ── STUDIO TRUST ── -->
+  <div class="studio-section">
+    <div class="studio-inner">
+      <div>
+        <div class="studio-tag">Built by Product Imagination</div>
+        <h2 class="studio-h">Not just a tool.<br><span>A studio-built OS.</span></h2>
+        <p class="studio-body">PI Agent OS was built because no tool existed that could run a full project team from a single brief. Product Imagination — a creative AI studio — built it for themselves first. Then opened it to everyone.</p>
+        <p class="studio-body" style="margin-top:-10px">Every template, every agent, every QA rule was designed by humans who have shipped real projects across real industries. That's the difference.</p>
+        <div class="studio-pills">
+          <span class="studio-pill">Strategy</span>
+          <span class="studio-pill">Brand</span>
+          <span class="studio-pill">Marketing</span>
+          <span class="studio-pill">Consulting</span>
+          <span class="studio-pill">Real Estate</span>
+          <span class="studio-pill">Entertainment</span>
+        </div>
+        <button class="btn btn-primary" onclick="quickStartDemo()" style="background:var(--brand-g);color:#fff;border:none;padding:13px 28px;border-radius:12px;font-size:0.92rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(255,61,154,0.35)">
+          See It Live — It's Free →
+        </button>
+      </div>
+      <div class="studio-card">
+        <div class="studio-metrics">
+          <div class="studio-metric">
+            <div class="studio-metric-num">28</div>
+            <div class="studio-metric-label">Agent steps per project — fully automated</div>
+          </div>
+          <div class="studio-metric">
+            <div class="studio-metric-num">10+</div>
+            <div class="studio-metric-label">Industry templates — strategy, brand, marketing &amp; more</div>
+          </div>
+          <div class="studio-metric">
+            <div class="studio-metric-num">100%</div>
+            <div class="studio-metric-label">QA-reviewed outputs — Guardian checks every step</div>
+          </div>
+          <div class="studio-metric">
+            <div class="studio-metric-num">60s</div>
+            <div class="studio-metric-label">From brief to first output — no waiting, no setup</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PRICING ── -->
+  <div id="pricing-section" class="pricing-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag">Pricing</div>
+        <h2>Start free.<br><em style="font-style:normal;color:var(--accent)">Scale when you're ready.</em></h2>
+        <p>No credit card. No lock-in. Try the full system before you commit to anything.</p>
+      </div>
+      <div class="pricing-grid">
+        <!-- Free -->
+        <div class="pricing-card">
+          <div class="pricing-tier">Starter</div>
+          <div class="pricing-price">Free<sub> forever</sub></div>
+          <div class="pricing-desc">Try the full system — no time limit.</div>
+          <div class="pricing-divider"></div>
+          <div class="pricing-features">
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>3 project runs per month</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>All industry templates</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Full 28-step agent pipeline</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Guardian QA on every output</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Brand image &amp; logo generator</div>
+          </div>
+          <button class="pricing-cta" onclick="quickStartDemo()">Start Free →</button>
+        </div>
+        <!-- Pro (Featured) -->
+        <div class="pricing-card featured">
+          <div class="pricing-badge">Most Popular</div>
+          <div class="pricing-tier">Pro</div>
+          <div class="pricing-price"><sup>$</sup>49<sub>/mo</sub></div>
+          <div class="pricing-desc">Unlimited projects. Priority output.</div>
+          <div class="pricing-divider"></div>
+          <div class="pricing-features">
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Unlimited project runs</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>All templates + early access to new ones</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Export to PDF, Markdown &amp; Docs</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Client portal access</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Email delivery of outputs</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Priority support</div>
+          </div>
+          <button class="pricing-cta" onclick="quickStartDemo()">Get Pro — $49/mo →</button>
+        </div>
+        <!-- Studio -->
+        <div class="pricing-card">
+          <div class="pricing-tier">Studio</div>
+          <div class="pricing-price" style="font-size:1.8rem">Custom</div>
+          <div class="pricing-desc">White-label, API access &amp; team seats.</div>
+          <div class="pricing-divider"></div>
+          <div class="pricing-features">
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Pro</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>White-label for your clients</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>API access + custom agents</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Team seats &amp; admin dashboard</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Dedicated onboarding</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>SLA &amp; custom contracts</div>
+          </div>
+          <a href="mailto:hello@productimagination.com" class="pricing-cta">Talk to Us →</a>
+        </div>
+      </div>
+      <div class="pricing-note">All plans include Guardian QA · No credit card required to start · Cancel anytime</div>
+    </div>
+  </div>
+
+  <!-- ── FAQ ── -->
+  <div class="faq-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag">FAQ</div>
+        <h2>Questions we<br><em style="font-style:normal;color:var(--accent)">get asked a lot.</em></h2>
+      </div>
+      <div class="faq-list" id="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Is this actually AI or just templates?</span>
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Both — and that's the point. The templates define the project structure and agent sequence. The AI does the actual work: research, writing, analysis, and QA scoring. The result is structured enough to be reliable and smart enough to feel custom.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">How is this different from ChatGPT?</span>
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">ChatGPT is a single AI you prompt manually. PI Agent OS is an orchestrated team of specialists — each focused on one part of your project — with a QA agent reviewing every output before the next step begins. You brief it once. It runs the full project.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Who can see my project brief?</span>
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Your brief is used only to generate your project output. We don't use client data to train models or share it with third parties. Studio plan customers get enhanced data handling with custom agreements.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Can I use this for client work?</span>
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Yes — Pro and Studio plans are built for agency and consultant use. You can run projects for clients, export polished deliverables, and on the Studio plan, white-label the entire platform with your own branding.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">What industries does it support?</span>
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">Currently: Strategy Consulting, Brand &amp; Marketing, Real Estate, and Entertainment. We're expanding rapidly — Music, Legal, Healthcare, and Tech are in development. New templates ship every month.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Do I need to set anything up?</span>
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">No setup, no API keys, no configuration. Pick a template, fill in your brief, and the system runs. You can have your first output in under 60 seconds.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FINAL CTA ── -->
+  <div class="final-cta-section">
+    <div class="final-cta-h">Your next project starts<br><span>with one brief.</span></div>
+    <div class="final-cta-sub">No setup. No agency fees. No waiting. Just tell PI Agent OS what you need — and watch it get built.</div>
+    <button class="btn btn-primary" onclick="quickStartDemo()" style="background:var(--brand-g);color:#fff;border:none;padding:16px 40px;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 28px rgba(255,61,154,0.40);letter-spacing:-0.01em">
+      ✨ Try PI Agent OS Free →
+    </button>
+    <div class="final-cta-proof">No sign-up required · No credit card · See results in 60 seconds</div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-brand-logo" onclick="goHome()">
+            <svg viewBox="0 0 46 38" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px;height:30px">
+              <defs>
+                <linearGradient id="fg" x1="0" y1="0" x2="46" y2="38" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FF6535"/><stop offset="38%" stop-color="#FF3D9A"/>
+                  <stop offset="72%" stop-color="#8A5CF6"/><stop offset="100%" stop-color="#4A8FD9"/>
+                </linearGradient>
+              </defs>
+              <path d="M34 30H11C7.69 30 5 27.31 5 24C5 21.14 6.99 18.75 9.7 18.15C9.57 17.62 9.5 17.07 9.5 16.5C9.5 13.46 11.96 11 15 11C16.44 11 17.75 11.56 18.72 12.47C19.71 10.36 21.87 9 24.3 9C27.75 9 30.5 11.65 30.5 15C30.5 15.05 30.5 15.1 30.49 15.15C32.55 15.78 34 17.72 34 20V30Z" stroke="url(#fg)" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
+              <line x1="10" y1="21.5" x2="29" y2="21.5" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+              <line x1="14.5" y1="21.5" x2="14.5" y2="16.5" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+              <line x1="20" y1="21.5" x2="20" y2="27" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+              <line x1="25.5" y1="21.5" x2="25.5" y2="16.5" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+              <circle cx="14.5" cy="21.5" r="2" fill="#FF6535"/><circle cx="20" cy="21.5" r="2" fill="#FF3D9A"/>
+              <circle cx="25.5" cy="21.5" r="2" fill="#8A5CF6"/>
+              <path d="M41 3 L41.85 6.15 L45 7 L41.85 7.85 L41 11 L40.15 7.85 L37 7 L40.15 6.15 Z" fill="#FF6535" opacity="0.85"/>
+            </svg>
+            <div style="display:flex;flex-direction:column;gap:1px">
+              <div class="logo-title" style="font-size:0.88rem;font-weight:800;letter-spacing:-0.025em;background:var(--brand-g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">PI Agent OS</div>
+              <div style="font-size:0.52rem;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-muted)">by Product Imagination</div>
+            </div>
+          </div>
+          <p>The AI agent operating system for projects that need to get done. Built by Product Imagination LLC.</p>
+        </div>
+        <div>
+          <div class="footer-col-h">Product</div>
+          <div class="footer-links">
+            <button class="footer-link" onclick="document.getElementById('how-section-anchor').scrollIntoView({behavior:'smooth'})">How It Works</button>
+            <button class="footer-link" onclick="document.getElementById('templates-section').scrollIntoView({behavior:'smooth'})">Templates</button>
+            <button class="footer-link" onclick="document.getElementById('pricing-section').scrollIntoView({behavior:'smooth'})">Pricing</button>
+            <button class="footer-link" onclick="quickStartDemo()">Try It Free</button>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-h">Company</div>
+          <div class="footer-links">
+            <span class="footer-link" style="cursor:default;opacity:0.5">About</span>
+            <a href="client-portal.html" class="footer-link">Client Portal</a>
+            <a href="mailto:hello@productimagination.com" class="footer-link">Contact</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-h">Legal</div>
+          <div class="footer-links">
+            <span class="footer-link" style="cursor:default;opacity:0.5">Privacy Policy</span>
+            <span class="footer-link" style="cursor:default;opacity:0.5">Terms of Service</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2026 Product Imagination LLC. All rights reserved.</div>
+        <div class="footer-legal">
+          <a href="mailto:hello@productimagination.com">hello@productimagination.com</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
 </div>
 
 <!-- ════════════════════════════════════════════════ TRY ME WIDGET -->
@@ -3492,6 +4082,13 @@ function showScreen(id) {
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
   window.scrollTo(0, 0);
+}
+
+function toggleFaq(btn){
+  var item = btn.closest('.faq-item');
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(el){el.classList.remove('open')});
+  if(!isOpen) item.classList.add('open');
 }
 
 function goHome() { showScreen('home'); }
