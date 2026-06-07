@@ -1694,6 +1694,48 @@ body.in-workflow #try-me-widget{display:none;}
 .try-inspire-dots span:nth-child(3){animation-delay:0.36s;}
 @keyframes try-dot-b{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-4px);}}
 
+/* ── Personable modal header ────────────────────────────────── */
+#try-agent-avatar{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#0EA5E9,#7C3AED);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.15rem;box-shadow:0 0 0 3px rgba(14,165,233,0.2);
+  animation:try-avatar-pulse 2.8s ease-in-out infinite;
+}
+@keyframes try-avatar-pulse{0%,100%{box-shadow:0 0 0 3px rgba(14,165,233,0.2);}50%{box-shadow:0 0 0 6px rgba(14,165,233,0.08);}}
+#try-agent-sub{font-size:0.73rem;color:#64748B;margin-top:3px;line-height:1.4;}
+#try-demo-header-inner{display:flex;align-items:center;gap:12px;min-width:0;}
+
+/* ── Logo generator ─────────────────────────────────────────── */
+#try-logo-section{margin-top:14px;}
+.try-logo-top{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.try-logo-col-label{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#A78BFA;}
+.try-logo-style-tag{display:inline-flex;align-items:center;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.22);border-radius:100px;padding:2px 8px;font-size:0.6rem;font-weight:700;color:#A78BFA;letter-spacing:0.04em;}
+#try-logo-preview{
+  background:rgba(255,255,255,0.02);border:1px solid rgba(148,163,184,0.09);
+  border-radius:12px;overflow:hidden;min-height:72px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s ease;
+}
+#try-logo-preview.generating{animation:try-shimmer 1s ease-in-out infinite;}
+#try-logo-preview svg{width:100%;height:auto;display:block;}
+#try-logo-actions{display:flex;gap:8px;margin-top:8px;}
+#try-logo-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  background:rgba(167,139,250,0.11);border:1px solid rgba(167,139,250,0.24);
+  color:#A78BFA;border-radius:10px;padding:9px 14px;
+  font-size:0.82rem;font-weight:700;cursor:pointer;
+  transition:all 0.18s;font-family:inherit;
+}
+#try-logo-btn:hover{background:rgba(167,139,250,0.22);border-color:rgba(167,139,250,0.44);}
+#try-logo-regen{
+  width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(148,163,184,0.06);border:1px solid rgba(148,163,184,0.13);
+  border-radius:8px;cursor:pointer;color:#64748B;font-size:1rem;
+  transition:all 0.18s;font-family:inherit;
+}
+#try-logo-regen:hover{background:rgba(148,163,184,0.14);color:#94A3B8;transform:rotate(30deg);}
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    iOS PWA — Safe Areas & Touch
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -2205,7 +2247,13 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
 <div id="try-demo-modal" role="dialog" aria-modal="true" aria-label="Quick Brand Demo">
   <div id="try-demo-card">
     <div id="try-demo-header">
-      <h3>✨ See What I Build For You — In Seconds</h3>
+      <div id="try-demo-header-inner">
+        <div id="try-agent-avatar">⬡</div>
+        <div>
+          <h3>✨ See What I Build For You — In Seconds</h3>
+          <div id="try-agent-sub">Hi! I'm Aria, your AI Brand Agent &middot; No sign-up &middot; Watch the magic 👀</div>
+        </div>
+      </div>
       <button id="try-demo-close" onclick="closeTryDemo()" aria-label="Close">✕</button>
     </div>
     <div id="try-demo-body">
@@ -2214,6 +2262,18 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
         <div class="try-demo-col-label">Your Brand Image</div>
         <div class="try-example-tag">✦ Example — NovaSkin Cosmetics</div>
         <div id="try-brand-preview"></div>
+        <!-- Logo generator -->
+        <div id="try-logo-section">
+          <div class="try-logo-top">
+            <div class="try-logo-col-label">Your Logo Design</div>
+            <span class="try-logo-style-tag" id="try-logo-style-tag">Circular Badge</span>
+          </div>
+          <div id="try-logo-preview"></div>
+          <div id="try-logo-actions">
+            <button id="try-logo-btn" onclick="tryGenerateLogo()">🎨 Generate My Logo</button>
+            <button id="try-logo-regen" onclick="tryRegenerateLogoStyle()" title="Try another style">↻</button>
+          </div>
+        </div>
         <div id="try-inspire-msg"></div>
       </div>
       <!-- Right: 2-field form -->
@@ -2227,7 +2287,7 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
           <label for="try-goal">Your Main Goal</label>
           <input id="try-goal" type="text" placeholder="e.g. Launch a clean beauty brand" maxlength="80" autocomplete="off"/>
         </div>
-        <button id="try-generate-btn" onclick="generateBrandDemo()">✨ Generate My Brand Image →</button>
+        <button id="try-generate-btn" onclick="generateBrandDemo()">✨ Generate My Brand Image + Logo →</button>
         <button id="try-full-btn" onclick="launchFullDemo()">🚀 Start Full AI Workflow →</button>
       </div>
     </div>
@@ -6001,6 +6061,13 @@ renderTemplates();
     if (!modal._exampleRendered) {
       modal._exampleRendered = true;
       document.getElementById('try-brand-preview').innerHTML = makeBrandSVG('NovaSkin Cosmetics','Launch a clean beauty skincare brand','#EC4899','#7C3AED','NC');
+      var exLogo = document.getElementById('try-logo-preview');
+      if (exLogo) {
+        modal._logoState = { name:'NovaSkin Cosmetics', accent:'#EC4899', accent2:'#7C3AED', initials:'NC', styleIdx:0 };
+        exLogo.innerHTML = makeLogoSVG('NovaSkin Cosmetics','#EC4899','#7C3AED','NC',0);
+        var tag = document.getElementById('try-logo-style-tag');
+        if (tag) tag.textContent = logoStyleNames[0];
+      }
     }
     // Focus company input
     setTimeout(function() {
@@ -6043,11 +6110,26 @@ renderTemplates();
     var tag = document.querySelector('.try-example-tag');
     if (tag) tag.textContent = '✦ ' + name;
 
+    // Store logo state for regen
+    modal._logoState = { name: name, accent: palette[pi][0], accent2: palette[pi][1], initials: initials, styleIdx: 0 };
+
     // Show brand card after brief shimmer
     setTimeout(function() {
       preview.innerHTML = makeBrandSVG(name, g, palette[pi][0], palette[pi][1], initials);
       preview.classList.remove('generating');
     }, 600);
+
+    // Generate logo with slight offset for staggered wow effect
+    var logoEl = document.getElementById('try-logo-preview');
+    var logoTag = document.getElementById('try-logo-style-tag');
+    if (logoEl) {
+      logoEl.classList.add('generating');
+      setTimeout(function() {
+        logoEl.innerHTML = makeLogoSVG(name, palette[pi][0], palette[pi][1], initials, 0);
+        logoEl.classList.remove('generating');
+        if (logoTag) logoTag.textContent = logoStyleNames[0];
+      }, 900);
+    }
 
     // Show typing indicator immediately in inspire slot
     if (inspireEl) {
@@ -6141,6 +6223,124 @@ renderTemplates();
     else scrollToTemplates();
   };
 
+  // ── Logo style names ─────────────────────────────────────────────────────
+  var logoStyleNames = ['Circular Badge','Square Emblem','Vertical Mark','Hexagon Seal','Diamond Crest'];
+
+  // ── SVG logo generator ───────────────────────────────────────────────────
+  function makeLogoSVG(name, accent, accent2, initials, styleIdx) {
+    var s = (styleIdx || 0) % logoStyleNames.length;
+    var yr = new Date().getFullYear();
+    var safeN = (name.length > 18 ? name.slice(0,16)+'…' : name).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    var shortN = (name.length > 13 ? name.slice(0,11)+'…' : name).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    var init = (initials || 'YB').slice(0,2);
+    var upperN = shortN.toUpperCase();
+    var defs = '<defs>'
+      +'<linearGradient id="lg'+s+'" x1="0%" y1="0%" x2="100%" y2="100%">'
+        +'<stop offset="0%" stop-color="'+accent+'"/>'
+        +'<stop offset="100%" stop-color="'+accent2+'"/>'
+      +'</linearGradient>'
+      +'<clipPath id="lc'+s+'"><rect width="240" height="120" rx="10"/></clipPath>'
+      +'</defs>';
+    var base = '<rect width="240" height="120" rx="10" fill="#070C18"/>';
+    var wrap0 = '<g clip-path="url(#lc'+s+')">';
+    var wrap1 = '</g>';
+    var inner = '';
+
+    if (s === 0) {
+      // Circular badge: big gradient circle left, wordmark right
+      inner =
+        '<circle cx="60" cy="60" r="48" fill="url(#lg0)"/>'
+        +'<circle cx="60" cy="60" r="40" fill="rgba(0,0,0,0.2)"/>'
+        +'<circle cx="60" cy="60" r="32" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>'
+        +'<text x="60" y="70" font-family="system-ui,sans-serif" font-size="26" font-weight="900" fill="#FFFFFF" text-anchor="middle">'+init+'</text>'
+        +'<text x="126" y="47" font-family="system-ui,sans-serif" font-size="15" font-weight="900" fill="#FFFFFF">'+safeN+'</text>'
+        +'<rect x="126" y="53" width="104" height="1.5" rx="0.75" fill="url(#lg0)"/>'
+        +'<text x="126" y="68" font-family="system-ui,sans-serif" font-size="6.5" fill="'+accent+'" letter-spacing="2.5" font-weight="800">BRAND IDENTITY</text>'
+        +'<text x="126" y="85" font-family="system-ui,sans-serif" font-size="8" fill="rgba(148,163,184,0.45)" letter-spacing="1">AI CRAFTED \xB7 '+yr+'</text>';
+    } else if (s === 1) {
+      // Square emblem left, right side text
+      inner =
+        '<rect x="12" y="12" width="96" height="96" rx="14" fill="url(#lg1)"/>'
+        +'<rect x="20" y="20" width="80" height="80" rx="9" fill="rgba(0,0,0,0.18)"/>'
+        +'<text x="60" y="73" font-family="system-ui,sans-serif" font-size="36" font-weight="900" fill="#FFFFFF" text-anchor="middle">'+init+'</text>'
+        +'<text x="124" y="46" font-family="system-ui,sans-serif" font-size="15" font-weight="900" fill="#FFFFFF">'+safeN+'</text>'
+        +'<rect x="124" y="52" width="106" height="1.5" rx="0.75" fill="url(#lg1)"/>'
+        +'<text x="124" y="67" font-family="system-ui,sans-serif" font-size="6.5" fill="'+accent+'" letter-spacing="2" font-weight="800">BRAND MARK</text>'
+        +'<text x="124" y="84" font-family="system-ui,sans-serif" font-size="8" fill="rgba(148,163,184,0.4)">Est. '+yr+'</text>';
+    } else if (s === 2) {
+      // Centered vertical mark — circle top, name below
+      inner =
+        '<circle cx="120" cy="44" r="34" fill="url(#lg2)"/>'
+        +'<circle cx="120" cy="44" r="26" fill="rgba(0,0,0,0.22)"/>'
+        +'<text x="120" y="53" font-family="system-ui,sans-serif" font-size="20" font-weight="900" fill="#FFFFFF" text-anchor="middle">'+init+'</text>'
+        +'<line x1="28" y1="88" x2="212" y2="88" stroke="url(#lg2)" stroke-width="1.5"/>'
+        +'<text x="120" y="108" font-family="system-ui,sans-serif" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">'+upperN+'</text>';
+    } else if (s === 3) {
+      // Hexagon seal left, text right
+      inner =
+        '<polygon points="60,6 106,31 106,81 60,106 14,81 14,31" fill="url(#lg3)"/>'
+        +'<polygon points="60,17 96,38 96,74 60,95 24,74 24,38" fill="rgba(0,0,0,0.2)"/>'
+        +'<text x="60" y="66" font-family="system-ui,sans-serif" font-size="22" font-weight="900" fill="#FFFFFF" text-anchor="middle">'+init+'</text>'
+        +'<text x="124" y="46" font-family="system-ui,sans-serif" font-size="15" font-weight="900" fill="#FFFFFF">'+safeN+'</text>'
+        +'<rect x="124" y="52" width="106" height="1.5" rx="0.75" fill="url(#lg3)"/>'
+        +'<text x="124" y="67" font-family="system-ui,sans-serif" font-size="6.5" fill="'+accent+'" letter-spacing="2" font-weight="800">VERIFIED BRAND</text>'
+        +'<text x="124" y="84" font-family="system-ui,sans-serif" font-size="8" fill="rgba(148,163,184,0.4)">AI Generated \xB7 Free</text>';
+    } else {
+      // Diamond crest left, text right
+      inner =
+        '<polygon points="60,5 108,60 60,112 12,60" fill="url(#lg4)"/>'
+        +'<polygon points="60,20 92,60 60,98 28,60" fill="rgba(0,0,0,0.22)"/>'
+        +'<text x="60" y="67" font-family="system-ui,sans-serif" font-size="20" font-weight="900" fill="#FFFFFF" text-anchor="middle">'+init+'</text>'
+        +'<text x="124" y="46" font-family="system-ui,sans-serif" font-size="15" font-weight="900" fill="#FFFFFF">'+safeN+'</text>'
+        +'<rect x="124" y="52" width="106" height="1.5" rx="0.75" fill="url(#lg4)"/>'
+        +'<text x="124" y="67" font-family="system-ui,sans-serif" font-size="6.5" fill="'+accent+'" letter-spacing="2" font-weight="800">PREMIUM BRAND</text>'
+        +'<text x="124" y="84" font-family="system-ui,sans-serif" font-size="8" fill="rgba(148,163,184,0.4)">AI Generated \xB7 Free</text>';
+    }
+
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 120" style="width:100%;height:auto;display:block;border-radius:10px">'
+      + defs + base + wrap0 + inner + wrap1 + '</svg>';
+  }
+
+  // ── Logo generator helper functions ──────────────────────────────────────
+  window.tryGenerateLogo = function() {
+    var company = (document.getElementById('try-company').value || '').trim();
+    var goal    = (document.getElementById('try-goal').value    || '').trim();
+    var name = company || (modal._logoState && modal._logoState.name) || 'Your Brand';
+    var palette = [
+      ['#0EA5E9','#7C3AED'],['#EC4899','#F59E0B'],['#10B981','#0EA5E9'],
+      ['#8B5CF6','#EC4899'],['#F59E0B','#EF4444'],['#06B6D4','#10B981'],
+      ['#7C3AED','#06B6D4'],['#EF4444','#F59E0B'],
+    ];
+    var pi = name.charCodeAt(0) % palette.length;
+    var initials = name.replace(/[^A-Za-z0-9 ]/g,'').split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2) || 'YB';
+    var styleIdx = (modal._logoState && modal._logoState.styleIdx != null) ? modal._logoState.styleIdx : 0;
+    modal._logoState = { name: name, accent: palette[pi][0], accent2: palette[pi][1], initials: initials, styleIdx: styleIdx };
+    var logoEl = document.getElementById('try-logo-preview');
+    var logoTag = document.getElementById('try-logo-style-tag');
+    if (!logoEl) return;
+    logoEl.classList.add('generating');
+    setTimeout(function() {
+      logoEl.innerHTML = makeLogoSVG(name, palette[pi][0], palette[pi][1], initials, styleIdx);
+      logoEl.classList.remove('generating');
+      if (logoTag) logoTag.textContent = logoStyleNames[styleIdx % logoStyleNames.length];
+    }, 400);
+  };
+
+  window.tryRegenerateLogoStyle = function() {
+    var st = modal._logoState;
+    if (!st) { window.tryGenerateLogo(); return; }
+    st.styleIdx = ((st.styleIdx || 0) + 1) % logoStyleNames.length;
+    var logoEl = document.getElementById('try-logo-preview');
+    var logoTag = document.getElementById('try-logo-style-tag');
+    if (!logoEl) return;
+    logoEl.classList.add('generating');
+    setTimeout(function() {
+      logoEl.innerHTML = makeLogoSVG(st.name, st.accent, st.accent2, st.initials, st.styleIdx);
+      logoEl.classList.remove('generating');
+      if (logoTag) logoTag.textContent = logoStyleNames[st.styleIdx];
+    }, 280);
+  };
+
   // ── SVG brand card generator ──────────────────────────────────────────────
   function makeBrandSVG(name, goal, accent, accent2, initials) {
     var yr = new Date().getFullYear();
@@ -6224,11 +6424,11 @@ renderTemplates();
 
         // ── BODY ──────────────────────────────────────────────────────────
         // Campaign label + goal text
-        +'<text x="20" y="148" font-family="system-ui,sans-serif" font-size="7" fill="'+accent+'" letter-spacing="2.2" font-weight="800">CAMPAIGN DIRECTION</text>'
+        +'<text x="20" y="148" font-family="system-ui,sans-serif" font-size="7" fill="'+accent+'" letter-spacing="2.2" font-weight="800">YOUR BRAND STORY</text>'
         +'<text x="20" y="'+goalY1+'" font-family="system-ui,sans-serif" font-size="13.5" font-weight="700" fill="#EEF4FF">'+safeA+'</text>'
         +(goalB ? '<text x="20" y="'+goalY2+'" font-family="system-ui,sans-serif" font-size="13.5" font-weight="700" fill="#EEF4FF">'+safeB+'</text>' : '')
         // Brand potential bar
-        +'<text x="20" y="197" font-family="system-ui,sans-serif" font-size="6.5" fill="rgba(148,163,184,0.5)" letter-spacing="1.8" font-weight="700">BRAND POTENTIAL</text>'
+        +'<text x="20" y="197" font-family="system-ui,sans-serif" font-size="6.5" fill="rgba(148,163,184,0.5)" letter-spacing="1.8" font-weight="700">YOUR BRAND POWER</text>'
         +'<rect x="20" y="202" width="280" height="5" rx="2.5" fill="rgba(255,255,255,0.06)"/>'
         +'<rect x="20" y="202" width="'+barW+'" height="5" rx="2.5" fill="url(#hg)"/>'
         +'<text x="308" y="208" font-family="system-ui,sans-serif" font-size="9" fill="'+accent+'" font-weight="800">'+strength+'%</text>'
