@@ -3867,11 +3867,9 @@ function agentSay(text, delay, shouldSpeak) {
     setTimeout(function() {
       removeTyping();
       addBubble('agent', text, state.currentAgentIcon);
-      // Speak all agent messages (shouldSpeak===false disables, anything else enables)
+      // Queue speech — never interrupt a message that is currently playing
       if (shouldSpeak !== false) {
-        if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
-        setTimeout(function() { speakText(text); }, 150);
+        setTimeout(function() { enqueueTTS(text); }, 150);
       }
       resolve();
     }, delay !== undefined ? delay : 500);
@@ -4203,7 +4201,7 @@ function processingToOutput(conv, templateId, agent) {
       removeTyping();
       var headerText = 'Here is your ' + agent.name + ' deliverable for ' + b.client + '.';
       addBubble('agent', '<strong>' + headerText + '</strong>', agent.icon);
-      if (voice.ttsEnabled) speakViaProxy(headerText);
+      if (voice.ttsEnabled) enqueueTTS(headerText);
 
       var msgs = document.getElementById('chat-messages');
       var wrap = document.createElement('div');
@@ -4228,10 +4226,7 @@ function processingToOutput(conv, templateId, agent) {
           // Read the full deliverable after typing completes
           if (voice.ttsEnabled) {
             var fullClean = cleanTextForSpeech(output);
-            if (fullClean.trim()) {
-              stopCurrentSpeech();
-              speakViaProxy(fullClean);
-            }
+            if (fullClean.trim()) enqueueTTS(fullClean);
           }
           setTimeout(function() { showGuardianPanel(agent, templateId); }, 600);
         }
@@ -4919,18 +4914,41 @@ function pickNaturalVoice(voices) {
 var TTS_MAX_CHARS = 4000;
 var SILENT_WAV    = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 
-function speakText(text) {
+/* ── TTS queue — each message waits for the previous to finish ───────────── */
+var ttsQueue   = [];
+var ttsPlaying = false;
+
+function enqueueTTS(text) {
   if (!voice.ttsEnabled) return;
-  stopCurrentSpeech();
   var clean = cleanTextForSpeech(text);
   if (!clean.trim()) return;
-  speakViaProxy(clean);
+  ttsQueue.push(clean);
+  if (!ttsPlaying) playTTSQueue();
+}
+
+function playTTSQueue() {
+  if (!voice.ttsEnabled || ttsQueue.length === 0) {
+    ttsPlaying = false;
+    removeTTSBadge();
+    return;
+  }
+  ttsPlaying = true;
+  playTTSChunk(chunkForTTS(ttsQueue.shift()), 0);
 }
 
 function stopCurrentSpeech() {
+  ttsQueue   = [];
+  ttsPlaying = false;
   if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
   if (window.speechSynthesis) window.speechSynthesis.cancel();
   removeTTSBadge();
+}
+
+function speakText(text) {
+  if (!voice.ttsEnabled) return;
+  var clean = cleanTextForSpeech(text);
+  if (!clean.trim()) return;
+  enqueueTTS(clean);
 }
 
 /* Split text at sentence boundaries to stay within OpenAI's 4096-char limit */
@@ -4946,9 +4964,13 @@ function chunkForTTS(text) {
   return chunks.length ? chunks : [text.slice(0, TTS_MAX_CHARS)];
 }
 
-/* Play one chunk, then queue the next — always OpenAI TTS-HD, no browser fallback */
+/* Play one chunk — when done, advance the queue */
 function playTTSChunk(chunks, idx) {
-  if (!voice.ttsEnabled || idx >= chunks.length) { removeTTSBadge(); return; }
+  if (!voice.ttsEnabled || idx >= chunks.length) {
+    ttsPlaying = false;
+    playTTSQueue();
+    return;
+  }
 
   // iOS/Safari audio-context unlock: play silent stub synchronously before async fetch
   var placeholder = new Audio(SILENT_WAV);
@@ -4984,20 +5006,25 @@ function playTTSChunk(chunks, idx) {
       voice.currentAudio = null;
       playTTSChunk(chunks, idx + 1);
     };
-    audio.onerror = function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; };
-    audio.play().catch(function() { removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null; });
+    audio.onerror = function() {
+      removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null;
+      ttsPlaying = false; playTTSQueue();
+    };
+    audio.play().catch(function() {
+      removeTTSBadge(); URL.revokeObjectURL(url); voice.currentAudio = null;
+      ttsPlaying = false; playTTSQueue();
+    });
   })
   .catch(function(err) {
     console.warn('[TTS] chunk', idx, 'failed:', err.message);
     if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
-    removeTTSBadge();
+    ttsPlaying = false; playTTSQueue();
   });
 }
 
 function speakViaProxy(text) {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
-  playTTSChunk(chunkForTTS(text), 0);
+  stopCurrentSpeech();
+  enqueueTTS(text);
 }
 
 var speakOpenAI = speakViaProxy;

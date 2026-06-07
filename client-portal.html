@@ -1916,13 +1916,32 @@ function resizeImageForUpload(file){
 /* ═══════════════════════════════════════════════════════════════
    PORTAL TTS — OpenAI TTS-HD only, chunked for long responses
 ═══════════════════════════════════════════════════════════════ */
-var _portalAudio = null;
+var _portalAudio   = null;
 var PORTAL_TTS_MAX = 4000;
 var PORTAL_SILENT  = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+var _portalQueue   = [];
+var _portalPlaying = false;
 
 function stopPortalSpeech(){
+  _portalQueue=[];_portalPlaying=false;
   if(_portalAudio){_portalAudio.pause();_portalAudio=null;}
   if(window.speechSynthesis)window.speechSynthesis.cancel();
+}
+
+function enqueuePortalTTS(text){
+  var prefEl=document.getElementById('pref-voice');
+  if(prefEl&&!prefEl.checked)return;
+  var clean=text.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  if(!clean)return;
+  _portalQueue.push(clean);
+  if(!_portalPlaying)playPortalQueue();
+}
+
+function playPortalQueue(){
+  var prefEl=document.getElementById('pref-voice');
+  if((prefEl&&!prefEl.checked)||_portalQueue.length===0){_portalPlaying=false;return;}
+  _portalPlaying=true;
+  playPortalChunk(chunkPortalText(_portalQueue.shift()),0);
 }
 
 function chunkPortalText(text){
@@ -1940,12 +1959,10 @@ function chunkPortalText(text){
 function playPortalChunk(chunks,idx){
   var prefEl=document.getElementById('pref-voice');
   if(prefEl&&!prefEl.checked)return;
-  if(idx>=chunks.length)return;
+  if(idx>=chunks.length){_portalPlaying=false;playPortalQueue();return;}
 
-  /* iOS/Safari audio-context unlock */
   var placeholder=new Audio(PORTAL_SILENT);
-  placeholder.volume=0;
-  _portalAudio=placeholder;
+  placeholder.volume=0;_portalAudio=placeholder;
   placeholder.play().catch(function(){});
 
   fetch('/api/openai/speech',{
@@ -1956,24 +1973,19 @@ function playPortalChunk(chunks,idx){
   .then(function(blob){
     placeholder.pause();
     var url=URL.createObjectURL(blob);
-    var audio=new Audio(url);
-    audio.volume=1.0;
-    _portalAudio=audio;
+    var audio=new Audio(url);audio.volume=1.0;_portalAudio=audio;
     audio.onended=function(){URL.revokeObjectURL(url);_portalAudio=null;playPortalChunk(chunks,idx+1);};
-    audio.onerror=function(){URL.revokeObjectURL(url);_portalAudio=null;};
-    audio.play().catch(function(){URL.revokeObjectURL(url);_portalAudio=null;});
+    audio.onerror=function(){URL.revokeObjectURL(url);_portalAudio=null;_portalPlaying=false;playPortalQueue();};
+    audio.play().catch(function(){URL.revokeObjectURL(url);_portalAudio=null;_portalPlaying=false;playPortalQueue();});
   })
   .catch(function(err){
     console.warn('[Portal TTS] chunk',idx,'failed:',err.message);
-    placeholder.pause();_portalAudio=null;
+    placeholder.pause();_portalAudio=null;_portalPlaying=false;playPortalQueue();
   });
 }
 
 function speakPortalText(text){
-  stopPortalSpeech();
-  var clean=text.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-  if(!clean)return;
-  playPortalChunk(chunkPortalText(clean),0);
+  enqueuePortalTTS(text);
 }
 
 /* Strip markdown/AI formatting markers from text */
