@@ -60,15 +60,16 @@ html{scroll-behavior:smooth}
    DESIGN TOKENS — clean dark-mode palette
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 :root{
-  /* ── Brand identity — logo gradient (orange→pink→purple→blue) ─────────── */
-  --brand-g:      linear-gradient(135deg,#FF6535 0%,#FF3D9A 38%,#8A5CF6 72%,#4A8FD9 100%);
-  --brand-g-h:    linear-gradient(90deg,  #FF6535 0%,#FF3D9A 38%,#8A5CF6 72%,#4A8FD9 100%);
+  /* ── Brand identity — logo gradient (orange→orange→blue→blue) ─────────── */
+  --brand-g:      linear-gradient(135deg,#FF6535 0%,#FF8A00 35%,#2563EB 72%,#1D4ED8 100%);
+  --brand-g-h:    linear-gradient(90deg,  #FF6535 0%,#FF8A00 35%,#2563EB 72%,#1D4ED8 100%);
   --brand-start:  #FF6535;
-  --brand-mid:    #FF3D9A;
+  --brand-mid:    #FF8A00;
   --brand-purple: #8A5CF6;
-  --brand-blue:   #4A8FD9;
+  --brand-blue:   #2563EB;
   --brand-navy:   #1B2068;   /* logo cloud outline */
   --brand-yellow: #F5C400;   /* golden accent */
+  --brand-orange: #FF6535;   /* primary CTA orange */
 
   /* ── Backgrounds — deep brand navy ───────────────────────────────────── */
   --bg-base:     #0B0D1E;
@@ -77,11 +78,11 @@ html{scroll-behavior:smooth}
   --bg-raised:   #21254A;
   --bg-elevated: #282D56;
 
-  /* ── Accent — brand pink (warm, inviting primary) ─────────────────────── */
-  --accent:      #FF3D9A;
-  --accent-d:    #E0267A;
-  --accent-l:    #FF70BA;
-  --accent-glow: rgba(255,61,154,0.22);
+  /* ── Accent — brand orange (energetic primary) ─────────────────────── */
+  --accent:      #FF6535;
+  --accent-d:    #E85520;
+  --accent-l:    #FF8A5C;
+  --accent-glow: rgba(255,101,53,0.25);
 
   /* ── Supporting — logo gradient colours ──────────────────────────────── */
   --violet:      #8A5CF6;   /* Guardian QA — brand purple */
@@ -99,14 +100,14 @@ html{scroll-behavior:smooth}
   /* ── Borders — brand-tinted ───────────────────────────────────────────── */
   --border:         rgba(255,248,240,0.08);
   --border-active:  rgba(255,248,240,0.15);
-  --border-accent:  rgba(255,61,154,0.30);
+  --border-accent:  rgba(255,101,53,0.35);
 
   /* ── Shadows ─────────────────────────────────────────────────────────── */
   --shadow-sm:   0 1px 3px rgba(0,0,0,0.5);
   --shadow-md:   0 4px 16px rgba(0,0,0,0.55);
   --shadow-lg:   0 12px 40px rgba(0,0,0,0.65);
   --shadow-card: 0 0 0 1px var(--border), 0 4px 24px rgba(0,0,0,0.50);
-  --glow-accent: 0 0 28px rgba(255,61,154,0.32);
+  --glow-accent: 0 0 28px rgba(255,101,53,0.35);
 
   /* ── Legacy aliases ───────────────────────────────────────────────────── */
   --navy:        var(--bg-base);
@@ -193,7 +194,7 @@ button{font-family:var(--fb)}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 nav{
   background:rgba(11,13,30,0.95);
-  border-bottom:1px solid rgba(255,61,154,0.12);
+  border-bottom:1px solid rgba(255,101,53,0.14);
   backdrop-filter:blur(24px);
   -webkit-backdrop-filter:blur(24px);
   position:sticky;top:0;z-index:100;
@@ -233,8 +234,8 @@ nav{
 .nav-badge{
   font-family:var(--fm);font-size:0.56rem;font-weight:700;
   letter-spacing:0.10em;text-transform:uppercase;
-  background:rgba(255,61,154,0.10);
-  border:1px solid rgba(255,61,154,0.24);
+  background:rgba(255,101,53,0.10);
+  border:1px solid rgba(255,101,53,0.28);
   color:var(--accent);padding:3px 10px;border-radius:20px;
 }
 .nav-right{display:flex;align-items:center;gap:12px}
@@ -259,13 +260,13 @@ nav{
 .btn-primary{
   background:var(--brand-g);color:#FFFFFF;
   font-weight:700;
-  box-shadow:0 4px 20px rgba(255,61,154,0.38);
+  box-shadow:0 4px 20px rgba(255,101,53,0.42);
   border:none;
 }
 .btn-primary:hover{
   opacity:0.90;
   transform:translateY(-2px);
-  box-shadow:0 8px 28px rgba(255,61,154,0.50);
+  box-shadow:0 8px 28px rgba(255,101,53,0.55);
 }
 .btn-ghost{
   background:transparent;
@@ -565,9 +566,9 @@ nav{
   transform:translateY(-6px) scale(1.015);
   border-color:rgba(255,61,154,0.70);
   box-shadow:
-    0 0 0 3px rgba(255,61,154,0.15),
-    0 8px 24px rgba(255,61,154,0.18),
-    0 24px 48px rgba(255,61,154,0.14),
+    0 0 0 3px rgba(255,101,53,0.18),
+    0 8px 24px rgba(255,101,53,0.20),
+    0 24px 48px rgba(255,101,53,0.14),
     0 32px 64px rgba(0,0,0,0.08);
 }
 .template-card:hover::before{
@@ -578,7 +579,7 @@ nav{
   background:var(--brand-g);
   color:#FFFFFF;
   border-color:transparent;
-  box-shadow:0 6px 20px rgba(255,61,154,0.45),0 2px 6px rgba(255,61,154,0.30);
+  box-shadow:0 6px 20px rgba(255,101,53,0.50),0 2px 6px rgba(255,101,53,0.30);
 }
 .template-card:hover .card-btn-arrow{
   transform:translateX(5px);
@@ -902,8 +903,8 @@ select option{background:#FFFFFF;color:#0F172A}
 }
 .agent-item:hover{background:rgba(255,255,255,0.04)}
 .agent-item.active{
-  background:rgba(255,61,154,0.08);
-  border-color:rgba(255,61,154,0.20);
+  background:rgba(255,101,53,0.08);
+  border-color:rgba(255,101,53,0.22);
 }
 .agent-item.done{color:var(--text-secondary)}
 .agent-item.done .agent-status{color:var(--emerald)}
@@ -914,7 +915,7 @@ select option{background:#FFFFFF;color:#0F172A}
   font-family:var(--fm);font-size:0.60rem;font-weight:700;flex-shrink:0;
   background:rgba(255,255,255,0.06);color:var(--text-muted);
 }
-.agent-item.active .agent-num{background:rgba(255,61,154,0.15);color:var(--accent)}
+.agent-item.active .agent-num{background:rgba(255,101,53,0.15);color:var(--accent)}
 .agent-item.done .agent-num{background:rgba(52,211,153,0.12);color:var(--emerald)}
 .agent-item .agent-name{flex:1;font-weight:500;color:var(--text-body)}
 .agent-item.active .agent-name{color:var(--accent);font-weight:600}
@@ -1163,7 +1164,7 @@ select option{background:#FFFFFF;color:#0F172A}
 .chat-input::placeholder{color:var(--text-muted)}
 .chat-input:focus{
   outline:none;border-color:var(--border-accent);
-  box-shadow:0 0 0 3px rgba(255,61,154,0.10);
+  box-shadow:0 0 0 3px rgba(255,101,53,0.12);
 }
 .chat-send-btn{
   width:42px;height:42px;border-radius:50%;
@@ -1171,7 +1172,7 @@ select option{background:#FFFFFF;color:#0F172A}
   display:flex;align-items:center;justify-content:center;
   font-size:17px;cursor:pointer;
   transition:var(--transition);
-  box-shadow:0 3px 12px rgba(255,61,154,0.35);
+  box-shadow:0 3px 12px rgba(255,101,53,0.40);
   color:#FFFFFF;font-weight:700;
 }
 .chat-send-btn:hover{background:var(--accent-l);transform:scale(1.06)}
@@ -1625,14 +1626,14 @@ select option{background:#FFFFFF;color:#0F172A}
 }
 #try-me-widget.show-bubble #try-me-bubble{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
 #try-me-bubble::after{content:'';position:absolute;bottom:-10px;right:22px;border:6px solid transparent;border-top-color:#ffffff;border-bottom:0;}
-#try-me-bubble-name{font-size:0.68rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#C4006A;margin-bottom:5px;display:flex;align-items:center;gap:6px;}
+#try-me-bubble-name{font-size:0.68rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#D94E1A;margin-bottom:5px;display:flex;align-items:center;gap:6px;}
 #try-me-bubble-name::before{content:'';width:7px;height:7px;border-radius:50%;background:#22C55E;display:inline-block;animation:try-pulse 1.8s ease-in-out infinite;}
 #try-me-bubble-text{font-size:0.85rem;line-height:1.5;color:#0F172A;font-weight:500;margin-bottom:12px;}
-#try-me-bubble-cta{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#FF6535 0%,#FF3D9A 50%,#8A5CF6 100%);color:#fff;border:none;border-radius:100px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;width:100%;justify-content:center;box-shadow:0 4px 14px rgba(255,61,154,0.35);transition:transform 0.15s ease,box-shadow 0.15s ease;}
-#try-me-bubble-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,61,154,0.45);}
-#try-me-btn{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FF6535 0%,#FF3D9A 50%,#8A5CF6 100%);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(255,61,154,0.45),0 2px 8px rgba(0,0,0,0.2);position:relative;opacity:0;transform:scale(0);}
+#try-me-bubble-cta{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#FF6535 0%,#FF8A00 40%,#2563EB 100%);color:#fff;border:none;border-radius:100px;padding:9px 18px;font-size:0.82rem;font-weight:700;cursor:pointer;width:100%;justify-content:center;box-shadow:0 4px 14px rgba(255,101,53,0.40);transition:transform 0.15s ease,box-shadow 0.15s ease;}
+#try-me-bubble-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,101,53,0.50);}
+#try-me-btn{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FF6535 0%,#FF8A00 40%,#2563EB 100%);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(255,101,53,0.50),0 2px 8px rgba(0,0,0,0.2);position:relative;opacity:0;transform:scale(0);}
 #try-me-widget.visible #try-me-btn{opacity:1;transform:scale(1);animation:try-float 3.2s ease-in-out infinite 0.2s;transition:opacity 0.4s ease,transform 0.4s cubic-bezier(.34,1.56,.64,1);}
-#try-me-btn:hover{transform:scale(1.1)!important;box-shadow:0 10px 32px rgba(255,61,154,0.55),0 2px 8px rgba(0,0,0,0.2);animation:none;}
+#try-me-btn:hover{transform:scale(1.1)!important;box-shadow:0 10px 32px rgba(255,101,53,0.60),0 2px 8px rgba(0,0,0,0.2);animation:none;}
 #try-me-btn-inner{font-size:1.5rem;line-height:1;}
 #try-me-dot{position:absolute;top:2px;right:2px;width:15px;height:15px;border-radius:50%;background:#22C55E;border:2.5px solid #fff;animation:try-ping 1.8s ease-in-out infinite;}
 @keyframes try-ping{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);}50%{box-shadow:0 0 0 6px rgba(34,197,94,0);}}
@@ -1651,9 +1652,9 @@ body.in-workflow #try-me-widget{display:none;}
 }
 #try-demo-modal.open{opacity:1;pointer-events:auto;}
 #try-demo-card{
-  background:#FFFFFF;border:1px solid rgba(255,61,154,0.22);
+  background:#FFFFFF;border:1px solid rgba(255,101,53,0.22);
   border-radius:24px;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;
-  box-shadow:0 24px 80px rgba(0,0,0,0.18),0 0 0 1px rgba(255,61,154,0.10);
+  box-shadow:0 24px 80px rgba(0,0,0,0.18),0 0 0 1px rgba(255,101,53,0.10);
   transform:translateY(20px) scale(0.97);
   transition:transform 0.32s cubic-bezier(.34,1.56,.64,1);
   margin:16px;
@@ -1832,11 +1833,11 @@ input,textarea,select{-webkit-appearance:none;appearance:none;border-radius:8px;
   --bg-elevated: #E5F0FF;
   --bg-glass:    rgba(251,251,253,0.92);
 
-  /* Accent — brand pink (readable on light bg) */
-  --accent:      #C4006A;
-  --accent-d:    #A0005A;
-  --accent-l:    #FF3D9A;
-  --accent-glow: rgba(196,0,106,0.12);
+  /* Accent — brand orange (readable on light bg) */
+  --accent:      #D94E1A;
+  --accent-d:    #B84010;
+  --accent-l:    #FF6535;
+  --accent-glow: rgba(217,78,26,0.12);
 
   /* Text — Apple labels */
   --text-primary:   #1D1D1F;
@@ -1910,10 +1911,10 @@ input,textarea,select{-webkit-appearance:none;appearance:none;border-radius:8px;
   background:#FFFFFF;
   border-right-color:rgba(15,23,42,0.08);
 }
-[data-theme="light"] .agent-item:hover{background:rgba(8,145,178,0.05)}
+[data-theme="light"] .agent-item:hover{background:rgba(255,101,53,0.05)}
 [data-theme="light"] .agent-item.active{
-  background:rgba(8,145,178,0.07);
-  border-color:rgba(8,145,178,0.20);
+  background:rgba(255,101,53,0.07);
+  border-color:rgba(255,101,53,0.22);
 }
 [data-theme="light"] .agent-item .agent-name{color:#1E293B}
 [data-theme="light"] .agent-item.active .agent-name{color:var(--accent)}
@@ -1933,8 +1934,8 @@ input,textarea,select{-webkit-appearance:none;appearance:none;border-radius:8px;
 
 /* Steps */
 [data-theme="light"] .step-item{background:#FFFFFF;border-color:rgba(15,23,42,0.08)}
-[data-theme="light"] .step-item:hover{background:#F8FAFC;border-color:rgba(8,145,178,0.25)}
-[data-theme="light"] .step-item.checked{background:rgba(8,145,178,0.04);border-color:rgba(8,145,178,0.20)}
+[data-theme="light"] .step-item:hover{background:#F8FAFC;border-color:rgba(255,101,53,0.28)}
+[data-theme="light"] .step-item.checked{background:rgba(255,101,53,0.04);border-color:rgba(255,101,53,0.22)}
 [data-theme="light"] .step-content .step-title{color:#0F172A}
 [data-theme="light"] .step-content .step-desc{color:#635E58}
 [data-theme="light"] .step-check{border-color:rgba(15,23,42,0.18)}
@@ -2039,7 +2040,7 @@ body,nav,.template-card,.workflow-sidebar,.workflow-main,
   background:var(--brand-g);color:#FFFFFF;font-weight:700;
   padding:8px 18px;border-radius:10px;border:none;cursor:pointer;
   font-size:0.82rem;font-family:inherit;letter-spacing:-0.01em;
-  box-shadow:0 2px 12px rgba(255,61,154,0.32);
+  box-shadow:0 2px 12px rgba(255,101,53,0.35);
   transition:opacity 0.15s,transform 0.15s;white-space:nowrap;
 }
 .nav-cta:hover{opacity:0.88;transform:translateY(-1px)}
@@ -2469,9 +2470,9 @@ body.in-workflow #mobile-bottom-nav{display:none;}
       </div>
     </div>
     <div class="nav-links">
-      <button class="nav-link" onclick="document.getElementById('how-section-anchor').scrollIntoView({behavior:'smooth'})">How It Works</button>
-      <button class="nav-link" onclick="document.getElementById('templates-section').scrollIntoView({behavior:'smooth'})">Templates</button>
-      <button class="nav-link" onclick="document.getElementById('pricing-section').scrollIntoView({behavior:'smooth'})">Pricing</button>
+      <button class="nav-link" onclick="scrollToHow()">How It Works</button>
+      <button class="nav-link" onclick="scrollToTemplates()">Templates</button>
+      <button class="nav-link" onclick="scrollToPricing()">Pricing</button>
       <button class="nav-cta" onclick="quickStartDemo()">✨ Try It Free</button>
     </div>
     <div class="nav-right">
@@ -2496,7 +2497,7 @@ body.in-workflow #mobile-bottom-nav{display:none;}
     <p>Tell PI Agent OS your goal. A coordinated team of specialist AI agents executes every step — researched, written, QA-reviewed, and ready to ship.</p>
 
     <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;">
-      <button class="btn btn-primary btn-lg" onclick="quickStartDemo()" style="background:linear-gradient(135deg,#FF6535 0%,#FF3D9A 38%,#8A5CF6 72%,#4A8FD9 100%);box-shadow:0 6px 24px rgba(255,61,154,0.40);font-size:1rem;padding:15px 32px;letter-spacing:-0.01em;">
+      <button class="btn btn-primary btn-lg" onclick="quickStartDemo()" style="background:linear-gradient(135deg,#FF6535 0%,#FF8A00 35%,#2563EB 72%,#1D4ED8 100%);box-shadow:0 6px 24px rgba(255,101,53,0.45);font-size:1rem;padding:15px 32px;letter-spacing:-0.01em;">
         ✨ Try Me Now — It's Free
       </button>
       <button class="btn btn-ghost btn-lg" onclick="scrollToTemplates()">Browse Templates →</button>
@@ -2975,9 +2976,9 @@ body.in-workflow #mobile-bottom-nav{display:none;}
         <div>
           <div class="footer-col-h">Product</div>
           <div class="footer-links">
-            <button class="footer-link" onclick="document.getElementById('how-section-anchor').scrollIntoView({behavior:'smooth'})">How It Works</button>
-            <button class="footer-link" onclick="document.getElementById('templates-section').scrollIntoView({behavior:'smooth'})">Templates</button>
-            <button class="footer-link" onclick="document.getElementById('pricing-section').scrollIntoView({behavior:'smooth'})">Pricing</button>
+            <button class="footer-link" onclick="scrollToHow()">How It Works</button>
+            <button class="footer-link" onclick="scrollToTemplates()">Templates</button>
+            <button class="footer-link" onclick="scrollToPricing()">Pricing</button>
             <button class="footer-link" onclick="quickStartDemo()">Try It Free</button>
           </div>
         </div>
@@ -4223,7 +4224,16 @@ function toggleFaq(btn){
 }
 
 function goHome() { showScreen('home'); }
-function scrollToTemplates() { document.getElementById('templates-section').scrollIntoView({ behavior: 'smooth' }); }
+function scrollToId(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var navH = (document.querySelector('nav') || {}).offsetHeight || 64;
+  var top  = el.getBoundingClientRect().top + window.pageYOffset - navH - 8;
+  window.scrollTo({top: Math.max(0, top), behavior: 'smooth'});
+}
+function scrollToTemplates() { scrollToId('templates-section'); }
+function scrollToPricing()   { scrollToId('pricing-section'); }
+function scrollToHow()       { scrollToId('how-section-anchor'); }
 
 // ── How It Works Modal ────────────────────────────────────────────────────────
 var HIW_STATS = {
@@ -4311,7 +4321,10 @@ function renderTemplates() {
 }
 
 function selectTemplate(id) {
-  state.template = TEMPLATES.find(t => t.id === id);
+  var tmpl = TEMPLATES.find(t => t.id === id);
+  if (!tmpl) return;
+  // Limit to 4 agents for a focused, high-impact demo
+  state.template = Object.assign({}, tmpl, { agents: tmpl.agents.slice(0, 4) });
   state.agentIndex = 0;
   state.stepChecked = {};
   state.scores = {};
@@ -4321,7 +4334,7 @@ function selectTemplate(id) {
   state.briefStep = 0;
   state.questionIdx = 0;
   state.pins = [];
-  state.currentAgentIcon = state.template && state.template.agents[0] ? state.template.agents[0].icon : "🤖";
+  state.currentAgentIcon = state.template.agents[0] ? state.template.agents[0].icon : "🤖";
   state.brief = {};
   state.template.agents.forEach(a => { state.stepChecked[a.id] = new Set(); });
   // Unlock iOS audio context immediately at the user gesture point
@@ -4329,6 +4342,10 @@ function selectTemplate(id) {
   // Hide agent sidebar on mobile during brief collection
   var _ws = document.getElementById('screen-workflow');
   if (_ws) _ws.classList.add('brief-mode');
+  // Scroll to top before switching screens (iOS Safari fix)
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
   renderWorkflow();
   showScreen('workflow');
 }
@@ -6952,6 +6969,10 @@ renderTemplates();
           '<div class="try-inspire-text">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
         '</div>';
       inspireEl.classList.add('visible');
+      // Speak the inspiring message if TTS is enabled
+      if (typeof enqueueTTS === 'function' && voice && voice.ttsEnabled && voice.serverHasOai) {
+        enqueueTTS(text);
+      }
     }
 
     function fallbackInspire() {
@@ -7002,11 +7023,35 @@ renderTemplates();
 
   // ── Launch full workflow ──────────────────────────────────────────────────
   window.launchFullDemo = function() {
+    // Pre-populate brief from Try Me form if user filled it out
+    var tryCompany = (document.getElementById('try-company')||{}).value || '';
+    var tryGoal    = (document.getElementById('try-goal')||{}).value || '';
     modal.classList.remove('open');
     var first = (typeof TEMPLATES !== 'undefined' ? TEMPLATES : []).find(function(t){ return t.active; })
                 || (typeof TEMPLATES !== 'undefined' ? TEMPLATES[0] : null);
-    if (first) { window.scrollTo({top:0,behavior:'smooth'}); setTimeout(function(){ selectTemplate(first.id); },200); }
-    else scrollToTemplates();
+    if (first) {
+      window.scrollTo({top:0,behavior:'smooth'});
+      setTimeout(function(){
+        selectTemplate(first.id);
+        // If brand form was filled, skip brief collection and pre-fill
+        if (tryCompany && tryGoal) {
+          state.brief.client = tryCompany;
+          state.brief.goal   = tryGoal;
+          state.brief = Object.assign(state.brief, {
+            project:'',deliverable:'',deadline:'TBD',audience:'TBD',
+            budget:'TBD',tone:'TBD',constraints:'None specified',risks:'None specified',
+            template: first.id,
+          });
+          try { localStorage.setItem('pi-client-brief', JSON.stringify(state.brief)); } catch(e) {}
+          var _wsEl = document.getElementById('screen-workflow');
+          if (_wsEl) _wsEl.classList.remove('brief-mode');
+          state.convPhase  = 'orch_intro';
+          state.briefStep  = 0;
+          state.convAnswers = {};
+          startAgentConversation(state.template.agents[0], 0, state.template.id);
+        }
+      }, 250);
+    } else scrollToTemplates();
   };
 
   // ── Logo style names ─────────────────────────────────────────────────────
@@ -7278,11 +7323,11 @@ renderTemplates();
         <span class="mob-nav-icon">🏠</span>
         <span>Home</span>
       </button>
-      <button class="mob-nav-item" onclick="showScreen('home');setTimeout(()=>document.getElementById('templates-section')?.scrollIntoView({behavior:'smooth'}),80)" aria-label="Templates">
+      <button class="mob-nav-item" onclick="showScreen('home');setTimeout(scrollToTemplates,120)" aria-label="Templates">
         <span class="mob-nav-icon">🎯</span>
         <span>Templates</span>
       </button>
-      <button class="mob-nav-item" onclick="showScreen('home');setTimeout(()=>document.getElementById('pricing-section')?.scrollIntoView({behavior:'smooth'}),80)" aria-label="Pricing">
+      <button class="mob-nav-item" onclick="showScreen('home');setTimeout(scrollToPricing,120)" aria-label="Pricing">
         <span class="mob-nav-icon">💳</span>
         <span>Pricing</span>
       </button>
@@ -7324,8 +7369,8 @@ renderTemplates();
           font-family:'Space Grotesk','Space Mono',system-ui,sans-serif;font-size:12px;letter-spacing:0.02em;
           color:${isDark ? 'rgba(220,230,255,0.90)' : '#1B2068'};text-align:center;
           box-shadow:${isDark ? '0 8px 32px rgba(0,0,0,0.55)' : '0 8px 32px rgba(0,0,0,0.12),0 2px 8px rgba(0,0,0,0.06)'};
-          z-index:8999;max-width:300px;white-space:nowrap;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-          display:flex;align-items:center;gap:10px;
+          z-index:8999;max-width:calc(100vw - 32px);white-space:normal;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+          display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;
         ">
           <span style="font-size:18px;flex-shrink:0">📲</span>
           <span>Tap <strong style="color:#FF3D9A">Share</strong> then <strong style="color:#8A5CF6">Add to Home Screen</strong></span>
