@@ -6143,43 +6143,124 @@ renderTemplates();
 
   // ── SVG brand card generator ──────────────────────────────────────────────
   function makeBrandSVG(name, goal, accent, accent2, initials) {
-    var shortName = name.length > 26 ? name.slice(0,24)+'…' : name;
-    var shortGoal = goal.length > 55 ? goal.slice(0,53)+'…' : goal;
-    var safeN = shortName.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    var safeG = shortGoal.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 230">'
+    var yr = new Date().getFullYear();
+    var safeN = (name.length > 22 ? name.slice(0,20)+'…' : name).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    var bigLetter = initials[0] || 'B';
+    // Two-line goal split
+    var gMax = 48;
+    var goalA, goalB;
+    if (goal.length <= gMax) {
+      goalA = goal; goalB = null;
+    } else {
+      var cut = goal.lastIndexOf(' ', gMax); if (cut < 10) cut = gMax;
+      goalA = goal.slice(0, cut);
+      goalB = goal.slice(cut).trim().length > 44 ? goal.slice(cut).trim().slice(0,42)+'…' : goal.slice(cut).trim();
+    }
+    var safeA = goalA.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    var safeB = goalB ? goalB.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+    // Dynamic audience from goal keywords
+    var gl = goal.toLowerCase();
+    var audience = /beauty|skincare|cosmetic|makeup/.test(gl) ? 'Beauty Lovers'
+      : /tech|app|software|digital|saas/.test(gl) ? 'Tech Pioneers'
+      : /food|drink|bar|restaurant|caf/.test(gl) ? 'Food & Drink Fans'
+      : /fitness|health|wellness|sport/.test(gl) ? 'Health Seekers'
+      : /real.estate|property|invest/.test(gl) ? 'Smart Investors'
+      : /fashion|style|clothing|wear/.test(gl) ? 'Style Setters'
+      : /kids|child|family|parent/.test(gl) ? 'Modern Families'
+      : 'Early Adopters';
+    // Dynamic voice from accent palette index
+    var voices = ['Bold \xB7 Authentic','Elegant \xB7 Refined','Playful \xB7 Fresh','Expert \xB7 Trusted','Bold \xB7 Daring','Warm \xB7 Inspiring','Clean \xB7 Modern','Dynamic \xB7 Bold'];
+    var voice  = voices[name.charCodeAt(0) % voices.length];
+    // Brand strength score (72-89 range)
+    var strength  = 72 + (name.charCodeAt(0) % 18);
+    var barW      = Math.round(280 * strength / 100);
+    // Goal line 2 Y offset
+    var goalY1 = goalB ? 163 : 168;
+    var goalY2 = 179;
+
+    return (
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 272" style="width:100%;height:auto;display:block;border-radius:12px">'
       +'<defs>'
-        +'<linearGradient id="dmb" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#080F1E"/><stop offset="100%" stop-color="#0D1829"/></linearGradient>'
-        +'<linearGradient id="dma" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="'+accent+'"/><stop offset="100%" stop-color="'+accent2+'"/></linearGradient>'
-        +'<clipPath id="dmc"><rect width="400" height="230" rx="14"/></clipPath>'
+        +'<linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="'+accent+'"/><stop offset="100%" stop-color="'+accent2+'"/></linearGradient>'
+        +'<linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#090E1C"/><stop offset="100%" stop-color="#0C1525"/></linearGradient>'
+        +'<radialGradient id="rg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="'+accent+'" stop-opacity="0.35"/><stop offset="100%" stop-color="'+accent+'" stop-opacity="0"/></radialGradient>'
+        +'<clipPath id="cc"><rect width="440" height="272" rx="14"/></clipPath>'
       +'</defs>'
-      +'<rect width="400" height="230" rx="14" fill="url(#dmb)" clip-path="url(#dmc)"/>'
-      +'<circle cx="340" cy="-10" r="110" fill="'+accent+'" opacity="0.08"/>'
-      +'<circle cx="40" cy="260" r="90" fill="'+accent2+'" opacity="0.07"/>'
-      +'<rect x="0" y="0" width="4" height="230" fill="url(#dma)" rx="2"/>'
-      +'<circle cx="42" cy="48" r="22" fill="url(#dma)" opacity="0.2"/>'
-      +'<circle cx="42" cy="48" r="16" fill="url(#dma)"/>'
-      +'<text x="42" y="53" font-family="system-ui,sans-serif" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">'+initials+'</text>'
-      +'<text x="72" y="42" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#F8FAFC" letter-spacing="0.2">'+safeN+'</text>'
-      +'<text x="72" y="58" font-family="system-ui,sans-serif" font-size="8" fill="'+accent+'" letter-spacing="1.4" font-weight="700">BRAND CONCEPT</text>'
-      +'<line x1="20" y1="80" x2="380" y2="80" stroke="rgba(148,163,184,0.1)" stroke-width="1"/>'
-      +'<text x="20" y="104" font-family="system-ui,sans-serif" font-size="9" fill="rgba(148,163,184,0.6)" letter-spacing="0.8">CAMPAIGN DIRECTION</text>'
-      +'<text x="20" y="122" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#F1F5F9">'+safeG+'</text>'
-      +'<rect x="20" y="138" width="174" height="32" rx="8" fill="'+accent+'" opacity="0.1"/>'
-      +'<rect x="202" y="138" width="174" height="32" rx="8" fill="rgba(148,163,184,0.05)"/>'
-      +'<text x="107" y="150" font-family="system-ui,sans-serif" font-size="7" fill="'+accent+'" text-anchor="middle" font-weight="700" letter-spacing="0.8">VOICE</text>'
-      +'<text x="107" y="163" font-family="system-ui,sans-serif" font-size="9" fill="#CBD5E1" text-anchor="middle">Bold · Clear · Authentic</text>'
-      +'<text x="289" y="150" font-family="system-ui,sans-serif" font-size="7" fill="rgba(148,163,184,0.55)" text-anchor="middle" font-weight="700" letter-spacing="0.8">CHANNEL MIX</text>'
-      +'<text x="289" y="163" font-family="system-ui,sans-serif" font-size="9" fill="#CBD5E1" text-anchor="middle">Social · Content · Paid</text>'
-      +'<line x1="20" y1="184" x2="380" y2="184" stroke="rgba(148,163,184,0.1)" stroke-width="1"/>'
-      +'<circle cx="30" cy="206" r="5" fill="'+accent+'"/>'
-      +'<circle cx="44" cy="206" r="5" fill="'+accent2+'" opacity="0.6"/>'
-      +'<circle cx="58" cy="206" r="5" fill="'+accent+'" opacity="0.3"/>'
-      +'<circle cx="72" cy="206" r="5" fill="'+accent2+'" opacity="0.15"/>'
-      +'<text x="88" y="210" font-family="system-ui,sans-serif" font-size="8" fill="rgba(148,163,184,0.4)">Brand palette — Product Imagination AI</text>'
-      +'<rect x="326" y="196" width="54" height="20" rx="10" fill="url(#dma)" opacity="0.15"/>'
-      +'<text x="353" y="210" font-family="system-ui,sans-serif" font-size="8" fill="'+accent+'" text-anchor="middle" font-weight="700">READY ✓</text>'
-      +'</svg>';
+      // Card base + full clip
+      +'<rect width="440" height="272" rx="14" fill="url(#bg)"/>'
+      +'<g clip-path="url(#cc)">'
+        // ── HEADER gradient panel ──────────────────────────────────────────
+        +'<rect width="440" height="122" fill="url(#hg)"/>'
+        // Decorative concentric rings (top-right)
+        +'<circle cx="415" cy="2" r="150" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>'
+        +'<circle cx="415" cy="2" r="105" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>'
+        +'<circle cx="415" cy="2" r="60"  fill="rgba(255,255,255,0.04)"/>'
+        // Corner shine (bottom-left of header)
+        +'<circle cx="0" cy="122" r="80" fill="rgba(0,0,0,0.12)"/>'
+        // Large watermark initial
+        +'<text x="308" y="122" font-family="system-ui,sans-serif" font-size="148" font-weight="900" fill="rgba(255,255,255,0.055)" text-anchor="middle" dominant-baseline="auto">'+bigLetter+'</text>'
+        // Dot grid decoration (subtle, top-right quadrant)
+        +'<circle cx="396" cy="82" r="1.8" fill="rgba(255,255,255,0.18)"/><circle cx="409" cy="82" r="1.8" fill="rgba(255,255,255,0.14)"/><circle cx="422" cy="82" r="1.8" fill="rgba(255,255,255,0.1)"/>'
+        +'<circle cx="396" cy="95" r="1.8" fill="rgba(255,255,255,0.13)"/><circle cx="409" cy="95" r="1.8" fill="rgba(255,255,255,0.09)"/><circle cx="422" cy="95" r="1.8" fill="rgba(255,255,255,0.06)"/>'
+        +'<circle cx="396" cy="108" r="1.8" fill="rgba(255,255,255,0.08)"/><circle cx="409" cy="108" r="1.8" fill="rgba(255,255,255,0.05)"/>'
+        // Logo badge glow halo
+        +'<circle cx="46" cy="62" r="40" fill="url(#rg)"/>'
+        // Badge ring (stroke only)
+        +'<circle cx="46" cy="62" r="26" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>'
+        // Badge fill
+        +'<circle cx="46" cy="62" r="22" fill="rgba(255,255,255,0.93)"/>'
+        // Initials
+        +'<text x="46" y="69" font-family="system-ui,sans-serif" font-size="15" font-weight="900" fill="'+accent+'" text-anchor="middle">'+initials+'</text>'
+        // Company name
+        +'<text x="82" y="52" font-family="system-ui,sans-serif" font-size="21" font-weight="900" fill="#FFFFFF" letter-spacing="-0.5">'+safeN+'</text>'
+        +'<text x="82" y="70" font-family="system-ui,sans-serif" font-size="8.5" fill="rgba(255,255,255,0.6)" letter-spacing="2.2" font-weight="600">BRAND CONCEPT \xB7 '+yr+'</text>'
+        // Accent pill on header
+        +'<rect x="82" y="78" width="90" height="16" rx="8" fill="rgba(255,255,255,0.15)"/>'
+        +'<text x="127" y="90" font-family="system-ui,sans-serif" font-size="7.5" fill="#FFFFFF" text-anchor="middle" font-weight="700" letter-spacing="0.5">AI GENERATED • FREE</text>'
+        // Wave separator into body
+        +'<path d="M0 122 Q80 113 180 118 Q300 124 440 112 L440 122 L0 122 Z" fill="#0C1525"/>'
+        // Left accent stripe continuing into body
+        +'<rect x="0" y="122" width="3" height="150" fill="url(#hg)" rx="1.5"/>'
+
+        // ── BODY ──────────────────────────────────────────────────────────
+        // Campaign label + goal text
+        +'<text x="20" y="148" font-family="system-ui,sans-serif" font-size="7" fill="'+accent+'" letter-spacing="2.2" font-weight="800">CAMPAIGN DIRECTION</text>'
+        +'<text x="20" y="'+goalY1+'" font-family="system-ui,sans-serif" font-size="13.5" font-weight="700" fill="#EEF4FF">'+safeA+'</text>'
+        +(goalB ? '<text x="20" y="'+goalY2+'" font-family="system-ui,sans-serif" font-size="13.5" font-weight="700" fill="#EEF4FF">'+safeB+'</text>' : '')
+        // Brand potential bar
+        +'<text x="20" y="197" font-family="system-ui,sans-serif" font-size="6.5" fill="rgba(148,163,184,0.5)" letter-spacing="1.8" font-weight="700">BRAND POTENTIAL</text>'
+        +'<rect x="20" y="202" width="280" height="5" rx="2.5" fill="rgba(255,255,255,0.06)"/>'
+        +'<rect x="20" y="202" width="'+barW+'" height="5" rx="2.5" fill="url(#hg)"/>'
+        +'<text x="308" y="208" font-family="system-ui,sans-serif" font-size="9" fill="'+accent+'" font-weight="800">'+strength+'%</text>'
+        // Divider
+        +'<line x1="20" y1="218" x2="420" y2="218" stroke="rgba(148,163,184,0.08)" stroke-width="1"/>'
+        // Three attribute pills
+        +'<rect x="20" y="224" width="122" height="28" rx="8" fill="'+accent+'" fill-opacity="0.11"/>'
+        +'<rect x="150" y="224" width="138" height="28" rx="8" fill="'+accent2+'" fill-opacity="0.09"/>'
+        +'<rect x="296" y="224" width="124" height="28" rx="8" fill="rgba(148,163,184,0.05)"/>'
+        +'<text x="81" y="234" font-family="system-ui,sans-serif" font-size="6.5" fill="'+accent+'" text-anchor="middle" font-weight="800" letter-spacing="0.6">VOICE &amp; TONE</text>'
+        +'<text x="81" y="246" font-family="system-ui,sans-serif" font-size="9.5" fill="#C8D8F0" text-anchor="middle">'+voice+'</text>'
+        +'<text x="219" y="234" font-family="system-ui,sans-serif" font-size="6.5" fill="'+accent2+'" text-anchor="middle" font-weight="800" letter-spacing="0.6">TARGET AUDIENCE</text>'
+        +'<text x="219" y="246" font-family="system-ui,sans-serif" font-size="9.5" fill="#C8D8F0" text-anchor="middle">'+audience+'</text>'
+        +'<text x="358" y="234" font-family="system-ui,sans-serif" font-size="6.5" fill="rgba(148,163,184,0.6)" text-anchor="middle" font-weight="800" letter-spacing="0.6">CHANNELS</text>'
+        +'<text x="358" y="246" font-family="system-ui,sans-serif" font-size="9.5" fill="#C8D8F0" text-anchor="middle">Social \xB7 Paid \xB7 Content</text>'
+
+        // ── FOOTER ────────────────────────────────────────────────────────
+        +'<line x1="20" y1="262" x2="420" y2="262" stroke="rgba(148,163,184,0.07)" stroke-width="1"/>'
+        // Colour swatches as pills
+        +'<rect x="20" y="266" width="16" height="4" rx="2" fill="'+accent+'"/>'
+        +'<rect x="40" y="266" width="16" height="4" rx="2" fill="'+accent2+'"/>'
+        +'<rect x="60" y="266" width="16" height="4" rx="2" fill="'+accent+'" fill-opacity="0.5"/>'
+        +'<rect x="80" y="266" width="16" height="4" rx="2" fill="'+accent2+'" fill-opacity="0.28"/>'
+        +'<rect x="100" y="266" width="16" height="4" rx="2" fill="rgba(248,250,252,0.12)"/>'
+        +'<text x="124" y="270" font-family="system-ui,sans-serif" font-size="7" fill="rgba(148,163,184,0.3)">Brand palette \xB7 Product Imagination AI</text>'
+        // APPROVED badge (gradient border)
+        +'<rect x="361" y="259" width="62" height="19" rx="9.5" fill="url(#hg)" fill-opacity="0.14"/>'
+        +'<rect x="361" y="259" width="62" height="19" rx="9.5" fill="none" stroke="'+accent+'" stroke-opacity="0.3" stroke-width="1"/>'
+        +'<text x="392" y="272" font-family="system-ui,sans-serif" font-size="7.5" fill="'+accent+'" text-anchor="middle" font-weight="800">APPROVED ✓</text>'
+      +'</g>'
+      +'</svg>'
+    );
   }
 
   // ── showScreen hook: hide widget during workflow ──────────────────────────
