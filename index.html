@@ -4232,9 +4232,20 @@ function askQuestion(conv, qIdx, templateId, agent) {
   // Pass shouldSpeak=true ONLY for questions so the user hears what to answer
   agentSay(q.text, 800, true).then(function() {
     showQuickReplies(q.opts, function(answer) {
-      // Stop any speech the moment user responds
-      if (voice.currentAudio) { voice.currentAudio.pause(); voice.currentAudio = null; }
-      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      // Clear the queue so a pending question doesn't play after the user already answered,
+      // but don't pause mid-word — stopCurrentSpeech clears the queue cleanly
+      stopCurrentSpeech();
+
+      if (answer === '📌 Pin for later') {
+        if (!state.pins) state.pins = [];
+        state.pins.push({ icon: state.currentAgentIcon, topic: q.id, question: q.text });
+        addBubble('user', '📌 Pin for later', '👤');
+        agentSay('📌 Noted — flagged for your final report. Moving forward!', 350).then(function() {
+          processingToOutput(conv, templateId, agent);
+        });
+        return;
+      }
+
       state.convAnswers[q.id] = answer;
       addBubble('user', answer, '👤');
       setTimeout(function() { askQuestion(conv, qIdx + 1, templateId, agent); }, 500);
@@ -4366,6 +4377,9 @@ function showStaticAgentOutput(agent, templateId) {
   agentSay(agent.specialty, 400);
   var output = getDemoContent(templateId, agent.id, b);
   var msgs = document.getElementById('chat-messages');
+  var headerText = 'Here is your ' + agent.name + ' deliverable for ' + b.client + '.';
+  addBubble('agent', '<strong>' + headerText + '</strong>', agent.icon);
+  if (voice.ttsEnabled) enqueueTTS(headerText);
   var wrap = document.createElement('div');
   wrap.className = 'bubble-wrap agent';
   var b2 = document.createElement('div');
@@ -4374,6 +4388,10 @@ function showStaticAgentOutput(agent, templateId) {
   wrap.appendChild(b2);
   msgs.appendChild(wrap);
   chatScrollBottom();
+  if (voice.ttsEnabled) {
+    var fullClean = cleanTextForSpeech(output);
+    if (fullClean.trim()) enqueueTTS(fullClean);
+  }
   setTimeout(function() { showGuardianPanel(agent, templateId); }, 800);
 }
 
