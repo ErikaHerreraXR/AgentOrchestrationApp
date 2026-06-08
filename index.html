@@ -2261,6 +2261,16 @@ body.in-workflow #mobile-bottom-nav{display:none;}
   font-family:var(--fm);font-size:0.52rem;font-weight:700;
   letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);
 }
+@media(max-width:600px){.shoreline-grid{grid-template-columns:1fr!important;}}
+/* Mobile: compact horizontal output cards */
+@media(max-width:600px){
+  .outputs-grid{grid-template-columns:1fr 1fr;gap:10px;margin-top:24px;}
+  .output-card{padding:14px 12px;border-radius:12px;display:flex;flex-direction:column;align-items:flex-start;}
+  .output-icon{font-size:1.35rem;margin-bottom:7px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(99,102,241,0.08);border-radius:9px;border:1px solid rgba(99,102,241,0.14);}
+  .output-name{font-size:0.78rem;}
+  .output-desc{display:none;}
+  .output-tag{font-size:0.48rem;padding:2px 7px;}
+}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    STUDIO TRUST
@@ -2586,12 +2596,15 @@ body.in-workflow #mobile-bottom-nav{display:none;}
     <div class="container">
       <div class="section-header" style="margin-bottom:40px">
         <div class="tag">How It Works</div>
-        <h2>Three steps.<br><span style="color:var(--accent)">Infinite output.</span></h2>
-        <p style="max-width:480px;margin:0 auto">Brief one agent. A coordinated team executes your project — each step QA-reviewed before the next begins.</p>
-        <div style="margin-top:14px"><span class="star-badge">✦ No prompting skills needed</span></div>
+        <h2>Four steps.<br><span style="color:var(--accent)">Infinite output.</span></h2>
+        <p style="max-width:520px;margin:0 auto">Brief once. A full AI team executes every step — QA-reviewed, client-ready, and <strong style="color:var(--text-primary)">100% yours to keep, brand, and deploy.</strong></p>
+        <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <span class="star-badge">✦ No prompting skills needed</span>
+          <span class="star-badge">✦ You own everything — no lock-in</span>
+        </div>
       </div>
 
-      <!-- 3-step process flow -->
+      <!-- 4-step process flow -->
       <div class="how-flow">
         <div class="how-step">
           <div class="how-step-num">Step 01</div>
@@ -2607,113 +2620,91 @@ body.in-workflow #mobile-bottom-nav{display:none;}
           <div class="how-step-desc">Specialists execute every step — researched, written, and QA-reviewed automatically.</div>
         </div>
         <div class="how-connector">→</div>
-        <div class="how-step done">
+        <div class="how-step qa">
           <div class="how-step-num">Step 03</div>
-          <div class="how-step-icon">✅</div>
-          <div class="how-step-title">Output Ready</div>
-          <div class="how-step-desc">Download your complete deliverable — strategy, copy, plan, or brand kit.</div>
+          <div class="how-step-icon">🛡️</div>
+          <div class="how-step-title">Guardian QA</div>
+          <div class="how-step-desc">Every output passes a dedicated quality agent before you see it. Zero fluff shipped.</div>
+        </div>
+        <div class="how-connector">→</div>
+        <div class="how-step done">
+          <div class="how-step-num">Step 04</div>
+          <div class="how-step-icon">🚀</div>
+          <div class="how-step-title">Publish &amp; Own</div>
+          <div class="how-step-desc">Deploy, present, or hand off. Everything is yours — fully editable, white-labelable, zero royalties.</div>
         </div>
       </div>
 
-      <!-- Agent pipeline visual (Consulting example) -->
-      <div class="how-pipeline-wrap">
-        <div class="how-pipeline-label">Example: Strategy Consulting Pipeline</div>
-        <div class="how-pipeline">
-
-          <div class="how-agent">
-            <div class="how-agent-ico">🔍</div>
-            <div class="how-agent-lbl">Discovery</div>
-          </div>
-          <div class="how-qa-gate">
-            <div class="how-qa-arrow">→</div>
-            <div class="how-guardian-ico">🛡️</div>
-            <div class="how-qa-badge">QA ✓</div>
-            <div class="how-qa-arrow">→</div>
-          </div>
-
-          <div class="how-agent">
-            <div class="how-agent-ico">📈</div>
-            <div class="how-agent-lbl">Research</div>
-          </div>
-          <div class="how-qa-gate">
-            <div class="how-qa-arrow">→</div>
-            <div class="how-guardian-ico">🛡️</div>
-            <div class="how-qa-badge">QA ✓</div>
-            <div class="how-qa-arrow">→</div>
-          </div>
-
-          <div class="how-agent">
-            <div class="how-agent-ico">🧭</div>
-            <div class="how-agent-lbl">Strategy</div>
-          </div>
-          <div class="how-qa-gate">
-            <div class="how-qa-arrow">→</div>
-            <div class="how-guardian-ico">🛡️</div>
-            <div class="how-qa-badge">QA ✓</div>
-            <div class="how-qa-arrow">→</div>
-          </div>
-
-          <div class="how-agent">
-            <div class="how-agent-ico">💹</div>
-            <div class="how-agent-lbl">Financial</div>
-          </div>
-          <div class="how-qa-gate">
-            <div class="how-qa-arrow">→</div>
-            <div class="how-guardian-ico">🛡️</div>
-            <div class="how-qa-badge">QA ✓</div>
-            <div class="how-qa-arrow">→</div>
-          </div>
-
-          <div class="how-agent">
-            <div class="how-agent-ico">🔄</div>
-            <div class="how-agent-lbl">Change Mgmt</div>
-          </div>
-          <div class="how-qa-gate">
-            <div class="how-qa-arrow">→</div>
-            <div class="how-guardian-ico">🛡️</div>
-            <div class="how-qa-badge">QA ✓</div>
-            <div class="how-qa-arrow">→</div>
-          </div>
-
-          <div class="how-agent">
-            <div class="how-agent-ico">🎨</div>
-            <div class="how-agent-lbl">Presentation</div>
-          </div>
-          <div class="how-qa-gate">
-            <div class="how-qa-arrow">→</div>
-            <div class="how-guardian-ico">🛡️</div>
-            <div class="how-qa-badge">QA ✓</div>
-            <div class="how-qa-arrow">→</div>
-          </div>
-
-          <div class="how-agent">
-            <div class="how-agent-ico">📅</div>
-            <div class="how-agent-lbl">Impl. Plan</div>
-          </div>
-          <div class="how-qa-gate">
-            <div class="how-qa-arrow">→</div>
-            <div class="how-guardian-ico">🛡️</div>
-            <div class="how-qa-badge">QA ✓</div>
-            <div class="how-qa-arrow">→</div>
-          </div>
-
-          <div class="how-agent">
-            <div class="how-agent-ico">📝</div>
-            <div class="how-agent-lbl">Comms</div>
-          </div>
-          <div class="how-qa-gate">
-            <div class="how-qa-arrow">→</div>
-            <div class="how-guardian-ico">🛡️</div>
-            <div class="how-qa-badge">QA ✓</div>
-            <div class="how-qa-arrow">→</div>
-          </div>
-
-          <div class="how-final">
-            <div class="how-final-ico">✅</div>
-            <div class="how-final-lbl">Delivered</div>
-          </div>
-
+      <!-- Live client workflow: Shoreline Properties -->
+      <div class="how-pipeline-wrap" style="position:relative">
+        <div class="how-pipeline-label" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center">
+          <span style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.28);color:#34D399;border-radius:100px;padding:2px 10px;font-size:0.58rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;font-family:var(--fm)">● Live Client</span>
+          <span>Shoreline Properties — Airbnb &amp; Property Management</span>
         </div>
+
+        <!-- Brief summary row -->
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 auto 18px;max-width:780px">
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:0.72rem;color:var(--text-secondary);display:flex;align-items:center;gap:7px">
+            <span style="font-size:1rem">🏡</span> <strong style="color:var(--text-primary)">Template:</strong> Airbnb &amp; Short-Term Rental
+          </div>
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:0.72rem;color:var(--text-secondary);display:flex;align-items:center;gap:7px">
+            <span style="font-size:1rem">⚡</span> <strong style="color:var(--text-primary)">Brief time:</strong> 4 questions · 60 seconds
+          </div>
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:0.72rem;color:var(--text-secondary);display:flex;align-items:center;gap:7px">
+            <span style="font-size:1rem">🛠️</span> <strong style="color:var(--text-primary)">Covers:</strong> Listings · Pricing · Guest Ops · Brand
+          </div>
+        </div>
+
+        <!-- Agent pipeline -->
+        <div class="how-pipeline">
+          <div class="how-agent"><div class="how-agent-ico">🏡</div><div class="how-agent-lbl">Property Audit</div></div>
+          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
+          <div class="how-agent"><div class="how-agent-ico">✍️</div><div class="how-agent-lbl">Listing Copy</div></div>
+          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
+          <div class="how-agent"><div class="how-agent-ico">💬</div><div class="how-agent-lbl">Guest Comms</div></div>
+          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
+          <div class="how-agent"><div class="how-agent-ico">💰</div><div class="how-agent-lbl">Pricing</div></div>
+          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
+          <div class="how-agent"><div class="how-agent-ico">⚙️</div><div class="how-agent-lbl">Operations</div></div>
+          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
+          <div class="how-agent"><div class="how-agent-ico">🎨</div><div class="how-agent-lbl">Brand Identity</div></div>
+          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
+          <div class="how-final"><div class="how-final-ico">✅</div><div class="how-final-lbl">Delivered</div></div>
+        </div>
+
+        <!-- Shoreline deliverables + links -->
+        <div class="shoreline-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px auto 0;max-width:780px">
+
+          <!-- Deliverables -->
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px 20px">
+            <div style="font-family:var(--fm);font-size:0.58rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px">What Was Built</div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:7px">
+              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:#34D399;font-size:0.7rem">✓</span> 5-property Airbnb listing suite</li>
+              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:#34D399;font-size:0.7rem">✓</span> Guest welcome guide &amp; house rules</li>
+              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:#34D399;font-size:0.7rem">✓</span> Dynamic pricing &amp; revenue strategy</li>
+              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:#34D399;font-size:0.7rem">✓</span> Operations SOP + vendor checklist</li>
+              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:var(--accent);font-size:0.7rem">⬡</span> Brand identity kit <span style="font-size:0.65rem;color:var(--accent);font-weight:700">in progress</span></li>
+            </ul>
+          </div>
+
+          <!-- Links + sneak peek -->
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:var(--fm);font-size:0.58rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0">Client Links</div>
+            <a href="https://shorelineproperties.com" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.18);border-radius:9px;padding:9px 12px;font-size:0.76rem;font-weight:700;color:var(--text-primary);text-decoration:none;transition:0.18s ease" onmouseover="this.style.borderColor='rgba(99,102,241,0.4)'" onmouseout="this.style.borderColor='rgba(99,102,241,0.18)'">
+              <span>🌐</span> shorelineproperties.com <span style="margin-left:auto;font-size:0.62rem;color:var(--accent);font-family:var(--fm)">IN DEV →</span>
+            </a>
+            <a href="#" onclick="return false" style="display:flex;align-items:center;gap:8px;background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.18);border-radius:9px;padding:9px 12px;font-size:0.76rem;font-weight:700;color:var(--text-primary);text-decoration:none;transition:0.18s ease" onmouseover="this.style.borderColor='rgba(99,102,241,0.4)'" onmouseout="this.style.borderColor='rgba(99,102,241,0.18)'">
+              <span>🏠</span> View Property Portfolio <span style="margin-left:auto;font-size:0.62rem;color:var(--accent);font-family:var(--fm)">SOON →</span>
+            </a>
+            <!-- Sneak peek -->
+            <div style="margin-top:4px;background:linear-gradient(135deg,rgba(99,102,241,0.07),rgba(124,58,237,0.07));border:1px solid rgba(99,102,241,0.16);border-radius:9px;padding:10px 12px">
+              <div style="font-family:var(--fm);font-size:0.54rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:5px">⬡ AI Team Sneak Peek</div>
+              <div style="font-size:0.7rem;color:var(--text-secondary);line-height:1.5">Shoreline's dedicated agents: <span style="color:var(--text-primary);font-weight:600">Listing Specialist · Guest Experience · Revenue Optimizer · Brand Agent</span> — briefed once, always on.</div>
+            </div>
+          </div>
+        </div>
+
+
       </div>
     </div>
   </div>
