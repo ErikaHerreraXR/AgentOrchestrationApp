@@ -6994,11 +6994,11 @@ renderTemplates();
     }
 
     // Fetch inspiring message from AI
-    var sysPrompt = 'You are a warm, enthusiastic brand strategist and mentor. ' +
-      'A founder just shared their company and goal with you. ' +
-      'Write 2 short sentences (max 30 words total) that are genuinely inspiring, supportive, and motivating. ' +
-      'Reference their specific goal naturally. Sound human, not corporate. ' +
-      'No quotes, no bullet points, no sign-off. Just the two sentences.';
+    var sysPrompt = 'You are a friendly, encouraging helper. ' +
+      'Someone just told you their company name and what they want to achieve. ' +
+      'Write 2 very short sentences (max 25 words total) that feel warm and easy to understand. ' +
+      'Use simple everyday words — no business jargon, no buzzwords. Sound like a supportive friend. ' +
+      'No quotes, no lists, no sign-off. Just the two sentences.';
     var userMsg = 'Company: ' + name + '. Goal: ' + g + '.';
 
     function showInspireText(text) {
@@ -7021,10 +7021,10 @@ renderTemplates();
     function fallbackInspire() {
       // Graceful fallback if API is unavailable
       var phrases = [
-        'What you\'re building with ' + name + ' is exactly the kind of venture that changes things — keep going.',
-        'The goal to ' + g.toLowerCase() + ' is bold and absolutely worth pursuing. You\'re already ahead for starting.',
-        name + ' has a real story to tell. The clarity of your goal is your biggest competitive advantage.',
-        'Most people never start. You did — and that goal to ' + g.toLowerCase() + ' is just the beginning.',
+        name + ' sounds amazing! Your goal to ' + g.toLowerCase() + ' is totally doable — and we\'re here to help every step.',
+        'Love this! ' + name + ' is a great fit for what we do. You\'re going to see results fast.',
+        'You picked a great goal! ' + name + ' has real potential — let\'s build something you\'re proud of.',
+        'Great start! Most people just think about it — you\'re already doing it. ' + name + ' is going places.',
       ];
       showInspireText(phrases[name.charCodeAt(0) % phrases.length]);
     }
