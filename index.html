@@ -301,10 +301,8 @@ nav{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
 @media(max-width:860px){.hero{padding-top:32px;padding-bottom:36px;}}
-/* Hero — light mode: clean gradient, no image */
-.hero{
-  background: linear-gradient(160deg, #FAFAFE 0%, #F5F3FF 55%, #FBFBFD 100%);
-}
+/* Hero — light mode: uses the site background image */
+[data-theme="light"] .hero{background:transparent;}
 
 .hero-tag{
   display:inline-flex;align-items:center;gap:8px;
@@ -1857,12 +1855,12 @@ input,textarea,select{-webkit-appearance:none;appearance:none;border-radius:8px;
    LIGHT MODE — token overrides
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 [data-theme="light"]{
-  /* Backgrounds — Apple light mode */
-  --bg-base:     #FBFBFD;
-  --bg-surface:  #F5F5F7;
-  --bg-card:     #FFFFFF;
-  --bg-raised:   #FFFFFF;
-  --bg-elevated: #E5F0FF;
+  /* Backgrounds — transparent so hero-bg.webp bleeds through */
+  --bg-base:     transparent;
+  --bg-surface:  rgba(248,248,255,0.60);
+  --bg-card:     rgba(255,255,255,0.88);
+  --bg-raised:   rgba(255,255,255,0.95);
+  --bg-elevated: rgba(229,235,255,0.80);
   --bg-glass:    rgba(251,251,253,0.92);
 
   /* Accent — brand pink (readable on light bg) */
@@ -1907,10 +1905,11 @@ input,textarea,select{-webkit-appearance:none;appearance:none;border-radius:8px;
   --border-warm:  var(--border);
 }
 
-/* ── Light mode component overrides ── */
-[data-theme="light"] body{
-  background:var(--bg-base);
+/* ── Light mode: full-site background image ── */
+[data-theme="light"] html{
+  background:url('/hero-bg.webp') center top / cover no-repeat fixed #F4F3FF;
 }
+[data-theme="light"] body{background:transparent;}
 [data-theme="light"] nav{
   background:rgba(248,250,252,0.95);
   border-bottom-color:rgba(15,23,42,0.08);
