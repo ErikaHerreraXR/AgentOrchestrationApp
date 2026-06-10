@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Metakittyz · Agent Team Command Center</title>
+<style>
+:root{
+  --pink:#FF2D78;--purple:#BF5AF2;--cyan:#00F5FF;--green:#00FF94;
+  --gold:#FFD60A;--orange:#FF6B2B;--red:#FF453A;--blue:#0A84FF;
+  --nova:#FF2D78;--pulse:#00FF94;--aria:#00F5FF;--reach:#FF6B2B;--spark:#FFD60A;--guardian:#BF5AF2;
+  --bg:#07070D;--bg2:#0F0F1A;--card:#141422;--card2:#1A1A2C;--card3:#202035;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#EEEEFF;--text2:#8B8BAD;--text3:#4A4A6A;
+  --font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+  --grad:linear-gradient(135deg,#FF2D78,#BF5AF2,#00F5FF);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 15% 10%,rgba(255,45,120,0.07) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 40% at 85% 85%,rgba(191,90,242,0.07) 0%,transparent 60%),
+             radial-gradient(ellipse 40% 50% at 50% 40%,rgba(0,245,255,0.04) 0%,transparent 70%)}
+
+/* ── TOP BAR ── */
+.topbar{position:sticky;top:0;z-index:200;height:54px;display:flex;align-items:center;
+  background:rgba(7,7,13,0.94);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.tb-brand{display:flex;align-items:center;gap:8px;padding:0 18px;border-right:1px solid var(--border);height:100%;text-decoration:none}
+.tb-logo{font-size:1.15rem}
+.tb-name{font-weight:900;font-size:0.9rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tb-team-badge{display:flex;align-items:center;gap:6px;padding:0 14px;border-right:1px solid var(--border);height:100%;font-size:0.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--purple)}
+.tb-stats{flex:1;display:flex;align-items:center;justify-content:center;gap:20px}
+.tb-stat{text-align:center}
+.tb-val{font-size:.9rem;font-weight:900;letter-spacing:-.02em}
+.tb-lbl{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)}
+.tb-right{display:flex;align-items:center;gap:10px;padding:0 14px;margin-left:auto}
+.tb-clock{font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--text2)}
+.tb-day{background:rgba(191,90,242,.15);border:1px solid rgba(191,90,242,.3);border-radius:7px;padding:3px 10px;font-size:.7rem;font-weight:800;color:var(--purple)}
+.notify-btn{background:rgba(255,214,10,.12);border:1px solid rgba(255,214,10,.3);border-radius:7px;padding:4px 10px;font-size:.68rem;font-weight:800;color:var(--gold);cursor:pointer;font-family:var(--font);transition:all .2s}
+.notify-btn.on{background:rgba(0,255,148,.12);border-color:rgba(0,255,148,.3);color:var(--green)}
+.update-btn{background:var(--grad);border:none;border-radius:7px;padding:5px 13px;color:#fff;font-weight:800;font-size:.72rem;cursor:pointer;font-family:var(--font)}
+
+/* ── MAIN ── */
+.main{position:relative;z-index:1;padding:14px;display:flex;flex-direction:column;gap:14px}
+
+/* ── SECTION LABEL ── */
+.sec{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--text2);display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sec::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── AGENT TEAM ROW ── */
+.agents-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+@media(max-width:1100px){.agents-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.agents-row{grid-template-columns:repeat(2,1fr)}}
+
+.agent-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.agent-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac)}
+.agent-card:hover{border-color:var(--ac);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.agent-card.active-card{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac),0 8px 32px rgba(0,0,0,.3)}
+.agent-av{width:44px;height:44px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:2px solid var(--ac)}
+.agent-name{font-size:.82rem;font-weight:900;letter-spacing:-.01em;color:var(--ac);margin-bottom:2px}
+.agent-title{font-size:.62rem;color:var(--text2);font-weight:600;margin-bottom:8px;line-height:1.3}
+.agent-status{display:inline-flex;align-items:center;gap:4px;font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.status-dot{width:5px;height:5px;border-radius:50%;animation:s-pulse 2s ease-in-out infinite}
+@keyframes s-pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.agent-insight{font-size:.65rem;color:var(--text2);line-height:1.4;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);text-align:left}
+.ask-btn{margin-top:8px;width:100%;padding:5px;border-radius:7px;border:1px solid var(--ac);background:transparent;color:var(--ac);font-size:.65rem;font-weight:800;cursor:pointer;font-family:var(--font);transition:all .2s}
+.ask-btn:hover{background:rgba(255,255,255,.05)}
+
+/* ── TWO COLUMN LAYOUT ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:900px){.two-col,.three-col{grid-template-columns:1fr}}
+
+/* ── PANEL ── */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.pt{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);display:flex;align-items:center;gap:7px}
+.pdot{width:6px;height:6px;border-radius:50%}
+.pb{padding:16px}
+.pa{display:flex;gap:6px;align-items:center}
+.pbtn{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:4px 9px;color:var(--text2);font-size:.65rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .15s}
+.pbtn:hover{background:rgba(255,255,255,.09);color:var(--text)}
+.pbtn.active{background:rgba(191,90,242,.15);color:var(--purple);border-color:rgba(191,90,242,.3)}
+
+/* ── BRIEFING FEED ── */
+.feed{max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:14px}
+.feed::-webkit-scrollbar{width:3px}
+.feed::-webkit-scrollbar-thumb{background:rgba(191,90,242,.3);border-radius:2px}
+.feed-msg{display:flex;gap:10px;animation:fadein .4s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.feed-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;border:1.5px solid var(--fac,var(--purple))}
+.feed-body{flex:1;background:var(--card2);border-radius:10px 10px 10px 3px;padding:10px 12px;border:1px solid var(--border)}
+.feed-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.feed-who{font-size:.65rem;font-weight:800;color:var(--fac,var(--purple))}
+.feed-time{font-size:.6rem;color:var(--text3)}
+.feed-text{font-size:.78rem;line-height:1.6;color:var(--text)}
+.feed-typing{display:flex;gap:4px;align-items:center;height:16px;padding:0 4px}
+.feed-typing span{width:5px;height:5px;border-radius:50%;background:var(--purple);animation:tdot 1.1s ease-in-out infinite}
+.feed-typing span:nth-child(2){animation-delay:.18s}
+.feed-typing span:nth-child(3){animation-delay:.36s}
+@keyframes tdot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+.feed-input-row{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);background:rgba(255,255,255,.02)}
+.feed-input{flex:1;background:var(--card3,#202035);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:.78rem;font-family:var(--font);outline:none}
+.feed-input:focus{border-color:var(--purple)}
+.feed-send{background:var(--grad);border:none;border-radius:8px;padding:8px 14px;color:#fff;font-weight:800;font-size:.75rem;cursor:pointer;font-family:var(--font);white-space:nowrap}
+
+/* ── TODAY'S SCHEDULE ── */
+.schedule-item{display:flex;gap:12px;padding:12px;border-radius:11px;border:1px solid var(--border);background:rgba(255,255,255,.02);margin-bottom:8px;position:relative;overflow:hidden;transition:border-color .2s}
+.schedule-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--sc)}
+.schedule-item:hover{border-color:var(--border2)}
+.sch-time-col{min-width:50px;text-align:center;flex-shrink:0}
+.sch-time{font-family:var(--mono);font-size:.75rem;font-weight:800;color:var(--sc)}
+.sch-cd{font-size:.58rem;color:var(--text2);margin-top:3px;white-space:nowrap}
+.sch-purpose{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--sc);opacity:.7;margin-top:4px}
+.sch-content{flex:1;min-width:0}
+.sch-hook{font-size:.82rem;font-weight:800;margin-bottom:4px;line-height:1.35}
+.sch-desc{font-size:.7rem;color:var(--text2);line-height:1.5;margin-bottom:6px}
+.sch-tags{display:flex;gap:4px;flex-wrap:wrap}
+.sch-tag{font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(191,90,242,.1);color:var(--purple)}
+.sch-right{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.mark-btn{font-size:.65rem;font-weight:800;padding:5px 9px;border-radius:7px;cursor:pointer;font-family:var(--font);border:1px solid rgba(0,255,148,.3);background:rgba(0,255,148,.08);color:var(--green);transition:all .2s;white-space:nowrap}
+.mark-btn:hover{background:rgba(0,255,148,.15)}
+.mark-btn.done{border-color:var(--border);background:rgba(255,255,255,.03);color:var(--text3);cursor:default}
+
+/* ── CONTENT RATER ── */
+.rater-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.rater-field label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);display:block;margin-bottom:4px}
+.rater-input{width:100%;background:var(--card3,#202035);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:.78rem;font-family:var(--font);outline:none;resize:none}
+.rater-input:focus{border-color:var(--purple)}
+.rater-full{grid-column:1/-1}
+.rate-btn{width:100%;padding:10px;border-radius:9px;border:none;cursor:pointer;font-family:var(--font);font-weight:800;font-size:.8rem;color:#fff;background:linear-gradient(135deg,#FF2D78,#BF5AF2);margin-bottom:14px;transition:opacity .2s}
+.rate-btn:hover{opacity:.87}
+.rate-btn:disabled{opacity:.4;cursor:not-allowed}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+@media(max-width:500px){.score-grid{grid-template-columns:1fr 1fr}}
+.score-card{background:var(--card2);border-radius:10px;padding:12px;text-align:center}
+.score-num{font-size:1.6rem;font-weight:900;letter-spacing:-.04em;line-height:1}
+.score-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-top:4px}
+.score-bar-wrap{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-top:6px}
+.score-bar{height:100%;border-radius:2px;transition:width 1s ease}
+.overall-score{text-align:center;padding:14px;background:var(--card2);border-radius:12px;margin-top:4px}
+.overall-num{font-size:2.4rem;font-weight:900;letter-spacing:-.04em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.overall-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);margin-top:2px}
+.rater-feedback{background:var(--card2);border-radius:10px;padding:12px;margin-top:10px;font-size:.75rem;line-height:1.7;color:var(--text);white-space:pre-wrap}
+
+/* ── STRATEGY CARDS ── */
+.strat-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;transition:border-color .2s}
+.strat-card:hover{border-color:var(--border2)}
+.strat-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.strat-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.strat-agent{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.strat-title{font-size:.82rem;font-weight:800;color:var(--text);margin-bottom:4px}
+.strat-desc{font-size:.73rem;color:var(--text2);line-height:1.6}
+.strat-action{display:inline-block;margin-top:8px;font-size:.65rem;font-weight:800;padding:3px 9px;border-radius:5px;background:rgba(191,90,242,.12);color:var(--purple);border:1px solid rgba(191,90,242,.25)}
+.priority-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-left:auto}
+
+/* ── REMINDER WIDGET ── */
+.reminder-list{display:flex;flex-direction:column;gap:8px}
+.reminder-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--border)}
+.rem-time{font-family:var(--mono);font-size:.82rem;font-weight:800;min-width:50px;color:var(--rc)}
+.rem-label{font-size:.75rem;color:var(--text);flex:1}
+.rem-cd{font-size:.65rem;color:var(--text2);margin-left:auto;white-space:nowrap}
+.rem-status{width:8px;height:8px;border-radius:50%;background:var(--rc);flex-shrink:0}
+
+/* ── LIVE STATS ── */
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.stat-row:last-child{border-bottom:none}
+.stat-name{font-size:.75rem;color:var(--text2)}
+.stat-val{font-size:.85rem;font-weight:800}
+.stat-bar-wrap{flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:0 12px}
+.stat-bar-fill{height:100%;border-radius:2px;transition:width 1s ease}
+
+/* ── FOLLOWER MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(7,7,13,.88);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal{background:var(--card2);border:1px solid var(--border2);border-radius:18px;padding:26px;width:min(400px,90vw);box-shadow:0 40px 80px rgba(0,0,0,.6);transform:translateY(16px) scale(.97);transition:transform .2s}
+.modal-overlay.open .modal{transform:none}
+.modal h3{font-size:1rem;font-weight:900;margin-bottom:6px}
+.modal p{font-size:.76rem;color:var(--text2);margin-bottom:16px;line-height:1.5}
+.modal-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.modal-lbl{font-size:.75rem;font-weight:700;min-width:86px;display:flex;align-items:center;gap:6px}
+.modal-inp{flex:1;background:var(--card3,#202035);border:1px solid var(--border);border-radius:7px;padding:7px 10px;color:var(--text);font-size:.82rem;font-family:var(--mono);outline:none}
+.modal-inp:focus{border-color:var(--purple)}
+.modal-acts{display:flex;gap:8px;margin-top:6px}
+.m-save{flex:1;padding:10px;border-radius:9px;border:none;cursor:pointer;font-family:var(--font);font-weight:800;font-size:.82rem;color:#fff;background:var(--grad)}
+.m-cancel{padding:10px 14px;border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text2);font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font)}
+</style>
+</head>
+<body>
+
+<!-- ═══ TOP BAR ═══ -->
+<div class="topbar">
+  <a class="tb-brand" href="/">
+    <span class="tb-logo">🐱</span>
+    <span class="tb-name">Metakittyz</span>
+  </a>
+  <div class="tb-team-badge">👥 Agent Team</div>
+  <div class="tb-stats">
+    <div class="tb-stat">
+      <div class="tb-val" id="tb-total" style="background:linear-gradient(90deg,#FF2D78,#BF5AF2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">295</div>
+      <div class="tb-lbl">Followers</div>
+    </div>
+    <div style="width:1px;height:26px;background:var(--border)"></div>
+    <div class="tb-stat">
+      <div class="tb-val" id="tb-growth" style="color:var(--green)">+0</div>
+      <div class="tb-lbl">Today</div>
+    </div>
+    <div style="width:1px;height:26px;background:var(--border)"></div>
+    <div class="tb-stat">
+      <div class="tb-val" id="tb-posted" style="color:var(--gold)">0/3</div>
+      <div class="tb-lbl">Posted</div>
+    </div>
+    <div style="width:1px;height:26px;background:var(--border)"></div>
+    <div class="tb-stat">
+      <div class="tb-val" id="tb-er" style="color:var(--cyan)">—</div>
+      <div class="tb-lbl">Eng. Rate</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-clock" id="clock">--:--:--</div>
+    <div class="tb-day" id="day-badge">Day 1/60</div>
+    <button class="notify-btn" id="notify-btn" onclick="toggleNotifications()">🔔 Reminders</button>
+    <button class="update-btn" onclick="openModal()">+ Update</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ═══ AGENT TEAM ═══ -->
+<div>
+  <div class="sec">🤖 Your Agent Team — 6 World-Class Specialists</div>
+  <div class="agents-row">
+    <!-- NOVA -->
+    <div class="agent-card" style="--ac:var(--nova)" onclick="selectAgent('nova')" id="card-nova">
+      <div class="agent-av" style="background:rgba(255,45,120,.12)">🎯</div>
+      <div class="agent-name">NOVA</div>
+      <div class="agent-title">Chief Content Strategist</div>
+      <div class="agent-status"><span class="status-dot" style="background:var(--green)"></span><span style="color:var(--green)">Active</span></div>
+      <div class="agent-insight" id="insight-nova">Analyzing today's content opportunities…</div>
+      <button class="ask-btn" onclick="event.stopPropagation();askAgent('nova')">Ask NOVA</button>
+    </div>
+    <!-- PULSE -->
+    <div class="agent-card" style="--ac:var(--pulse)" onclick="selectAgent('pulse')" id="card-pulse">
+      <div class="agent-av" style="background:rgba(0,255,148,.1)">💬</div>
+      <div class="agent-name">PULSE</div>
+      <div class="agent-title">Engagement Expert</div>
+      <div class="agent-status"><span class="status-dot" style="background:var(--green)"></span><span style="color:var(--green)">Active</span></div>
+      <div class="agent-insight" id="insight-pulse">Monitoring engagement patterns…</div>
+      <button class="ask-btn" onclick="event.stopPropagation();askAgent('pulse')">Ask PULSE</button>
+    </div>
+    <!-- ARIA -->
+    <div class="agent-card" style="--ac:var(--aria)" onclick="selectAgent('aria')" id="card-aria">
+      <div class="agent-av" style="background:rgba(0,245,255,.1)">📊</div>
+      <div class="agent-name">ARIA</div>
+      <div class="agent-title">Analytics Director</div>
+      <div class="agent-status"><span class="status-dot" style="background:var(--green)"></span><span style="color:var(--green)">Active</span></div>
+      <div class="agent-insight" id="insight-aria">Processing growth trajectory…</div>
+      <button class="ask-btn" onclick="event.stopPropagation();askAgent('aria')">Ask ARIA</button>
+    </div>
+    <!-- REACH -->
+    <div class="agent-card" style="--ac:var(--reach)" onclick="selectAgent('reach')" id="card-reach">
+      <div class="agent-av" style="background:rgba(255,107,43,.1)">📢</div>
+      <div class="agent-name">REACH</div>
+      <div class="agent-title">Marketing Director</div>
+      <div class="agent-status"><span class="status-dot" style="background:var(--green)"></span><span style="color:var(--green)">Active</span></div>
+      <div class="agent-insight" id="insight-reach">Identifying distribution channels…</div>
+      <button class="ask-btn" onclick="event.stopPropagation();askAgent('reach')">Ask REACH</button>
+    </div>
+    <!-- SPARK -->
+    <div class="agent-card" style="--ac:var(--spark)" onclick="selectAgent('spark')" id="card-spark">
+      <div class="agent-av" style="background:rgba(255,214,10,.1)">⚡</div>
+      <div class="agent-name">SPARK</div>
+      <div class="agent-title">Viral Content Specialist</div>
+      <div class="agent-status"><span class="status-dot" style="background:var(--green)"></span><span style="color:var(--green)">Active</span></div>
+      <div class="agent-insight" id="insight-spark">Scanning trending formats…</div>
+      <button class="ask-btn" onclick="event.stopPropagation();askAgent('spark')">Ask SPARK</button>
+    </div>
+    <!-- GUARDIAN -->
+    <div class="agent-card" style="--ac:var(--guardian)" onclick="selectAgent('guardian')" id="card-guardian">
+      <div class="agent-av" style="background:rgba(191,90,242,.1)">🛡️</div>
+      <div class="agent-name">GUARDIAN</div>
+      <div class="agent-title">Quality & Brand Director</div>
+      <div class="agent-status"><span class="status-dot" style="background:var(--green)"></span><span style="color:var(--green)">Active</span></div>
+      <div class="agent-insight" id="insight-guardian">Reviewing brand consistency…</div>
+      <button class="ask-btn" onclick="event.stopPropagation();askAgent('guardian')">Ask GUARDIAN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TEAM FEED + TODAY'S SCHEDULE ═══ -->
+<div class="two-col">
+
+  <!-- TEAM BRIEFING FEED -->
+  <div class="panel" style="display:flex;flex-direction:column">
+    <div class="ph">
+      <div class="pt"><div class="pdot" style="background:var(--purple)"></div>Team Briefing Feed</div>
+      <div class="pa">
+        <button class="pbtn" onclick="loadMorningBriefing()" id="briefing-btn">🌅 Morning Briefing</button>
+        <button class="pbtn" onclick="clearFeed()">Clear</button>
+      </div>
+    </div>
+    <div class="feed" id="feed"></div>
+    <div class="feed-input-row">
+      <input class="feed-input" id="feed-input" placeholder="Ask your team anything… (e.g. What should I post tonight?)" onkeydown="if(event.key==='Enter')sendToTeam()"/>
+      <button class="feed-send" onclick="sendToTeam()">Send →</button>
+    </div>
+  </div>
+
+  <!-- TODAY'S SCHEDULE -->
+  <div class="panel">
+    <div class="ph">
+      <div class="pt"><div class="pdot" style="background:var(--gold)"></div>Today's Post Schedule</div>
+      <div class="pa"><span style="font-size:.62rem;color:var(--text2)" id="sched-date">–</span></div>
+    </div>
+    <div class="pb" id="schedule-body"></div>
+    <!-- REMINDERS -->
+    <div style="padding:0 16px 16px">
+      <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);margin-bottom:8px">⏰ Post Reminders</div>
+      <div class="reminder-list">
+        <div class="reminder-item" style="--rc:var(--pink)">
+          <div class="rem-time">7:00am</div>
+          <div class="rem-label">Morning Reel — Hook & Announce</div>
+          <div class="rem-cd" id="rem-0">–</div>
+          <div class="rem-status"></div>
+        </div>
+        <div class="reminder-item" style="--rc:var(--purple)">
+          <div class="rem-time">12:00pm</div>
+          <div class="rem-label">Midday Reel — Value & Educate</div>
+          <div class="rem-cd" id="rem-1">–</div>
+          <div class="rem-status"></div>
+        </div>
+        <div class="reminder-item" style="--rc:var(--cyan)">
+          <div class="rem-time">6:00pm</div>
+          <div class="rem-label">Evening Reel — Personal & Connect</div>
+          <div class="rem-cd" id="rem-2">–</div>
+          <div class="rem-status"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTENT RATER + STRATEGY ═══ -->
+<div class="two-col">
+
+  <!-- CONTENT RATER -->
+  <div class="panel">
+    <div class="ph">
+      <div class="pt"><div class="pdot" style="background:var(--guardian)"></div>Content Rater — GUARDIAN + SPARK</div>
+    </div>
+    <div class="pb">
+      <div class="rater-inputs">
+        <div class="rater-field rater-full">
+          <label>Post Hook / Opening Line</label>
+          <input class="rater-input" id="r-hook" placeholder="e.g. Harvard taught me this about AI agents and it changed everything…"/>
+        </div>
+        <div class="rater-field">
+          <label>Content Type</label>
+          <select class="rater-input" id="r-type">
+            <option>AI Explainer Reel</option>
+            <option>Build in Public</option>
+            <option>Journey Update</option>
+            <option>Viral / Trending</option>
+            <option>Collab</option>
+            <option>Harvard Insight</option>
+          </select>
+        </div>
+        <div class="rater-field">
+          <label>Platform</label>
+          <select class="rater-input" id="r-platform">
+            <option>Instagram Reel</option>
+            <option>TikTok</option>
+            <option>YouTube Short</option>
+            <option>LinkedIn</option>
+          </select>
+        </div>
+        <div class="rater-field rater-full">
+          <label>Description (optional)</label>
+          <textarea class="rater-input" id="r-desc" rows="2" placeholder="Briefly describe what happens in the video…"></textarea>
+        </div>
+      </div>
+      <button class="rate-btn" id="rate-btn" onclick="rateContent()">🛡️ Rate This Content</button>
+      <div class="score-grid" id="score-grid" style="display:none">
+        <div class="score-card" id="sc-clarity"><div class="score-num" style="color:var(--cyan)">—</div><div class="score-lbl">Clarity</div><div class="score-bar-wrap"><div class="score-bar" style="background:var(--cyan);width:0%"></div></div></div>
+        <div class="score-card" id="sc-visual"><div class="score-num" style="color:var(--purple)">—</div><div class="score-lbl">Visual Appeal</div><div class="score-bar-wrap"><div class="score-bar" style="background:var(--purple);width:0%"></div></div></div>
+        <div class="score-card" id="sc-target"><div class="score-num" style="color:var(--pink)">—</div><div class="score-lbl">Target Market</div><div class="score-bar-wrap"><div class="score-bar" style="background:var(--pink);width:0%"></div></div></div>
+        <div class="score-card" id="sc-viral"><div class="score-num" style="color:var(--gold)">—</div><div class="score-lbl">Viral Potential</div><div class="score-bar-wrap"><div class="score-bar" style="background:var(--gold);width:0%"></div></div></div>
+        <div class="score-card" id="sc-reach"><div class="score-num" style="color:var(--green)">—</div><div class="score-lbl">Reach Score</div><div class="score-bar-wrap"><div class="score-bar" style="background:var(--green);width:0%"></div></div></div>
+        <div class="score-card" id="sc-eng"><div class="score-num" style="color:var(--orange)">—</div><div class="score-lbl">Engagement</div><div class="score-bar-wrap"><div class="score-bar" style="background:var(--orange);width:0%"></div></div></div>
+      </div>
+      <div class="overall-score" id="overall-score" style="display:none">
+        <div class="overall-num" id="overall-num">—</div>
+        <div class="overall-label">Overall Score / 100 · <span id="overall-rating">—</span></div>
+      </div>
+      <div class="rater-feedback" id="rater-feedback" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- STRATEGY RECOMMENDATIONS -->
+  <div class="panel">
+    <div class="ph">
+      <div class="pt"><div class="pdot" style="background:var(--reach)"></div>Live Strategy Recommendations</div>
+      <div class="pa"><button class="pbtn" onclick="refreshStrategy()">🔄 Refresh</button></div>
+    </div>
+    <div class="pb" style="max-height:560px;overflow-y:auto" id="strategy-body">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LIVE STATS + ADVERTISING ═══ -->
+<div class="two-col">
+  <div class="panel">
+    <div class="ph"><div class="pt"><div class="pdot" style="background:var(--aria)"></div>ARIA — Live Performance Stats</div><div class="pa"><span style="font-size:.6rem;color:var(--text2)" id="stats-updated">–</span></div></div>
+    <div class="pb" id="stats-body"></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><div class="pt"><div class="pdot" style="background:var(--reach)"></div>REACH — Advertising & Growth Tactics</div></div>
+    <div class="pb" id="ads-body"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ═══ UPDATE MODAL ═══ -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3>📊 Update Follower Counts</h3>
+    <p>Log today's numbers across all platforms. Your team will analyze the growth and update their strategies automatically.</p>
+    <div class="modal-row"><div class="modal-lbl">📸 Instagram</div><input class="modal-inp" id="m-ig" type="number" placeholder="295" min="0"/></div>
+    <div class="modal-row"><div class="modal-lbl">🎵 TikTok</div><input class="modal-inp" id="m-tt" type="number" placeholder="0" min="0"/></div>
+    <div class="modal-row"><div class="modal-lbl">▶️ YouTube</div><input class="modal-inp" id="m-yt" type="number" placeholder="0" min="0"/></div>
+    <div class="modal-row"><div class="modal-lbl">💼 LinkedIn</div><input class="modal-inp" id="m-li" type="number" placeholder="0" min="0"/></div>
+    <div class="modal-acts">
+      <button class="m-cancel" onclick="closeModal()">Cancel</button>
+      <button class="m-save" onclick="saveModal()">Save & Notify Team</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════ */
+var KEY = 'mk_team_v1';
+var S = JSON.parse(localStorage.getItem(KEY)||'null')||{
+  startDate: new Date().toISOString().split('T')[0],
+  platforms: {ig:295,tt:0,yt:0,li:0},
+  history: [], posted: {}, posts: [], notifs: false
+};
+function save(){ localStorage.setItem(KEY,JSON.stringify(S)); }
+
+/* ══════════════════════════════════════════════════════════
+   AGENTS CONFIG
+══════════════════════════════════════════════════════════ */
+var AGENTS = {
+  nova:     {name:'NOVA',     ico:'🎯', color:'#FF2D78', title:'Chief Content Strategist',
+    system:'You are NOVA, the world\'s best Instagram content strategist. You specialize in viral hooks, content calendars, and growing AI creator accounts to 1 million followers. You are direct, confident, and always give specific actionable advice. The creator is Erika (@metakittyz) — colorful, vibrant, Harvard AI Agentic Intensive student, building PI Agent OS. Keep responses concise and punchy. Max 3 sentences unless asked for more.'},
+  pulse:    {name:'PULSE',    ico:'💬', color:'#00FF94', title:'Engagement Expert',
+    system:'You are PULSE, the world\'s leading Instagram engagement expert. You know exactly how to trigger comments, saves, shares, and follows. You specialize in community building and the psychology of viral engagement. The creator is Erika (@metakittyz). Keep responses concise and punchy. Max 3 sentences unless asked for more.'},
+  aria:     {name:'ARIA',     ico:'📊', color:'#00F5FF', title:'Analytics Director',
+    system:'You are ARIA, an elite social media analytics AI. You interpret follower growth data, engagement rates, and platform algorithms to give precise strategic advice. The creator is Erika (@metakittyz) — 295 followers, Day 1 of a 60-day mission to 1 million. Keep responses concise and punchy. Max 3 sentences unless asked for more.'},
+  reach:    {name:'REACH',    ico:'📢', color:'#FF6B2B', title:'Marketing Director',
+    system:'You are REACH, a world-class social media marketing director. You specialize in organic growth, collab strategies, cross-platform distribution, and advertising tactics for creator brands. The creator is Erika (@metakittyz). Keep responses concise and punchy. Max 3 sentences unless asked for more.'},
+  spark:    {name:'SPARK',    ico:'⚡', color:'#FFD60A', title:'Viral Content Specialist',
+    system:'You are SPARK, the best viral content specialist in the world. You identify exactly what makes content explode — trending audio, hook formats, timing, thumbnail psychology. The creator is Erika (@metakittyz). Keep responses concise and punchy. Max 3 sentences unless asked for more.'},
+  guardian: {name:'GUARDIAN', ico:'🛡️', color:'#BF5AF2', title:'Quality & Brand Director',
+    system:'You are GUARDIAN, an elite brand quality director. You rate content on clarity, visual appeal, target market fit, viral potential, reach potential, and engagement likelihood — always on a scale of 1-10 per dimension. The creator is Erika (@metakittyz) — colorful, vibrant, Harvard AI student. Keep ratings precise and feedback specific.'},
+};
+var activeAgent = 'nova';
+
+/* ══════════════════════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════════════════════ */
+function fmt(n){ return n>=1e6?(n/1e6).toFixed(2)+'M':n>=1000?(n/1000).toFixed(1)+'K':String(n); }
+function dayNum(){ return Math.max(1,Math.min(Math.floor((new Date()-new Date(S.startDate))/86400000)+1,60)); }
+function daysLeft(){ return Math.max(0,61-dayNum()); }
+function todayKey(){ return new Date().toISOString().split('T')[0]; }
+function total(){ var p=S.platforms; return (p.ig||0)+(p.tt||0)+(p.yt||0)+(p.li||0); }
+function todayGrowth(){
+  var h=S.history.filter(function(x){return x.date===todayKey();});
+  if(h.length<2){ var y=new Date();y.setDate(y.getDate()-1);var yk=y.toISOString().split('T')[0];var p=S.history.filter(function(x){return x.date===yk;});if(p.length){var l=p[p.length-1];return total()-((l.ig||0)+(l.tt||0)+(l.yt||0)+(l.li||0));} return 0; }
+  var f=h[0],l=h[h.length-1];return ((l.ig||0)+(l.tt||0)+(l.yt||0)+(l.li||0))-((f.ig||0)+(f.tt||0)+(f.yt||0)+(f.li||0));
+}
+function avgER(){
+  if(!S.posts||!S.posts.length) return 0;
+  var t=S.posts.slice(0,10).reduce(function(s,p){return s+((p.likes||0)+(p.comments||0)+(p.saves||0)*2)/(S.platforms.ig||295)*100;},0);
+  return t/Math.min(S.posts.length,10);
+}
+function el(id){ return document.getElementById(id); }
+function setText(id,v){ var e=el(id);if(e)e.textContent=v; }
+
+/* ══════════════════════════════════════════════════════════
+   UPDATE METRICS
+══════════════════════════════════════════════════════════ */
+function updateMetrics(){
+  var t=total(),g=todayGrowth(),dn=dayNum(),dl=daysLeft();
+  var needed=dl>0?Math.ceil((1e6-t)/dl):0;
+  var posted=(S.posted[todayKey()]||[]).length;
+  var er=avgER();
+  setText('tb-total',fmt(t));
+  setText('tb-growth',(g>=0?'+':'')+fmt(g));
+  setText('tb-posted',posted+'/3');
+  setText('tb-er',er?er.toFixed(1)+'%':'—');
+  setText('day-badge','Day '+dn+'/60');
+  updateStats(t,g,dn,dl,needed,posted,er);
+  updateAds(dn,needed);
+  updateInsights(t,g,dn,needed,posted);
+}
+
+/* ══════════════════════════════════════════════════════════
+   AGENT INSIGHTS (static, fast)
+══════════════════════════════════════════════════════════ */
+var INSIGHT_POOL = {
+  nova: ['Lead today with the Harvard angle — it\'s your strongest credibility hook right now.',
+         'Your hook should start mid-sentence. Drop the intro.',
+         'Film today\'s morning reel tonight so you\'re never scrambling.'],
+  pulse: ['Reply to every comment in the first 60 minutes — this is non-negotiable.',
+          'End every post with a direct question. Comments fuel reach.',
+          'Story polls today: "Did you know AI agents could do this?" — yes/no gets taps.'],
+  aria:  ['At 295 followers your engagement rate matters more than reach right now.',
+          'Cross-posting to TikTok will give you 3-4x more data to analyze.',
+          'Your first 1000 followers are the hardest. Focus on one viral moment.'],
+  reach: ['DM 10 creators in the AI space today. Genuine engagement, no pitch yet.',
+          'Cross-post every reel to LinkedIn — B2B audience is underserved in AI creator content.',
+          'Your Harvard credibility is a press hook. Start building a media contact list.'],
+  spark: ['Trending audio + AI twist = your fastest path to the explore page.',
+          'POV format reels are outperforming talking head by 4x this week.',
+          'Your next viral moment: "I ran [a business] through an AI pipeline live."'],
+  guardian: ['Your brand color identity is strong — maintain it in every thumbnail.',
+             'Keep all AI explanations under 30 words per concept. Simplicity = shareability.',
+             'Every post should pass this test: would a 16-year-old understand it?'],
+};
+function updateInsights(t,g,dn,needed,posted){
+  Object.keys(AGENTS).forEach(function(k){
+    var pool=INSIGHT_POOL[k];
+    var insight=pool[(dn+pool.length)%pool.length];
+    var el=document.getElementById('insight-'+k);
+    if(el && el.textContent.indexOf('…')>-1) el.textContent=insight;
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   CLOCK + REMINDERS
+══════════════════════════════════════════════════════════ */
+var POST_TIMES = [7,12,18];
+function updateClock(){
+  var n=new Date();
+  setText('clock',String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0'));
+  POST_TIMES.forEach(function(h,i){
+    var t=new Date();t.setHours(h,0,0,0);
+    if(t<n)t.setDate(t.getDate()+1);
+    var diff=Math.floor((t-n)/1000);
+    var hrs=Math.floor(diff/3600),min=Math.floor((diff%3600)/60);
+    var e=el('rem-'+i);
+    if(e) e.textContent=(n.getHours()===h&&n.getMinutes()===0)?'🔴 NOW!':(hrs>0?hrs+'h ':'')+String(min).padStart(2,'0')+'m';
+    var e2=el('cd-sched-'+i);
+    if(e2) e2.textContent=(n.getHours()===h&&n.getMinutes()<5)?'🔴 POST NOW':(hrs>0?hrs+'h ':'')+String(min).padStart(2,'0')+'m';
+    // Notification trigger
+    if(S.notifs && n.getHours()===h && n.getMinutes()===0 && n.getSeconds()===0){
+      new Notification('🐱 Metakittyz — Time to Post!',{body:'Your '+['morning','midday','evening'][i]+' reel should go live now. Your team is ready!',icon:'/favicon.png'});
+    }
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   NOTIFICATIONS
+══════════════════════════════════════════════════════════ */
+function toggleNotifications(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission==='granted'){
+    S.notifs=!S.notifs; save(); updateNotifyBtn();
+  } else {
+    Notification.requestPermission().then(function(p){
+      if(p==='granted'){S.notifs=true;save();updateNotifyBtn();new Notification('🐱 Metakittyz Reminders On!',{body:'You\'ll be reminded to post at 7am, 12pm, and 6pm daily.'});}
+    });
+  }
+}
+function updateNotifyBtn(){
+  var b=el('notify-btn');
+  if(!b)return;
+  b.className='notify-btn'+(S.notifs?' on':'');
+  b.textContent=S.notifs?'🔔 Reminders On':'🔔 Reminders';
+}
+
+/* ══════════════════════════════════════════════════════════
+   TODAY'S SCHEDULE
+══════════════════════════════════════════════════════════ */
+var SCHEDULE_DATA = [
+  [
+    {time:'7–9am',purpose:'Hook & Announce',sc:'var(--pink)',hook:'"I just started a Harvard AI course and I\'m documenting everything."',desc:'Show the enrollment. Show 295 followers. State the mission: 1M in 60 days. Raw, honest, exciting.',tags:['#Harvard','#AgenticAI','#1MillionIn60Days']},
+    {time:'12–1pm',purpose:'Educate & Value',sc:'var(--purple)',hook:'"What even IS an AI agent? 30 seconds."',desc:'One analogy. ChatGPT = one employee. AI agent = a whole department that runs itself. Show PI Agent OS for 2 seconds.',tags:['#AIAgent','#AIExplained','#LearnAI']},
+    {time:'6–9pm',purpose:'Personal & Connect',sc:'var(--cyan)',hook:'"I told 295 people I\'m going to 1M in 60 days. Here\'s why I actually think it\'s possible."',desc:'Vulnerability + strategy. Three things that make this different: Harvard credibility, building live, documenting mistakes.',tags:['#CreatorJourney','#MetakittyzLife']},
+  ],
+  [
+    {time:'7–9am',purpose:'Hook & Educate',sc:'var(--pink)',hook:'"The most powerful thing about AI agents: you brief them once."',desc:'Explain how one brief flows to every agent. No repeating yourself 8 times. Show the PI Agent OS pipeline briefly.',tags:['#AIAgents','#Harvard','#BuildingWithAI']},
+    {time:'12–1pm',purpose:'Build in Public',sc:'var(--purple)',hook:'"Here\'s a live tour of what I\'m building with AI."',desc:'Screen record PI Agent OS. Show the orchestration pipeline running. Show a real agent doing something cool.',tags:['#BuildInPublic','#PIAgentOS','#AIBuilder']},
+    {time:'6–9pm',purpose:'Journey Update',sc:'var(--cyan)',hook:'"Day 2: what actually happened after the announcement."',desc:'Share the numbers. New followers. Comments. What surprised you. One thing you\'re doing differently tomorrow.',tags:['#DayUpdate','#CreatorMission']},
+  ],
+  [
+    {time:'7–9am',purpose:'Viral Hook',sc:'var(--pink)',hook:'"A pipeline is a factory floor — not a chat."',desc:'Explain AI pipelines visually. Each agent does one job, passes it forward. Nobody does everything. The result is better.',tags:['#AgenticAI','#AIExplained','#TechTok']},
+    {time:'12–1pm',purpose:'Demo & Build',sc:'var(--purple)',hook:'"Watch AI build a complete brand in under 60 seconds."',desc:'Fast-cut demo. Drop in a company name. Watch agents run. Show the output. The "wow" moment is the hook.',tags:['#AIDemo','#BuildInPublic','#BrandAI']},
+    {time:'6–9pm',purpose:'Honest & Real',sc:'var(--cyan)',hook:'"What I got wrong in my first 2 days of posting."',desc:'Honest reflection. One thing that flopped. What you learned. What you\'re changing. This content type saves follows.',tags:['#Mistakes','#RealTalk','#CreatorLife']},
+  ],
+];
+function renderSchedule(){
+  var dn=dayNum()-1;
+  var day=SCHEDULE_DATA[Math.min(dn,SCHEDULE_DATA.length-1)];
+  var posted=S.posted[todayKey()]||[];
+  var body=el('schedule-body');
+  if(!body)return;
+  var sd=el('sched-date');
+  if(sd)sd.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  body.innerHTML=day.map(function(p,i){
+    var done=posted.includes(i);
+    return '<div class="schedule-item" style="--sc:'+p.sc+'">' +
+      '<div class="sch-time-col"><div class="sch-time">'+p.time+'</div><div class="sch-cd" id="cd-sched-'+i+'">–</div><div class="sch-purpose">'+p.purpose+'</div></div>'+
+      '<div class="sch-content"><div class="sch-hook">'+p.hook+'</div><div class="sch-desc">'+p.desc+'</div>'+
+      '<div class="sch-tags">'+p.tags.map(function(t){return '<span class="sch-tag">'+t+'</span>';}).join('')+'</div></div>'+
+      '<div class="sch-right"><button class="mark-btn'+(done?' done':'')+'" id="schbtn-'+i+'" onclick="markPosted('+i+')">'+(done?'✓ Posted':'Mark Posted')+'</button></div>'+
+    '</div>';
+  }).join('');
+}
+function markPosted(i){
+  var k=todayKey();
+  if(!S.posted[k])S.posted[k]=[];
+  if(!S.posted[k].includes(i)){
+    S.posted[k].push(i);
+    addFeedMsg('pulse','✅ Post '+String(i+1)+' marked live! Now go reply to every comment in the next 60 minutes — that window is when the algorithm decides your reach. Don\'t waste it. 🔥');
+  }
+  save();renderSchedule();updateMetrics();
+}
+
+/* ══════════════════════════════════════════════════════════
+   TEAM FEED
+══════════════════════════════════════════════════════════ */
+function addFeedMsg(agentKey, text, isTyping){
+  var feed=el('feed');if(!feed)return;
+  var a=AGENTS[agentKey]||AGENTS.nova;
+  var wrap=document.createElement('div');
+  wrap.className='feed-msg';
+  wrap.style.setProperty('--fac',a.color);
+  var t=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  wrap.innerHTML='<div class="feed-av" style="background:rgba('+hexToRgb(a.color)+',.1)">'+a.ico+'</div>'+
+    '<div class="feed-body"><div class="feed-meta"><span class="feed-who">'+a.name+'</span><span class="feed-time">'+t+'</span></div>'+
+    (isTyping?'<div class="feed-typing"><span></span><span></span><span></span></div>':'<div class="feed-text">'+text+'</div>')+
+    '</div>';
+  wrap.id=isTyping?'typing-'+agentKey:'';
+  feed.appendChild(wrap);
+  feed.scrollTop=feed.scrollHeight;
+  return wrap;
+}
+function removeTyping(agentKey){
+  var e=el('typing-'+agentKey);if(e)e.remove();
+}
+function hexToRgb(hex){
+  var r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return r?parseInt(r[1],16)+','+parseInt(r[2],16)+','+parseInt(r[3],16):'191,90,242';
+}
+function clearFeed(){ var f=el('feed');if(f)f.innerHTML=''; }
+
+function callAgent(agentKey, userMsg, onDone){
+  var a=AGENTS[agentKey];
+  addFeedMsg(agentKey, '', true);
+  var body={model:'claude-sonnet-4-6',max_tokens:200,system:a.system,messages:[{role:'user',content:userMsg}]};
+  fetch('/api/anthropic',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    removeTyping(agentKey);
+    var t=d.content&&d.content[0]&&d.content[0].text;
+    if(t){addFeedMsg(agentKey,t);if(onDone)onDone(t);}
+    else throw new Error('empty');
+  })
+  .catch(function(){
+    fetch('/api/qwen/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({max_tokens:200,messages:[{role:'system',content:a.system},{role:'user',content:userMsg}]})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      removeTyping(agentKey);
+      var t=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+      if(t){addFeedMsg(agentKey,t);if(onDone)onDone(t);}
+      else throw new Error('empty');
+    })
+    .catch(function(){
+      removeTyping(agentKey);
+      addFeedMsg(agentKey,'[API not configured — add ANTHROPIC_API_KEY to your Render environment variables]');
+    });
+  });
+}
+
+/* Morning briefing */
+var briefingLoaded=false;
+function loadMorningBriefing(){
+  if(briefingLoaded) return;
+  briefingLoaded=true;
+  var btn=el('briefing-btn');if(btn){btn.disabled=true;btn.textContent='Loading…';}
+  var dn=dayNum(),t=total(),g=todayGrowth(),dl=daysLeft();
+  var ctx='Day '+dn+' of 60. Current followers: '+fmt(t)+'. Today\'s growth: '+(g>=0?'+':'')+fmt(g)+'. Days left: '+dl+'. Goal: 1 million.';
+  setTimeout(function(){callAgent('nova','Give a sharp 2-sentence morning briefing for @metakittyz. '+ctx+' What\'s the #1 content priority today?');},300);
+  setTimeout(function(){callAgent('pulse','Give a sharp 1-sentence engagement tip for @metakittyz today. '+ctx);},1200);
+  setTimeout(function(){callAgent('spark','Give a sharp 1-sentence viral opportunity or trending format @metakittyz should use today. '+ctx);},2200);
+  setTimeout(function(){callAgent('reach','Give a sharp 1-sentence marketing or distribution move @metakittyz should make today. '+ctx);},3200);
+  if(btn)setTimeout(function(){btn.disabled=false;btn.textContent='🌅 Morning Briefing';briefingLoaded=false;},4000);
+}
+
+function selectAgent(key){
+  activeAgent=key;
+  document.querySelectorAll('.agent-card').forEach(function(c){c.classList.remove('active-card');});
+  var c=el('card-'+key);if(c)c.classList.add('active-card');
+}
+function askAgent(key){
+  selectAgent(key);
+  var inp=el('feed-input');
+  if(inp){inp.placeholder='Asking '+AGENTS[key].name+'… type your question here';inp.focus();}
+}
+function sendToTeam(){
+  var inp=el('feed-input');if(!inp||!inp.value.trim())return;
+  var msg=inp.value.trim();inp.value='';
+  var user=document.createElement('div');
+  user.style.cssText='display:flex;justify-content:flex-end;margin-bottom:8px;animation:fadein .3s ease';
+  user.innerHTML='<div style="background:rgba(191,90,242,.15);border:1px solid rgba(191,90,242,.25);border-radius:10px 10px 3px 10px;padding:9px 13px;font-size:.78rem;max-width:80%">'+msg+'</div>';
+  var feed=el('feed');if(feed){feed.appendChild(user);feed.scrollTop=feed.scrollHeight;}
+  callAgent(activeAgent, msg);
+}
+
+/* ══════════════════════════════════════════════════════════
+   CONTENT RATER
+══════════════════════════════════════════════════════════ */
+function rateContent(){
+  var hook=el('r-hook').value.trim();
+  if(!hook){el('r-hook').focus();return;}
+  var type=el('r-type').value, platform=el('r-platform').value;
+  var desc=el('r-desc').value.trim();
+  var btn=el('rate-btn');btn.disabled=true;btn.textContent='🛡️ Rating…';
+  var sg=el('score-grid'),os=el('overall-score'),rf=el('rater-feedback');
+  if(sg)sg.style.display='none';if(os)os.style.display='none';if(rf)rf.style.display='none';
+
+  var prompt='Rate this '+platform+' content for @metakittyz on exactly these 6 dimensions (score 1-10 each):\n'+
+    '1. Clarity (is the message immediately clear?)\n'+
+    '2. Visual Appeal (does it suggest strong visual content?)\n'+
+    '3. Target Market Fit (does it match: AI creator, colorful, Harvard, 18-35 audience?)\n'+
+    '4. Viral Potential (hook strength, shareability, comment triggers)\n'+
+    '5. Reach Score (hashtag/SEO/algorithm potential)\n'+
+    '6. Engagement Likelihood (will people comment, save, share?)\n\n'+
+    'Hook: "'+hook+'"\nType: '+type+(desc?'\nDescription: '+desc:'')+'\n\n'+
+    'Reply ONLY in this exact JSON format: {"clarity":X,"visual":X,"target":X,"viral":X,"reach":X,"engagement":X,"feedback":"2-3 sentence specific improvement suggestion"}';
+
+  var body={model:'claude-sonnet-4-6',max_tokens:300,system:AGENTS.guardian.system,messages:[{role:'user',content:prompt}]};
+  fetch('/api/anthropic',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var t=d.content&&d.content[0]&&d.content[0].text;
+    if(t) processRating(t);else throw new Error('empty');
+  })
+  .catch(function(){
+    fetch('/api/qwen/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({max_tokens:300,messages:[{role:'system',content:AGENTS.guardian.system},{role:'user',content:prompt}]})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var t=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+      if(t)processRating(t);else showFallbackRating(hook);
+    })
+    .catch(function(){showFallbackRating(hook);});
+  })
+  .finally(function(){btn.disabled=false;btn.textContent='🛡️ Rate This Content';});
+}
+
+function processRating(text){
+  try{
+    var json=JSON.parse(text.match(/\{[\s\S]*\}/)[0]);
+    showScores(json);
+  }catch(e){ showFallbackRating(''); }
+}
+function showScores(j){
+  var dims=[
+    {key:'clarity',id:'sc-clarity',color:'var(--cyan)'},
+    {key:'visual',id:'sc-visual',color:'var(--purple)'},
+    {key:'target',id:'sc-target',color:'var(--pink)'},
+    {key:'viral',id:'sc-viral',color:'var(--gold)'},
+    {key:'reach',id:'sc-reach',color:'var(--green)'},
+    {key:'engagement',id:'sc-eng',color:'var(--orange)'},
+  ];
+  var sg=el('score-grid');if(sg)sg.style.display='grid';
+  dims.forEach(function(d){
+    var card=el(d.id);if(!card)return;
+    var score=Math.round(Math.min(10,Math.max(1,j[d.key]||5)));
+    card.children[0].textContent=score+'/10';
+    card.children[0].style.color=d.color;
+    card.children[2].children[0].style.width=(score*10)+'%';
+    card.children[2].children[0].style.background=d.color;
+  });
+  var avg=Math.round((Object.values({a:j.clarity,b:j.visual,c:j.target,d:j.viral,e:j.reach,f:j.engagement}).reduce(function(s,v){return s+(v||5);},0)/6)*10);
+  var os=el('overall-score'),on=el('overall-num'),or2=el('overall-rating');
+  if(os)os.style.display='block';
+  if(on)on.textContent=avg;
+  var rating=avg>=85?'🔥 Excellent':avg>=70?'💪 Strong':avg>=55?'👍 Good':avg>=40?'⚠️ Needs Work':'🔴 Rework Required';
+  if(or2)or2.textContent=rating;
+  var rf=el('rater-feedback');
+  if(rf){rf.style.display='block';rf.textContent=j.feedback||'';}
+}
+function showFallbackRating(hook){
+  var sg=el('score-grid'),os=el('overall-score'),rf=el('rater-feedback');
+  if(sg)sg.style.display='grid';
+  if(os)os.style.display='block';
+  if(rf){rf.style.display='block';rf.textContent='API not configured. Add ANTHROPIC_API_KEY to your Render environment variables to get AI-powered content ratings.';}
+}
+
+/* ══════════════════════════════════════════════════════════
+   STRATEGY RECOMMENDATIONS
+══════════════════════════════════════════════════════════ */
+var STRATEGIES = [
+  {agent:'reach',color:'var(--reach)',ico:'📢',priority:'high',title:'Cross-Post Every Reel to TikTok',desc:'Same reel, different caption. Post to TikTok 30 minutes after Instagram. You get 3-4x your current reach with zero extra production work. TikTok also acts as a preview audience — if it flops there, refine before the next IG post.',action:'Do this today'},
+  {agent:'spark',color:'var(--spark)',ico:'⚡',priority:'high',title:'Use Trending Audio Before It Peaks',desc:'Check Instagram\'s trending audio tab daily. Find audio with an upward arrow that has under 50K uses. Use it before it hits 500K. This single tactic can 10x your reel\'s organic reach overnight.',action:'Check daily'},
+  {agent:'pulse',color:'var(--pulse)',ico:'💬',priority:'high',title:'60-Minute Engagement Window',desc:'The algorithm scores your post in the first hour based on engagement rate. Set a timer. Reply to every comment, like every reply. Ask a follow-up question to everyone. This window determines how many non-followers see your content.',action:'Non-negotiable'},
+  {agent:'nova',color:'var(--nova)',ico:'🎯',priority:'high',title:'Pin Your Best Reel as the Top Post',desc:'Your first impression is your pinned post. Pin the one with the best hook and clearest value proposition. Every new visitor who comes from another reel will see this first. It should immediately answer "why should I follow you?"',action:'Do this now'},
+  {agent:'reach',color:'var(--reach)',ico:'📢',priority:'medium',title:'LinkedIn Tuesday Morning Post',desc:'Every Tuesday at 8am, post a text version of your best reel insight on LinkedIn with a link to your IG. The B2B AI audience on LinkedIn is huge, underserved, and will drive high-quality followers who engage deeply.',action:'Start Tuesday'},
+  {agent:'spark',color:'var(--spark)',ico:'⚡',priority:'medium',title:'"POV: AI runs your business" Series',desc:'POV format reels are outperforming talking-head videos by 4x right now. Create a series: POV you\'re the AI agent, POV you briefed an AI team, POV you got results. The format is familiar, the AI twist is unique to you.',action:'Film this week'},
+  {agent:'nova',color:'var(--nova)',ico:'🎯',priority:'medium',title:'Harvard Credibility Series (8 episodes)',desc:'Every Monday post one AI concept from the Harvard course, explained in 30 seconds with plain English. Title them "Harvard taught me this about AI — and most people don\'t know it yet." The credibility signal compounds over time.',action:'Plan 8 topics'},
+  {agent:'pulse',color:'var(--pulse)',ico:'💬',priority:'medium',title:'Daily Story Poll Strategy',desc:'Post one poll to your Stories every day. "Can AI really replace a whole team?" "Would you trust AI to write your marketing?" These drive taps, which the algorithm reads as engagement. Simple yes/no is enough.',action:'Daily habit'},
+  {agent:'reach',color:'var(--reach)',ico:'📢',priority:'low',title:'Build Your Email List From Day 1',desc:'Instagram can limit your reach or ban you at any time. Your email list is yours forever. Create a free "AI Agents Explained in 5 Minutes" PDF, link it in bio. Every follower is also a subscriber. Start building this asset now.',action:'Set up this week'},
+  {agent:'guardian',color:'var(--guardian)',ico:'🛡️',priority:'low',title:'Consistent Thumbnail Style',desc:'Your grid should have a visual identity. Use the same font, color treatment, or visual motif on every thumbnail. When someone visits your profile, the grid should look intentional and bold — not random. This alone increases follow rate by 20-40%.',action:'Design template'},
+];
+function renderStrategy(){
+  var body=el('strategy-body');if(!body)return;
+  var priorityOrder={high:0,medium:1,low:2};
+  var sorted=STRATEGIES.slice().sort(function(a,b){return priorityOrder[a.priority]-priorityOrder[b.priority];});
+  body.innerHTML=sorted.map(function(s){
+    var pc=s.priority==='high'?'var(--pink)':s.priority==='medium'?'var(--gold)':'var(--text3)';
+    return '<div class="strat-card">'+
+      '<div class="strat-header">'+
+        '<div class="strat-av" style="background:rgba('+hexToRgb(s.color.replace('var(--','').replace(')',''))||'191,90,242'+',.1)">'+s.ico+'</div>'+
+        '<div class="strat-agent" style="color:'+s.color+'">'+AGENTS[s.agent].name+'</div>'+
+        '<div class="priority-dot" style="background:'+pc+'" title="'+s.priority+' priority"></div>'+
+      '</div>'+
+      '<div class="strat-title">'+s.title+'</div>'+
+      '<div class="strat-desc">'+s.desc+'</div>'+
+      '<span class="strat-action">→ '+s.action+'</span>'+
+    '</div>';
+  }).join('');
+}
+function refreshStrategy(){ renderStrategy(); }
+
+/* ══════════════════════════════════════════════════════════
+   ARIA LIVE STATS
+══════════════════════════════════════════════════════════ */
+function updateStats(t,g,dn,dl,needed,posted,er){
+  var body=el('stats-body');if(!body)return;
+  var pct=(t/1e6*100).toFixed(2);
+  var onTrack=g>=(needed*0.5);
+  body.innerHTML=[
+    {n:'Total Reach (all platforms)',v:fmt(t),c:'var(--pink)',pct:Math.min(t/5000*100,100)},
+    {n:'Today\'s Growth',v:(g>=0?'+':'')+fmt(g),c:g>0?'var(--green)':'var(--red)',pct:Math.min(Math.abs(g)/needed*100,100)},
+    {n:'% to 1M Goal',v:pct+'%',c:'var(--purple)',pct:parseFloat(pct)},
+    {n:'Days Remaining',v:String(dl)+' of 60',c:'var(--cyan)',pct:(60-dl)/60*100},
+    {n:'Posts Today',v:posted+' / 3',c:posted===3?'var(--green)':'var(--gold)',pct:posted/3*100},
+    {n:'Avg Engagement Rate',v:er?er.toFixed(1)+'%':'—',c:er>=5?'var(--green)':er>=2?'var(--gold)':'var(--red)',pct:Math.min(er*5,100)},
+    {n:'Followers Needed / Day',v:fmt(needed),c:onTrack?'var(--green)':'var(--orange)',pct:onTrack?80:30},
+    {n:'Growth Status',v:onTrack?'✅ On Track':'⚠️ Below Target',c:onTrack?'var(--green)':'var(--gold)',pct:onTrack?100:40},
+  ].map(function(s){
+    return '<div class="stat-row"><span class="stat-name">'+s.n+'</span>'+
+      '<div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:'+Math.max(0,Math.min(100,s.pct||0))+'%;background:'+s.c+'"></div></div>'+
+      '<span class="stat-val" style="color:'+s.c+'">'+s.v+'</span></div>';
+  }).join('');
+  var su=el('stats-updated');if(su)su.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
+
+/* ══════════════════════════════════════════════════════════
+   REACH ADVERTISING PANEL
+══════════════════════════════════════════════════════════ */
+function updateAds(dn){
+  var body=el('ads-body');if(!body)return;
+  var tactics=[
+    {ico:'🆓',title:'Organic First (Days 1–30)',desc:'Build credibility and proof before spending a dollar. Your Harvard angle + building live = press-worthy story. Organic reach validates content quality.'},
+    {ico:'🤝',title:'Collab Outreach (Days 11+)',desc:'DM 5 AI creators daily. Engage their content for 1 week first. Then pitch: "Let\'s do a duet — your audience + mine both get value." Collabs are worth 10x any ad spend at your stage.'},
+    {ico:'📰',title:'Earned Media Play',desc:'At 10K followers, you have a pitch-worthy story: "Latina Harvard AI student going 0 to 1M in 60 days while building AI tools." Pitch TechCrunch, Forbes, Insider, and AI-specific newsletters.'},
+    {ico:'🎯',title:'Instagram Boost (Day 30+)',desc:'Once you have a proven viral reel (1K+ likes), boost it with $20–50 to lookalike audiences: AI enthusiasts, tech entrepreneurs, 18-35 creators. Never boost a post that hasn\'t already proven organic traction.'},
+    {ico:'📢',title:'TikTok Creator Marketplace',desc:'At 10K on TikTok, access the Creator Marketplace. Brand partnerships in the AI/tech space pay $500–5000 per post. Your Harvard credibility makes you a premium partner.'},
+    {ico:'✉️',title:'Email List = Your Asset',desc:'Every follower should become an email subscriber. Link in bio → free PDF → email captured. 1000 email subscribers = more reliable reach than 10,000 followers on any platform.'},
+  ];
+  body.innerHTML=tactics.map(function(t){
+    return '<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">'+
+      '<div style="font-size:1.2rem;flex-shrink:0;margin-top:2px">'+t.ico+'</div>'+
+      '<div><div style="font-size:.78rem;font-weight:800;margin-bottom:3px">'+t.title+'</div>'+
+      '<div style="font-size:.7rem;color:var(--text2);line-height:1.5">'+t.desc+'</div></div>'+
+    '</div>';
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════════════════ */
+function openModal(){
+  var p=S.platforms;
+  el('m-ig').value=p.ig||'';el('m-tt').value=p.tt||'';el('m-yt').value=p.yt||'';el('m-li').value=p.li||'';
+  el('modal').classList.add('open');
+}
+function closeModal(){ el('modal').classList.remove('open'); }
+function saveModal(){
+  var prev=Object.assign({},S.platforms);
+  S.platforms={ig:parseInt(el('m-ig').value)||S.platforms.ig||0,tt:parseInt(el('m-tt').value)||0,yt:parseInt(el('m-yt').value)||0,li:parseInt(el('m-li').value)||0};
+  S.history.push({date:todayKey(),...S.platforms});
+  if(S.history.length>200)S.history=S.history.slice(-200);
+  save();closeModal();updateMetrics();renderSchedule();
+  var newT=total(),prevT=(prev.ig||0)+(prev.tt||0)+(prev.yt||0)+(prev.li||0);
+  var gained=newT-prevT;
+  if(gained>0) addFeedMsg('aria','📊 Numbers updated! Total reach: '+fmt(newT)+'. You gained '+fmt(gained)+' followers this update. '+(gained>=100?'Solid momentum — keep the posting cadence consistent.':'Keep posting — the algorithm rewards consistency over volume.'));
+}
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
+updateMetrics();
+renderSchedule();
+renderStrategy();
+updateNotifyBtn();
+updateClock();
+setInterval(updateClock,1000);
+setInterval(function(){updateMetrics();renderSchedule();},60000);
+
+// Auto-load morning briefing if it's before 10am
+var hr=new Date().getHours();
+if(hr>=6&&hr<10&&el('feed').children.length===0){
+  setTimeout(loadMorningBriefing,1500);
+}
+
+// Insert welcome message if feed is empty
+setTimeout(function(){
+  if(el('feed').children.length===0){
+    addFeedMsg('nova','Good '+['morning','morning','afternoon','afternoon','afternoon','evening','evening'][Math.min(Math.floor(new Date().getHours()/3.5),6)]+'! Your team is ready. Hit "Morning Briefing" to get today\'s strategy, or ask any of us a question directly.');
+  }
+},500);
+</script>
+</body>
+</html>
