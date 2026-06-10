@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Metakittyz · Live Dashboard</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   METAKITTYZ LIVE DASHBOARD
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --pink:#FF2D78;--purple:#BF5AF2;--cyan:#00F5FF;
+  --green:#00FF94;--gold:#FFD60A;--orange:#FF6B2B;
+  --red:#FF453A;--blue:#0A84FF;
+  --bg:#07070D;--bg2:#0F0F1A;--bg3:#151523;
+  --card:#161625;--card2:#1C1C2E;--card3:#222238;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#EEEEFF;--text2:#8B8BAD;--text3:#5A5A7A;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+
+/* ── Noise texture overlay ── */
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Ambient glows ── */
+.ambient{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+.ambient-1{width:600px;height:600px;background:rgba(191,90,242,0.07);top:-200px;left:-200px}
+.ambient-2{width:500px;height:500px;background:rgba(255,45,120,0.06);bottom:-150px;right:-150px}
+.ambient-3{width:400px;height:400px;background:rgba(0,245,255,0.05);top:50%;left:50%;transform:translate(-50%,-50%)}
+
+/* ── Layout ── */
+.wrap{position:relative;z-index:1}
+
+/* ═══════════════════════════════════════════════════════════
+   TOP BAR
+   ═══════════════════════════════════════════════════════════ */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:rgba(7,7,13,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0;height:52px;
+}
+.topbar-brand{
+  display:flex;align-items:center;gap:10px;
+  padding:0 20px;height:100%;border-right:1px solid var(--border);
+  text-decoration:none;
+}
+.topbar-logo{font-size:1.2rem}
+.topbar-name{font-weight:900;font-size:0.95rem;letter-spacing:-0.02em}
+.topbar-name span{background:linear-gradient(90deg,#FF2D78,#BF5AF2,#00F5FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.topbar-live{
+  display:flex;align-items:center;gap:6px;padding:0 16px;height:100%;border-right:1px solid var(--border);
+  font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--green);
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:live-pulse 1.5s ease-in-out infinite}
+@keyframes live-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,148,0.4)}50%{opacity:0.7;box-shadow:0 0 0 6px rgba(0,255,148,0)}}
+.topbar-center{flex:1;display:flex;align-items:center;justify-content:center;gap:24px;padding:0 16px}
+.topbar-stat{text-align:center}
+.topbar-stat-val{font-size:0.95rem;font-weight:900;letter-spacing:-0.02em}
+.topbar-stat-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:12px;padding:0 16px;margin-left:auto}
+.topbar-clock{font-family:var(--mono);font-size:0.82rem;font-weight:700;color:var(--text2)}
+.topbar-day{
+  background:linear-gradient(135deg,rgba(255,45,120,0.15),rgba(191,90,242,0.15));
+  border:1px solid rgba(191,90,242,0.3);border-radius:8px;
+  padding:4px 12px;font-size:0.75rem;font-weight:800;color:var(--purple);
+}
+.add-btn{
+  background:linear-gradient(135deg,#FF2D78,#BF5AF2);
+  border:none;border-radius:8px;padding:6px 14px;
+  color:#fff;font-weight:800;font-size:0.75rem;cursor:pointer;font-family:var(--font);
+  transition:opacity 0.2s;
+}
+.add-btn:hover{opacity:0.85}
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN GRID
+   ═══════════════════════════════════════════════════════════ */
+.main{padding:16px;display:flex;flex-direction:column;gap:14px}
+
+/* ── KPI row ── */
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+
+.kpi{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:16px;position:relative;overflow:hidden;transition:border-color 0.2s;
+}
+.kpi:hover{border-color:var(--border2)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kpi-color,var(--purple))}
+.kpi-label{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.kpi-val{font-size:1.6rem;font-weight:900;letter-spacing:-0.04em;color:var(--kpi-color,var(--text));line-height:1}
+.kpi-sub{font-size:0.68rem;color:var(--text2);margin-top:6px;display:flex;align-items:center;gap:4px}
+.kpi-delta{font-weight:700;font-size:0.7rem}
+.kpi-delta.up{color:var(--green)}
+.kpi-delta.down{color:var(--red)}
+.kpi-sparkline{position:absolute;bottom:0;right:0;width:80px;height:36px;opacity:0.3}
+
+/* ── Middle grid ── */
+.mid-grid{display:grid;grid-template-columns:1fr 340px;gap:14px}
+@media(max-width:1000px){.mid-grid{grid-template-columns:1fr}}
+
+/* ── Bottom grid ── */
+.bot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.bot-grid{grid-template-columns:1fr}}
+
+/* ── Wide grid ── */
+.wide-grid{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+@media(max-width:1000px){.wide-grid{grid-template-columns:1fr}}
+
+/* ═══════════════════════════════════════════════════════════
+   PANELS
+   ═══════════════════════════════════════════════════════════ */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.panel-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,0.02);
+}
+.panel-title{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);display:flex;align-items:center;gap:8px}
+.panel-title .dot{width:6px;height:6px;border-radius:50%}
+.panel-actions{display:flex;gap:8px;align-items:center}
+.panel-btn{
+  background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:7px;
+  padding:5px 10px;color:var(--text2);font-size:0.68rem;font-weight:700;cursor:pointer;
+  font-family:var(--font);transition:all 0.15s;
+}
+.panel-btn:hover{background:rgba(255,255,255,0.09);color:var(--text);border-color:var(--border2)}
+.panel-btn.active{background:rgba(191,90,242,0.15);color:var(--purple);border-color:rgba(191,90,242,0.3)}
+.panel-body{padding:18px}
+
+/* ═══════════════════════════════════════════════════════════
+   GROWTH CHART
+   ═══════════════════════════════════════════════════════════ */
+.chart-wrap{padding:16px 18px 12px;position:relative}
+.chart-legend{display:flex;gap:16px;margin-bottom:12px;font-size:0.65rem}
+.legend-item{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--text2)}
+.legend-dot{width:8px;height:8px;border-radius:2px}
+#growth-chart{width:100%;height:180px;display:block}
+.chart-x-labels{display:flex;justify-content:space-between;padding:4px 0 0;font-size:0.6rem;color:var(--text3)}
+
+/* ═══════════════════════════════════════════════════════════
+   PLATFORM METERS
+   ═══════════════════════════════════════════════════════════ */
+.platform-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.platform-row:last-child{border-bottom:none}
+.platform-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.platform-info{flex:1;min-width:0}
+.platform-name{font-size:0.78rem;font-weight:800;margin-bottom:4px}
+.platform-bar-wrap{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.platform-bar{height:100%;border-radius:2px;transition:width 1.2s ease}
+.platform-count{text-align:right;min-width:60px}
+.platform-num{font-size:0.85rem;font-weight:900;letter-spacing:-0.02em}
+.platform-label{font-size:0.6rem;color:var(--text2);margin-top:2px}
+.platform-input{
+  width:70px;background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  border-radius:6px;padding:3px 7px;color:var(--text);font-size:0.75rem;font-family:var(--mono);
+  outline:none;text-align:right;
+}
+.platform-input:focus{border-color:var(--purple)}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTENT QUEUE
+   ═══════════════════════════════════════════════════════════ */
+.queue-item{
+  display:flex;gap:12px;padding:12px;border-radius:10px;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  margin-bottom:8px;transition:border-color 0.2s;
+  position:relative;overflow:hidden;
+}
+.queue-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--q-col)}
+.queue-item:hover{border-color:var(--border2)}
+.queue-time-block{text-align:center;min-width:44px;flex-shrink:0}
+.queue-time{font-family:var(--mono);font-size:0.78rem;font-weight:800;color:var(--q-col)}
+.queue-countdown{font-size:0.6rem;color:var(--text2);margin-top:2px;white-space:nowrap}
+.queue-content{flex:1;min-width:0}
+.queue-hook{font-size:0.8rem;font-weight:700;margin-bottom:4px;line-height:1.4}
+.queue-desc{font-size:0.7rem;color:var(--text2);line-height:1.5}
+.queue-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.qtag{font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(191,90,242,0.12);color:var(--purple)}
+.queue-status{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.status-dot{width:8px;height:8px;border-radius:50%}
+.post-btn{
+  font-size:0.65rem;font-weight:800;padding:4px 8px;border-radius:6px;border:none;cursor:pointer;
+  font-family:var(--font);transition:all 0.2s;white-space:nowrap;
+}
+.post-btn.ready{background:rgba(0,255,148,0.12);color:var(--green);border:1px solid rgba(0,255,148,0.25)}
+.post-btn.ready:hover{background:rgba(0,255,148,0.2)}
+.post-btn.done{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border);cursor:default}
+
+/* ═══════════════════════════════════════════════════════════
+   AI CONTENT ENGINE
+   ═══════════════════════════════════════════════════════════ */
+.engine-select{
+  width:100%;background:var(--card3);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;color:var(--text);font-size:0.82rem;font-family:var(--font);outline:none;
+  margin-bottom:12px;cursor:pointer;
+}
+.engine-select:focus{border-color:var(--purple)}
+.engine-type-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.engine-type{
+  padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.03);
+  color:var(--text2);font-size:0.72rem;font-weight:700;cursor:pointer;font-family:var(--font);
+  transition:all 0.2s;
+}
+.engine-type.active{background:rgba(191,90,242,0.15);border-color:rgba(191,90,242,0.35);color:var(--purple)}
+.engine-generate{
+  width:100%;padding:11px;border-radius:10px;border:none;cursor:pointer;font-family:var(--font);
+  font-weight:800;font-size:0.82rem;color:#fff;
+  background:linear-gradient(135deg,#FF2D78,#BF5AF2);
+  transition:opacity 0.2s;margin-bottom:12px;
+}
+.engine-generate:hover{opacity:0.88}
+.engine-generate:disabled{opacity:0.4;cursor:not-allowed}
+.engine-output{
+  background:var(--card3);border:1px solid var(--border);border-radius:10px;
+  padding:14px;min-height:80px;font-size:0.8rem;line-height:1.65;color:var(--text);
+  white-space:pre-wrap;position:relative;
+}
+.engine-output.loading::after{
+  content:'Generating…';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:var(--purple);background:var(--card3);border-radius:10px;
+  animation:blink 1s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+.engine-copy{
+  margin-top:8px;width:100%;padding:8px;border-radius:8px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.04);color:var(--text2);font-size:0.72rem;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:all 0.2s;
+}
+.engine-copy:hover{background:rgba(255,255,255,0.08);color:var(--text)}
+
+/* ═══════════════════════════════════════════════════════════
+   POST LOGGER
+   ═══════════════════════════════════════════════════════════ */
+.log-form{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:14px;align-items:end}
+@media(max-width:700px){.log-form{grid-template-columns:1fr 1fr;}}
+.log-field label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);display:block;margin-bottom:5px}
+.log-input{
+  width:100%;background:var(--card3);border:1px solid var(--border);border-radius:8px;
+  padding:8px 10px;color:var(--text);font-size:0.8rem;font-family:var(--font);outline:none;
+}
+.log-input:focus{border-color:var(--purple)}
+.log-submit{
+  padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-family:var(--font);
+  font-weight:800;font-size:0.78rem;color:#fff;background:linear-gradient(135deg,#BF5AF2,#00F5FF);
+  white-space:nowrap;align-self:end;height:36px;
+}
+.log-table-wrap{overflow-x:auto}
+.log-table{width:100%;border-collapse:collapse;font-size:0.75rem}
+.log-table th{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.09em;color:var(--text2);text-align:left;padding:6px 10px;border-bottom:1px solid var(--border)}
+.log-table td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
+.log-table tr:last-child td{border-bottom:none}
+.log-table tr:hover td{background:rgba(255,255,255,0.02)}
+.er-badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:0.65rem;font-weight:800}
+.er-good{background:rgba(0,255,148,0.12);color:var(--green)}
+.er-mid{background:rgba(255,214,10,0.12);color:var(--gold)}
+.er-low{background:rgba(255,69,58,0.12);color:var(--red)}
+
+/* ═══════════════════════════════════════════════════════════
+   STRATEGY ALERTS
+   ═══════════════════════════════════════════════════════════ */
+.alert-item{
+  display:flex;align-items:flex-start;gap:12px;padding:12px;border-radius:10px;
+  margin-bottom:8px;border:1px solid transparent;
+}
+.alert-item:last-child{margin-bottom:0}
+.alert-item.warn{background:rgba(255,214,10,0.06);border-color:rgba(255,214,10,0.18)}
+.alert-item.success{background:rgba(0,255,148,0.06);border-color:rgba(0,255,148,0.18)}
+.alert-item.info{background:rgba(0,245,255,0.06);border-color:rgba(0,245,255,0.18)}
+.alert-item.action{background:rgba(255,45,120,0.06);border-color:rgba(255,45,120,0.18)}
+.alert-ico{font-size:1rem;flex-shrink:0;margin-top:1px}
+.alert-title{font-size:0.78rem;font-weight:800;margin-bottom:3px}
+.alert-desc{font-size:0.72rem;color:var(--text2);line-height:1.5}
+
+/* ═══════════════════════════════════════════════════════════
+   VELOCITY METER
+   ═══════════════════════════════════════════════════════════ */
+.velocity-ring-wrap{display:flex;flex-direction:column;align-items:center;padding:16px 0 8px}
+#velocity-ring{display:block}
+.velocity-center{text-align:center;margin-top:-10px;margin-bottom:10px}
+.velocity-val{font-size:2rem;font-weight:900;letter-spacing:-0.04em}
+.velocity-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);margin-top:4px}
+.velocity-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 8px}
+.vel-stat{background:var(--card3);border-radius:10px;padding:12px;text-align:center}
+.vel-stat-val{font-size:1rem;font-weight:900;letter-spacing:-0.02em;margin-bottom:4px}
+.vel-stat-label{font-size:0.62rem;color:var(--text2);font-weight:600}
+
+/* ═══════════════════════════════════════════════════════════
+   HEATMAP
+   ═══════════════════════════════════════════════════════════ */
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:4px 0}
+.heatmap-cell{
+  aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:all 0.15s;
+  display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;
+}
+.heatmap-cell:hover{transform:scale(1.1)}
+.heatmap-labels{display:flex;justify-content:space-between;font-size:0.58rem;color:var(--text3);margin-bottom:4px}
+
+/* ═══════════════════════════════════════════════════════════
+   FOLLOWER UPDATE MODAL
+   ═══════════════════════════════════════════════════════════ */
+.modal-overlay{
+  position:fixed;inset:0;z-index:500;background:rgba(7,7,13,0.85);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal{
+  background:var(--card2);border:1px solid var(--border2);border-radius:20px;
+  padding:28px;width:min(420px,90vw);box-shadow:0 32px 80px rgba(0,0,0,0.6);
+  transform:translateY(20px) scale(0.97);transition:transform 0.2s;
+}
+.modal-overlay.open .modal{transform:none}
+.modal h3{font-size:1.1rem;font-weight:900;letter-spacing:-0.02em;margin-bottom:8px}
+.modal p{font-size:0.8rem;color:var(--text2);margin-bottom:20px;line-height:1.6}
+.modal-platforms{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.modal-platform-row{display:flex;align-items:center;gap:12px}
+.modal-platform-label{font-size:0.78rem;font-weight:700;min-width:90px;display:flex;align-items:center;gap:7px}
+.modal-input{
+  flex:1;background:var(--card3);border:1px solid var(--border);border-radius:8px;
+  padding:8px 12px;color:var(--text);font-size:0.85rem;font-family:var(--mono);outline:none;
+}
+.modal-input:focus{border-color:var(--purple)}
+.modal-actions{display:flex;gap:8px}
+.modal-save{
+  flex:1;padding:11px;border-radius:10px;border:none;cursor:pointer;font-family:var(--font);
+  font-weight:800;font-size:0.85rem;color:#fff;background:linear-gradient(135deg,#FF2D78,#BF5AF2);
+}
+.modal-cancel{
+  padding:11px 16px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.04);
+  color:var(--text2);font-size:0.85rem;font-weight:700;cursor:pointer;font-family:var(--font);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MISC
+   ═══════════════════════════════════════════════════════════ */
+.tag-pill{display:inline-block;padding:2px 8px;border-radius:100px;font-size:0.65rem;font-weight:700}
+.tag-pill.harvard{background:rgba(255,45,120,0.15);color:var(--pink)}
+.tag-pill.build{background:rgba(191,90,242,0.15);color:var(--purple)}
+.tag-pill.journey{background:rgba(0,245,255,0.15);color:var(--cyan)}
+.tag-pill.viral{background:rgba(255,214,10,0.15);color:var(--gold)}
+.tag-pill.collab{background:rgba(0,255,148,0.15);color:var(--green)}
+.empty-state{text-align:center;padding:28px;color:var(--text2);font-size:0.8rem}
+.empty-state .empty-ico{font-size:2rem;margin-bottom:8px}
+.scrollable{max-height:320px;overflow-y:auto;padding-right:2px}
+.scrollable::-webkit-scrollbar{width:4px}
+.scrollable::-webkit-scrollbar-thumb{background:rgba(191,90,242,0.3);border-radius:2px}
+.refresh-label{font-size:0.62rem;color:var(--text3);margin-left:auto}
+</style>
+</head>
+<body>
+
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+<div class="ambient ambient-3"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TOP BAR
+     ═══════════════════════════════════════════════════════ -->
+<div class="wrap">
+<div class="topbar">
+  <a class="topbar-brand" href="/" style="text-decoration:none">
+    <span class="topbar-logo">🐱</span>
+    <span class="topbar-name"><span>Metakittyz</span></span>
+  </a>
+  <div class="topbar-live"><div class="live-dot"></div>LIVE</div>
+  <div class="topbar-center">
+    <div class="topbar-stat">
+      <div class="topbar-stat-val" id="tb-followers" style="background:linear-gradient(90deg,#FF2D78,#BF5AF2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">295</div>
+      <div class="topbar-stat-label">Total Followers</div>
+    </div>
+    <div style="width:1px;height:28px;background:var(--border)"></div>
+    <div class="topbar-stat">
+      <div class="topbar-stat-val" id="tb-today" style="color:var(--green)">+0</div>
+      <div class="topbar-stat-label">Today's Growth</div>
+    </div>
+    <div style="width:1px;height:28px;background:var(--border)"></div>
+    <div class="topbar-stat">
+      <div class="topbar-stat-val" id="tb-needed" style="color:var(--gold)">16,618</div>
+      <div class="topbar-stat-label">Needed / Day</div>
+    </div>
+    <div style="width:1px;height:28px;background:var(--border)"></div>
+    <div class="topbar-stat">
+      <div class="topbar-stat-val" id="tb-day" style="color:var(--purple)">Day 1</div>
+      <div class="topbar-stat-label">of 60</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-clock" id="clock">--:--:--</div>
+    <div class="topbar-day" id="topbar-day-badge">Day 1 / 60</div>
+    <button class="add-btn" onclick="openModal()">+ Update</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     MAIN
+     ═══════════════════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- ── KPI ROW ── -->
+  <div class="kpi-row">
+    <div class="kpi" style="--kpi-color:var(--pink)">
+      <div class="kpi-label"><span class="live-dot" style="width:5px;height:5px"></span>Instagram</div>
+      <div class="kpi-val" id="kpi-ig">295</div>
+      <div class="kpi-sub"><span class="kpi-delta up" id="kpi-ig-delta">+0 today</span></div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--cyan)">
+      <div class="kpi-label">TikTok</div>
+      <div class="kpi-val" id="kpi-tt">0</div>
+      <div class="kpi-sub"><span class="kpi-delta up" id="kpi-tt-delta">+0 today</span></div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--red)">
+      <div class="kpi-label">YouTube</div>
+      <div class="kpi-val" id="kpi-yt">0</div>
+      <div class="kpi-sub"><span class="kpi-delta up" id="kpi-yt-delta">+0 today</span></div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--blue)">
+      <div class="kpi-label">LinkedIn</div>
+      <div class="kpi-val" id="kpi-li">0</div>
+      <div class="kpi-sub"><span class="kpi-delta up" id="kpi-li-delta">+0 today</span></div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--gold)">
+      <div class="kpi-label">Posts Today</div>
+      <div class="kpi-val" id="kpi-posts">0 <span style="font-size:1rem;opacity:0.5">/ 3</span></div>
+      <div class="kpi-sub" id="kpi-posts-sub">Target: 3 posts</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--green)">
+      <div class="kpi-label">Avg Eng. Rate</div>
+      <div class="kpi-val" id="kpi-er">—</div>
+      <div class="kpi-sub">likes + comments / followers</div>
+    </div>
+  </div>
+
+  <!-- ── GROWTH CHART + PLATFORMS ── -->
+  <div class="mid-grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><div class="dot" style="background:var(--purple)"></div>Follower Growth</div>
+        <div class="panel-actions">
+          <span class="refresh-label" id="chart-updated">–</span>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--pink)"></div>Actual</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(191,90,242,0.5)"></div>Target Path</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>1M Goal</div>
+        </div>
+        <canvas id="growth-chart"></canvas>
+        <div class="chart-x-labels" id="chart-x-labels"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><div class="dot" style="background:var(--cyan)"></div>Platforms</div>
+        <div class="panel-actions">
+          <button class="panel-btn" onclick="openModal()">Update</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="platform-row">
+          <div class="platform-ico" style="background:rgba(255,45,120,0.12)">📸</div>
+          <div class="platform-info">
+            <div class="platform-name" style="color:var(--pink)">Instagram</div>
+            <div class="platform-bar-wrap"><div class="platform-bar" id="bar-ig" style="background:var(--pink);width:0%"></div></div>
+          </div>
+          <div class="platform-count">
+            <div class="platform-num" id="pf-ig">295</div>
+            <div class="platform-label">followers</div>
+          </div>
+        </div>
+        <div class="platform-row">
+          <div class="platform-ico" style="background:rgba(0,245,255,0.12)">🎵</div>
+          <div class="platform-info">
+            <div class="platform-name" style="color:var(--cyan)">TikTok</div>
+            <div class="platform-bar-wrap"><div class="platform-bar" id="bar-tt" style="background:var(--cyan);width:0%"></div></div>
+          </div>
+          <div class="platform-count">
+            <div class="platform-num" id="pf-tt">0</div>
+            <div class="platform-label">followers</div>
+          </div>
+        </div>
+        <div class="platform-row">
+          <div class="platform-ico" style="background:rgba(255,69,58,0.12)">▶️</div>
+          <div class="platform-info">
+            <div class="platform-name" style="color:var(--red)">YouTube</div>
+            <div class="platform-bar-wrap"><div class="platform-bar" id="bar-yt" style="background:var(--red);width:0%"></div></div>
+          </div>
+          <div class="platform-count">
+            <div class="platform-num" id="pf-yt">0</div>
+            <div class="platform-label">subscribers</div>
+          </div>
+        </div>
+        <div class="platform-row">
+          <div class="platform-ico" style="background:rgba(10,132,255,0.12)">💼</div>
+          <div class="platform-info">
+            <div class="platform-name" style="color:var(--blue)">LinkedIn</div>
+            <div class="platform-bar-wrap"><div class="platform-bar" id="bar-li" style="background:var(--blue);width:0%"></div></div>
+          </div>
+          <div class="platform-count">
+            <div class="platform-num" id="pf-li">0</div>
+            <div class="platform-label">connections</div>
+          </div>
+        </div>
+        <!-- TOTAL -->
+        <div style="margin-top:14px;padding:12px;background:var(--card3);border-radius:10px;display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2)">Total Reach</div>
+          <div style="font-size:1.2rem;font-weight:900;letter-spacing:-0.03em;background:linear-gradient(90deg,#FF2D78,#BF5AF2,#00F5FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" id="total-reach">295</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONTENT QUEUE + AI ENGINE ── -->
+  <div class="wide-grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><div class="dot" style="background:var(--gold)"></div>Today's Content Queue</div>
+        <div class="panel-actions">
+          <span style="font-size:0.65rem;color:var(--text2)" id="queue-date">–</span>
+        </div>
+      </div>
+      <div class="panel-body">
+        <!-- Post 1 -->
+        <div class="queue-item" style="--q-col:var(--pink)" id="qitem-0">
+          <div class="queue-time-block">
+            <div class="queue-time">7–9am</div>
+            <div class="queue-countdown" id="cd-0">–</div>
+          </div>
+          <div class="queue-content">
+            <div class="queue-hook" id="qhook-0">Loading today's plan…</div>
+            <div class="queue-desc" id="qdesc-0">–</div>
+            <div class="queue-tags"><span class="qtag" id="qtag-0">–</span></div>
+          </div>
+          <div class="queue-status">
+            <div class="status-dot" id="qstatus-0" style="background:var(--gold)"></div>
+            <button class="post-btn ready" id="qbtn-0" onclick="markPosted(0)">Mark Posted</button>
+          </div>
+        </div>
+        <!-- Post 2 -->
+        <div class="queue-item" style="--q-col:var(--purple)" id="qitem-1">
+          <div class="queue-time-block">
+            <div class="queue-time">12–1pm</div>
+            <div class="queue-countdown" id="cd-1">–</div>
+          </div>
+          <div class="queue-content">
+            <div class="queue-hook" id="qhook-1">–</div>
+            <div class="queue-desc" id="qdesc-1">–</div>
+            <div class="queue-tags"><span class="qtag" id="qtag-1">–</span></div>
+          </div>
+          <div class="queue-status">
+            <div class="status-dot" id="qstatus-1" style="background:var(--gold)"></div>
+            <button class="post-btn ready" id="qbtn-1" onclick="markPosted(1)">Mark Posted</button>
+          </div>
+        </div>
+        <!-- Post 3 -->
+        <div class="queue-item" style="--q-col:var(--cyan)" id="qitem-2">
+          <div class="queue-time-block">
+            <div class="queue-time">6–9pm</div>
+            <div class="queue-countdown" id="cd-2">–</div>
+          </div>
+          <div class="queue-content">
+            <div class="queue-hook" id="qhook-2">–</div>
+            <div class="queue-desc" id="qdesc-2">–</div>
+            <div class="queue-tags"><span class="qtag" id="qtag-2">–</span></div>
+          </div>
+          <div class="queue-status">
+            <div class="status-dot" id="qstatus-2" style="background:var(--gold)"></div>
+            <button class="post-btn ready" id="qbtn-2" onclick="markPosted(2)">Mark Posted</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><div class="dot" style="background:var(--green)"></div>AI Content Engine</div>
+      </div>
+      <div class="panel-body">
+        <select class="engine-select" id="engine-topic">
+          <option value="What is an AI agent — plain English explanation">What is an AI agent?</option>
+          <option value="What is orchestration in agentic AI systems">Orchestration explained</option>
+          <option value="Harvard AI course insight about governance and accountability">AI Governance</option>
+          <option value="Build in public — showing PI Agent OS live demo">Build in Public demo</option>
+          <option value="60-day journey to 1 million followers progress update">Journey update</option>
+          <option value="The difference between ChatGPT and an AI agent pipeline">ChatGPT vs Agents</option>
+          <option value="Human in the loop and why it matters for AI trust">Human in the Loop</option>
+          <option value="Trending AI moment explained simply for creators">AI Trend breakdown</option>
+        </select>
+        <div class="engine-type-row">
+          <button class="engine-type active" onclick="setType(this,'hook')">Hook</button>
+          <button class="engine-type" onclick="setType(this,'caption')">Caption</button>
+          <button class="engine-type" onclick="setType(this,'hashtags')">Hashtags</button>
+          <button class="engine-type" onclick="setType(this,'cta')">CTA</button>
+        </div>
+        <button class="engine-generate" id="engine-btn" onclick="generateContent()">✨ Generate with AI</button>
+        <div class="engine-output" id="engine-output">Your AI-generated content will appear here. Select a topic, choose a type, and hit Generate.</div>
+        <button class="engine-copy" onclick="copyContent()">📋 Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── POST LOGGER + VELOCITY ── -->
+  <div class="bot-grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><div class="dot" style="background:var(--blue)"></div>Post Performance Log</div>
+        <div class="panel-actions">
+          <button class="panel-btn" onclick="clearLog()">Clear</button>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-bottom:8px">
+        <div class="log-form">
+          <div class="log-field">
+            <label>Post Hook</label>
+            <input class="log-input" id="log-hook" placeholder="e.g. What is an AI agent…"/>
+          </div>
+          <div class="log-field">
+            <label>Likes</label>
+            <input class="log-input" id="log-likes" type="number" min="0" placeholder="0"/>
+          </div>
+          <div class="log-field">
+            <label>Comments</label>
+            <input class="log-input" id="log-comments" type="number" min="0" placeholder="0"/>
+          </div>
+          <div class="log-field">
+            <label>Saves</label>
+            <input class="log-input" id="log-saves" type="number" min="0" placeholder="0"/>
+          </div>
+          <button class="log-submit" onclick="logPost()">+ Log</button>
+        </div>
+        <div class="log-table-wrap">
+          <table class="log-table">
+            <thead><tr><th>Post</th><th>Likes</th><th>Cmts</th><th>Saves</th><th>ER%</th><th>Day</th></tr></thead>
+            <tbody id="log-tbody"><tr><td colspan="6" class="empty-state" style="padding:16px;text-align:center;color:var(--text2);font-size:0.75rem">No posts logged yet — log your first post above</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><div class="dot" style="background:var(--orange)"></div>Growth Velocity</div>
+      </div>
+      <div class="velocity-ring-wrap">
+        <svg id="velocity-ring" width="180" height="180" viewBox="0 0 180 180">
+          <circle cx="90" cy="90" r="75" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="14"/>
+          <circle cx="90" cy="90" r="75" fill="none" stroke="url(#vring-grad)" stroke-width="14"
+                  stroke-linecap="round" stroke-dasharray="471" id="vring-fill" stroke-dashoffset="471"
+                  transform="rotate(-90 90 90)" style="transition:stroke-dashoffset 1.5s ease"/>
+          <defs>
+            <linearGradient id="vring-grad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#FF2D78"/>
+              <stop offset="100%" stop-color="#BF5AF2"/>
+            </linearGradient>
+          </defs>
+          <text x="90" y="82" text-anchor="middle" fill="var(--text)" font-size="22" font-weight="900" font-family="Inter,sans-serif" id="vring-pct">0%</text>
+          <text x="90" y="104" text-anchor="middle" fill="var(--text2)" font-size="10" font-weight="700" font-family="Inter,sans-serif">to goal</text>
+        </svg>
+      </div>
+      <div class="velocity-stats">
+        <div class="vel-stat">
+          <div class="vel-stat-val" id="vel-today" style="color:var(--green)">0</div>
+          <div class="vel-stat-label">Gained Today</div>
+        </div>
+        <div class="vel-stat">
+          <div class="vel-stat-val" id="vel-needed" style="color:var(--gold)">16,618</div>
+          <div class="vel-stat-label">Needed / Day</div>
+        </div>
+        <div class="vel-stat">
+          <div class="vel-stat-val" id="vel-remaining" style="color:var(--purple)">999,705</div>
+          <div class="vel-stat-label">Left to Goal</div>
+        </div>
+        <div class="vel-stat">
+          <div class="vel-stat-val" id="vel-daystrack" style="color:var(--cyan)">Day 1</div>
+          <div class="vel-stat-label">of 60</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STRATEGY ALERTS ── -->
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title"><div class="dot" style="background:var(--pink)"></div>Strategy Alerts & Action Items</div>
+      <div class="panel-actions">
+        <span class="refresh-label" id="alerts-updated">–</span>
+      </div>
+    </div>
+    <div class="panel-body" id="alerts-body">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /wrap -->
+
+<!-- ═══════════════════════════════════════════════════════
+     UPDATE MODAL
+     ═══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <h3>📊 Update Follower Counts</h3>
+    <p>Enter today's numbers across all platforms. The dashboard updates instantly.</p>
+    <div class="modal-platforms">
+      <div class="modal-platform-row">
+        <div class="modal-platform-label">📸 Instagram</div>
+        <input class="modal-input" id="m-ig" type="number" placeholder="e.g. 295" min="0"/>
+      </div>
+      <div class="modal-platform-row">
+        <div class="modal-platform-label">🎵 TikTok</div>
+        <input class="modal-input" id="m-tt" type="number" placeholder="e.g. 0" min="0"/>
+      </div>
+      <div class="modal-platform-row">
+        <div class="modal-platform-label">▶️ YouTube</div>
+        <input class="modal-input" id="m-yt" type="number" placeholder="e.g. 0" min="0"/>
+      </div>
+      <div class="modal-platform-row">
+        <div class="modal-platform-label">💼 LinkedIn</div>
+        <input class="modal-input" id="m-li" type="number" placeholder="e.g. 0" min="0"/>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-save" onclick="saveModal()">Save & Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPT
+     ═══════════════════════════════════════════════════════ -->
+<script>
+/* ── State ──────────────────────────────────────────────── */
+var KEY = 'mk_live_v2';
+var S = JSON.parse(localStorage.getItem(KEY) || 'null') || {
+  startDate: new Date().toISOString().split('T')[0],
+  platforms: { ig:295, tt:0, yt:0, li:0 },
+  history: [],      // [{date, ig, tt, yt, li}]
+  posts: [],        // [{hook,likes,comments,saves,day,date}]
+  posted: {},       // {date: [0,1,2]} — which queue slots marked posted
+};
+function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
+
+/* ── Day calc ───────────────────────────────────────────── */
+function dayNum(){
+  var start = new Date(S.startDate);
+  var now   = new Date();
+  var diff  = Math.floor((now - start)/86400000) + 1;
+  return Math.max(1, Math.min(diff, 60));
+}
+function daysLeft(){ return Math.max(0, 61 - dayNum()); }
+function todayKey(){ return new Date().toISOString().split('T')[0]; }
+
+/* ── Followers ──────────────────────────────────────────── */
+function totalFollowers(){
+  var p = S.platforms;
+  return (p.ig||0) + (p.tt||0) + (p.yt||0) + (p.li||0);
+}
+function todayGrowth(){
+  var today = todayKey();
+  var hist  = S.history.filter(function(h){ return h.date === today; });
+  if (hist.length < 2) {
+    // compare to yesterday
+    var yday = new Date(); yday.setDate(yday.getDate()-1);
+    var ydayKey = yday.toISOString().split('T')[0];
+    var prev = S.history.filter(function(h){ return h.date === ydayKey; });
+    if (prev.length) {
+      var last = prev[prev.length-1];
+      return totalFollowers() - ((last.ig||0)+(last.tt||0)+(last.yt||0)+(last.li||0));
+    }
+    return 0;
+  }
+  var first = hist[0]; var last2 = hist[hist.length-1];
+  return ((last2.ig||0)+(last2.tt||0)+(last2.yt||0)+(last2.li||0)) -
+         ((first.ig||0)+(first.tt||0)+(first.yt||0)+(first.li||0));
+}
+
+/* ── Formatted number ───────────────────────────────────── */
+function fmt(n){
+  if (n >= 1000000) return (n/1000000).toFixed(2)+'M';
+  if (n >= 1000)    return (n/1000).toFixed(1)+'K';
+  return n.toString();
+}
+
+/* ── Update all metrics ─────────────────────────────────── */
+function updateAll(){
+  var p      = S.platforms;
+  var total  = totalFollowers();
+  var goal   = 1000000;
+  var dl     = daysLeft();
+  var needed = dl > 0 ? Math.ceil((goal - total) / dl) : 0;
+  var pct    = Math.min(total / goal * 100, 100);
+  var dn     = dayNum();
+  var growth = todayGrowth();
+
+  // Top bar
+  setText('tb-followers', fmt(total));
+  setText('tb-today',     (growth >= 0 ? '+' : '') + fmt(growth));
+  setText('tb-needed',    fmt(needed));
+  setText('tb-day',       'Day ' + dn);
+  setText('topbar-day-badge', 'Day ' + dn + ' / 60');
+
+  // KPIs
+  setText('kpi-ig', fmt(p.ig||0));
+  setText('kpi-tt', fmt(p.tt||0));
+  setText('kpi-yt', fmt(p.yt||0));
+  setText('kpi-li', fmt(p.li||0));
+  setText('kpi-ig-delta', (growth >= 0 ? '+' : '') + fmt(growth) + ' today');
+
+  // Post count
+  var todayPosted = (S.posted[todayKey()] || []).length;
+  var kpPosts = document.getElementById('kpi-posts');
+  if (kpPosts) kpPosts.innerHTML = todayPosted + ' <span style="font-size:1rem;opacity:0.5">/ 3</span>';
+  setText('kpi-posts-sub', todayPosted === 3 ? '✅ Daily goal met!' : (3 - todayPosted) + ' post(s) left');
+
+  // Engagement rate
+  var er = calcAvgER();
+  setText('kpi-er', er ? er.toFixed(1) + '%' : '—');
+
+  // Platform bars
+  var maxPlatform = Math.max(p.ig||0, p.tt||0, p.yt||0, p.li||0, 1000);
+  setBar('bar-ig', (p.ig||0) / maxPlatform * 100);
+  setBar('bar-tt', (p.tt||0) / maxPlatform * 100);
+  setBar('bar-yt', (p.yt||0) / maxPlatform * 100);
+  setBar('bar-li', (p.li||0) / maxPlatform * 100);
+  setText('pf-ig', fmt(p.ig||0));
+  setText('pf-tt', fmt(p.tt||0));
+  setText('pf-yt', fmt(p.yt||0));
+  setText('pf-li', fmt(p.li||0));
+  setText('total-reach', fmt(total));
+
+  // Velocity ring
+  var fillCirc = 471;
+  var offset   = fillCirc * (1 - pct / 100);
+  var ring = document.getElementById('vring-fill');
+  if (ring) ring.setAttribute('stroke-dashoffset', offset);
+  var ringPct = document.getElementById('vring-pct');
+  if (ringPct) ringPct.textContent = pct.toFixed(2) + '%';
+  setText('vel-today',     (growth >= 0 ? '+' : '') + fmt(growth));
+  setText('vel-needed',    fmt(needed));
+  setText('vel-remaining', fmt(Math.max(0, goal - total)));
+  setText('vel-daystrack', 'Day ' + dn);
+
+  // Countdown queue date
+  var qd = document.getElementById('queue-date');
+  if (qd) qd.textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+
+  updateChart();
+  updateAlerts(total, growth, todayPosted, dl, needed);
+  updateLog();
+}
+
+/* ── Helpers ────────────────────────────────────────────── */
+function setText(id, val){
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+function setBar(id, pct){
+  var el = document.getElementById(id);
+  if (el) el.style.width = Math.max(0, Math.min(100, pct)) + '%';
+}
+
+/* ── Clock ──────────────────────────────────────────────── */
+function updateClock(){
+  var now = new Date();
+  var h   = String(now.getHours()).padStart(2,'0');
+  var m   = String(now.getMinutes()).padStart(2,'0');
+  var s   = String(now.getSeconds()).padStart(2,'0');
+  setText('clock', h + ':' + m + ':' + s);
+  updateCountdowns();
+}
+
+/* ── Post time countdowns ───────────────────────────────── */
+var POST_HOURS = [8, 12, 18]; // 8am, noon, 6pm
+function updateCountdowns(){
+  var now = new Date();
+  POST_HOURS.forEach(function(h, i){
+    var target = new Date(); target.setHours(h,0,0,0);
+    if (target < now) target.setDate(target.getDate() + 1);
+    var diff = Math.floor((target - now)/1000);
+    var hrs  = Math.floor(diff/3600);
+    var min  = Math.floor((diff%3600)/60);
+    var sec  = diff % 60;
+    var el   = document.getElementById('cd-' + i);
+    if (el) el.textContent = (now.getHours() === h ? '🔴 NOW' :
+      hrs + 'h ' + String(min).padStart(2,'0') + 'm');
+  });
+}
+
+/* ── Content queue ──────────────────────────────────────── */
+var QUEUE = [
+  [
+    {hook:'Announce the 60-day mission',desc:'Show the Harvard enrollment, the 295 follower count, and the goal. Raw and honest. This IS the content.',tag:'#1MillionIn60Days'},
+    {hook:'"What even IS an AI agent? 30 seconds."',desc:'One analogy: ChatGPT is one employee, an AI agent is a whole self-running department. Show PI Agent OS for 2 seconds.',tag:'#AgenticAI'},
+    {hook:'"I told 295 people I\'m going to 1M in 60 days."',desc:'Why this challenge is actually achievable: Harvard credibility + building live + documenting everything including mistakes.',tag:'#CreatorJourney'},
+  ],
+  [
+    {hook:'"The most powerful thing about AI agents: you brief them once."',desc:'Explain how the brief flows to every agent automatically — no repeating yourself 8 times.',tag:'#AIAgents'},
+    {hook:'Build in public: tour the PI Agent OS pipeline',desc:'Screen recording of the orchestration pipeline. Show Shoreline Properties workflow running live.',tag:'#BuildInPublic'},
+    {hook:'Day 2 update: what happened after the announcement',desc:'Share the early engagement numbers, any new followers, and what you learned from comments.',tag:'#DayUpdate'},
+  ],
+  [
+    {hook:'"A pipeline is a factory floor — not a chat."',desc:'Explain why AI systems need sequence. Each agent does one job and passes it forward. Show the visual pipeline.',tag:'#Harvard'},
+    {hook:'Watch AI build a complete brand in 60 seconds',desc:'Live demo reel of a brand going through the agent pipeline. Fast cuts, real output shown.',tag:'#PIAgentOS'},
+    {hook:'What I got wrong in my first 2 days of posting',desc:'Honest reflection. What worked, what flopped, what you\'d do differently.',tag:'#MistakesLearned'},
+  ],
+];
+
+function loadQueue(){
+  var dn    = Math.min(dayNum() - 1, QUEUE.length - 1);
+  var queue = QUEUE[dn] || QUEUE[0];
+  var posted= S.posted[todayKey()] || [];
+
+  queue.forEach(function(item, i){
+    setText('qhook-' + i, item.hook);
+    setText('qdesc-' + i, item.desc);
+    setText('qtag-' + i, item.tag);
+
+    var btn = document.getElementById('qbtn-' + i);
+    var dot = document.getElementById('qstatus-' + i);
+    if (posted.includes(i)){
+      if (btn){ btn.textContent = '✓ Posted'; btn.className = 'post-btn done'; }
+      if (dot) dot.style.background = 'var(--green)';
+    } else {
+      if (btn){ btn.textContent = 'Mark Posted'; btn.className = 'post-btn ready'; }
+      if (dot) dot.style.background = 'var(--gold)';
+    }
+  });
+}
+
+function markPosted(idx){
+  var key = todayKey();
+  if (!S.posted[key]) S.posted[key] = [];
+  if (!S.posted[key].includes(idx)) S.posted[key].push(idx);
+  save(); loadQueue(); updateAll();
+}
+
+/* ── AI Engine ──────────────────────────────────────────── */
+var currentType = 'hook';
+function setType(el, type){
+  currentType = type;
+  document.querySelectorAll('.engine-type').forEach(function(b){ b.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+function generateContent(){
+  var topic = document.getElementById('engine-topic').value;
+  var type  = currentType;
+  var btn   = document.getElementById('engine-btn');
+  var out   = document.getElementById('engine-output');
+
+  var prompts = {
+    hook:     'Write 3 short punchy Instagram Reel hooks (one sentence each, under 12 words) for this topic: "' + topic + '". Brand: @metakittyz — colorful, warm, AI + Harvard. Start each hook mid-sentence or with a bold claim. Number them 1, 2, 3.',
+    caption:  'Write an Instagram caption (100-150 words) for this topic: "' + topic + '". Brand: @metakittyz. Warm, colorful, smart but accessible. Start with the hook. Include a question at the end to drive comments. No hashtags in caption body.',
+    hashtags: 'Generate 20 Instagram hashtags for this topic: "' + topic + '". Mix: 3 mega (1M+), 7 large (100K-1M), 7 mid (10K-100K), 3 brand (#Metakittyz #PIAgentOS #1MillionIn60Days). Format as a single line ready to paste.',
+    cta:      'Write 4 different CTA (call to action) lines for an Instagram post about: "' + topic + '". Each CTA should feel warm and conversational, not salesy. One asks a question, one drives saves, one drives shares, one drives follows. Number them 1-4.',
+  };
+
+  btn.disabled = true; btn.textContent = '✨ Generating…';
+  out.className = 'engine-output loading'; out.textContent = '';
+
+  fetch('/api/anthropic', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6', max_tokens: 400,
+      system: 'You are a world-class social media content strategist specializing in AI and tech creators. Write in a warm, conversational tone. Keep it simple and punchy.',
+      messages: [{role:'user', content: prompts[type]}]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    var text = d.content && d.content[0] && d.content[0].text;
+    out.className = 'engine-output';
+    out.textContent = text || 'No response. Check your API key in Render.';
+    btn.disabled = false; btn.textContent = '✨ Generate with AI';
+  })
+  .catch(function(){
+    // Fallback to Qwen
+    fetch('/api/qwen/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({max_tokens:400, messages:[
+        {role:'system', content:'You are a world-class social media content strategist for AI creators. Simple, punchy, warm.'},
+        {role:'user', content: prompts[type]}
+      ]})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var text = d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
+      out.className = 'engine-output';
+      out.textContent = text || 'API not configured. Check server environment variables.';
+    })
+    .catch(function(){
+      out.className = 'engine-output';
+      out.textContent = 'API unavailable. Add ANTHROPIC_API_KEY to your Render environment.';
+    })
+    .finally(function(){ btn.disabled = false; btn.textContent = '✨ Generate with AI'; });
+  });
+}
+
+function copyContent(){
+  var text = document.getElementById('engine-output').textContent;
+  if (!text || text.indexOf('appear here') > -1) return;
+  navigator.clipboard.writeText(text).then(function(){
+    var btn = document.querySelector('.engine-copy');
+    var orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(function(){ btn.textContent = orig; }, 2000);
+  });
+}
+
+/* ── Post Logger ────────────────────────────────────────── */
+function logPost(){
+  var hook     = document.getElementById('log-hook').value.trim();
+  var likes    = parseInt(document.getElementById('log-likes').value) || 0;
+  var comments = parseInt(document.getElementById('log-comments').value) || 0;
+  var saves    = parseInt(document.getElementById('log-saves').value) || 0;
+  if (!hook) { document.getElementById('log-hook').focus(); return; }
+  S.posts.unshift({ hook:hook, likes:likes, comments:comments, saves:saves,
+                    day: dayNum(), date: todayKey() });
+  save();
+  document.getElementById('log-hook').value = '';
+  document.getElementById('log-likes').value = '';
+  document.getElementById('log-comments').value = '';
+  document.getElementById('log-saves').value = '';
+  updateLog(); updateAll();
+}
+
+function calcER(likes, comments, saves, followers){
+  followers = followers || S.platforms.ig || 295;
+  return ((likes + comments + saves * 2) / followers * 100);
+}
+
+function calcAvgER(){
+  if (!S.posts.length) return 0;
+  var total = S.posts.slice(0,10).reduce(function(sum,p){
+    return sum + calcER(p.likes, p.comments, p.saves);
+  }, 0);
+  return total / Math.min(S.posts.length, 10);
+}
+
+function updateLog(){
+  var tbody = document.getElementById('log-tbody');
+  if (!tbody) return;
+  if (!S.posts.length){
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text2);font-size:0.75rem">No posts logged yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = S.posts.slice(0,15).map(function(p){
+    var er = calcER(p.likes, p.comments, p.saves);
+    var erClass = er >= 5 ? 'er-good' : er >= 2 ? 'er-mid' : 'er-low';
+    return '<tr>' +
+      '<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + p.hook + '">' + p.hook + '</td>' +
+      '<td>' + fmt(p.likes) + '</td>' +
+      '<td>' + fmt(p.comments) + '</td>' +
+      '<td>' + fmt(p.saves) + '</td>' +
+      '<td><span class="er-badge ' + erClass + '">' + er.toFixed(1) + '%</span></td>' +
+      '<td style="color:var(--text2)">D' + p.day + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function clearLog(){
+  if (!confirm('Clear all logged posts?')) return;
+  S.posts = []; save(); updateLog(); updateAll();
+}
+
+/* ── Growth Chart ───────────────────────────────────────── */
+function updateChart(){
+  var canvas = document.getElementById('growth-chart');
+  if (!canvas) return;
+  var W = canvas.parentElement.clientWidth - 36;
+  var H = 180;
+  canvas.width  = W;
+  canvas.height = H;
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  var padL = 36, padR = 8, padT = 10, padB = 24;
+  var gW = W - padL - padR;
+  var gH = H - padT - padB;
+
+  var days = 60;
+  var goal = 1000000;
+  var start = S.platforms.ig || 295;
+
+  // Build actual history array (60 slots)
+  var actual = new Array(days).fill(null);
+  actual[0] = start;
+  S.history.forEach(function(h){
+    var d = new Date(h.date);
+    var s = new Date(S.startDate);
+    var idx = Math.floor((d - s) / 86400000);
+    if (idx >= 0 && idx < days){
+      actual[idx] = (h.ig||0)+(h.tt||0)+(h.yt||0)+(h.li||0);
+    }
+  });
+
+  // Target curve (exponential)
+  var target = [];
+  for (var i = 0; i < days; i++){
+    var t = start + (goal - start) * Math.pow(i / (days-1), 1.5);
+    target.push(Math.round(t));
+  }
+
+  var maxVal = Math.max(goal, 1000);
+  function xPos(d){ return padL + (d / (days-1)) * gW; }
+  function yPos(v){ return padT + gH - (v / maxVal) * gH; }
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  [0, 0.25, 0.5, 0.75, 1].forEach(function(f){
+    var y = padT + gH * (1-f);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(fmt(maxVal * f), padL - 4, y + 3);
+  });
+
+  // Target area fill
+  ctx.beginPath();
+  ctx.moveTo(xPos(0), yPos(target[0]));
+  for (var i = 1; i < days; i++) ctx.lineTo(xPos(i), yPos(target[i]));
+  ctx.lineTo(xPos(days-1), padT + gH);
+  ctx.lineTo(xPos(0), padT + gH);
+  ctx.closePath();
+  var grad = ctx.createLinearGradient(0, padT, 0, padT + gH);
+  grad.addColorStop(0, 'rgba(191,90,242,0.12)');
+  grad.addColorStop(1, 'rgba(191,90,242,0)');
+  ctx.fillStyle = grad; ctx.fill();
+
+  // Target line
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(191,90,242,0.45)';
+  ctx.setLineDash([4,4]); ctx.lineWidth = 1.5;
+  ctx.moveTo(xPos(0), yPos(target[0]));
+  for (var i = 1; i < days; i++) ctx.lineTo(xPos(i), yPos(target[i]));
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Actual area fill
+  var lastActualIdx = -1;
+  actual.forEach(function(v, i){ if (v !== null) lastActualIdx = i; });
+
+  if (lastActualIdx >= 0){
+    ctx.beginPath();
+    ctx.moveTo(xPos(0), yPos(actual[0]));
+    for (var i = 1; i <= lastActualIdx; i++){
+      var val = actual[i] !== null ? actual[i] : actual[i-1];
+      ctx.lineTo(xPos(i), yPos(val));
+    }
+    ctx.lineTo(xPos(lastActualIdx), padT + gH);
+    ctx.lineTo(xPos(0), padT + gH);
+    ctx.closePath();
+    var grad2 = ctx.createLinearGradient(0, padT, 0, padT + gH);
+    grad2.addColorStop(0, 'rgba(255,45,120,0.25)');
+    grad2.addColorStop(1, 'rgba(255,45,120,0)');
+    ctx.fillStyle = grad2; ctx.fill();
+
+    // Actual line
+    ctx.beginPath();
+    ctx.strokeStyle = '#FF2D78'; ctx.lineWidth = 2.5;
+    ctx.moveTo(xPos(0), yPos(actual[0]));
+    for (var i = 1; i <= lastActualIdx; i++){
+      var val = actual[i] !== null ? actual[i] : actual[i-1];
+      ctx.lineTo(xPos(i), yPos(val));
+    }
+    ctx.stroke();
+
+    // Current dot
+    var curVal = actual[lastActualIdx];
+    ctx.beginPath();
+    ctx.arc(xPos(lastActualIdx), yPos(curVal), 5, 0, Math.PI*2);
+    ctx.fillStyle = '#FF2D78'; ctx.fill();
+    ctx.beginPath();
+    ctx.arc(xPos(lastActualIdx), yPos(curVal), 9, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,45,120,0.2)'; ctx.fill();
+  }
+
+  // 1M goal line
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(0,255,148,0.4)'; ctx.lineWidth = 1; ctx.setLineDash([2,6]);
+  ctx.moveTo(padL, yPos(goal)); ctx.lineTo(W - padR, yPos(goal));
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // X labels (Day 1, 15, 30, 45, 60)
+  var xlabels = document.getElementById('chart-x-labels');
+  if (xlabels) xlabels.textContent = 'Day 1  ·  Day 15  ·  Day 30  ·  Day 45  ·  Day 60';
+
+  var cu = document.getElementById('chart-updated');
+  if (cu) cu.textContent = 'Updated ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+}
+
+/* ── Strategy Alerts ────────────────────────────────────── */
+function updateAlerts(total, growth, posted, dl, needed){
+  var body = document.getElementById('alerts-body');
+  if (!body) return;
+  var alerts = [];
+  var dn = dayNum();
+
+  if (posted < 3){
+    var n = 3 - posted;
+    alerts.push({type:'action', ico:'🎬', title: n + ' post' + (n>1?'s':'') + ' remaining today',
+      desc: 'You need 3 posts daily to hit your target. Use the Content Queue above — hooks and descriptions are already written.'});
+  } else {
+    alerts.push({type:'success', ico:'✅', title: "Daily posting goal complete!",
+      desc: 'All 3 posts scheduled or published today. Make sure to engage every comment in the first 60 minutes for maximum reach.'});
+  }
+
+  if (growth < needed * 0.1 && dn > 3){
+    alerts.push({type:'warn', ico:'⚠️', title: 'Growth below target velocity',
+      desc: 'You need ' + fmt(needed) + ' followers per day to hit 1M by Day 60. Today\'s growth: ' + fmt(growth) + '. Double down on engaging trending audio and cross-posting to TikTok.'});
+  }
+
+  if (dn <= 3){
+    alerts.push({type:'info', ico:'🎓', title: 'First week: lock the habit before chasing numbers',
+      desc: 'Days 1–10 are about building the routine and finding your first viral moment. Focus on posting consistency and engaging every single comment — not the follower count.'});
+  }
+
+  if (dn > 10 && !S.posts.some(function(p){ return p.likes > 500; })){
+    alerts.push({type:'warn', ico:'🔥', title: 'No high-performing posts logged yet',
+      desc: 'You haven\'t logged any post with 500+ likes. Review the Hook Formulas in your Command Center. Your best angle: "Harvard taught me something most people don\'t know about AI."'});
+  }
+
+  alerts.push({type:'info', ico:'🤝', title: 'Collab window opens Day 11',
+    desc: 'Start DMing 5 AI creators daily now so you have warm relationships ready when the collab phase begins. Engage their content genuinely for 3–5 days before you pitch anything.'});
+
+  body.innerHTML = alerts.map(function(a){
+    return '<div class="alert-item ' + a.type + '">' +
+      '<div class="alert-ico">' + a.ico + '</div>' +
+      '<div><div class="alert-title">' + a.title + '</div><div class="alert-desc">' + a.desc + '</div></div>' +
+    '</div>';
+  }).join('');
+
+  var au = document.getElementById('alerts-updated');
+  if (au) au.textContent = 'Live · auto-refreshes';
+}
+
+/* ── Modal ──────────────────────────────────────────────── */
+function openModal(){
+  var p = S.platforms;
+  document.getElementById('m-ig').value = p.ig || '';
+  document.getElementById('m-tt').value = p.tt || '';
+  document.getElementById('m-yt').value = p.yt || '';
+  document.getElementById('m-li').value = p.li || '';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+function closeModalOutside(e){ if (e.target.id === 'modal') closeModal(); }
+function saveModal(){
+  var today = todayKey();
+  var prev  = Object.assign({}, S.platforms);
+
+  var newPlatforms = {
+    ig: parseInt(document.getElementById('m-ig').value) || S.platforms.ig || 0,
+    tt: parseInt(document.getElementById('m-tt').value) || S.platforms.tt || 0,
+    yt: parseInt(document.getElementById('m-yt').value) || S.platforms.yt || 0,
+    li: parseInt(document.getElementById('m-li').value) || S.platforms.li || 0,
+  };
+  S.platforms = newPlatforms;
+
+  // Push history snapshot
+  S.history.push({ date: today, ig: newPlatforms.ig, tt: newPlatforms.tt,
+                    yt: newPlatforms.yt, li: newPlatforms.li });
+  if (S.history.length > 200) S.history = S.history.slice(-200);
+
+  save(); closeModal(); updateAll(); loadQueue();
+}
+
+/* ── Init & Intervals ───────────────────────────────────── */
+updateAll();
+loadQueue();
+updateClock();
+setInterval(updateClock,  1000);
+setInterval(updateAll,    60000);  // refresh metrics every minute
+setInterval(updateChart,  120000); // redraw chart every 2 min
+window.addEventListener('resize', function(){ updateChart(); });
+
+// Handle Enter key in modal
+document.querySelectorAll('.modal-input').forEach(function(inp){
+  inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') saveModal(); });
+});
+document.getElementById('log-saves').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') logPost();
+});
+</script>
+</body>
+</html>
