@@ -267,6 +267,9 @@ const pages = {
   '/strategy':   'metakittyz.html',
   '/mk-team':    'mk-team.html',
   '/team':       'mk-team.html',
+  '/journey':    'mk-journey.html',
+  '/follow':     'mk-journey.html',
+  '/progress':   'mk-journey.html',
 };
 Object.entries(pages).forEach(([route, file]) => {
   app.get(route, (req, res) => res.sendFile(path.join(__dirname, file)));
