@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: pi-agents-os
+    name: agentorchestrationapp
     runtime: node
     branch: main
     autoDeploy: yes

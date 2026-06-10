@@ -298,4 +298,15 @@ app.listen(PORT, HOST, () => {
   console.log(`\n    OpenAI:    ${oai ? '✓ connected' : '✗ key missing — add to .env or Render dashboard'}`);
   console.log(`    Anthropic: ${ant ? '✓ connected' : '✗ key missing — add to .env or Render dashboard'}`);
   console.log();
+
+  // Keep-alive self-ping every 14 minutes so Render free tier never sleeps
+  if (env === 'production') {
+    const SELF = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+    setInterval(() => {
+      fetch(`${SELF}/api/version`)
+        .then(() => console.log('[keep-alive] ping ok'))
+        .catch(err => console.warn('[keep-alive] ping failed:', err.message));
+    }, 14 * 60 * 1000);
+    console.log(`    Keep-alive: self-ping every 14 min to prevent sleep\n`);
+  }
 });
