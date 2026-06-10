@@ -260,10 +260,15 @@ app.post('/api/send-email', async (req, res) => {
 });
 
 // ── Named page routes (before catch-all) ─────────────────────────
-app.get('/mk-live',      (req, res) => res.sendFile(path.join(__dirname, 'mk-live.html')));
-app.get('/dashboard',    (req, res) => res.sendFile(path.join(__dirname, 'mk-live.html')));
-app.get('/metakittyz',   (req, res) => res.sendFile(path.join(__dirname, 'metakittyz.html')));
-app.get('/strategy',     (req, res) => res.sendFile(path.join(__dirname, 'metakittyz.html')));
+const pages = {
+  '/mk-live':    'mk-live.html',
+  '/dashboard':  'mk-live.html',
+  '/metakittyz': 'metakittyz.html',
+  '/strategy':   'metakittyz.html',
+};
+Object.entries(pages).forEach(([route, file]) => {
+  app.get(route, (req, res) => res.sendFile(path.join(__dirname, file)));
+});
 
 // ── Catch-all → index.html (SPA fallback) ────────────────────────
 app.get('*', (req, res) => {
