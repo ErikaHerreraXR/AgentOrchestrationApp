@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Metakittyz — 0→1M Command Center</title>
+<style>
+:root{
+  --neon-pink:#FF2D78;
+  --neon-purple:#BF5AF2;
+  --neon-cyan:#00F5FF;
+  --neon-green:#00FF94;
+  --neon-gold:#FFD60A;
+  --neon-orange:#FF6B2B;
+  --bg:#0A0A0F;
+  --bg2:#12121A;
+  --bg3:#1A1A28;
+  --card:#1E1E2E;
+  --card2:#252538;
+  --border:rgba(255,255,255,0.08);
+  --text:#F8F8FF;
+  --text2:#94A3B8;
+  --font:'Inter',system-ui,sans-serif;
+  --grad:linear-gradient(135deg,#FF2D78,#BF5AF2,#00F5FF);
+  --grad2:linear-gradient(135deg,#FF6B2B,#FFD60A,#00FF94);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+
+/* ── Animated background ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 50% at 20% 20%,rgba(191,90,242,0.08) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 40% at 80% 80%,rgba(255,45,120,0.08) 0%,transparent 60%),
+             radial-gradient(ellipse 40% 60% at 50% 50%,rgba(0,245,255,0.04) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* ── Layout ── */
+.page{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:20px 16px 60px}
+
+/* ── Header ── */
+.hdr{text-align:center;padding:40px 0 32px;position:relative}
+.hdr-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(191,90,242,0.15);border:1px solid rgba(191,90,242,0.3);border-radius:100px;padding:6px 16px;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--neon-purple);margin-bottom:16px}
+.hdr h1{font-size:clamp(2rem,6vw,3.5rem);font-weight:900;letter-spacing:-0.03em;line-height:1.05;margin-bottom:8px}
+.hdr h1 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-sub{font-size:1rem;color:var(--text2);max-width:560px;margin:0 auto 24px}
+.mission-badge{display:inline-block;background:linear-gradient(135deg,rgba(255,45,120,0.2),rgba(191,90,242,0.2));border:1px solid rgba(255,45,120,0.4);border-radius:12px;padding:10px 24px;font-size:0.85rem;font-weight:700;color:#FF2D78}
+
+/* ── Section title ── */
+.sec-title{font-size:0.68rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--neon-purple);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── Grid layouts ── */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:28px}
+.grid-main{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:28px}
+@media(max-width:900px){.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr}.grid-main{grid-template-columns:1fr}}
+@media(max-width:600px){.grid-4{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-glow-pink{box-shadow:0 0 0 1px rgba(255,45,120,0.2),0 8px 32px rgba(255,45,120,0.08)}
+.card-glow-purple{box-shadow:0 0 0 1px rgba(191,90,242,0.2),0 8px 32px rgba(191,90,242,0.08)}
+.card-glow-cyan{box-shadow:0 0 0 1px rgba(0,245,255,0.2),0 8px 32px rgba(0,245,255,0.08)}
+.card-glow-green{box-shadow:0 0 0 1px rgba(0,255,148,0.2),0 8px 32px rgba(0,255,148,0.08)}
+
+/* ── Metric cards ── */
+.metric{text-align:center;padding:24px 16px}
+.metric-icon{font-size:1.8rem;margin-bottom:8px}
+.metric-val{font-size:2rem;font-weight:900;letter-spacing:-0.03em;line-height:1}
+.metric-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);margin-top:6px}
+.metric-sub{font-size:0.75rem;color:var(--text2);margin-top:4px}
+
+/* ── Progress bar ── */
+.prog-wrap{margin:20px 0}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.8rem}
+.prog-label{font-weight:700;color:var(--text)}
+.prog-pct{font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.prog-track{height:10px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;background:var(--grad);transition:width 1s ease}
+.prog-milestones{display:flex;justify-content:space-between;margin-top:6px;font-size:0.65rem;color:var(--text2)}
+
+/* ── Day tracker ── */
+.day-track{display:flex;flex-wrap:wrap;gap:4px;margin-top:16px}
+.day-dot{width:18px;height:18px;border-radius:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all 0.2s;position:relative}
+.day-dot.done{background:var(--neon-green);border-color:var(--neon-green);box-shadow:0 0 8px rgba(0,255,148,0.4)}
+.day-dot.today{background:var(--neon-pink);border-color:var(--neon-pink);box-shadow:0 0 10px rgba(255,45,120,0.5);animation:pulse-dot 1.5s ease-in-out infinite}
+.day-dot.upcoming{background:rgba(191,90,242,0.15);border-color:rgba(191,90,242,0.3)}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 10px rgba(255,45,120,0.5)}50%{box-shadow:0 0 20px rgba(255,45,120,0.8)}}
+.day-dot-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.72rem;color:var(--text2)}
+
+/* ── Follower input ── */
+.follower-input-wrap{display:flex;gap:10px;margin-top:16px}
+.follower-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.9rem;font-family:var(--font);outline:none}
+.follower-input:focus{border-color:var(--neon-pink)}
+.update-btn{background:var(--grad);border:none;border-radius:10px;padding:10px 18px;color:#fff;font-weight:800;font-size:0.82rem;cursor:pointer;white-space:nowrap;font-family:var(--font)}
+
+/* ── Content calendar ── */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}
+.cal-head{text-align:center;font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);padding:6px 0}
+.cal-day{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:8px 6px;min-height:80px;cursor:pointer;transition:all 0.2s;position:relative}
+.cal-day:hover{background:rgba(191,90,242,0.1);border-color:rgba(191,90,242,0.3)}
+.cal-day.today-cal{border-color:var(--neon-pink);background:rgba(255,45,120,0.08)}
+.cal-day.done-cal{background:rgba(0,255,148,0.06);border-color:rgba(0,255,148,0.2)}
+.cal-num{font-size:0.7rem;font-weight:800;color:var(--text2);margin-bottom:4px}
+.cal-tag{font-size:0.6rem;font-weight:700;border-radius:4px;padding:2px 5px;display:inline-block;margin-bottom:3px;white-space:nowrap}
+.cal-title{font-size:0.62rem;color:var(--text2);line-height:1.3}
+@media(max-width:700px){.cal-grid{grid-template-columns:repeat(7,1fr)}.cal-title{display:none}.cal-day{min-height:52px}}
+
+/* ── Content pillars ── */
+.pillar{display:flex;align-items:flex-start;gap:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;transition:all 0.2s}
+.pillar:hover{background:rgba(191,90,242,0.06);border-color:rgba(191,90,242,0.2)}
+.pillar-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.pillar-body{}
+.pillar-name{font-size:0.85rem;font-weight:800;margin-bottom:3px}
+.pillar-desc{font-size:0.75rem;color:var(--text2);line-height:1.5}
+.pillar-pct{font-size:0.68rem;font-weight:700;margin-top:6px}
+
+/* ── Time slots ── */
+.time-slot{display:flex;align-items:center;gap:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.time-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.time-val{font-weight:800;font-size:0.9rem;min-width:56px}
+.time-desc{font-size:0.78rem;color:var(--text2)}
+.time-badge{margin-left:auto;font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:6px}
+
+/* ── Phase cards ── */
+.phase{border-radius:14px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.phase::before{content:'';position:absolute;inset:0;opacity:0.06;background:var(--phase-col)}
+.phase-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.phase-num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9rem;background:var(--phase-col);color:#000;flex-shrink:0}
+.phase-title{font-size:1rem;font-weight:800}
+.phase-days{font-size:0.72rem;color:var(--text2);margin-top:2px}
+.phase-goal{font-size:0.8rem;font-weight:700;margin-bottom:10px}
+.phase-tasks{list-style:none;display:flex;flex-direction:column;gap:6px}
+.phase-tasks li{font-size:0.78rem;color:var(--text2);display:flex;gap:8px;line-height:1.4}
+.phase-tasks li::before{content:'→';color:var(--neon-purple);flex-shrink:0}
+
+/* ── Competitor watch ── */
+.comp-row{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.comp-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.comp-name{font-weight:700;font-size:0.85rem}
+.comp-handle{font-size:0.7rem;color:var(--text2)}
+.comp-followers{margin-left:auto;text-align:right}
+.comp-f-num{font-size:0.85rem;font-weight:800}
+.comp-f-label{font-size:0.65rem;color:var(--text2)}
+.comp-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:100px}
+
+/* ── Checklist ── */
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s}
+.check-item:last-child{border-bottom:none}
+.check-item:hover{background:rgba(255,255,255,0.02)}
+.check-box{width:20px;height:20px;border-radius:5px;border:2px solid rgba(255,255,255,0.2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.check-item.checked .check-box{background:var(--neon-green);border-color:var(--neon-green)}
+.check-item.checked .check-box::after{content:'✓';font-size:0.7rem;font-weight:900;color:#000}
+.check-item.checked .check-text{text-decoration:line-through;color:var(--text2)}
+.check-text{font-size:0.82rem;line-height:1.4}
+.check-priority{font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:6px;margin-left:auto;flex-shrink:0}
+
+/* ── Brand audit ── */
+.audit-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.audit-label{font-size:0.78rem;font-weight:700;min-width:140px}
+.audit-track{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
+.audit-fill{height:100%;border-radius:100px;transition:width 1s ease}
+.audit-score{font-size:0.82rem;font-weight:800;min-width:32px;text-align:right}
+
+/* ── Platform tabs ── */
+.tab-bar{display:flex;gap:6px;margin-bottom:20px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:6px}
+.tab{padding:8px 16px;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.2s;border:none;background:none;color:var(--text2);font-family:var(--font)}
+.tab.active{background:var(--grad);color:#fff}
+
+/* ── Hook formulas ── */
+.hook-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.hook-formula{font-size:0.82rem;font-weight:700;color:var(--neon-cyan);margin-bottom:6px;font-family:monospace}
+.hook-example{font-size:0.78rem;color:var(--text2);font-style:italic;line-height:1.5}
+
+/* ── Alert ── */
+.alert{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:12px;margin-bottom:14px;font-size:0.82rem;line-height:1.5}
+.alert-warn{background:rgba(255,214,10,0.08);border:1px solid rgba(255,214,10,0.25);color:var(--neon-gold)}
+.alert-success{background:rgba(0,255,148,0.08);border:1px solid rgba(0,255,148,0.25);color:var(--neon-green)}
+.alert-info{background:rgba(0,245,255,0.08);border:1px solid rgba(0,245,255,0.25);color:var(--neon-cyan)}
+.alert-danger{background:rgba(255,45,120,0.08);border:1px solid rgba(255,45,120,0.25);color:var(--neon-pink)}
+.alert-ico{font-size:1.1rem;flex-shrink:0}
+
+/* ── Stat bar ── */
+.stat-bars{display:flex;flex-direction:column;gap:10px}
+.stat-bar-row{display:flex;align-items:center;gap:12px}
+.stat-bar-label{font-size:0.72rem;color:var(--text2);min-width:80px}
+.stat-bar-track{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
+.stat-bar-fill{height:100%;border-radius:100px}
+.stat-bar-val{font-size:0.72rem;font-weight:700;min-width:36px;text-align:right}
+
+/* ── Today's plan ── */
+.today-post{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden}
+.today-post::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--post-col)}
+.post-time{font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);margin-bottom:4px}
+.post-hook{font-size:0.88rem;font-weight:800;margin-bottom:6px;color:var(--text)}
+.post-body{font-size:0.76rem;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.post-tags{display:flex;flex-wrap:wrap;gap:4px}
+.post-tag{font-size:0.62rem;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(191,90,242,0.15);color:var(--neon-purple)}
+
+/* ── Navbar ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:16px}
+.nav-brand{font-weight:900;font-size:1.1rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex-shrink:0}
+.nav-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav-link{padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:700;color:var(--text2);cursor:pointer;text-decoration:none;white-space:nowrap;transition:all 0.2s}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.06)}
+.nav-link.active-link{color:var(--neon-pink)}
+.nav-day{margin-left:auto;font-size:0.75rem;font-weight:800;color:var(--neon-green);flex-shrink:0}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(191,90,242,0.3);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">🐱 Metakittyz</div>
+  <div class="nav-links">
+    <a class="nav-link active-link" href="#mission">Mission</a>
+    <a class="nav-link" href="#today">Today</a>
+    <a class="nav-link" href="#calendar">Calendar</a>
+    <a class="nav-link" href="#strategy">Strategy</a>
+    <a class="nav-link" href="#pillars">Pillars</a>
+    <a class="nav-link" href="#competitors">Intel</a>
+    <a class="nav-link" href="#hooks">Hooks</a>
+    <a class="nav-link" href="#brand">Brand</a>
+  </div>
+  <div class="nav-day" id="nav-day">Day — / 60</div>
+</nav>
+
+<div class="page">
+
+<!-- HEADER -->
+<div class="hdr" id="mission">
+  <div class="hdr-badge">🚀 0 → 1,000,000 Followers in 60 Days</div>
+  <h1><span>Metakittyz</span><br>Command Center</h1>
+  <p class="hdr-sub">AI-powered content strategy for @metakittyz — Harvard Agentic AI Intensive meets the most colorful creator in tech.</p>
+  <div class="mission-badge">Mission: 1,000,000 followers · 60 days · No shortcuts — just systems.</div>
+</div>
+
+<!-- ALERT -->
+<div class="alert alert-success">
+  <div class="alert-ico">🟢</div>
+  <div><strong>Day 1 — Journey Begins.</strong> You just posted your first video about the journey. That's the hardest day done. Everything from here is momentum. Update your follower count daily to track progress.</div>
+</div>
+
+<!-- MISSION METRICS -->
+<div class="sec-title">📊 Mission Control</div>
+<div class="grid-4" style="margin-bottom:20px">
+  <div class="card metric card-glow-pink">
+    <div class="metric-icon">👥</div>
+    <div class="metric-val" id="current-followers" style="color:var(--neon-pink)">295</div>
+    <div class="metric-label">Current Followers</div>
+    <div class="metric-sub">@metakittyz</div>
+  </div>
+  <div class="card metric card-glow-purple">
+    <div class="metric-icon">🎯</div>
+    <div class="metric-val" style="color:var(--neon-purple)">1,000,000</div>
+    <div class="metric-label">Goal</div>
+    <div class="metric-sub">60-day target</div>
+  </div>
+  <div class="card metric card-glow-cyan">
+    <div class="metric-icon">📅</div>
+    <div class="metric-val" id="days-remaining" style="color:var(--neon-cyan)">60</div>
+    <div class="metric-label">Days Left</div>
+    <div class="metric-sub" id="start-date-label">Started today</div>
+  </div>
+  <div class="card metric card-glow-green">
+    <div class="metric-icon">⚡</div>
+    <div class="metric-val" id="needed-per-day" style="color:var(--neon-green)">16,618</div>
+    <div class="metric-label">Followers / Day</div>
+    <div class="metric-sub">Needed to hit goal</div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="card" style="margin-bottom:28px">
+  <div class="sec-title">📈 Progress Tracker</div>
+  <div class="follower-input-wrap">
+    <input class="follower-input" id="follower-input" type="number" placeholder="Enter today's follower count…" min="0"/>
+    <button class="update-btn" onclick="updateFollowers()">Update Count</button>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-top">
+      <span class="prog-label">Journey to 1 Million</span>
+      <span class="prog-pct" id="prog-pct">0.03%</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0.03%"></div></div>
+    <div class="prog-milestones">
+      <span>0</span><span>10K</span><span>50K</span><span>100K</span><span>500K</span><span>1M 🎯</span>
+    </div>
+  </div>
+  <div>
+    <div class="day-dot-label"><span>60-Day Journey</span><span id="days-done-label">0 / 60 days complete</span></div>
+    <div class="day-track" id="day-dots"></div>
+  </div>
+</div>
+
+<!-- TODAY'S PLAN -->
+<div class="sec-title" id="today">🎬 Today's Content Plan</div>
+<div class="alert alert-info">
+  <div class="alert-ico">💡</div>
+  <div><strong>Day 1 Strategy:</strong> You already posted the journey announcement. Your job now is to engage every single comment within the first hour, repost it to your Stories with a poll ("Should I really try this?"), and pin it to your profile top.</div>
+</div>
+
+<div class="grid-3" style="margin-bottom:28px">
+  <div class="today-post" style="--post-col:var(--neon-pink)">
+    <div class="post-time">🌅 7–9am · Morning Post</div>
+    <div class="post-hook">"I just enrolled in Harvard's AI course and I'm documenting everything — starting now."</div>
+    <div class="post-body">Introduce the 60-day challenge publicly. Show the Harvard enrollment screen. Tell them exactly what they're going to learn watching your journey. ✅ Already posted — now pin it & engage every comment.</div>
+    <div class="post-tags"><span class="post-tag">#AgenticAI</span><span class="post-tag">#Harvard</span><span class="post-tag">#AIJourney</span></div>
+  </div>
+  <div class="today-post" style="--post-col:var(--neon-purple)">
+    <div class="post-time">☀️ 12–1pm · Midday Post</div>
+    <div class="post-hook">"What even IS an AI agent? Let me explain it in 30 seconds."</div>
+    <div class="post-body">Simple explainer reel. Use one analogy: "ChatGPT is one employee. An AI agent is a whole department that runs itself." Show the PI Agent OS pipeline screen for 2 seconds at the end. Tease tomorrow.</div>
+    <div class="post-tags"><span class="post-tag">#WhatIsAI</span><span class="post-tag">#AIExplained</span><span class="post-tag">#LearnWithMe</span></div>
+  </div>
+  <div class="today-post" style="--post-col:var(--neon-cyan)">
+    <div class="post-time">🌙 6–9pm · Evening Post</div>
+    <div class="post-hook">"I told 295 people I'm going to 1 million in 60 days. Here's why I actually think it's possible."</div>
+    <div class="post-body">Vulnerability + strategy post. Show your face, be real. Explain the 3 things that make this mission different: Harvard credibility, PI Agent OS as live proof, and you documenting everything — mistakes included.</div>
+    <div class="post-tags"><span class="post-tag">#CreatorJourney</span><span class="post-tag">#1MillionIn60Days</span><span class="post-tag">#Metakittyz</span></div>
+  </div>
+</div>
+
+<!-- 60-DAY CALENDAR -->
+<div class="sec-title" id="calendar">📅 60-Day Content Calendar</div>
+<div class="card" style="margin-bottom:28px;padding:24px">
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:0.72rem">
+    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(255,45,120,0.6);border-radius:3px;margin-right:4px"></span>Harvard / AI Fundamentals</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(191,90,242,0.6);border-radius:3px;margin-right:4px"></span>Build in Public</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(0,245,255,0.6);border-radius:3px;margin-right:4px"></span>Journey / Meta</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(0,255,148,0.6);border-radius:3px;margin-right:4px"></span>Collab / Trend</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(255,214,10,0.6);border-radius:3px;margin-right:4px"></span>Viral / Hook Day</span>
+  </div>
+  <div class="cal-grid">
+    <div class="cal-head">MON</div><div class="cal-head">TUE</div><div class="cal-head">WED</div>
+    <div class="cal-head">THU</div><div class="cal-head">FRI</div><div class="cal-head">SAT</div><div class="cal-head">SUN</div>
+  </div>
+  <div class="cal-grid" id="cal-body"></div>
+</div>
+
+<!-- STRATEGY PHASES -->
+<div class="sec-title" id="strategy">🗺️ 60-Day Battle Plan</div>
+<div style="margin-bottom:28px">
+
+  <div class="phase" style="--phase-col:#FF2D78;border:1px solid rgba(255,45,120,0.25);background:rgba(255,45,120,0.04)">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#FF2D78">1</div>
+      <div>
+        <div class="phase-title">Foundation & Spark — Days 1–10</div>
+        <div class="phase-days">Target: 0 → 5,000 followers · 3 posts/day</div>
+      </div>
+    </div>
+    <div class="phase-goal" style="color:#FF2D78">Goal: Establish your 3 content pillars, lock the posting routine, get your first viral moment.</div>
+    <ul class="phase-tasks">
+      <li>Optimize bio: add clear value proposition — "I'm learning Agentic AI at Harvard & building the future of creative AI — follow the journey"</li>
+      <li>Post 3x daily: 7am hook, 12pm value, 7pm personal</li>
+      <li>Reel 1–3: Harvard AI fundamentals series begins (What is an Agent / Orchestration / The Brief)</li>
+      <li>Story: daily poll ("Did you know AI could do this?") to train the algorithm</li>
+      <li>Engage every comment in the first 60 minutes of every post</li>
+      <li>Add 3 story highlights: Harvard Journey / What I'm Building / AI Explained</li>
+      <li>Cross-post every reel to TikTok, YouTube Shorts, LinkedIn same day</li>
+      <li>DM 20 creators in your niche per day — genuine engagement, no spam</li>
+    </ul>
+  </div>
+
+  <div class="phase" style="--phase-col:#BF5AF2;border:1px solid rgba(191,90,242,0.25);background:rgba(191,90,242,0.04)">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#BF5AF2">2</div>
+      <div>
+        <div class="phase-title">Acceleration — Days 11–25</div>
+        <div class="phase-days">Target: 5K → 50,000 followers · First collab drops</div>
+      </div>
+    </div>
+    <div class="phase-goal" style="color:#BF5AF2">Goal: Hit your first viral reel, launch a collab, and show PI Agent OS live on camera.</div>
+    <ul class="phase-tasks">
+      <li>Film "Watch AI build a full brand in 60 seconds" — live PI Agent OS demo reel</li>
+      <li>Harvard course midpoint check-in: "Here's what I've learned so far" compilation</li>
+      <li>Reach out to 3 creators for collab (AI space, Latinas in tech, founder journey)</li>
+      <li>Start weekly "AI term of the week" series — one concept, 30 seconds, plain English</li>
+      <li>Post your first "mistake" reel — what went wrong and what you learned</li>
+      <li>LinkedIn article: "What Harvard taught me about AI in week 2" — drives IG traffic</li>
+      <li>Create a custom Metakittyz sticker pack for Stories to build brand identity</li>
+      <li>Run your first Story Q&A: "Ask me anything about AI agents"</li>
+    </ul>
+  </div>
+
+  <div class="phase" style="--phase-col:#00F5FF;border:1px solid rgba(0,245,255,0.25);background:rgba(0,245,255,0.04)">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#00F5FF;color:#000">3</div>
+      <div>
+        <div class="phase-title">Momentum Lock — Days 26–40</div>
+        <div class="phase-days">Target: 50K → 200,000 followers · Authority building</div>
+      </div>
+    </div>
+    <div class="phase-goal" style="color:#00F5FF">Goal: Establish Metakittyz as THE colorful AI creator. Media pitches begin. Community forms.</div>
+    <ul class="phase-tasks">
+      <li>Harvard course complete — post the final project reveal reel</li>
+      <li>Start a weekly live: "AI office hours with Metakittyz" — answer community questions</li>
+      <li>Pitch 5 podcasts in the AI / creator / Latina entrepreneur space</li>
+      <li>Launch Metakittyz newsletter: weekly AI breakdown, 1 building update, 1 resource</li>
+      <li>Film "I ran [Company X] through an AI agent pipeline — watch what happened"</li>
+      <li>Show follower growth transparency: post a real analytics screenshot weekly</li>
+      <li>Start tagging Harvard, AI creators, and tech media in relevant posts</li>
+    </ul>
+  </div>
+
+  <div class="phase" style="--phase-col:#00FF94;border:1px solid rgba(0,255,148,0.25);background:rgba(0,255,148,0.04)">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#00FF94;color:#000">4</div>
+      <div>
+        <div class="phase-title">Scale & Own — Days 41–60</div>
+        <div class="phase-days">Target: 200K → 1,000,000 followers · Thought leader status</div>
+      </div>
+    </div>
+    <div class="phase-goal" style="color:#00FF94">Goal: The 60-day finale becomes its own viral moment. Brand partnerships. Speaking stage.</div>
+    <ul class="phase-tasks">
+      <li>Weekly recap series: "Day 41–45 of trying to get 1M followers — here's what worked"</li>
+      <li>The 60-day finale reel: raw honest breakdown of everything — numbers, mistakes, wins</li>
+      <li>PI Agent OS public beta announcement — followers become first users</li>
+      <li>Pitch Forbes, TechCrunch, Business Insider: "Creator goes from 295 to X followers in 60 days using AI systems"</li>
+      <li>First brand partnership pitch deck sent — you now have proof of concept</li>
+      <li>Create a free "AI for Creators" guide — email list builder + lead magnet</li>
+      <li>Document the full 60-day journey as a case study and sell it or release it</li>
+    </ul>
+  </div>
+</div>
+
+<!-- CONTENT PILLARS -->
+<div class="sec-title" id="pillars">🎨 Content Pillars</div>
+<div style="margin-bottom:28px">
+  <div class="pillar">
+    <div class="pillar-ico" style="background:rgba(255,45,120,0.15)">🎓</div>
+    <div class="pillar-body">
+      <div class="pillar-name" style="color:var(--neon-pink)">Harvard AI Fundamentals — 30% of content</div>
+      <div class="pillar-desc">One concept per reel. What is an agent. What is orchestration. What is governance. What is memory. Plain English, 30–60 seconds. This is your credibility content — it positions you as a teacher, not just a student.</div>
+      <div class="pillar-pct" style="color:var(--neon-pink)">3x / week · Mon, Wed, Fri</div>
+    </div>
+  </div>
+  <div class="pillar">
+    <div class="pillar-ico" style="background:rgba(191,90,242,0.15)">🏗️</div>
+    <div class="pillar-body">
+      <div class="pillar-name" style="color:var(--neon-purple)">Build in Public — 25% of content</div>
+      <div class="pillar-desc">Live demos of PI Agent OS. Show a real client workflow running. Show what you built this week. Show what broke. This is your proof-of-work content — it separates you from every other "AI creator" who just talks about it.</div>
+      <div class="pillar-pct" style="color:var(--neon-purple)">3x / week · Tue, Thu, Sat</div>
+    </div>
+  </div>
+  <div class="pillar">
+    <div class="pillar-ico" style="background:rgba(0,245,255,0.15)">🌊</div>
+    <div class="pillar-body">
+      <div class="pillar-name" style="color:var(--neon-cyan)">The Journey — 20% of content</div>
+      <div class="pillar-desc">Raw, honest documentation of trying to hit 1M in 60 days. The mistakes. The wins. The numbers. The doubt. The 2am breakthroughs. This is your most relatable content — it builds a community, not just an audience.</div>
+      <div class="pillar-pct" style="color:var(--neon-cyan)">Daily Stories + 2 reels / week</div>
+    </div>
+  </div>
+  <div class="pillar">
+    <div class="pillar-ico" style="background:rgba(255,214,10,0.15)">⚡</div>
+    <div class="pillar-body">
+      <div class="pillar-name" style="color:var(--neon-gold)">Viral Hooks & Trends — 15% of content</div>
+      <div class="pillar-desc">Jump on trending audio and formats — but always with an AI/Metakittyz twist. A trending sound with "POV: you asked an AI agent to run your whole business" overlay gets the reach. Your personality keeps the follows.</div>
+      <div class="pillar-pct" style="color:var(--neon-gold)">When relevant · 2–3x / week</div>
+    </div>
+  </div>
+  <div class="pillar">
+    <div class="pillar-ico" style="background:rgba(0,255,148,0.15)">🤝</div>
+    <div class="pillar-body">
+      <div class="pillar-name" style="color:var(--neon-green)">Collabs & Community — 10% of content</div>
+      <div class="pillar-desc">Duets with AI creators. Q&As. "I ran YOUR business through the agent pipeline" — where followers submit their company for a live demo. This is your distribution multiplier. Other people's audiences, coming to you.</div>
+      <div class="pillar-pct" style="color:var(--neon-green)">Weekly starting Day 11</div>
+    </div>
+  </div>
+</div>
+
+<!-- POSTING TIMES -->
+<div class="sec-title">⏰ Optimal Posting Schedule</div>
+<div class="grid-2" style="margin-bottom:28px">
+  <div class="card">
+    <div style="font-size:0.8rem;font-weight:800;margin-bottom:12px;color:var(--neon-pink)">📱 Instagram Reels</div>
+    <div class="time-slot">
+      <div class="time-dot" style="background:var(--neon-pink)"></div>
+      <div class="time-val">7–9am</div>
+      <div class="time-desc">Morning scroll · commute · coffee · high intent</div>
+      <div class="time-badge" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">PRIME</div>
+    </div>
+    <div class="time-slot">
+      <div class="time-dot" style="background:var(--neon-purple)"></div>
+      <div class="time-val">12–1pm</div>
+      <div class="time-desc">Lunch break scroll · midday reset</div>
+      <div class="time-badge" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">STRONG</div>
+    </div>
+    <div class="time-slot">
+      <div class="time-dot" style="background:var(--neon-cyan)"></div>
+      <div class="time-val">6–9pm</div>
+      <div class="time-desc">Evening wind-down · highest save rate</div>
+      <div class="time-badge" style="background:rgba(0,245,255,0.15);color:var(--neon-cyan)">PRIME</div>
+    </div>
+    <div style="margin-top:12px;font-size:0.72rem;color:var(--text2)">Best days: Tuesday, Wednesday, Thursday. Never post Saturday morning — lowest reach day for tech/AI content.</div>
+  </div>
+  <div class="card">
+    <div style="font-size:0.8rem;font-weight:800;margin-bottom:12px;color:var(--neon-purple)">🔄 Cross-Platform</div>
+    <div class="time-slot">
+      <div class="time-dot" style="background:var(--neon-pink)"></div>
+      <div class="time-val">TikTok</div>
+      <div class="time-desc">Same reel, 30 min after IG · different caption</div>
+      <div class="time-badge" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">2x REACH</div>
+    </div>
+    <div class="time-slot">
+      <div class="time-dot" style="background:var(--neon-gold)"></div>
+      <div class="time-val">LinkedIn</div>
+      <div class="time-desc">Tuesday 8am · text post linking IG · B2B audience</div>
+      <div class="time-badge" style="background:rgba(255,214,10,0.15);color:var(--neon-gold)">B2B LEADS</div>
+    </div>
+    <div class="time-slot">
+      <div class="time-dot" style="background:var(--neon-green)"></div>
+      <div class="time-val">YouTube</div>
+      <div class="time-desc">Shorts from IG reels · weekly long-form from Harvard content</div>
+      <div class="time-badge" style="background:rgba(0,255,148,0.15);color:var(--neon-green)">SEO POWER</div>
+    </div>
+    <div style="margin-top:12px;font-size:0.72rem;color:var(--text2)">Every piece of content hits 4 platforms. Same work, 4x the exposure. Never waste a reel on one platform only.</div>
+  </div>
+</div>
+
+<!-- HOOK FORMULAS -->
+<div class="sec-title" id="hooks">🎣 Hook Formulas That Work for Your Brand</div>
+<div class="grid-2" style="margin-bottom:28px">
+  <div>
+    <div class="hook-card">
+      <div class="hook-formula">"[Surprising claim] about [AI topic] — here's the proof."</div>
+      <div class="hook-example">"Most people have no idea what an AI agent actually does — here's the proof that changes everything."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hook-formula">"I gave AI [task] and it did [unexpected result] in [time]."</div>
+      <div class="hook-example">"I gave an AI agent a full real estate company to manage. It built a complete brand, pricing strategy, and guest system in under 60 seconds."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hook-formula">"Harvard taught me [insight] that most [people] don't know yet."</div>
+      <div class="hook-example">"Harvard taught me that AI governance is the part nobody talks about — and it's the most important part."</div>
+    </div>
+  </div>
+  <div>
+    <div class="hook-card">
+      <div class="hook-formula">"POV: [relatable situation] but [Metakittyz twist]."</div>
+      <div class="hook-example">"POV: your entire project team is AI, it never sleeps, never has a bad day, and it costs less than one employee."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hook-formula">"Day [X] of [mission] — here's what actually happened."</div>
+      <div class="hook-example">"Day 14 of trying to get 1 million Instagram followers using AI systems — here's what actually happened this week."</div>
+    </div>
+    <div class="hook-card">
+      <div class="hook-formula">"Stop using [common thing]. Use [better thing] instead — I'll show you."</div>
+      <div class="hook-example">"Stop asking ChatGPT to do everything. Use an agent pipeline instead — I'll show you the difference in 30 seconds."</div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPETITOR INTEL -->
+<div class="sec-title" id="competitors">🔍 Creator Intelligence — Who to Watch & Learn From</div>
+<div class="card" style="margin-bottom:28px">
+  <div class="alert alert-warn" style="margin-bottom:16px">
+    <div class="alert-ico">⚠️</div>
+    <div>Watch these creators for format and timing ideas — but never copy. Your edge is the combination of colorful personality + Harvard credibility + building live. No one else has all three.</div>
+  </div>
+  <div class="comp-row">
+    <div class="comp-avatar" style="background:rgba(255,45,120,0.15)">🤖</div>
+    <div><div class="comp-name">AI Explainer Creators</div><div class="comp-handle">@aisolopreneur, @thegptguide, @futurepedia</div><div class="comp-tags"><span class="tag" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">AI Education</span><span class="tag" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">Tools</span></div></div>
+    <div class="comp-followers" style="margin-left:auto"><div class="comp-f-num" style="color:var(--neon-pink)">100K–500K</div><div class="comp-f-label">Study their hook formats</div></div>
+  </div>
+  <div class="comp-row">
+    <div class="comp-avatar" style="background:rgba(0,245,255,0.15)">🏗️</div>
+    <div><div class="comp-name">Build in Public Founders</div><div class="comp-handle">@levelsio, @dagorenouf, @marc_louvion</div><div class="comp-tags"><span class="tag" style="background:rgba(0,245,255,0.15);color:var(--neon-cyan)">Transparency</span><span class="tag" style="background:rgba(255,214,10,0.15);color:var(--neon-gold)">Revenue</span></div></div>
+    <div class="comp-followers" style="margin-left:auto"><div class="comp-f-num" style="color:var(--neon-cyan)">200K–1M+</div><div class="comp-f-label">Study their transparency format</div></div>
+  </div>
+  <div class="comp-row">
+    <div class="comp-avatar" style="background:rgba(0,255,148,0.15)">🌈</div>
+    <div><div class="comp-name">Colorful Tech Creators</div><div class="comp-handle">@zoeunlimited, @fashiontech.girls</div><div class="comp-tags"><span class="tag" style="background:rgba(0,255,148,0.15);color:var(--neon-green)">Aesthetic</span><span class="tag" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">Personality</span></div></div>
+    <div class="comp-followers" style="margin-left:auto"><div class="comp-f-num" style="color:var(--neon-green)">50K–300K</div><div class="comp-f-label">Study their visual identity</div></div>
+  </div>
+  <div class="comp-row">
+    <div class="comp-avatar" style="background:rgba(255,214,10,0.15)">👩🏽‍💻</div>
+    <div><div class="comp-name">Latinas in Tech</div><div class="comp-handle">#LatinaInTech, #TechLatina community</div><div class="comp-tags"><span class="tag" style="background:rgba(255,214,10,0.15);color:var(--neon-gold)">Community</span><span class="tag" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">Representation</span></div></div>
+    <div class="comp-followers" style="margin-left:auto"><div class="comp-f-num" style="color:var(--neon-gold)">Collab pool</div><div class="comp-f-label">Your community to lead</div></div>
+  </div>
+</div>
+
+<!-- DAILY CHECKLIST -->
+<div class="sec-title">✅ Daily Agent Checklist</div>
+<div class="grid-2" style="margin-bottom:28px">
+  <div class="card" id="checklist-morning">
+    <div style="font-size:0.8rem;font-weight:800;margin-bottom:12px;color:var(--neon-pink)">🌅 Morning Routine</div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Post morning reel by 9am</div><div class="check-priority" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">CRITICAL</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Reply to every comment from last night's post</div><div class="check-priority" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">CRITICAL</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Post morning Story with a poll or question</div><div class="check-priority" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">HIGH</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Cross-post reel to TikTok</div><div class="check-priority" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">HIGH</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Update follower count in command center</div><div class="check-priority" style="background:rgba(0,245,255,0.15);color:var(--neon-cyan)">DAILY</div></div>
+  </div>
+  <div class="card" id="checklist-evening">
+    <div style="font-size:0.8rem;font-weight:800;margin-bottom:12px;color:var(--neon-purple)">🌙 Evening Routine</div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Post evening reel by 7pm</div><div class="check-priority" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">CRITICAL</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Engage comments within 60 min of posting</div><div class="check-priority" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">CRITICAL</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Film tomorrow's morning reel tonight</div><div class="check-priority" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">HIGH</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">DM 10 creators in your space (genuine engagement)</div><div class="check-priority" style="background:rgba(0,245,255,0.15);color:var(--neon-cyan)">GROWTH</div></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Review analytics — what performed best today?</div><div class="check-priority" style="background:rgba(0,255,148,0.15);color:var(--neon-green)">LEARN</div></div>
+  </div>
+</div>
+
+<!-- BRAND AUDIT -->
+<div class="sec-title" id="brand">🎨 Brand Audit — Current State</div>
+<div class="grid-2" style="margin-bottom:28px">
+  <div class="card">
+    <div style="font-size:0.8rem;font-weight:800;margin-bottom:16px;color:var(--neon-cyan)">Current Scores</div>
+    <div class="audit-row"><div class="audit-label">Brand Personality</div><div class="audit-track"><div class="audit-fill" style="width:85%;background:var(--neon-green)"></div></div><div class="audit-score" style="color:var(--neon-green)">8.5</div></div>
+    <div class="audit-row"><div class="audit-label">Visual Consistency</div><div class="audit-track"><div class="audit-fill" style="width:50%;background:var(--neon-gold)"></div></div><div class="audit-score" style="color:var(--neon-gold)">5.0</div></div>
+    <div class="audit-row"><div class="audit-label">Bio Value Clarity</div><div class="audit-track"><div class="audit-fill" style="width:60%;background:var(--neon-gold)"></div></div><div class="audit-score" style="color:var(--neon-gold)">6.0</div></div>
+    <div class="audit-row"><div class="audit-label">Content Strategy</div><div class="audit-track"><div class="audit-fill" style="width:30%;background:var(--neon-pink)"></div></div><div class="audit-score" style="color:var(--neon-pink)">3.0</div></div>
+    <div class="audit-row"><div class="audit-label">Posting Consistency</div><div class="audit-track"><div class="audit-fill" style="width:20%;background:var(--neon-pink)"></div></div><div class="audit-score" style="color:var(--neon-pink)">2.0</div></div>
+    <div class="audit-row"><div class="audit-label">Cross-Platform</div><div class="audit-track"><div class="audit-fill" style="width:25%;background:var(--neon-pink)"></div></div><div class="audit-score" style="color:var(--neon-pink)">2.5</div></div>
+    <div class="audit-row"><div class="audit-label">Credibility Signals</div><div class="audit-track"><div class="audit-fill" style="width:75%;background:var(--neon-purple)"></div></div><div class="audit-score" style="color:var(--neon-purple)">7.5</div></div>
+  </div>
+  <div class="card">
+    <div style="font-size:0.8rem;font-weight:800;margin-bottom:16px;color:var(--neon-pink)">🔧 Immediate Fixes (Do This Today)</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:10px">
+      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Bio rewrite:</strong> "I'm learning Agentic AI at Harvard & building AI tools that anyone can use — follow the journey 🌈🤖" + link to PI Agent OS</span></li>
+      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Pin 3 highlights:</strong> "Harvard Journey" / "What I'm Building" / "AI Explained" — create covers in your brand colors</span></li>
+      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Profile photo:</strong> use a bold, high-contrast version of your colorful photo — no "Inspo needed" note should be visible</span></li>
+      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Pin your best reel</strong> to the top of your grid — first impression = first post seen</span></li>
+      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Add link in bio:</strong> PI Agent OS landing page — every follower becomes a potential user</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- SYSTEMS -->
+<div class="sec-title">⚙️ Systems to Implement</div>
+<div class="grid-3" style="margin-bottom:28px">
+  <div class="card card-glow-pink">
+    <div style="font-size:1.5rem;margin-bottom:10px">🎬</div>
+    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Batch Filming System</div>
+    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">Film 9–12 reels in one 3-hour session, Sunday evenings. Schedule Mon–Sat automatically. You post once a week, publish every day. Never scramble for content again.</div>
+  </div>
+  <div class="card card-glow-purple">
+    <div style="font-size:1.5rem;margin-bottom:10px">💬</div>
+    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">60-Minute Engagement Window</div>
+    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">The algorithm judges a post in the first 60 minutes. Set a timer. Reply to every comment personally. Ask a follow-up question. This alone can 3x your reach per post.</div>
+  </div>
+  <div class="card card-glow-cyan">
+    <div style="font-size:1.5rem;margin-bottom:10px">📊</div>
+    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Weekly Analytics Review</div>
+    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">Every Sunday: review top 3 performing posts. What was the hook? What was the topic? What time? Double down on what worked. Kill what didn't. This is how you get smarter every week.</div>
+  </div>
+  <div class="card card-glow-green">
+    <div style="font-size:1.5rem;margin-bottom:10px">🔄</div>
+    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Cross-Platform Repurpose</div>
+    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">IG Reel → TikTok (same day) → YouTube Short (next day) → LinkedIn text post (Tuesday) → Newsletter snippet (Friday). One piece of content, 5 platforms, 5x the audience.</div>
+  </div>
+  <div class="card">
+    <div style="font-size:1.5rem;margin-bottom:10px">📧</div>
+    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Email List from Day 1</div>
+    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">Instagram can shadowban you. TikTok can ban you. Your email list is yours forever. Start building it now. Link in bio → free "AI Agents Explained" PDF → email captured. Every follower is also a subscriber.</div>
+  </div>
+  <div class="card">
+    <div style="font-size:1.5rem;margin-bottom:10px">🤝</div>
+    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Collab Pipeline</div>
+    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">DM 5 creators per day. Not "can we collab" — instead engage with their content genuinely for 1 week first, then pitch a specific idea. Collabs starting Day 11 become your biggest growth multiplier.</div>
+  </div>
+</div>
+
+<!-- HASHTAG STRATEGY -->
+<div class="sec-title">🏷️ Hashtag Strategy</div>
+<div class="card" style="margin-bottom:28px">
+  <div class="grid-3">
+    <div>
+      <div style="font-size:0.72rem;font-weight:800;color:var(--neon-pink);margin-bottom:10px">🔥 BIG (1M+ posts) — 3 per post</div>
+      <div style="font-size:0.78rem;color:var(--text2);line-height:2">#AI #ArtificialIntelligence #Tech #Innovation #FutureOfWork #DigitalCreator</div>
+    </div>
+    <div>
+      <div style="font-size:0.72rem;font-weight:800;color:var(--neon-purple);margin-bottom:10px">🎯 MID (100K–1M) — 5 per post</div>
+      <div style="font-size:0.78rem;color:var(--text2);line-height:2">#AgenticAI #AIAgents #AIForBusiness #BuildInPublic #AICreator #TechCreator #HarvardAI</div>
+    </div>
+    <div>
+      <div style="font-size:0.72rem;font-weight:800;color:var(--neon-cyan);margin-bottom:10px">🎪 NICHE (Under 100K) — 5 per post</div>
+      <div style="font-size:0.78rem;color:var(--text2);line-height:2">#Metakittyz #LatinaInTech #AIOrchestration #ProductImagination #1MillionIn60Days #AIJourneyLog</div>
+    </div>
+  </div>
+</div>
+
+<!-- MILESTONE TARGETS -->
+<div class="sec-title">🏆 Milestone Targets</div>
+<div class="grid-4" style="margin-bottom:48px">
+  <div class="card" style="text-align:center;padding:20px 14px">
+    <div style="font-size:1.5rem;margin-bottom:6px">🌱</div>
+    <div style="font-weight:900;font-size:1.1rem;color:var(--neon-green)">1,000</div>
+    <div style="font-size:0.7rem;color:var(--text2);margin-top:4px">Day 3–5 · First real proof</div>
+  </div>
+  <div class="card" style="text-align:center;padding:20px 14px">
+    <div style="font-size:1.5rem;margin-bottom:6px">🚀</div>
+    <div style="font-weight:900;font-size:1.1rem;color:var(--neon-cyan)">10,000</div>
+    <div style="font-size:0.7rem;color:var(--text2);margin-top:4px">Day 10–14 · First viral moment</div>
+  </div>
+  <div class="card" style="text-align:center;padding:20px 14px">
+    <div style="font-size:1.5rem;margin-bottom:6px">⚡</div>
+    <div style="font-weight:900;font-size:1.1rem;color:var(--neon-purple)">100,000</div>
+    <div style="font-size:0.7rem;color:var(--text2);margin-top:4px">Day 30 · Authority established</div>
+  </div>
+  <div class="card" style="text-align:center;padding:20px 14px">
+    <div style="font-size:1.5rem;margin-bottom:6px">👑</div>
+    <div style="font-weight:900;font-size:1.1rem;color:var(--neon-pink)">1,000,000</div>
+    <div style="font-size:0.7rem;color:var(--text2);margin-top:4px">Day 60 · The mission complete</div>
+  </div>
+</div>
+
+</div><!-- end page -->
+
+<script>
+// ── State ────────────────────────────────────────────────────────
+var STATE_KEY = 'metakittyz_state';
+var state = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
+if (!state.startDate) state.startDate = new Date().toISOString().split('T')[0];
+if (!state.followers) state.followers = 295;
+if (!state.dayFollowers) state.dayFollowers = {};
+if (!state.doneDays) state.doneDays = [];
+if (!state.checks) state.checks = {};
+saveState();
+
+function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
+
+// ── Day calculation ───────────────────────────────────────────────
+function getDayNum() {
+  var start = new Date(state.startDate);
+  var now = new Date();
+  var diff = Math.floor((now - start) / 86400000) + 1;
+  return Math.max(1, Math.min(diff, 60));
+}
+
+// ── Update metrics ────────────────────────────────────────────────
+function updateMetrics() {
+  var dayNum = getDayNum();
+  var daysLeft = Math.max(0, 61 - dayNum);
+  var goal = 1000000;
+  var followers = state.followers;
+  var needed = daysLeft > 0 ? Math.ceil((goal - followers) / daysLeft) : 0;
+  var pct = (followers / goal * 100);
+
+  document.getElementById('current-followers').textContent = followers.toLocaleString();
+  document.getElementById('days-remaining').textContent = daysLeft;
+  document.getElementById('needed-per-day').textContent = needed.toLocaleString();
+  document.getElementById('prog-pct').textContent = pct.toFixed(2) + '%';
+  document.getElementById('prog-fill').style.width = Math.max(0.1, pct) + '%';
+  document.getElementById('nav-day').textContent = 'Day ' + dayNum + ' / 60';
+  document.getElementById('start-date-label').textContent = 'Started ' + state.startDate;
+  document.getElementById('days-done-label').textContent = (dayNum - 1) + ' / 60 days complete';
+}
+
+// ── Update follower count ─────────────────────────────────────────
+function updateFollowers() {
+  var val = parseInt(document.getElementById('follower-input').value);
+  if (!val || isNaN(val) || val < 0) return;
+  state.followers = val;
+  var today = new Date().toISOString().split('T')[0];
+  state.dayFollowers[today] = val;
+  var dayNum = getDayNum();
+  if (!state.doneDays.includes(dayNum)) state.doneDays.push(dayNum);
+  saveState();
+  updateMetrics();
+  renderDots();
+  document.getElementById('follower-input').value = '';
+  document.getElementById('follower-input').placeholder = '✓ Updated to ' + val.toLocaleString() + ' followers';
+}
+
+// ── Day dots ─────────────────────────────────────────────────────
+function renderDots() {
+  var dayNum = getDayNum();
+  var wrap = document.getElementById('day-dots');
+  wrap.innerHTML = '';
+  for (var i = 1; i <= 60; i++) {
+    var d = document.createElement('div');
+    d.className = 'day-dot';
+    if (state.doneDays.includes(i)) d.classList.add('done');
+    else if (i === dayNum) d.classList.add('today');
+    else if (i > dayNum) d.classList.add('upcoming');
+    d.title = 'Day ' + i;
+    (function(day) {
+      d.onclick = function() {
+        if (!state.doneDays.includes(day)) { state.doneDays.push(day); }
+        else { state.doneDays = state.doneDays.filter(function(d){ return d !== day; }); }
+        saveState(); renderDots();
+      };
+    })(i);
+    wrap.appendChild(d);
+  }
+}
+
+// ── Calendar ─────────────────────────────────────────────────────
+var CAL_DATA = [
+  // Days 1–60 content plan
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Announce the 60-day mission'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'What IS an AI agent?'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Tour PI Agent OS live'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Orchestration explained simply'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Trending audio + AI twist'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Week 1 review + numbers'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Behind the scenes: filming day'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'The Brief: why you only explain once'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Shoreline Properties pipeline demo'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'What is a pipeline?'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'POV: AI runs your whole business'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'First week mistake I made'},
+  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Duet with AI creator'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Watch AI build a brand in 60s'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Governance: the part nobody talks about'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Adding new agent to pipeline'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'"Stop using ChatGPT for this"'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Follower count update: 2 weeks in'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Memory & context in agents'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Client portal demo walkthrough'},
+  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'AI creator collab drops'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Human in the loop explained'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Trending sound: AI workplace'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'What Harvard taught me so far'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Live Q&A: building with AI'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Agent vs chatbot: the real difference'},
+  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Latina in tech collab post'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Real client workflow: Shoreline'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'POV: your AI team never sleeps'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Month 1 finale recap'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Harvard course complete reveal'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'PI Agent OS beta announcement'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Month 2 begins: doubling down'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'"I ran [follower business] through AI"'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'The future of agentic AI'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'New template reveal'},
+  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Podcast appearance clip'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 37 numbers + what changed'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Trending challenge: AI edition'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Behind the algorithm: how it works'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Multi-agent systems: what comes next'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'The biggest mistake of the 60 days'},
+  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Entrepreneur creator collab'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'AI agent builds in real time on screen'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Controversial AI take (engagement bait)'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Transparency: real analytics screenshot'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'What I wish I knew on Day 1'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'User testimonial / first user story'},
+  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Media feature / PR clip'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 50: 10 days left — final push'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'"10 days to 1M — here\'s the plan"'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Full product demo: PI Agent OS'},
+  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Everything AI taught me this year'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 54: real talk, real numbers'},
+  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Final big collab drops'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Going viral on purpose — experiment'},
+  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Brand partnership reveal'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 58: 2 days left'},
+  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 59: eve of the finale'},
+  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'🎯 DAY 60 FINALE — the full story'},
+];
+
+function renderCalendar() {
+  var body = document.getElementById('cal-body');
+  body.innerHTML = '';
+  var dayNum = getDayNum();
+  var startOffset = 0; // Mon = 0
+  for (var i = 0; i < startOffset; i++) {
+    body.appendChild(Object.assign(document.createElement('div'), {className:'cal-day',innerHTML:''}));
+  }
+  for (var d = 0; d < 60; d++) {
+    var data = CAL_DATA[d] || {tag:'Content',col:'rgba(99,102,241,0.6)',title:'Content day'};
+    var el = document.createElement('div');
+    el.className = 'cal-day';
+    if (d + 1 === dayNum) el.classList.add('today-cal');
+    else if (d + 1 < dayNum && state.doneDays.includes(d + 1)) el.classList.add('done-cal');
+    el.innerHTML = '<div class="cal-num">D' + (d+1) + '</div>' +
+      '<span class="cal-tag" style="background:' + data.col + ';color:#000">' + data.tag + '</span>' +
+      '<div class="cal-title">' + data.title + '</div>';
+    body.appendChild(el);
+  }
+}
+
+// ── Checklist ─────────────────────────────────────────────────────
+function toggleCheck(el) {
+  var key = el.querySelector('.check-text').textContent;
+  el.classList.toggle('checked');
+  var today = new Date().toISOString().split('T')[0];
+  state.checks[today + '_' + key] = el.classList.contains('checked');
+  saveState();
+}
+
+// ── Init ─────────────────────────────────────────────────────────
+updateMetrics();
+renderDots();
+renderCalendar();
+
+// Smooth scroll for nav links
+document.querySelectorAll('.nav-link').forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    document.querySelectorAll('.nav-link').forEach(function(l){ l.classList.remove('active-link'); });
+    this.classList.add('active-link');
+  });
+});
+</script>
+</body>
+</html>
