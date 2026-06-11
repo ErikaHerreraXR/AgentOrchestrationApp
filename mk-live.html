@@ -391,12 +391,12 @@ body::after{
     <div style="width:1px;height:28px;background:var(--border)"></div>
     <div class="topbar-stat">
       <div class="topbar-stat-val" id="tb-day" style="color:var(--purple)">Day 1</div>
-      <div class="topbar-stat-label">of 60</div>
+      <div class="topbar-stat-label">of 90</div>
     </div>
   </div>
   <div class="topbar-right">
     <div class="topbar-clock" id="clock">--:--:--</div>
-    <div class="topbar-day" id="topbar-day-badge">Day 1 / 60</div>
+    <div class="topbar-day" id="topbar-day-badge">Day 1 / 90</div>
     <button class="add-btn" onclick="openModal()">+ Update</button>
   </div>
 </div>
@@ -592,7 +592,7 @@ body::after{
           <option value="What is orchestration in agentic AI systems">Orchestration explained</option>
           <option value="Harvard AI course insight about governance and accountability">AI Governance</option>
           <option value="Build in public — showing PI Agent OS live demo">Build in Public demo</option>
-          <option value="60-day journey to 1 million followers progress update">Journey update</option>
+          <option value="90-day journey to 1 million followers progress update">Journey update</option>
           <option value="The difference between ChatGPT and an AI agent pipeline">ChatGPT vs Agents</option>
           <option value="Human in the loop and why it matters for AI trust">Human in the Loop</option>
           <option value="Trending AI moment explained simply for creators">AI Trend breakdown</option>
@@ -683,7 +683,7 @@ body::after{
         </div>
         <div class="vel-stat">
           <div class="vel-stat-val" id="vel-daystrack" style="color:var(--cyan)">Day 1</div>
-          <div class="vel-stat-label">of 60</div>
+          <div class="vel-stat-label">of 90</div>
         </div>
       </div>
     </div>
@@ -757,9 +757,9 @@ function dayNum(){
   var start = new Date(S.startDate);
   var now   = new Date();
   var diff  = Math.floor((now - start)/86400000) + 1;
-  return Math.max(1, Math.min(diff, 60));
+  return Math.max(1, Math.min(diff, 90));
 }
-function daysLeft(){ return Math.max(0, 61 - dayNum()); }
+function daysLeft(){ return Math.max(0, 91 - dayNum()); }
 function todayKey(){ return new Date().toISOString().split('T')[0]; }
 
 /* ── Followers ──────────────────────────────────────────── */
@@ -809,7 +809,7 @@ function updateAll(){
   setText('tb-today',     (growth >= 0 ? '+' : '') + fmt(growth));
   setText('tb-needed',    fmt(needed));
   setText('tb-day',       'Day ' + dn);
-  setText('topbar-day-badge', 'Day ' + dn + ' / 60');
+  setText('topbar-day-badge', 'Day ' + dn + ' / 90');
 
   // KPIs
   setText('kpi-ig', fmt(p.ig||0));
@@ -901,9 +901,9 @@ function updateCountdowns(){
 /* ── Content queue ──────────────────────────────────────── */
 var QUEUE = [
   [
-    {hook:'Announce the 60-day mission',desc:'Show the Harvard enrollment, the 295 follower count, and the goal. Raw and honest. This IS the content.',tag:'#1MillionIn60Days'},
+    {hook:'Announce the 90-day mission',desc:'Show the Harvard enrollment, the 295 follower count, and the goal. Raw and honest. This IS the content.',tag:'#1MillionIn60Days'},
     {hook:'"What even IS an AI agent? 30 seconds."',desc:'One analogy: ChatGPT is one employee, an AI agent is a whole self-running department. Show PI Agent OS for 2 seconds.',tag:'#AgenticAI'},
-    {hook:'"I told 295 people I\'m going to 1M in 60 days."',desc:'Why this challenge is actually achievable: Harvard credibility + building live + documenting everything including mistakes.',tag:'#CreatorJourney'},
+    {hook:'"I told 295 people I\'m going to 1M in 90 days."',desc:'Why this challenge is actually achievable: Harvard credibility + building live + documenting everything including mistakes.',tag:'#CreatorJourney'},
   ],
   [
     {hook:'"The most powerful thing about AI agents: you brief them once."',desc:'Explain how the brief flows to every agent automatically — no repeating yourself 8 times.',tag:'#AIAgents'},
@@ -1090,11 +1090,11 @@ function updateChart(){
   var gW = W - padL - padR;
   var gH = H - padT - padB;
 
-  var days = 60;
+  var days = 90;
   var goal = 1000000;
   var start = S.platforms.ig || 295;
 
-  // Build actual history array (60 slots)
+  // Build actual history array (90 slots)
   var actual = new Array(days).fill(null);
   actual[0] = start;
   S.history.forEach(function(h){
@@ -1193,9 +1193,9 @@ function updateChart(){
   ctx.moveTo(padL, yPos(goal)); ctx.lineTo(W - padR, yPos(goal));
   ctx.stroke(); ctx.setLineDash([]);
 
-  // X labels (Day 1, 15, 30, 45, 60)
+  // X labels (Day 1, 15, 30, 60, 90)
   var xlabels = document.getElementById('chart-x-labels');
-  if (xlabels) xlabels.textContent = 'Day 1  ·  Day 15  ·  Day 30  ·  Day 45  ·  Day 60';
+  if (xlabels) xlabels.textContent = 'Day 1  ·  Day 15  ·  Day 30  ·  Day 60  ·  Day 90';
 
   var cu = document.getElementById('chart-updated');
   if (cu) cu.textContent = 'Updated ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
@@ -1219,7 +1219,7 @@ function updateAlerts(total, growth, posted, dl, needed){
 
   if (growth < needed * 0.1 && dn > 3){
     alerts.push({type:'warn', ico:'⚠️', title: 'Growth below target velocity',
-      desc: 'You need ' + fmt(needed) + ' followers per day to hit 1M by Day 60. Today\'s growth: ' + fmt(growth) + '. Double down on engaging trending audio and cross-posting to TikTok.'});
+      desc: 'You need ' + fmt(needed) + ' followers per day to hit 1M by Day 90. Today\'s growth: ' + fmt(growth) + '. Double down on engaging trending audio and cross-posting to TikTok.'});
   }
 
   if (dn <= 3){

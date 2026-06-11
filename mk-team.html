@@ -218,7 +218,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     <div class="tb-team-badge">👥 Agent Team</div>
     <div class="tb-spacer"></div>
     <div class="tb-clock" id="clock">--:--:--</div>
-    <div class="tb-day" id="day-badge">Day 1/60</div>
+    <div class="tb-day" id="day-badge">Day 1/90</div>
     <button class="notify-btn" id="notify-btn" onclick="toggleNotifications()">🔔<span class="nb-label"> Reminders</span></button>
     <button class="update-btn" onclick="openModal()">+ Update</button>
   </div>
@@ -457,7 +457,7 @@ var AGENTS={
   pulse:{name:'PULSE',ico:'💬',color:'#00FF94',title:'Engagement Expert',
     system:'You are PULSE, the world\'s leading Instagram engagement expert. You know exactly how to trigger comments, saves, shares, and follows. You specialize in community building and the psychology of viral engagement. The creator is Erika (@metakittyz). Keep responses concise and punchy. Max 3 sentences unless asked for more.'},
   aria:{name:'ARIA',ico:'📊',color:'#00F5FF',title:'Analytics Director',
-    system:'You are ARIA, an elite social media analytics AI. You interpret follower growth data, engagement rates, and platform algorithms to give precise strategic advice. The creator is Erika (@metakittyz) — 295 followers, Day 1 of a 60-day mission to 1 million. Keep responses concise and punchy. Max 3 sentences unless asked for more.'},
+    system:'You are ARIA, an elite social media analytics AI. You interpret follower growth data, engagement rates, and platform algorithms to give precise strategic advice. The creator is Erika (@metakittyz) — 295 followers, Day 1 of a 90-day mission to 1 million. Keep responses concise and punchy. Max 3 sentences unless asked for more.'},
   reach:{name:'REACH',ico:'📢',color:'#FF6B2B',title:'Marketing Director',
     system:'You are REACH, a world-class social media marketing director. You specialize in organic growth, collab strategies, cross-platform distribution, and advertising tactics for creator brands. The creator is Erika (@metakittyz). Keep responses concise and punchy. Max 3 sentences unless asked for more.'},
   spark:{name:'SPARK',ico:'⚡',color:'#FFD60A',title:'Viral Content Specialist',
@@ -468,8 +468,8 @@ var AGENTS={
 var activeAgent='nova';
 
 function fmt(n){return n>=1e6?(n/1e6).toFixed(2)+'M':n>=1000?(n/1000).toFixed(1)+'K':String(n);}
-function dayNum(){return Math.max(1,Math.min(Math.floor((new Date()-new Date(S.startDate))/86400000)+1,60));}
-function daysLeft(){return Math.max(0,61-dayNum());}
+function dayNum(){return Math.max(1,Math.min(Math.floor((new Date()-new Date(S.startDate))/86400000)+1,90));}
+function daysLeft(){return Math.max(0,91-dayNum());}
 function todayKey(){return new Date().toISOString().split('T')[0];}
 function total(){var p=S.platforms;return(p.ig||0)+(p.tt||0)+(p.yt||0)+(p.li||0);}
 function todayGrowth(){
@@ -494,7 +494,7 @@ function updateMetrics(){
   setText('tb-growth',(g>=0?'+':'')+fmt(g));
   setText('tb-posted',posted+'/3');
   setText('tb-er',er?er.toFixed(1)+'%':'—');
-  setText('day-badge','Day '+dn+'/60');
+  setText('day-badge','Day '+dn+'/90');
   updateStats(t,g,dn,dl,needed,posted,er);
   updateAds(dn,needed);
   updateInsights(t,g,dn,needed,posted);
@@ -567,9 +567,9 @@ function updateNotifyBtn(){
 
 var SCHEDULE_DATA=[
   [
-    {time:'7–9am',purpose:'Hook & Announce',sc:'var(--pink)',hook:'"I just started a Harvard AI course and I\'m documenting everything."',desc:'Show the enrollment. Show 295 followers. State the mission: 1M in 60 days. Raw, honest, exciting.',tags:['#Harvard','#AgenticAI','#1MillionIn60Days']},
+    {time:'7–9am',purpose:'Hook & Announce',sc:'var(--pink)',hook:'"I just started a Harvard AI course and I\'m documenting everything."',desc:'Show the enrollment. Show 295 followers. State the mission: 1M in 90 days. Raw, honest, exciting.',tags:['#Harvard','#AgenticAI','#1MillionIn60Days']},
     {time:'12–1pm',purpose:'Educate & Value',sc:'var(--purple)',hook:'"What even IS an AI agent? 30 seconds."',desc:'One analogy. ChatGPT = one employee. AI agent = a whole department that runs itself. Show PI Agent OS for 2 seconds.',tags:['#AIAgent','#AIExplained','#LearnAI']},
-    {time:'6–9pm',purpose:'Personal & Connect',sc:'var(--cyan)',hook:'"I told 295 people I\'m going to 1M in 60 days. Here\'s why I actually think it\'s possible."',desc:'Vulnerability + strategy. Three things that make this different: Harvard credibility, building live, documenting mistakes.',tags:['#CreatorJourney','#MetakittyzLife']},
+    {time:'6–9pm',purpose:'Personal & Connect',sc:'var(--cyan)',hook:'"I told 295 people I\'m going to 1M in 90 days. Here\'s why I actually think it\'s possible."',desc:'Vulnerability + strategy. Three things that make this different: Harvard credibility, building live, documenting mistakes.',tags:['#CreatorJourney','#MetakittyzLife']},
   ],
   [
     {time:'7–9am',purpose:'Hook & Educate',sc:'var(--pink)',hook:'"The most powerful thing about AI agents: you brief them once."',desc:'Explain how one brief flows to every agent. No repeating yourself 8 times. Show the PI Agent OS pipeline briefly.',tags:['#AIAgents','#Harvard','#BuildingWithAI']},
@@ -659,7 +659,7 @@ function loadMorningBriefing(){
   briefingLoaded=true;
   var btn=el('briefing-btn');if(btn){btn.disabled=true;btn.textContent='Loading…';}
   var dn=dayNum(),t=total(),g=todayGrowth(),dl=daysLeft();
-  var ctx='Day '+dn+' of 60. Current followers: '+fmt(t)+'. Today\'s growth: '+(g>=0?'+':'')+fmt(g)+'. Days left: '+dl+'. Goal: 1 million.';
+  var ctx='Day '+dn+' of 90. Current followers: '+fmt(t)+'. Today\'s growth: '+(g>=0?'+':'')+fmt(g)+'. Days left: '+dl+'. Goal: 1 million.';
   setTimeout(function(){callAgent('nova','Give a sharp 2-sentence morning briefing for @metakittyz. '+ctx+' What\'s the #1 content priority today?');},300);
   setTimeout(function(){callAgent('pulse','Give a sharp 1-sentence engagement tip for @metakittyz today. '+ctx);},1200);
   setTimeout(function(){callAgent('spark','Give a sharp 1-sentence viral opportunity or trending format @metakittyz should use today. '+ctx);},2200);
@@ -788,7 +788,7 @@ function updateStats(t,g,dn,dl,needed,posted,er){
     {n:'Total Reach (all platforms)',v:fmt(t),c:'var(--pink)',pct:Math.min(t/5000*100,100)},
     {n:'Today\'s Growth',v:(g>=0?'+':'')+fmt(g),c:g>0?'var(--green)':'var(--red)',pct:Math.min(Math.abs(g)/Math.max(needed,1)*100,100)},
     {n:'% to 1M Goal',v:pct+'%',c:'var(--purple)',pct:parseFloat(pct)},
-    {n:'Days Remaining',v:String(dl)+' of 60',c:'var(--cyan)',pct:(60-dl)/60*100},
+    {n:'Days Remaining',v:String(dl)+' of 90',c:'var(--cyan)',pct:(90-dl)/90*100},
     {n:'Posts Today',v:posted+' / 3',c:posted===3?'var(--green)':'var(--gold)',pct:posted/3*100},
     {n:'Avg Engagement Rate',v:er?er.toFixed(1)+'%':'—',c:er>=5?'var(--green)':er>=2?'var(--gold)':'var(--red)',pct:Math.min(er*5,100)},
     {n:'Followers Needed / Day',v:fmt(needed),c:onTrack?'var(--green)':'var(--orange)',pct:onTrack?80:30},
@@ -806,7 +806,7 @@ function updateAds(dn){
   var tactics=[
     {ico:'🆓',title:'Organic First (Days 1–30)',desc:'Build credibility and proof before spending a dollar. Your Harvard angle + building live = press-worthy story. Organic reach validates content quality.'},
     {ico:'🤝',title:'Collab Outreach (Days 11+)',desc:'DM 5 AI creators daily. Engage their content for 1 week first. Then pitch a duet — your audience + mine both get value. Collabs are worth 10x any ad spend at your stage.'},
-    {ico:'📰',title:'Earned Media Play',desc:'At 10K followers, you have a pitch-worthy story: "Latina Harvard AI student going 0 to 1M in 60 days while building AI tools." Pitch TechCrunch, Forbes, and AI newsletters.'},
+    {ico:'📰',title:'Earned Media Play',desc:'At 10K followers, you have a pitch-worthy story: "Latina Harvard AI student going 0 to 1M in 90 days while building AI tools." Pitch TechCrunch, Forbes, and AI newsletters.'},
     {ico:'🎯',title:'Instagram Boost (Day 30+)',desc:'Once you have a proven viral reel (1K+ likes), boost it with $20–50 to lookalike audiences. Never boost a post that hasn\'t already proven organic traction.'},
     {ico:'📢',title:'TikTok Creator Marketplace',desc:'At 10K on TikTok, access the Creator Marketplace. Brand partnerships in the AI/tech space pay $500–5000 per post. Harvard credibility makes you a premium partner.'},
     {ico:'✉️',title:'Email List = Your Asset',desc:'Every follower should become an email subscriber. Link in bio → free PDF → email captured. 1000 email subscribers = more reliable reach than 10,000 followers.'},

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content="Follow Erika (@metakittyz) on a 60-day mission from 295 to 1,000,000 followers — live progress, daily content, and Harvard AI insights."/>
-<meta property="og:title" content="Metakittyz · The 60-Day Journey to 1M"/>
-<meta property="og:description" content="Live follower dashboard — Day X of 60. Building in public, learning AI at Harvard, going from 295 to 1,000,000."/>
-<title>Metakittyz · The 60-Day Journey to 1M</title>
+<meta name="description" content="Follow Erika (@metakittyz) on a 90-day mission from 295 to 1,000,000 followers — live progress, daily content, and Harvard AI insights."/>
+<meta property="og:title" content="Metakittyz · The 90-Day Journey to 1M"/>
+<meta property="og:description" content="Live follower dashboard — Day X of 90. Building in public, learning AI at Harvard, going from 295 to 1,000,000."/>
+<title>Metakittyz · The 90-Day Journey to 1M</title>
 <style>
 :root{
   --pink:#FF2D78;--purple:#BF5AF2;--cyan:#00F5FF;--green:#00FF94;
@@ -226,7 +226,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     </a>
     <div class="tb-spacer"></div>
     <div class="tb-live"><div class="live-dot"></div>Live</div>
-    <div class="tb-day" id="tb-day-badge">Day 1/60</div>
+    <div class="tb-day" id="tb-day-badge">Day 1/90</div>
     <button class="tb-share" onclick="shareJourney()">Share →</button>
   </div>
 </div>
@@ -235,7 +235,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 
 <!-- ═══ HERO ═══ -->
 <div class="hero fadein">
-  <div class="hero-eyebrow">⚡ 60-Day Public Challenge</div>
+  <div class="hero-eyebrow">⚡ 90-Day Public Challenge</div>
   <h1 class="hero-title">
     295 Followers<br>
     <span class="hero-grad">to 1,000,000</span>
@@ -250,7 +250,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       <span>·</span>
       <span>Goal: <strong>1,000,000</strong></span>
       <span>·</span>
-      <span id="days-left-txt"><strong>60 days</strong> left</span>
+      <span id="days-left-txt"><strong>90 days</strong> left</span>
     </div>
   </div>
 
@@ -284,8 +284,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     <div class="stat-card" style="--sc:var(--purple)">
       <div class="stat-icon">📅</div>
       <div class="stat-big" id="stat-day" style="color:var(--purple)">1</div>
-      <div class="stat-name">Day of 60</div>
-      <div class="stat-change" id="stat-daysleft" style="color:var(--text2)">59 days left</div>
+      <div class="stat-name">Day of 90</div>
+      <div class="stat-change" id="stat-daysleft" style="color:var(--text2)">89 days left</div>
     </div>
     <div class="stat-card" style="--sc:var(--gold)">
       <div class="stat-icon">🎬</div>
@@ -310,9 +310,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   <div class="posts-grid" id="posts-grid"></div>
 </div>
 
-<!-- ═══ 60-DAY MAP ═══ -->
+<!-- ═══ 90-DAY MAP ═══ -->
 <div class="section">
-  <div class="sec-label">🗓️ The 60-Day Journey Map</div>
+  <div class="sec-label">🗓️ The 90-Day Journey Map</div>
   <div class="journey-header">
     <div>
       <div class="sec-title" style="margin-bottom:0">Every Day Counts</div>
@@ -414,7 +414,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       <div class="milestone-ico">🚀</div>
       <div>
         <div class="milestone-date">Day 1 · June 10, 2026</div>
-        <div class="milestone-text">The 60-day challenge officially begins. Starting at 295 Instagram followers with a clear mission: 1 million in 60 days, documented in public.</div>
+        <div class="milestone-text">The 90-day challenge officially begins. Starting at 295 Instagram followers with a clear mission: 1 million in 90 days, documented in public.</div>
         <span class="milestone-badge" style="background:rgba(255,45,120,.15);color:var(--pink);border:1px solid rgba(255,45,120,.3)">Mission Started</span>
       </div>
     </div>
@@ -446,7 +446,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       <div class="about-name">Erika Herrera</div>
       <div class="about-handle">@metakittyz</div>
       <div class="about-text">I build AI products that turn imagination into reality. My platform — PI Agent OS — uses multi-agent AI pipelines to run entire creative and business workflows automatically.<br><br>
-      I'm currently enrolled in Harvard's AI Agentic Intensive, learning the frontier of agentic systems and building in public the entire time. This 60-day challenge is my way of proving that AI tools, used right, can compress years of growth into weeks.<br><br>
+      I'm currently enrolled in Harvard's AI Agentic Intensive, learning the frontier of agentic systems and building in public the entire time. This 90-day challenge is my way of proving that AI tools, used right, can compress years of growth into weeks.<br><br>
       Every post shares what I'm learning. Every reel shows what I'm building. You're not just watching — you're part of it.</div>
       <div class="about-tags">
         <span class="about-tag">🎓 Harvard AI</span>
@@ -542,8 +542,8 @@ var S=JSON.parse(localStorage.getItem(KEY)||'null')||{
 function save(){localStorage.setItem(KEY,JSON.stringify(S));}
 
 /* ══ HELPERS ═══════════════════════════════════ */
-function dayNum(){return Math.max(1,Math.min(Math.floor((new Date()-new Date(START))/86400000)+1,60));}
-function daysLeft(){return Math.max(0,61-dayNum());}
+function dayNum(){return Math.max(1,Math.min(Math.floor((new Date()-new Date(START))/86400000)+1,90));}
+function daysLeft(){return Math.max(0,91-dayNum());}
 function total(){return(S.ig||0)+(S.tt||0)+(S.yt||0)+(S.li||0);}
 function fmt(n){return n>=1e6?(n/1e6).toFixed(2)+'M':n>=1000?(n/1000).toFixed(1)+'K':n.toLocaleString();}
 function el(id){return document.getElementById(id);}
@@ -572,7 +572,7 @@ function renderHero(){
   var needed=dl>0?Math.ceil((GOAL-t)/dl):0;
   var startFmt=new Date(START+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
 
-  setText('tb-day-badge','Day '+dn+'/60');
+  setText('tb-day-badge','Day '+dn+'/90');
   setText('start-date-txt',startFmt);
   setText('days-left-txt','​'); // clear, then set below
   var dlt=el('days-left-txt');if(dlt)dlt.innerHTML='<strong>'+dl+' days</strong> left';
@@ -628,9 +628,9 @@ function renderPlatforms(){
 /* ══ RENDER TODAY'S POSTS ══════════════════════ */
 var DAY_CONTENT=[
   [
-    {time:'7–9am',purpose:'Hook & Announce',color:'#FF2D78',hook:'"I just started a Harvard AI course and I\'m documenting everything."',desc:'Show the enrollment. Show 295 followers. State the mission: 1M in 60 days.',tags:['#Harvard','#AgenticAI','#1MillionIn60Days'],status:'scheduled'},
+    {time:'7–9am',purpose:'Hook & Announce',color:'#FF2D78',hook:'"I just started a Harvard AI course and I\'m documenting everything."',desc:'Show the enrollment. Show 295 followers. State the mission: 1M in 90 days.',tags:['#Harvard','#AgenticAI','#1MillionIn60Days'],status:'scheduled'},
     {time:'12–1pm',purpose:'Educate & Value',color:'#BF5AF2',hook:'"What even IS an AI agent? 30 seconds."',desc:'ChatGPT = one employee. AI agent = a whole department that runs itself.',tags:['#AIAgent','#AIExplained','#LearnAI'],status:'scheduled'},
-    {time:'6–9pm',purpose:'Personal & Connect',color:'#00F5FF',hook:'"I told 295 people I\'m going to 1M in 60 days. Here\'s why."',desc:'Vulnerability + strategy. Three things that make this mission different.',tags:['#CreatorJourney','#MetakittyzLife'],status:'scheduled'},
+    {time:'6–9pm',purpose:'Personal & Connect',color:'#00F5FF',hook:'"I told 295 people I\'m going to 1M in 90 days. Here\'s why."',desc:'Vulnerability + strategy. Three things that make this mission different.',tags:['#CreatorJourney','#MetakittyzLife'],status:'scheduled'},
   ],
   [
     {time:'7–9am',purpose:'Educate',color:'#FF2D78',hook:'"The most powerful thing about AI agents: you brief them once."',desc:'One brief flows to every agent. No repeating yourself.',tags:['#AIAgents','#Harvard','#BuildingWithAI'],status:'scheduled'},
@@ -672,7 +672,7 @@ function renderJourneyMap(){
   var dn=dayNum();
   var grid=el('day-grid');if(!grid)return;
   var html='';
-  for(var d=1;d<=60;d++){
+  for(var d=1;d<=90;d++){
     var cls=d<dn?'done':d===dn?'today':'future';
     var label='Day '+d+(d<dn?' — Done':d===dn?' — Today':'');
     html+='<div class="day-dot '+cls+'" title="'+label+'"></div>';
@@ -731,8 +731,8 @@ function shareJourney(){
   var url=window.location.href;
   if(navigator.share){
     navigator.share({
-      title:'Metakittyz · The 60-Day Journey to 1M',
-      text:'Follow @metakittyz going from 295 to 1,000,000 followers in 60 days — Harvard AI student building in public!',
+      title:'Metakittyz · The 90-Day Journey to 1M',
+      text:'Follow @metakittyz going from 295 to 1,000,000 followers in 90 days — Harvard AI student building in public!',
       url:url
     }).catch(function(){});
   }else if(navigator.clipboard){
