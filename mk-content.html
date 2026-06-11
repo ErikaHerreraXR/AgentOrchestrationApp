@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Content Studio — Metakittyz AI</title>
+<style>
+:root{
+  --pink:#FF2D78;--cyan:#00F5FF;--green:#00FF94;--gold:#FFD60A;
+  --purple:#BF5AF2;--orange:#FF6B2B;
+  --bg:#0A0A0F;--surface:#13131A;--card:#1C1C28;--border:#2A2A3E;
+  --text:#E8E8F0;--muted:#6B6B8A;
+  --font:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,15,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.tb-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;
+}
+.tb-brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+.tb-logo{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;color:#fff;
+}
+.tb-name{font-size:14px;font-weight:700;color:var(--text)}
+.tb-tag{
+  font-size:10px;font-weight:600;letter-spacing:.06em;
+  color:var(--pink);background:rgba(255,45,120,.1);
+  padding:2px 8px;border-radius:20px;border:1px solid rgba(255,45,120,.3);
+}
+.tb-nav{display:flex;gap:4px;margin-left:auto}
+.tb-nav a{
+  font-size:12px;font-weight:500;color:var(--muted);
+  text-decoration:none;padding:6px 10px;border-radius:6px;
+  transition:all .2s;
+}
+.tb-nav a:hover{color:var(--text);background:var(--card)}
+.tb-nav a.active{color:var(--pink);background:rgba(255,45,120,.1)}
+
+/* ── LAYOUT ── */
+.main{max-width:1200px;margin:0 auto;padding:24px 16px;display:grid;gap:20px}
+
+/* ── SECTION HEADER ── */
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.sec-title{font-size:18px;font-weight:700}
+.sec-sub{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.card-row{grid-template-columns:1fr}}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;background:var(--surface);padding:4px;border-radius:10px;margin-bottom:20px}
+.tab{
+  flex:1;padding:8px 12px;border-radius:7px;border:none;
+  background:transparent;color:var(--muted);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;text-align:center;
+}
+.tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+
+/* ── FORMAT GRID ── */
+.format-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+@media(max-width:480px){.format-grid{grid-template-columns:1fr}}
+.format-card{
+  border:2px solid var(--border);border-radius:12px;padding:14px;
+  cursor:pointer;transition:all .2s;text-align:left;background:var(--surface);
+}
+.format-card:hover{border-color:var(--pink);background:rgba(255,45,120,.05)}
+.format-card.selected{border-color:var(--pink);background:rgba(255,45,120,.08)}
+.fmt-name{font-size:13px;font-weight:700;margin-bottom:3px}
+.fmt-desc{font-size:11px;color:var(--muted)}
+.fmt-badge{
+  display:inline-block;font-size:10px;font-weight:700;
+  padding:2px 6px;border-radius:20px;margin-top:6px;
+}
+.fmt-fire{background:rgba(255,107,43,.15);color:var(--orange)}
+.fmt-save{background:rgba(0,255,148,.1);color:var(--green)}
+.fmt-edu{background:rgba(191,90,242,.15);color:var(--purple)}
+.fmt-raw{background:rgba(255,214,10,.1);color:var(--gold)}
+
+/* ── FORM ELEMENTS ── */
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+input,textarea,select{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  color:var(--text);font-family:var(--font);font-size:14px;
+  border-radius:10px;padding:10px 14px;
+  transition:border-color .2s;resize:vertical;
+}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--pink)}
+textarea{min-height:80px}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:none;cursor:pointer;font-family:var(--font);font-weight:700;
+  border-radius:10px;transition:all .2s;padding:12px 20px;font-size:14px;
+}
+.btn-primary{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;width:100%}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);font-size:13px;padding:8px 14px}
+.btn-outline:hover{border-color:var(--pink);color:var(--pink)}
+.btn-green{background:rgba(0,255,148,.15);border:1px solid rgba(0,255,148,.3);color:var(--green);font-size:13px;padding:8px 14px}
+.btn-green:hover{background:rgba(0,255,148,.25)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
+
+/* ── GENERATE BTN LOADING ── */
+.btn-primary.loading{pointer-events:none}
+.btn-primary.loading .btn-label::after{
+  content:' ...';animation:dots 1.2s infinite;
+}
+@keyframes dots{0%{content:' .'}33%{content:' ..'}66%{content:' ...'}}
+
+/* ── OUTPUT PANEL ── */
+.output-panel{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:20px;min-height:200px;position:relative;
+}
+.output-placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:200px;color:var(--muted);gap:8px;text-align:center;
+}
+.output-placeholder .ph-icon{font-size:40px;opacity:.3}
+.output-placeholder p{font-size:13px}
+
+.output-content{display:none}
+.output-content.visible{display:block}
+
+.output-section{margin-bottom:20px}
+.output-section:last-child{margin-bottom:0}
+.out-label{
+  font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.out-text{
+  font-size:14px;line-height:1.7;color:var(--text);
+  white-space:pre-wrap;
+}
+.out-hook{
+  font-size:18px;font-weight:800;line-height:1.3;color:var(--pink);
+  border-left:3px solid var(--pink);padding-left:12px;
+}
+.out-cta{
+  background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.2);
+  border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);
+}
+.hashtag-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.hashtag{
+  font-size:12px;padding:3px 10px;border-radius:20px;
+  background:rgba(0,245,255,.08);color:var(--cyan);
+  border:1px solid rgba(0,245,255,.15);cursor:pointer;
+  transition:all .2s;
+}
+.hashtag:hover{background:rgba(0,245,255,.18)}
+
+.output-actions{
+  display:flex;flex-wrap:wrap;gap:8px;padding-top:16px;
+  border-top:1px solid var(--border);margin-top:16px;
+}
+
+/* ── QUEUE STRIP ── */
+.queue-strip{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;
+}
+.queue-item{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:12px;position:relative;cursor:pointer;transition:all .2s;
+}
+.queue-item:hover{border-color:var(--pink)}
+.qi-day{font-size:10px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.qi-title{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:6px}
+.qi-format{
+  font-size:10px;padding:2px 8px;border-radius:20px;
+  background:rgba(255,45,120,.1);color:var(--pink);display:inline-block;
+}
+.qi-status{
+  position:absolute;top:10px;right:10px;
+  width:8px;height:8px;border-radius:50%;
+}
+.qi-status.draft{background:var(--muted)}
+.qi-status.ready{background:var(--green)}
+.qi-status.posted{background:var(--cyan)}
+
+/* ── STAT PILLS ── */
+.stat-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.stat-pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:6px 12px;font-size:12px;
+}
+.sp-val{font-weight:700;color:var(--text)}
+.sp-label{color:var(--muted)}
+.sp-dot{width:8px;height:8px;border-radius:50%}
+
+/* ── TRACKER ── */
+.tracker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.track-day{
+  aspect-ratio:1;border-radius:6px;border:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:9px;color:var(--muted);cursor:pointer;transition:all .2s;
+  background:var(--surface);
+}
+.track-day:hover{border-color:var(--pink)}
+.track-day.posted{background:rgba(0,255,148,.1);border-color:rgba(0,255,148,.3);color:var(--green)}
+.track-day.today{border-color:var(--pink);color:var(--pink)}
+.track-day.future{opacity:.4}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:12px 20px;font-size:13px;font-weight:600;
+  transition:transform .3s;z-index:999;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--green);color:var(--green)}
+.toast.error{border-color:var(--pink);color:var(--pink)}
+
+/* ── AGENT BADGE ── */
+.agent-credit{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--muted);padding:4px 10px;
+  background:var(--surface);border-radius:20px;border:1px solid var(--border);
+}
+.ac-dot{width:7px;height:7px;border-radius:50%}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .tb-nav a span{display:none}
+  .tb-nav a{padding:6px 8px}
+}
+@media(max-width:480px){
+  .format-grid{grid-template-columns:1fr 1fr}
+  .main{padding:16px 12px}
+  .card{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="tb-inner">
+    <a class="tb-brand" href="/">
+      <div class="tb-logo">MK</div>
+      <span class="tb-name">Metakittyz</span>
+    </a>
+    <span class="tb-tag">Content Studio</span>
+    <nav class="tb-nav">
+      <a href="/mk-live"><span>📊</span> Live</a>
+      <a href="/mk-team"><span>🤖</span> Team</a>
+      <a href="/mk-content" class="active"><span>✍️</span> Studio</a>
+      <a href="/mk-engage"><span>💬</span> Engage</a>
+      <a href="/journey"><span>🗺️</span> Journey</a>
+    </nav>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CURRENT MOMENTUM STRIP -->
+  <div class="stat-row" id="momentumStrip">
+    <div class="stat-pill">
+      <div class="sp-dot" style="background:#FF2D78"></div>
+      <span class="sp-val" id="followCount">334</span>
+      <span class="sp-label">followers</span>
+    </div>
+    <div class="stat-pill">
+      <div class="sp-dot" style="background:#00FF94"></div>
+      <span class="sp-val" id="postsToday">0</span>
+      <span class="sp-label">posted today</span>
+    </div>
+    <div class="stat-pill">
+      <div class="sp-dot" style="background:#00F5FF"></div>
+      <span class="sp-val" id="queueCount">0</span>
+      <span class="sp-label">in queue</span>
+    </div>
+    <div class="stat-pill">
+      <div class="sp-dot" style="background:#FFD60A"></div>
+      <span class="sp-val" id="dayNum">1</span>
+      <span class="sp-label">of 90 days</span>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('generate',this)">✍️ Generate</button>
+    <button class="tab" onclick="switchTab('queue',this)">📅 Queue</button>
+    <button class="tab" onclick="switchTab('tracker',this)">📈 Tracker</button>
+    <button class="tab" onclick="switchTab('templates',this)">⚡ Templates</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TAB: GENERATE
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-generate">
+    <div class="card-row">
+
+      <!-- LEFT: INPUTS -->
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(255,45,120,.15)">✍️</div>
+          <div>
+            <div class="sec-title">Content Generator</div>
+            <div class="sec-sub">NOVA + SPARK agents working together</div>
+          </div>
+        </div>
+
+        <!-- FORMAT SELECTOR -->
+        <div style="margin-bottom:16px">
+          <label>Content Format</label>
+          <div class="format-grid">
+            <div class="format-card selected" data-format="graphic" onclick="selectFormat(this)">
+              <div class="fmt-name">📊 Graphic Reel</div>
+              <div class="fmt-desc">Bold text + data overlay</div>
+              <span class="fmt-badge fmt-fire">🔥 Best for follows</span>
+            </div>
+            <div class="format-card" data-format="results" onclick="selectFormat(this)">
+              <div class="fmt-name">📈 Results Reveal</div>
+              <div class="fmt-desc">Before/after, real numbers</div>
+              <span class="fmt-badge fmt-save">💾 High save rate</span>
+            </div>
+            <div class="format-card" data-format="education" onclick="selectFormat(this)">
+              <div class="fmt-name">🎓 Edu Drop</div>
+              <div class="fmt-desc">Cheat sheet, how-to, tips</div>
+              <span class="fmt-badge fmt-edu">📚 Reference content</span>
+            </div>
+            <div class="format-card" data-format="raw" onclick="selectFormat(this)">
+              <div class="fmt-name">📱 Raw Update</div>
+              <div class="fmt-desc">Day X of 90, what happened</div>
+              <span class="fmt-badge fmt-raw">⚡ High trust</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOPIC INPUT -->
+        <div style="margin-bottom:14px">
+          <label>Topic / Angle</label>
+          <textarea id="topicInput" rows="2" placeholder="e.g. My AI agents ran overnight and here's what they built, or: The biggest mistake I made on Day 1"></textarea>
+        </div>
+
+        <!-- CONTEXT -->
+        <div style="margin-bottom:14px">
+          <label>Today's Context (optional)</label>
+          <input id="contextInput" type="text" placeholder="e.g. 334 followers, posted 1 reel, 36 new follows yesterday"/>
+        </div>
+
+        <!-- TONE -->
+        <div style="margin-bottom:20px">
+          <label>Tone</label>
+          <select id="toneInput">
+            <option value="raw">Raw & Real (no filter, show the struggle)</option>
+            <option value="expert">Expert Authority (Harvard-level insights)</option>
+            <option value="hype">Hype Energy (we're actually doing this)</option>
+            <option value="teach">Teacher Mode (here's how this works)</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" id="generateBtn" onclick="generateContent()">
+          <span class="btn-label">⚡ Generate Content</span>
+        </button>
+
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-outline btn-sm" onclick="quickGenerate('announcement')">🚀 Announcement</button>
+          <button class="btn btn-outline btn-sm" onclick="quickGenerate('update')">📊 Day Update</button>
+          <button class="btn btn-outline btn-sm" onclick="quickGenerate('insight')">🧠 AI Insight</button>
+          <button class="btn btn-outline btn-sm" onclick="quickGenerate('behind')">🎬 Behind Scenes</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: OUTPUT -->
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(0,255,148,.1)">📤</div>
+          <div>
+            <div class="sec-title">Generated Output</div>
+            <div class="sec-sub" id="outputAgent">Waiting for NOVA + SPARK...</div>
+          </div>
+        </div>
+
+        <div class="output-panel">
+          <div class="output-placeholder" id="outputPlaceholder">
+            <div class="ph-icon">✨</div>
+            <p>Your content will appear here</p>
+            <p style="font-size:11px">Choose a format and topic, then generate</p>
+          </div>
+
+          <div class="output-content" id="outputContent">
+            <!-- HOOK -->
+            <div class="output-section">
+              <div class="out-label">🎣 Hook (first 3 seconds)</div>
+              <div class="out-hook" id="outHook"></div>
+            </div>
+            <!-- SCRIPT / BODY -->
+            <div class="output-section">
+              <div class="out-label">📝 Script / Text Overlay</div>
+              <div class="out-text" id="outScript"></div>
+            </div>
+            <!-- CAPTION -->
+            <div class="output-section">
+              <div class="out-label">📱 Caption</div>
+              <div class="out-text" id="outCaption"></div>
+            </div>
+            <!-- CTA -->
+            <div class="output-section">
+              <div class="out-cta" id="outCTA"></div>
+            </div>
+            <!-- HASHTAGS -->
+            <div class="output-section">
+              <div class="out-label">🏷️ Hashtags (tap to copy)</div>
+              <div class="hashtag-list" id="outHashtags"></div>
+            </div>
+
+            <div class="output-actions">
+              <button class="btn btn-green btn-sm" onclick="addToQueue()">+ Add to Queue</button>
+              <button class="btn btn-outline btn-sm" onclick="copyAll()">📋 Copy All</button>
+              <button class="btn btn-outline btn-sm" onclick="regenerate()">🔄 Regenerate</button>
+              <div class="agent-credit">
+                <div class="ac-dot" style="background:#FF2D78"></div>
+                NOVA + <div class="ac-dot" style="background:#FFD60A"></div> SPARK
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TAB: QUEUE
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-queue" style="display:none">
+    <div class="card">
+      <div class="sec-head">
+        <div class="sec-icon" style="background:rgba(0,245,255,.1)">📅</div>
+        <div>
+          <div class="sec-title">Content Queue</div>
+          <div class="sec-sub">Your next posts — drag to reorder, tap to edit</div>
+        </div>
+        <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="switchTab('generate',document.querySelector('.tab'))">+ New Post</button>
+      </div>
+
+      <div id="queueEmpty" style="text-align:center;padding:40px;color:var(--muted);display:none">
+        <div style="font-size:40px;opacity:.3;margin-bottom:8px">📭</div>
+        <p style="font-size:14px">Queue is empty — generate your first piece</p>
+      </div>
+
+      <div class="queue-strip" id="queueList"></div>
+    </div>
+
+    <!-- POSTING CHECKLIST -->
+    <div class="card" style="margin-top:16px">
+      <div class="sec-head">
+        <div class="sec-icon" style="background:rgba(255,214,10,.1)">✅</div>
+        <div>
+          <div class="sec-title">Pre-Post Checklist</div>
+          <div class="sec-sub">GUARDIAN agent review — every post before it goes live</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="checklist">
+        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
+          <input type="checkbox" style="width:auto;margin-top:2px"/>
+          <span style="font-size:13px">Hook lands in first frame — bold text visible without sound</span>
+        </label>
+        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
+          <input type="checkbox" style="width:auto;margin-top:2px"/>
+          <span style="font-size:13px">Contains a reason to SAVE (cheat sheet, formula, or reference)</span>
+        </label>
+        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
+          <input type="checkbox" style="width:auto;margin-top:2px"/>
+          <span style="font-size:13px">CTA appears at peak emotion (15–20s in), not just at the end</span>
+        </label>
+        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
+          <input type="checkbox" style="width:auto;margin-top:2px"/>
+          <span style="font-size:13px">Caption starts with hook (no "I", "So", or filler opening)</span>
+        </label>
+        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
+          <input type="checkbox" style="width:auto;margin-top:2px"/>
+          <span style="font-size:13px">Audio: trending sound or clear voiceover (no dead silence)</span>
+        </label>
+        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
+          <input type="checkbox" style="width:auto;margin-top:2px"/>
+          <span style="font-size:13px">Hashtags: 3–5 niche + 2 broad (not 30 spam tags)</span>
+        </label>
+        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
+          <input type="checkbox" style="width:auto;margin-top:2px"/>
+          <span style="font-size:13px">Posted at optimal time: 7–9am or 6–9pm your audience timezone</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TAB: TRACKER
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-tracker" style="display:none">
+    <div class="card-row">
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(255,45,120,.15)">📈</div>
+          <div>
+            <div class="sec-title">90-Day Post Tracker</div>
+            <div class="sec-sub">2 posts/day = 180 total. Every cell = 1 post</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+            <div style="width:12px;height:12px;border-radius:3px;background:rgba(0,255,148,.3);border:1px solid rgba(0,255,148,.5)"></div> Posted
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+            <div style="width:12px;height:12px;border-radius:3px;border:1px solid var(--pink)"></div> Today
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+            <div style="width:12px;height:12px;border-radius:3px;background:var(--surface);border:1px solid var(--border);opacity:.4"></div> Upcoming
+          </div>
+        </div>
+        <div class="tracker-grid" id="trackerGrid"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(0,255,148,.1)">🎯</div>
+          <div>
+            <div class="sec-title">Log Today's Stats</div>
+            <div class="sec-sub">PULSE agent — track every post</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div>
+            <label>Followers Now</label>
+            <input type="number" id="logFollowers" placeholder="e.g. 334"/>
+          </div>
+          <div>
+            <label>Posts Published Today</label>
+            <input type="number" id="logPosts" placeholder="e.g. 2" min="0" max="10"/>
+          </div>
+          <div>
+            <label>Best Reel Views Today</label>
+            <input type="number" id="logViews" placeholder="e.g. 1516"/>
+          </div>
+          <div>
+            <label>New Follows Today</label>
+            <input type="number" id="logFollows" placeholder="e.g. 36"/>
+          </div>
+          <div>
+            <label>Notes</label>
+            <textarea id="logNotes" rows="2" placeholder="What worked, what flopped, ideas..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="logDay()">📊 Log Day</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAILY LOG HISTORY -->
+    <div class="card">
+      <div class="sec-head">
+        <div class="sec-icon" style="background:rgba(191,90,242,.15)">📋</div>
+        <div>
+          <div class="sec-title">Daily Log</div>
+          <div class="sec-sub">Every day of the 90-day mission</div>
+        </div>
+      </div>
+      <div id="logHistory" style="display:flex;flex-direction:column;gap:8px">
+        <div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No logs yet — start tracking daily</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TAB: TEMPLATES
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-templates" style="display:none">
+    <div class="card-row">
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(255,214,10,.1)">⚡</div>
+          <div>
+            <div class="sec-title">Proven Templates</div>
+            <div class="sec-sub">Based on your top performer — the announcement reel</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px" id="templateList"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(0,245,255,.1)">📐</div>
+          <div>
+            <div class="sec-title">Hook Formula Bank</div>
+            <div class="sec-sub">Tap any hook to use in generator</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px" id="hookBank"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ── CONFIG ─────────────────────────────────────────────────────────
+var START = '2026-06-10';
+var GOAL  = 1000000;
+var STORAGE_KEY = 'mk_content_v1';
+
+// ── STATE ──────────────────────────────────────────────────────────
+var state = loadState();
+var selectedFormat = 'graphic';
+var lastGenerated  = null;
+
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState(); }
+  catch(e){ return defaultState(); }
+}
+function defaultState(){
+  return { queue:[], logs:[], trackerPosts:{} };
+}
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+// ── DAY CALC ───────────────────────────────────────────────────────
+function dayNum(){
+  return Math.min(Math.floor((Date.now()-new Date(START))/86400000)+1,90);
+}
+
+// ── INIT ───────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('dayNum').textContent = dayNum();
+  renderQueue();
+  renderTracker();
+  renderLogs();
+  renderTemplates();
+  renderHookBank();
+  syncStats();
+});
+
+// ── TAB SWITCHING ──────────────────────────────────────────────────
+function switchTab(name, clickedEl){
+  ['generate','queue','tracker','templates'].forEach(function(t){
+    document.getElementById('tab-'+t).style.display = t===name ? '' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach(function(el){
+    el.classList.toggle('active', el === clickedEl);
+  });
+  if(name === 'tracker') renderTracker();
+}
+
+// ── FORMAT SELECTOR ────────────────────────────────────────────────
+function selectFormat(el){
+  document.querySelectorAll('.format-card').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedFormat = el.dataset.format;
+}
+
+// ── QUICK GENERATE ─────────────────────────────────────────────────
+var quickTopics = {
+  announcement: 'I am building a 6-agent AI team to take me from 295 followers to 1 million in 90 days — here is the full plan',
+  update:       'Day ' + dayNum() + ' of 90: here is exactly what happened today with my AI agents and follower count',
+  insight:      'The Harvard Agentic AI concept that changed how I think about automation — most people get this wrong',
+  behind:       'What building an AI social media agency actually looks like at 2am — behind the scenes of day ' + dayNum()
+};
+
+function quickGenerate(type){
+  document.getElementById('topicInput').value = quickTopics[type] || '';
+  generateContent();
+}
+
+// ── GENERATE ──────────────────────────────────────────────────────
+function generateContent(){
+  var topic   = document.getElementById('topicInput').value.trim();
+  var context = document.getElementById('contextInput').value.trim();
+  var tone    = document.getElementById('toneInput').value;
+
+  if(!topic){ showToast('Enter a topic first', 'error'); return; }
+
+  var btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.querySelector('.btn-label').textContent = '⚡ Generating';
+
+  document.getElementById('outputAgent').textContent = 'NOVA scripting + SPARK optimizing...';
+
+  var systemPrompt = buildSystemPrompt(tone, selectedFormat);
+  var userPrompt   = buildUserPrompt(topic, context, tone, selectedFormat);
+
+  callAI(systemPrompt, userPrompt).then(function(text){
+    var parsed = parseAIOutput(text);
+    lastGenerated = { format: selectedFormat, topic: topic, ...parsed, raw: text };
+    renderOutput(parsed);
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-label').textContent = '⚡ Generate Content';
+    document.getElementById('outputAgent').textContent = 'Generated by NOVA + SPARK agents';
+  }).catch(function(err){
+    showToast('Generation failed — check API connection', 'error');
+    console.error(err);
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-label').textContent = '⚡ Generate Content';
+  });
+}
+
+function buildSystemPrompt(tone, format){
+  var toneGuide = {
+    raw:    'Write like you are texting a friend at 1am — raw, honest, no corporate speak. Show the real struggle and wins.',
+    expert: 'Write with authority and precision. Reference AI concepts clearly. Position as someone who deeply understands the technology.',
+    hype:   'Write with electric energy. This is actually happening. Make people feel the momentum. Use power words and urgency.',
+    teach:  'Write to educate. Clear, simple, step-by-step. The reader should feel smarter after consuming this.'
+  };
+
+  var formatGuide = {
+    graphic: 'This is a graphic reel — text appears as large overlays. Write short punchy phrases that work as visual text. Each line should standalone as a bold graphic.',
+    results: 'This is a results reveal — structure around before/after or data points. Lead with the number, then explain it.',
+    education: 'This is an education drop — structure as a list, tips, or framework. Make it reference-worthy so people save it.',
+    raw: 'This is a raw update — journal style, Day X of Y. Authentic and personal. Show real emotions.'
+  };
+
+  return `You are NOVA (content strategist) and SPARK (viral optimizer) — two AI agents in the Metakittyz social media system.
+
+Metakittyz is Erika's brand. She is on a 90-day mission to go from 295 to 1,000,000 followers by building a 6-AI-agent social media team.
+Current day: Day ${dayNum()}/90. She documents everything publicly. The audience is 35-44 professionals who want to understand AI.
+
+${toneGuide[tone]}
+
+${formatGuide[format]}
+
+CRITICAL RULES (based on real performance data):
+- The #1 performing reel got 36 follows: graphic format, bold text overlay, audacious claim
+- Talking-head reels average 0 follows — NO talking-head scripts
+- Skip rate is 46-51% — the hook MUST stop the scroll in 3 words or less
+- Save rate is near zero — build in a reason to save on every piece
+- Average watch time is 17s — front-load all value, no slow builds
+
+OUTPUT FORMAT (return exactly this structure, no markdown, no extra headers):
+HOOK: [3-7 word text overlay that stops the scroll]
+SCRIPT: [full visual text/overlay script, line by line]
+CAPTION: [Instagram caption, emoji-first, line breaks, 150-200 chars]
+CTA: [call to action moment]
+HASHTAGS: [8 hashtags, mix of niche and broad, space-separated]`;
+}
+
+function buildUserPrompt(topic, context, tone, format){
+  return `Create a ${format} reel about: ${topic}
+${context ? '\nContext: ' + context : ''}
+Tone: ${tone}
+
+Remember: this must convert viewers to followers. Every element should push toward that goal.`;
+}
+
+async function callAI(system, user){
+  // Try Anthropic first
+  try {
+    var r = await fetch('/api/anthropic', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-opus-4-8',
+        max_tokens: 1024,
+        system: system,
+        messages: [{ role: 'user', content: user }]
+      })
+    });
+    var d = await r.json();
+    if(d.content && d.content[0]) return d.content[0].text;
+    throw new Error(d.error?.message || 'No content');
+  } catch(e) {
+    // Fallback: OpenAI
+    var r2 = await fetch('/api/openai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user',   content: user   }
+        ]
+      })
+    });
+    var d2 = await r2.json();
+    if(d2.choices && d2.choices[0]) return d2.choices[0].message.content;
+    throw new Error(d2.error?.message || 'All AI providers failed');
+  }
+}
+
+function parseAIOutput(text){
+  var extract = function(label){
+    var re = new RegExp(label + ':\\s*([\\s\\S]*?)(?=\\n[A-Z]+:|$)', 'i');
+    var m  = text.match(re);
+    return m ? m[1].trim() : '';
+  };
+  return {
+    hook:     extract('HOOK'),
+    script:   extract('SCRIPT'),
+    caption:  extract('CAPTION'),
+    cta:      extract('CTA'),
+    hashtags: extract('HASHTAGS').split(/\s+/).filter(function(h){ return h.startsWith('#'); })
+  };
+}
+
+function renderOutput(p){
+  document.getElementById('outputPlaceholder').style.display = 'none';
+  var content = document.getElementById('outputContent');
+  content.classList.add('visible');
+
+  document.getElementById('outHook').textContent    = p.hook;
+  document.getElementById('outScript').textContent  = p.script;
+  document.getElementById('outCaption').textContent = p.caption;
+  document.getElementById('outCTA').textContent     = '👉 ' + p.cta;
+
+  var hashEl = document.getElementById('outHashtags');
+  hashEl.innerHTML = '';
+  (p.hashtags || []).forEach(function(h){
+    var span = document.createElement('span');
+    span.className = 'hashtag';
+    span.textContent = h;
+    span.onclick = function(){ navigator.clipboard.writeText(h); showToast('Copied '+h, 'success'); };
+    hashEl.appendChild(span);
+  });
+}
+
+// ── QUEUE ─────────────────────────────────────────────────────────
+function addToQueue(){
+  if(!lastGenerated){ showToast('Generate content first', 'error'); return; }
+  var item = Object.assign({ id: Date.now(), status: 'draft', day: dayNum() }, lastGenerated);
+  state.queue.unshift(item);
+  saveState();
+  renderQueue();
+  syncStats();
+  showToast('Added to queue!', 'success');
+  switchTab('queue', document.querySelectorAll('.tab')[1]);
+}
+
+function renderQueue(){
+  var list = document.getElementById('queueList');
+  var empty = document.getElementById('queueEmpty');
+  if(!state.queue.length){
+    list.style.display = 'none';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  list.style.display = '';
+  list.innerHTML = '';
+  state.queue.forEach(function(item, i){
+    var div = document.createElement('div');
+    div.className = 'queue-item';
+    div.innerHTML = '<div class="qi-day">Day '+item.day+'/90</div>'+
+      '<div class="qi-title">'+(item.hook||item.topic||'Untitled').substring(0,60)+'</div>'+
+      '<div style="display:flex;gap:6px;align-items:center">'+
+        '<span class="qi-format">'+item.format+'</span>'+
+        '<button onclick="markPosted('+i+')" style="margin-left:auto;border:none;background:rgba(0,255,148,.1);color:var(--green);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer">✓ Posted</button>'+
+        '<button onclick="removeQueue('+i+')" style="border:none;background:rgba(255,45,120,.1);color:var(--pink);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer">✕</button>'+
+      '</div>'+
+      '<div class="qi-status '+item.status+'"></div>';
+    list.appendChild(div);
+  });
+}
+
+function markPosted(i){
+  state.queue[i].status = 'posted';
+  saveState();
+  renderQueue();
+  showToast('Marked as posted!', 'success');
+}
+
+function removeQueue(i){
+  state.queue.splice(i,1);
+  saveState();
+  renderQueue();
+  syncStats();
+}
+
+// ── TRACKER ───────────────────────────────────────────────────────
+function renderTracker(){
+  var grid  = document.getElementById('trackerGrid');
+  var today = dayNum();
+  grid.innerHTML = '';
+  for(var d=1; d<=90; d++){
+    var div = document.createElement('div');
+    div.className = 'track-day' +
+      (d < today ? ' posted' : '') +
+      (d === today ? ' today' : '') +
+      (d > today ? ' future' : '');
+    div.textContent = d;
+    div.title = 'Day '+d;
+    grid.appendChild(div);
+  }
+}
+
+// ── LOG ───────────────────────────────────────────────────────────
+function logDay(){
+  var entry = {
+    day:       dayNum(),
+    date:      new Date().toLocaleDateString(),
+    followers: parseInt(document.getElementById('logFollowers').value)||0,
+    posts:     parseInt(document.getElementById('logPosts').value)||0,
+    views:     parseInt(document.getElementById('logViews').value)||0,
+    follows:   parseInt(document.getElementById('logFollows').value)||0,
+    notes:     document.getElementById('logNotes').value.trim()
+  };
+  // update or add
+  var existing = state.logs.findIndex(function(l){ return l.day === entry.day; });
+  if(existing >= 0) state.logs[existing] = entry;
+  else state.logs.unshift(entry);
+  saveState();
+  renderLogs();
+  syncStats();
+  showToast('Day '+entry.day+' logged!', 'success');
+}
+
+function renderLogs(){
+  var el = document.getElementById('logHistory');
+  if(!state.logs.length){
+    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No logs yet — start tracking daily</div>';
+    return;
+  }
+  el.innerHTML = state.logs.map(function(l){
+    return '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--surface);border-radius:10px;border:1px solid var(--border)">'+
+      '<div style="min-width:56px;text-align:center">'+
+        '<div style="font-size:18px;font-weight:800;color:var(--pink)">'+l.day+'</div>'+
+        '<div style="font-size:9px;color:var(--muted)">DAY</div>'+
+      '</div>'+
+      '<div style="flex:1">'+
+        '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px">'+
+          '<span style="font-size:12px"><b style="color:var(--green)">+'+l.follows+'</b> follows</span>'+
+          '<span style="font-size:12px"><b>'+l.followers.toLocaleString()+'</b> total</span>'+
+          '<span style="font-size:12px"><b>'+l.posts+'</b> posts</span>'+
+          '<span style="font-size:12px"><b>'+l.views.toLocaleString()+'</b> views</span>'+
+        '</div>'+
+        (l.notes ? '<div style="font-size:12px;color:var(--muted)">'+l.notes+'</div>' : '')+
+      '</div>'+
+      '<div style="font-size:10px;color:var(--muted)">'+l.date+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+// ── TEMPLATES ─────────────────────────────────────────────────────
+var TEMPLATES = [
+  { name:'🚀 Mission Announcement', format:'graphic', topic:'I am building a 6-AI-agent team to grow from [X] to 1,000,000 followers in 90 days — here is the plan', badge:'36 follows on first use' },
+  { name:'📊 Day X Update', format:'raw', topic:'Day [X] of 90: here is what the AI agents built overnight and the real numbers', badge:'High trust format' },
+  { name:'🎓 Harvard Drop', format:'education', topic:'The one Harvard AI concept that changes how you think about agents — most people never learn this', badge:'High save rate' },
+  { name:'🤖 Agent Reveal', format:'graphic', topic:'Meet the 6 AI agents running my Instagram — what each one does and why I built them', badge:'Shareable' },
+  { name:'💥 Failure Post', format:'raw', topic:'I failed on Day [X]: here is exactly what went wrong and how I am fixing it', badge:'Most authentic' },
+  { name:'📈 Results Reveal', format:'results', topic:'[X] followers → [Y] followers in [Z] days: here is exactly what moved the needle', badge:'Viral potential' },
+];
+
+function renderTemplates(){
+  var el = document.getElementById('templateList');
+  el.innerHTML = TEMPLATES.map(function(t,i){
+    return '<div style="border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s" '+
+      'onmouseover="this.style.borderColor=\'var(--pink)\'" onmouseout="this.style.borderColor=\'var(--border)\'" '+
+      'onclick="useTemplate('+i+')">'+
+      '<div style="flex:1">'+
+        '<div style="font-size:13px;font-weight:700;margin-bottom:2px">'+t.name+'</div>'+
+        '<div style="font-size:11px;color:var(--muted)">'+t.topic.substring(0,70)+'</div>'+
+      '</div>'+
+      '<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(0,255,148,.1);color:var(--green);white-space:nowrap">'+t.badge+'</span>'+
+    '</div>';
+  }).join('');
+}
+
+function useTemplate(i){
+  var t = TEMPLATES[i];
+  document.getElementById('topicInput').value = t.topic;
+  // select matching format card
+  var card = document.querySelector('[data-format="'+t.format+'"]');
+  if(card) selectFormat(card);
+  switchTab('generate', document.querySelector('.tab'));
+  showToast('Template loaded — customize and generate!', 'success');
+}
+
+var HOOKS = [
+  'I gave AI $0 and a deadline.',
+  'This is what 295 → 1M looks like.',
+  '6 agents. 90 days. No safety net.',
+  'What Harvard taught me about AI agents.',
+  'Day [X]: I almost quit.',
+  'The algorithm hates me. Here\'s proof.',
+  'I built a team that doesn\'t sleep.',
+  'Most people automate wrong. Here\'s why.',
+  'Real numbers. No filter.',
+  '295 followers yesterday. Watch this.',
+];
+
+function renderHookBank(){
+  var el = document.getElementById('hookBank');
+  el.innerHTML = HOOKS.map(function(h){
+    return '<div style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px;transition:all .2s" '+
+      'onmouseover="this.style.borderColor=\'var(--cyan)\';this.style.color=\'var(--cyan)\'" '+
+      'onmouseout="this.style.borderColor=\'var(--border)\';this.style.color=\'\'" '+
+      'onclick="useHook(\''+h.replace(/'/g,"\\'")+'\')">'+ h +'</div>';
+  }).join('');
+}
+
+function useHook(h){
+  var topic = document.getElementById('topicInput');
+  topic.value = h + ' — ' + (topic.value || 'my AI mission');
+  switchTab('generate', document.querySelector('.tab'));
+  showToast('Hook loaded!', 'success');
+}
+
+// ── COPY / REGENERATE ─────────────────────────────────────────────
+function copyAll(){
+  if(!lastGenerated) return;
+  var text = 'HOOK: '+lastGenerated.hook+'\n\nSCRIPT:\n'+lastGenerated.script+
+    '\n\nCAPTION:\n'+lastGenerated.caption+'\n\nCTA: '+lastGenerated.cta+
+    '\n\nHASHTAGS: '+(lastGenerated.hashtags||[]).join(' ');
+  navigator.clipboard.writeText(text);
+  showToast('Copied to clipboard!', 'success');
+}
+
+function regenerate(){
+  generateContent();
+}
+
+// ── SYNC STATS ────────────────────────────────────────────────────
+function syncStats(){
+  var latestLog = state.logs[0];
+  if(latestLog && latestLog.day === dayNum()){
+    document.getElementById('followCount').textContent  = latestLog.followers.toLocaleString();
+    document.getElementById('postsToday').textContent   = latestLog.posts;
+  }
+  var queueReady = state.queue.filter(function(q){ return q.status==='draft'; }).length;
+  document.getElementById('queueCount').textContent = queueReady;
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────
+function showToast(msg, type){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast '+(type||'');
+  setTimeout(function(){ t.classList.add('show'); }, 10);
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+</script>
+</body>
+</html>

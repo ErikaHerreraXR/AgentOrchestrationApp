@@ -270,6 +270,12 @@ const pages = {
   '/journey':    'mk-journey.html',
   '/follow':     'mk-journey.html',
   '/progress':   'mk-journey.html',
+  '/mk-content': 'mk-content.html',
+  '/studio':     'mk-content.html',
+  '/content':    'mk-content.html',
+  '/mk-engage':  'mk-engage.html',
+  '/engage':     'mk-engage.html',
+  '/community':  'mk-engage.html',
 };
 Object.entries(pages).forEach(([route, file]) => {
   app.get(route, (req, res) => res.sendFile(path.join(__dirname, file)));

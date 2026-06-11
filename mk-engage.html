@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Engagement Engine — Metakittyz AI</title>
+<style>
+:root{
+  --pink:#FF2D78;--cyan:#00F5FF;--green:#00FF94;--gold:#FFD60A;
+  --purple:#BF5AF2;--orange:#FF6B2B;
+  --bg:#0A0A0F;--surface:#13131A;--card:#1C1C28;--border:#2A2A3E;
+  --text:#E8E8F0;--muted:#6B6B8A;
+  --font:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,15,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.tb-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 16px}
+.tb-brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+.tb-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--pink),var(--purple));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff}
+.tb-name{font-size:14px;font-weight:700;color:var(--text)}
+.tb-tag{font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--cyan);background:rgba(0,245,255,.1);padding:2px 8px;border-radius:20px;border:1px solid rgba(0,245,255,.3)}
+.tb-nav{display:flex;gap:4px;margin-left:auto}
+.tb-nav a{font-size:12px;font-weight:500;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;transition:all .2s}
+.tb-nav a:hover{color:var(--text);background:var(--card)}
+.tb-nav a.active{color:var(--cyan);background:rgba(0,245,255,.1)}
+
+.main{max-width:1200px;margin:0 auto;padding:24px 16px;display:grid;gap:20px}
+
+.tabs{display:flex;gap:4px;background:var(--surface);padding:4px;border-radius:10px}
+.tab{flex:1;padding:8px 12px;border-radius:7px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.card-row{grid-template-columns:1fr}}
+
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.sec-title{font-size:18px;font-weight:700}
+.sec-sub{font-size:12px;color:var(--muted);margin-top:1px}
+
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+input,textarea,select{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font);font-size:14px;border-radius:10px;padding:10px 14px;transition:border-color .2s;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--cyan)}
+textarea{min-height:80px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-family:var(--font);font-weight:700;border-radius:10px;transition:all .2s;padding:12px 20px;font-size:14px}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;width:100%}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);font-size:13px;padding:8px 14px}
+.btn-outline:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
+.btn-green{background:rgba(0,255,148,.15);border:1px solid rgba(0,255,148,.3);color:var(--green);font-size:13px;padding:8px 14px}
+
+/* COMMENT QUEUE */
+.comment-card{
+  border:1px solid var(--border);border-radius:12px;
+  padding:14px;background:var(--surface);margin-bottom:10px;
+}
+.cc-meta{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.cc-user{font-size:12px;font-weight:700;color:var(--cyan)}
+.cc-time{font-size:11px;color:var(--muted);margin-left:auto}
+.cc-type{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600}
+.cc-type.comment{background:rgba(0,245,255,.1);color:var(--cyan)}
+.cc-type.dm{background:rgba(191,90,242,.1);color:var(--purple)}
+.cc-type.mention{background:rgba(255,214,10,.1);color:var(--gold)}
+.cc-text{font-size:13px;line-height:1.5;margin-bottom:10px;color:var(--text)}
+.cc-reply{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.6}
+.cc-reply.generated{color:var(--text);border-color:var(--cyan)}
+.cc-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* REPLY GEN */
+.reply-output{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:14px;min-height:100px;font-size:13px;line-height:1.7;
+  white-space:pre-wrap;color:var(--muted);
+}
+.reply-output.ready{color:var(--text);border-color:var(--cyan)}
+
+/* DM TEMPLATES */
+.dm-template{
+  border:1px solid var(--border);border-radius:10px;padding:12px;
+  background:var(--surface);cursor:pointer;transition:all .2s;
+}
+.dm-template:hover{border-color:var(--purple)}
+.dt-trigger{font-size:11px;color:var(--purple);font-weight:600;margin-bottom:4px}
+.dt-preview{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* ENGAGEMENT SCORE */
+.score-ring{
+  width:80px;height:80px;border-radius:50%;
+  border:4px solid var(--border);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;margin:0 auto 12px;
+}
+.score-val{font-size:22px;font-weight:800}
+.score-label{font-size:9px;color:var(--muted);letter-spacing:.06em}
+
+/* COMMUNITY QUEUE */
+.target-card{
+  border:1px solid var(--border);border-radius:10px;padding:12px;
+  background:var(--surface);display:flex;gap:10px;align-items:flex-start;
+}
+.tc-icon{font-size:24px}
+.tc-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.tc-desc{font-size:11px;color:var(--muted)}
+.tc-action{margin-left:auto;font-size:11px;padding:4px 10px;border-radius:20px;border:none;cursor:pointer;font-weight:600}
+.tc-action.done{background:rgba(0,255,148,.1);color:var(--green)}
+.tc-action.pending{background:rgba(0,245,255,.1);color:var(--cyan)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:13px;font-weight:600;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--green);color:var(--green)}
+.toast.error{border-color:var(--pink);color:var(--pink)}
+
+@media(max-width:480px){.main{padding:16px 12px}.card{padding:16px}}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="tb-inner">
+    <a class="tb-brand" href="/">
+      <div class="tb-logo">MK</div>
+      <span class="tb-name">Metakittyz</span>
+    </a>
+    <span class="tb-tag">Engagement Engine</span>
+    <nav class="tb-nav">
+      <a href="/mk-live"><span>📊</span> Live</a>
+      <a href="/mk-team"><span>🤖</span> Team</a>
+      <a href="/mk-content"><span>✍️</span> Studio</a>
+      <a href="/mk-engage" class="active"><span>💬</span> Engage</a>
+      <a href="/journey"><span>🗺️</span> Journey</a>
+    </nav>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('reply',this)">💬 Reply Generator</button>
+    <button class="tab" onclick="switchTab('queue',this)">📥 Comment Queue</button>
+    <button class="tab" onclick="switchTab('dm',this)">📩 DM Templates</button>
+    <button class="tab" onclick="switchTab('community',this)">🌱 Community</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TAB: REPLY GENERATOR
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-reply">
+    <div class="card-row">
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(0,245,255,.1)">💬</div>
+          <div>
+            <div class="sec-title">Reply Generator</div>
+            <div class="sec-sub">ARIA agent — human-feeling, algorithm-boosting replies</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px">
+          <label>Comment or Message</label>
+          <textarea id="commentInput" rows="3" placeholder="Paste the comment or DM you need to reply to..."></textarea>
+        </div>
+
+        <div style="margin-bottom:14px">
+          <label>Context (optional)</label>
+          <input type="text" id="replyContext" placeholder="e.g. this is on my announcement reel, they seem skeptical"/>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <label>Reply Goal</label>
+          <select id="replyGoal">
+            <option value="follow">Convert to follower</option>
+            <option value="engage">Deepen engagement</option>
+            <option value="authority">Build authority</option>
+            <option value="warmth">Build warmth / community</option>
+            <option value="handle">Handle skeptic / hater</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" id="replyBtn" onclick="generateReply()">
+          💬 Generate Reply
+        </button>
+
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-outline btn-sm" onclick="quickReply('love')">❤️ Love this</button>
+          <button class="btn btn-outline btn-sm" onclick="quickReply('question')">❓ Has question</button>
+          <button class="btn btn-outline btn-sm" onclick="quickReply('doubt')">🤨 Doubter</button>
+          <button class="btn btn-outline btn-sm" onclick="quickReply('collab')">🤝 Collab ask</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(0,255,148,.1)">✨</div>
+          <div>
+            <div class="sec-title">ARIA's Reply</div>
+            <div class="sec-sub" id="replyStatus">Waiting for a comment...</div>
+          </div>
+        </div>
+
+        <div class="reply-output" id="replyOutput">
+          Your reply will appear here. ARIA generates replies that: feel human, ask a question (to re-engage), and subtly push toward the follow.
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-green btn-sm" onclick="copyReply()">📋 Copy Reply</button>
+          <button class="btn btn-outline btn-sm" onclick="generateReply()">🔄 Try Again</button>
+          <button class="btn btn-outline btn-sm" onclick="addToCommentQueue()">+ Save to Queue</button>
+        </div>
+
+        <!-- ENGAGEMENT TIPS -->
+        <div style="margin-top:16px;padding:12px;background:var(--surface);border-radius:10px;border:1px solid var(--border)">
+          <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">⚡ ARIA's Reply Rules</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:11px;color:var(--muted)">✓ Always end with a question (re-engages the algorithm)</div>
+            <div style="font-size:11px;color:var(--muted)">✓ Use their first name if visible</div>
+            <div style="font-size:11px;color:var(--muted)">✓ Reply within 60 minutes of posting (golden window)</div>
+            <div style="font-size:11px;color:var(--muted)">✓ Never reply with just "Thanks!" — add context</div>
+            <div style="font-size:11px;color:var(--muted)">✓ 1 emoji max — feels less robotic</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TAB: COMMENT QUEUE
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-queue" style="display:none">
+    <div class="card">
+      <div class="sec-head">
+        <div class="sec-icon" style="background:rgba(191,90,242,.15)">📥</div>
+        <div>
+          <div class="sec-title">Comment Queue</div>
+          <div class="sec-sub">Log comments to respond to — process daily in the golden 60-min window</div>
+        </div>
+        <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="showAddComment()">+ Add Comment</button>
+      </div>
+
+      <div id="addCommentForm" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <label>Username</label>
+            <input type="text" id="newUser" placeholder="@username"/>
+          </div>
+          <div>
+            <label>Type</label>
+            <select id="newType">
+              <option value="comment">Comment</option>
+              <option value="dm">DM</option>
+              <option value="mention">Mention</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <label>Message</label>
+          <textarea id="newText" rows="2" placeholder="What they said..."></textarea>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" style="width:auto" onclick="addComment()">Add</button>
+          <button class="btn btn-outline btn-sm" onclick="hideAddComment()">Cancel</button>
+        </div>
+      </div>
+
+      <div id="commentQueueList"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TAB: DM TEMPLATES
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-dm" style="display:none">
+    <div class="card-row">
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(191,90,242,.15)">📩</div>
+          <div>
+            <div class="sec-title">DM Templates</div>
+            <div class="sec-sub">ARIA — pre-built responses for common scenarios</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px" id="dmTemplateList"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(255,214,10,.1)">🎯</div>
+          <div>
+            <div class="sec-title">Engagement Strategy</div>
+            <div class="sec-sub">The 90-min daily engagement block</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="border:1px solid var(--border);border-radius:10px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:4px">⏱️ 0–10 min: Respond to all comments</div>
+            <div style="font-size:12px;color:var(--muted)">Every comment on your last 3 posts. Use ARIA generator. Speed matters more than perfection.</div>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:10px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:4px">📩 10–25 min: DM every new follower</div>
+            <div style="font-size:12px;color:var(--muted)">Use the welcome template. This converts followers to community members and kills churn.</div>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:10px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:4px">🌱 25–45 min: Engage on 10 creator posts</div>
+            <div style="font-size:12px;color:var(--muted)">Target accounts in AI/tech/entrepreneurship niche. Leave meaningful first comments, not "great post!"</div>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:10px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:4px">🔎 45–60 min: Explore trending audio + hashtags</div>
+            <div style="font-size:12px;color:var(--muted)">Find 1 trending sound in your niche. Check what AI content is performing today. Feed the content queue.</div>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:10px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:var(--orange);margin-bottom:4px">📊 60–90 min: Log + generate tomorrow's content</div>
+            <div style="font-size:12px;color:var(--muted)">Update the tracker. Check metrics. Generate 2 pieces for tomorrow in the Content Studio.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       TAB: COMMUNITY
+  ══════════════════════════════════════════════════ -->
+  <div id="tab-community" style="display:none">
+    <div class="card-row">
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(0,255,148,.1)">🌱</div>
+          <div>
+            <div class="sec-title">Community Targets</div>
+            <div class="sec-sub">REACH agent — accounts to engage daily for growth</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;padding:10px;background:var(--surface);border-radius:8px">
+          Engage on 10 of these accounts daily. Real meaningful comments. Not "great post" — add a thought, ask a question.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px" id="communityTargets"></div>
+
+        <div style="margin-top:14px">
+          <label>Add Target Account</label>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="newTarget" placeholder="@account or niche keyword"/>
+            <button class="btn btn-outline btn-sm" onclick="addTarget()">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon" style="background:rgba(255,45,120,.15)">📊</div>
+          <div>
+            <div class="sec-title">Engagement Score</div>
+            <div class="sec-sub">Today's community engagement health</div>
+          </div>
+        </div>
+
+        <div class="score-ring" id="scoreRing" style="border-color:var(--pink)">
+          <div class="score-val" id="scoreVal" style="color:var(--pink)">0%</div>
+          <div class="score-label">TODAY</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:13px">Comments replied</span>
+            <span style="font-size:13px;font-weight:700" id="repliedCount">0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:13px">DMs sent</span>
+            <span style="font-size:13px;font-weight:700" id="dmCount">0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:13px">Accounts engaged</span>
+            <span style="font-size:13px;font-weight:700" id="engagedCount">0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+            <span style="font-size:13px">Stories viewed</span>
+            <span style="font-size:13px;font-weight:700" id="storiesCount">0</span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+          <button class="btn btn-outline btn-sm" onclick="increment('replies')">+ Reply</button>
+          <button class="btn btn-outline btn-sm" onclick="increment('dms')">+ DM</button>
+          <button class="btn btn-outline btn-sm" onclick="increment('engaged')">+ Engage</button>
+          <button class="btn btn-outline btn-sm" onclick="increment('stories')">+ Stories</button>
+        </div>
+        <button class="btn btn-outline btn-sm" style="width:100%;margin-top:8px;border-color:var(--pink);color:var(--pink)" onclick="resetDay()">Reset Day</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+var STORAGE_KEY = 'mk_engage_v1';
+var state = loadState();
+var lastReply = '';
+
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState(); }
+  catch(e){ return defaultState(); }
+}
+function defaultState(){
+  return {
+    comments: [],
+    targets:  defaultTargets(),
+    today:    { replies:0, dms:0, engaged:0, stories:0, date:'' }
+  };
+}
+function defaultTargets(){
+  return [
+    { name:'@aitools.daily',    desc:'AI tools niche — 200K followers, posts about automation', done:false },
+    { name:'@buildinpublic',    desc:'Build in public community — perfect audience overlap', done:false },
+    { name:'@harvard_extension',desc:'Harvard Extension content — validates your credibility angle', done:false },
+    { name:'@nocodemvp',        desc:'No-code entrepreneurs — want to build without coding', done:false },
+    { name:'@theaiagency',      desc:'AI agency space — potential collab and audience cross-over', done:false },
+    { name:'#agentic AI',       desc:'Top hashtag in your niche — watch for trending posts to comment on', done:false },
+    { name:'#buildinpublic',    desc:'75K posts — real founder audience watching public builds', done:false },
+    { name:'@socialmediaexaminer',desc:'SMM education niche — your audience\'s other interest', done:false },
+  ];
+}
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+document.addEventListener('DOMContentLoaded', function(){
+  resetDayIfNew();
+  renderCommentQueue();
+  renderDMTemplates();
+  renderCommunityTargets();
+  updateScore();
+});
+
+function switchTab(name, el){
+  ['reply','queue','dm','community'].forEach(function(t){
+    document.getElementById('tab-'+t).style.display = t===name?'':'none';
+  });
+  document.querySelectorAll('.tab').forEach(function(b){ b.classList.toggle('active', b===el); });
+}
+
+// ── REPLY GENERATOR ───────────────────────────────────────────────
+var quickScenarios = {
+  love:     { comment:'This is exactly what I needed to see! Love what you\'re building 🔥', goal:'warmth' },
+  question: { comment:'How does the AI actually decide what to post? Is it fully automated?', goal:'authority' },
+  doubt:    { comment:'Sounds cool but 295 to 1 million in 90 days? That seems impossible lol', goal:'handle' },
+  collab:   { comment:'I have 50K in the AI space. Let\'s do a collab and help each other grow!', goal:'engage' },
+};
+
+function quickReply(type){
+  var s = quickScenarios[type];
+  document.getElementById('commentInput').value = s.comment;
+  document.getElementById('replyGoal').value    = s.goal;
+  generateReply();
+}
+
+async function generateReply(){
+  var comment = document.getElementById('commentInput').value.trim();
+  var context = document.getElementById('replyContext').value.trim();
+  var goal    = document.getElementById('replyGoal').value;
+
+  if(!comment){ showToast('Paste a comment first', 'error'); return; }
+
+  var btn = document.getElementById('replyBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ ARIA thinking...';
+  document.getElementById('replyStatus').textContent = 'ARIA generating...';
+
+  var goalMap = {
+    follow:    'make them want to follow — create curiosity about what comes next in the journey',
+    engage:    'keep the conversation going — ask a follow-up question that invites a response',
+    authority: 'demonstrate expertise without being arrogant — teach something valuable briefly',
+    warmth:    'build genuine connection — be human and warm, this is community-building',
+    handle:    'handle gracefully — acknowledge their skepticism, share one real data point, invite them to watch'
+  };
+
+  var system = `You are ARIA, the engagement agent for Metakittyz — Erika's AI social media brand.
+
+Erika is on a 90-day mission: 295 → 1,000,000 followers by building a 6-AI-agent social media system.
+She is also taking a Harvard Agentic AI course and documenting everything publicly.
+
+Your job: write Instagram replies that feel 100% human, boost algorithm engagement, and build community.
+
+RULES:
+- Sound like a real person — NOT a corporate brand
+- Always end with a question (this is critical for algorithm re-engagement)
+- Maximum 2-3 sentences
+- 1 emoji maximum
+- Goal for this reply: ${goalMap[goal]}
+- Never say "absolutely", "certainly", "of course", "great question"
+- Never start with "I" — leads with the content
+
+Return ONLY the reply text. No explanation, no quotes, no labels.`;
+
+  var user = `Comment: "${comment}"${context ? '\nContext: '+context : ''}`;
+
+  try {
+    var r = await fetch('/api/anthropic',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-opus-4-8',
+        max_tokens:200,
+        system,
+        messages:[{role:'user',content:user}]
+      })
+    });
+    var d = await r.json();
+    var reply = d.content && d.content[0] ? d.content[0].text.trim() : null;
+    if(!reply) throw new Error('no content');
+    lastReply = reply;
+    var out = document.getElementById('replyOutput');
+    out.textContent = reply;
+    out.className = 'reply-output ready';
+    document.getElementById('replyStatus').textContent = 'ARIA — ready to copy';
+  } catch(e) {
+    // Fallback
+    try {
+      var r2 = await fetch('/api/openai',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'gpt-4o',
+          messages:[{role:'system',content:system},{role:'user',content:user}]
+        })
+      });
+      var d2 = await r2.json();
+      var reply2 = d2.choices && d2.choices[0] ? d2.choices[0].message.content.trim() : null;
+      if(!reply2) throw new Error('failed');
+      lastReply = reply2;
+      var out2 = document.getElementById('replyOutput');
+      out2.textContent = reply2;
+      out2.className = 'reply-output ready';
+      document.getElementById('replyStatus').textContent = 'ARIA — ready to copy';
+    } catch(e2){
+      showToast('Generation failed — check API', 'error');
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = '💬 Generate Reply';
+}
+
+function copyReply(){
+  if(!lastReply){ showToast('Generate a reply first', 'error'); return; }
+  navigator.clipboard.writeText(lastReply);
+  increment('replies');
+  showToast('Copied! Remember to reply within 60 min', 'success');
+}
+
+function addToCommentQueue(){
+  if(!lastReply){ showToast('Generate a reply first', 'error'); return; }
+  state.comments.push({
+    id:    Date.now(),
+    user:  '@user',
+    type:  'comment',
+    text:  document.getElementById('commentInput').value.trim(),
+    reply: lastReply,
+    done:  false
+  });
+  saveState();
+  showToast('Saved to queue!', 'success');
+}
+
+// ── COMMENT QUEUE ─────────────────────────────────────────────────
+function showAddComment(){ document.getElementById('addCommentForm').style.display=''; }
+function hideAddComment(){ document.getElementById('addCommentForm').style.display='none'; }
+
+function addComment(){
+  var user = document.getElementById('newUser').value.trim();
+  var type = document.getElementById('newType').value;
+  var text = document.getElementById('newText').value.trim();
+  if(!user || !text){ showToast('Fill in user and message', 'error'); return; }
+  state.comments.unshift({ id:Date.now(), user, type, text, reply:'', done:false });
+  saveState();
+  renderCommentQueue();
+  hideAddComment();
+  document.getElementById('newUser').value='';
+  document.getElementById('newText').value='';
+  showToast('Comment added to queue', 'success');
+}
+
+function renderCommentQueue(){
+  var el = document.getElementById('commentQueueList');
+  if(!state.comments.length){
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">No comments queued — add them or generate replies and save</div>';
+    return;
+  }
+  el.innerHTML = state.comments.map(function(c,i){
+    return '<div class="comment-card" style="'+(c.done?'opacity:.5':'')+'">'+
+      '<div class="cc-meta">'+
+        '<span class="cc-user">'+c.user+'</span>'+
+        '<span class="cc-type '+c.type+'">'+c.type+'</span>'+
+        '<span class="cc-time">'+(c.done?'✓ Done':'Pending')+'</span>'+
+      '</div>'+
+      '<div class="cc-text">'+c.text+'</div>'+
+      (c.reply?'<div class="cc-reply generated">↩️ '+c.reply+'</div>':'')+
+      '<div class="cc-actions">'+
+        '<button onclick="useComment('+i+')" class="btn btn-outline btn-sm">Generate Reply</button>'+
+        (c.reply?'<button onclick="copyComment('+i+')" class="btn btn-green btn-sm">📋 Copy</button>':'')+
+        '<button onclick="markDone('+i+')" class="btn btn-outline btn-sm" style="'+(c.done?'color:var(--muted)':'color:var(--green)')+'">'+
+          (c.done?'Undo':'✓ Done')+'</button>'+
+        '<button onclick="deleteComment('+i+')" class="btn btn-outline btn-sm" style="color:var(--pink)">✕</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function useComment(i){
+  var c = state.comments[i];
+  document.getElementById('commentInput').value = c.text;
+  switchTab('reply', document.querySelector('.tab'));
+  showToast('Loaded — generate a reply', 'success');
+}
+
+function copyComment(i){
+  navigator.clipboard.writeText(state.comments[i].reply);
+  increment('replies');
+  showToast('Copied!', 'success');
+}
+
+function markDone(i){
+  state.comments[i].done = !state.comments[i].done;
+  saveState();
+  renderCommentQueue();
+}
+
+function deleteComment(i){
+  state.comments.splice(i,1);
+  saveState();
+  renderCommentQueue();
+}
+
+// ── DM TEMPLATES ─────────────────────────────────────────────────
+var DM_TEMPLATES = [
+  {
+    trigger: '🎉 New Follower Welcome',
+    text: 'Hey [Name]! Saw you just followed — welcome to the 90-day mission 🙌 I\'m building an AI agent team to go from 295 → 1M followers and documenting every day publicly. Curious — what brought you here, the AI stuff or the growth challenge? Either way, excited to have you along for the ride.'
+  },
+  {
+    trigger: '🤔 Skeptic Response',
+    text: 'Totally fair to be skeptical — 90 days is aggressive. Here\'s what I know: the announcement reel got 36 follows in one day, all from people who\'d never heard of me. The AI system is real. Whether the goal is achievable or not, I\'m going to document exactly what happens either way. It\'s a better story if I fail, honestly. What would it take to convince you to watch?'
+  },
+  {
+    trigger: '🤝 Collab Request',
+    text: 'Appreciate you reaching out! Before I say yes to anything I always want to make sure there\'s real audience alignment — who do your followers typically work in? I\'m building specifically for people trying to understand and use AI agents in their work. If that\'s your audience too, absolutely worth a call. What did you have in mind?'
+  },
+  {
+    trigger: '❓ "How does it work?" DM',
+    text: 'Short version: I have 6 specialized AI agents — one for content scripting, one for analytics, one for engagement, one for strategy, one for reach optimization, and one for QA. They work together so I can produce and optimize content at scale. I\'m literally building this live — follow along and you\'ll see every piece come together over 90 days. What part are you most curious about?'
+  },
+  {
+    trigger: '💼 Brand Deal / Sponsorship Inquiry',
+    text: 'Thanks for reaching out! I\'m in the early phase of the mission — Day [X] of 90 — so I\'m selective about what I promote. I only work with tools I\'m actually using in the agent system. If your product fits that, I\'d love to see how you\'d position it. Send over your brief and I\'ll take a look.'
+  },
+];
+
+function renderDMTemplates(){
+  var el = document.getElementById('dmTemplateList');
+  el.innerHTML = DM_TEMPLATES.map(function(t,i){
+    return '<div class="dm-template" onclick="copyDM('+i+')">'+
+      '<div class="dt-trigger">'+t.trigger+'</div>'+
+      '<div class="dt-preview">'+t.text.substring(0,100)+'...</div>'+
+      '<div style="font-size:10px;color:var(--muted);margin-top:6px">Tap to copy full template</div>'+
+    '</div>';
+  }).join('');
+}
+
+function copyDM(i){
+  navigator.clipboard.writeText(DM_TEMPLATES[i].text);
+  increment('dms');
+  showToast('DM template copied!', 'success');
+}
+
+// ── COMMUNITY TARGETS ─────────────────────────────────────────────
+function renderCommunityTargets(){
+  var el = document.getElementById('communityTargets');
+  el.innerHTML = state.targets.map(function(t,i){
+    return '<div class="target-card">'+
+      '<div class="tc-icon">🎯</div>'+
+      '<div style="flex:1">'+
+        '<div class="tc-name">'+t.name+'</div>'+
+        '<div class="tc-desc">'+t.desc+'</div>'+
+      '</div>'+
+      '<button onclick="toggleTarget('+i+')" class="tc-action '+(t.done?'done':'pending')+'">'+
+        (t.done?'✓ Done':'Engage')+'</button>'+
+    '</div>';
+  }).join('');
+}
+
+function toggleTarget(i){
+  state.targets[i].done = !state.targets[i].done;
+  if(state.targets[i].done) increment('engaged');
+  saveState();
+  renderCommunityTargets();
+  updateScore();
+}
+
+function addTarget(){
+  var val = document.getElementById('newTarget').value.trim();
+  if(!val) return;
+  state.targets.push({ name:val, desc:'Custom target', done:false });
+  saveState();
+  renderCommunityTargets();
+  document.getElementById('newTarget').value = '';
+}
+
+// ── SCORE ─────────────────────────────────────────────────────────
+function increment(type){
+  var t = state.today;
+  if(type==='replies')  t.replies++;
+  if(type==='dms')      t.dms++;
+  if(type==='engaged')  t.engaged++;
+  if(type==='stories')  t.stories++;
+  saveState();
+  updateScore();
+  renderCommunityTargets();
+}
+
+function updateScore(){
+  var t = state.today;
+  document.getElementById('repliedCount').textContent  = t.replies;
+  document.getElementById('dmCount').textContent       = t.dms;
+  document.getElementById('engagedCount').textContent  = t.engaged;
+  document.getElementById('storiesCount').textContent  = t.stories;
+
+  // Score: 0-100 based on targets
+  var score = Math.min(100, Math.round(
+    (Math.min(t.replies,10)*3) +
+    (Math.min(t.dms,5)*4) +
+    (Math.min(t.engaged,10)*3)
+  ));
+  var ring = document.getElementById('scoreRing');
+  var val  = document.getElementById('scoreVal');
+  val.textContent = score+'%';
+  var color = score >= 80 ? 'var(--green)' : score >= 50 ? 'var(--gold)' : 'var(--pink)';
+  ring.style.borderColor = color;
+  val.style.color = color;
+}
+
+function resetDay(){
+  state.today = { replies:0, dms:0, engaged:0, stories:0, date:new Date().toDateString() };
+  state.targets.forEach(function(t){ t.done=false; });
+  saveState();
+  updateScore();
+  renderCommunityTargets();
+  showToast('Day reset!', 'success');
+}
+
+function resetDayIfNew(){
+  var today = new Date().toDateString();
+  if(state.today.date !== today){
+    state.today = { replies:0, dms:0, engaged:0, stories:0, date:today };
+    state.targets.forEach(function(t){ t.done=false; });
+    saveState();
+  }
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────
+function showToast(msg, type){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast '+(type||'');
+  setTimeout(function(){ t.classList.add('show'); }, 10);
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+</script>
+</body>
+</html>
