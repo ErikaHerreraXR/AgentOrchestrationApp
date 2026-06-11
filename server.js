@@ -276,6 +276,10 @@ const pages = {
   '/mk-engage':  'mk-engage.html',
   '/engage':     'mk-engage.html',
   '/community':  'mk-engage.html',
+  '/mk-command': 'mk-command.html',
+  '/command':    'mk-command.html',
+  '/os':         'mk-command.html',
+  '/agents':     'mk-command.html',
 };
 Object.entries(pages).forEach(([route, file]) => {
   app.get(route, (req, res) => res.sendFile(path.join(__dirname, file)));
