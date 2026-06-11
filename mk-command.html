@@ -5,543 +5,748 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Command Center — Metakittyz AI OS</title>
 <style>
+/* ── TOKENS ──────────────────────────────────────────────────── */
 :root{
   --pink:#FF2D78;--cyan:#00F5FF;--green:#00FF94;--gold:#FFD60A;
   --purple:#BF5AF2;--orange:#FF6B2B;--indigo:#7B61FF;--teal:#30D158;
   --bg:#07070D;--surface:#0F0F18;--card:#171724;--border:#252538;
   --text:#EEEEF8;--muted:#5E5E80;
   --font:'Inter',system-ui,sans-serif;
+  --bnav-h:64px;   /* mobile bottom nav height */
+  --tb-h:96px;     /* mobile topbar height (2 rows) */
+  --tb-hd:56px;    /* desktop topbar height */
+  --sb-w:220px;    /* desktop sidebar width */
+  --radius:14px;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:var(--font);display:flex;flex-direction:column}
 
-/* TOPBAR */
-.topbar{
-  flex-shrink:0;
-  background:rgba(7,7,13,.98);backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);
-  padding:0 20px;
-  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;
-  height:56px;
+/* ── RESET ───────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font);min-height:100vh;
+  /* mobile: natural scroll; desktop: see below */
 }
-.tb-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:var(--font);cursor:pointer}
+
+/* ══════════════════════════════════════════════════════════════
+   TOPBAR — 2 rows mobile, 1 row desktop
+══════════════════════════════════════════════════════════════ */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:rgba(7,7,13,.97);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+
+/* Row 1: brand + actions */
+.tb-r1{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;height:52px;
+}
+.tb-brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
 .tb-logo{
-  width:34px;height:34px;border-radius:9px;
+  width:34px;height:34px;border-radius:9px;flex-shrink:0;
   background:linear-gradient(135deg,var(--pink),var(--indigo));
   display:flex;align-items:center;justify-content:center;
-  font-size:15px;font-weight:900;color:#fff;letter-spacing:-.5px;
+  font-size:15px;font-weight:900;color:#fff;
 }
-.tb-name{font-size:14px;font-weight:800;color:var(--text)}
-.tb-mission{font-size:10px;color:var(--pink);font-weight:600;letter-spacing:.06em}
-.mission-bar{
-  display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;
-  justify-content:center;
-}
-.mission-bar::-webkit-scrollbar{display:none}
-.mb-stat{
+.tb-wordmark{display:flex;flex-direction:column;gap:1px}
+.tb-name{font-size:13px;font-weight:800;color:var(--text);line-height:1}
+.tb-sub{font-size:9px;color:var(--pink);font-weight:700;letter-spacing:.07em;line-height:1}
+
+.tb-spacer{flex:1}
+
+/* Agents button (mobile) */
+.btn-agents-open{
   display:flex;align-items:center;gap:6px;
+  background:rgba(123,97,255,.12);border:1px solid rgba(123,97,255,.3);
+  color:var(--indigo);font-size:12px;font-weight:700;
+  padding:7px 12px;border-radius:8px;flex-shrink:0;
+}
+
+/* Desktop quick nav */
+.tb-qnav{display:none;gap:2px}
+.tb-qnav a{
+  font-size:11px;font-weight:600;color:var(--muted);
+  text-decoration:none;padding:6px 10px;border-radius:6px;
+  transition:color .15s,background .15s;white-space:nowrap;
+}
+.tb-qnav a:hover{color:var(--text);background:var(--card)}
+
+/* Row 2: scrollable mission stats */
+.tb-r2{
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+  padding:0 16px 10px;
+}
+.tb-r2::-webkit-scrollbar{display:none}
+.ms-pill{
+  display:flex;align-items:center;gap:5px;
   background:var(--card);border:1px solid var(--border);
-  border-radius:20px;padding:5px 12px;white-space:nowrap;flex-shrink:0;
+  border-radius:20px;padding:5px 11px;white-space:nowrap;flex-shrink:0;
 }
-.mb-val{font-size:13px;font-weight:800}
-.mb-label{font-size:10px;color:var(--muted)}
-.mb-dot{width:7px;height:7px;border-radius:50%}
-.tb-nav{display:flex;gap:2px}
-.tb-nav a{font-size:11px;font-weight:600;color:var(--muted);text-decoration:none;padding:5px 9px;border-radius:6px;transition:all .15s;white-space:nowrap}
-.tb-nav a:hover{color:var(--text);background:var(--card)}
-.tb-nav a.active{color:var(--indigo);background:rgba(123,97,255,.12)}
+.ms-dot{width:7px;height:7px;border-radius:50%}
+.ms-val{font-size:12px;font-weight:800}
+.ms-lbl{font-size:10px;color:var(--muted)}
 
-/* MAIN LAYOUT */
-.layout{flex:1;display:grid;grid-template-columns:220px 1fr;overflow:hidden}
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{display:none}
+/* ══════════════════════════════════════════════════════════════
+   PAGE SHELL
+══════════════════════════════════════════════════════════════ */
+.page-shell{
+  display:flex;
+  /* mobile: single column, natural scroll */
+  padding-bottom:var(--bnav-h); /* room for bottom nav */
 }
 
-/* SIDEBAR */
-.sidebar{
-  background:var(--surface);border-right:1px solid var(--border);
-  overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;
-  padding:12px 8px;display:flex;flex-direction:column;gap:6px;
+/* ── SIDEBAR (desktop only) ───────────────────────────────── */
+.sidebar{display:none} /* hidden mobile */
+.sb-head{
+  font-size:9px;font-weight:700;letter-spacing:.1em;
+  color:var(--muted);text-transform:uppercase;
+  padding:4px 8px 6px;
 }
-.sidebar-head{
-  font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--muted);
-  text-transform:uppercase;padding:4px 8px 8px;
+.sb-tier{
+  font-size:9px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;padding:8px 8px 4px;
 }
-.agent-pill{
+.sb-div{height:1px;background:var(--border);margin:4px 8px}
+.ap{
   display:flex;align-items:center;gap:8px;
-  padding:9px 10px;border-radius:10px;cursor:pointer;
+  padding:9px 10px;border-radius:10px;
   border:1px solid transparent;transition:all .15s;
   background:transparent;text-align:left;width:100%;
 }
-.agent-pill:hover{background:var(--card);border-color:var(--border)}
-.agent-pill.active{background:var(--card);border-color:var(--border)}
+.ap:hover,.ap.sel{background:var(--card);border-color:var(--border)}
 .ap-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.ap-dot.pulse{animation:pulseGlow 2s infinite}
-@keyframes pulseGlow{0%,100%{opacity:1}50%{opacity:.4}}
-.ap-name{font-size:12px;font-weight:700;flex:1}
-.ap-role{font-size:9px;color:var(--muted)}
+.ap-dot.live{animation:liveDot 2s ease-in-out infinite}
+@keyframes liveDot{0%,100%{opacity:1}50%{opacity:.35}}
+.ap-info{flex:1;min-width:0}
+.ap-name{font-size:12px;font-weight:800;line-height:1}
+.ap-role{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ap-score{
-  font-size:10px;font-weight:700;
-  padding:2px 6px;border-radius:10px;
-  background:rgba(0,255,148,.1);color:var(--green);
+  font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;flex-shrink:0;
 }
-.ap-score.warn{background:rgba(255,214,10,.1);color:var(--gold)}
-.ap-score.fail{background:rgba(255,45,120,.1);color:var(--pink)}
-.sidebar-div{height:1px;background:var(--border);margin:4px 8px}
+.sc-good{background:rgba(0,255,148,.12);color:var(--green)}
+.sc-warn{background:rgba(255,214,10,.12);color:var(--gold)}
+.sc-fail{background:rgba(255,45,120,.12);color:var(--pink)}
 
-/* MAIN CONTENT */
-.main-content{overflow-y:auto;display:flex;flex-direction:column}
+/* ── MAIN AREA ────────────────────────────────────────────── */
+.main-area{flex:1;min-width:0;display:flex;flex-direction:column}
 
-/* TABS */
-.tab-bar{
-  flex-shrink:0;
-  display:flex;gap:0;border-bottom:1px solid var(--border);
-  background:var(--surface);padding:0 20px;overflow-x:auto;scrollbar-width:none;
+/* Desktop tab bar (hidden mobile, shown desktop) */
+.dtab-bar{
+  display:none;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 20px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;
 }
-.tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{
-  padding:14px 16px;font-size:12px;font-weight:700;
+.dtab-bar::-webkit-scrollbar{display:none}
+.dtab{
+  padding:14px 15px;font-size:12px;font-weight:700;
   color:var(--muted);background:transparent;border:none;
   cursor:pointer;transition:all .15s;white-space:nowrap;
   border-bottom:2px solid transparent;margin-bottom:-1px;
 }
-.tab-btn:hover{color:var(--text)}
-.tab-btn.active{color:var(--text);border-bottom-color:var(--indigo)}
+.dtab:hover{color:var(--text)}
+.dtab.act{color:var(--text);border-bottom-color:var(--indigo)}
 
-/* TAB CONTENT */
-.tab-content{flex:1;padding:20px;display:none}
-.tab-content.active{display:block}
+/* ── TAB CONTENTS ─────────────────────────────────────────── */
+.tab-pane{display:none;padding:16px}
+.tab-pane.act{display:block}
 
-/* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+/* ══════════════════════════════════════════════════════════════
+   BOTTOM NAV (mobile only)
+══════════════════════════════════════════════════════════════ */
+.bnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:var(--bnav-h);
+  background:rgba(7,7,13,.97);backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:stretch;
+}
+.bn-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;background:transparent;border:none;
+  color:var(--muted);font-size:9px;font-weight:700;letter-spacing:.04em;
+  transition:color .15s;padding:0 4px;text-transform:uppercase;
+}
+.bn-item.act{color:var(--indigo)}
+.bn-icon{font-size:20px;line-height:1}
 
-.section-title{
-  font-size:11px;font-weight:700;letter-spacing:.08em;
-  color:var(--muted);text-transform:uppercase;margin-bottom:12px;
+/* ══════════════════════════════════════════════════════════════
+   AGENT DRAWER (mobile)
+══════════════════════════════════════════════════════════════ */
+.drawer-overlay{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
 }
-.block-title{font-size:15px;font-weight:800;margin-bottom:4px}
-.block-sub{font-size:11px;color:var(--muted)}
+.drawer-overlay.open{display:block}
+.agent-drawer{
+  position:fixed;bottom:0;left:0;right:0;z-index:301;
+  background:var(--surface);border-top:1px solid var(--border);
+  border-radius:20px 20px 0 0;
+  padding:0 0 calc(env(safe-area-inset-bottom,0px) + 8px);
+  transform:translateY(100%);transition:transform .3s ease;
+  max-height:80vh;display:flex;flex-direction:column;
+}
+.agent-drawer.open{transform:translateY(0)}
+.drawer-handle{
+  width:40px;height:4px;border-radius:2px;background:var(--border);
+  margin:12px auto 4px;flex-shrink:0;
+}
+.drawer-title{
+  font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.08em;
+  text-transform:uppercase;padding:8px 16px 12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.drawer-close{
+  background:transparent;border:none;color:var(--muted);font-size:20px;
+  padding:0;line-height:1;
+}
+.drawer-scroll{overflow-y:auto;padding:0 10px 10px;flex:1}
 
-/* GRADE CARDS */
-.grade-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
-.grade-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:14px;text-align:center;
+/* ══════════════════════════════════════════════════════════════
+   CARDS & LAYOUT PRIMITIVES
+══════════════════════════════════════════════════════════════ */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px;
 }
-.grade-letter{font-size:32px;font-weight:900;line-height:1}
-.grade-area{font-size:11px;color:var(--muted);margin-top:4px}
-.grade-note{font-size:10px;margin-top:6px;line-height:1.4}
-.grade-A{color:var(--green)}
-.grade-B{color:var(--cyan)}
-.grade-C{color:var(--gold)}
-.grade-D{color:var(--orange)}
-.grade-F{color:var(--pink)}
+.card+.card,.card+.g2,.card+.g3,.g2+.card,.g3+.card,.g2+.g2,.g3+.g3{margin-top:12px}
 
-/* COMPLIANCE */
-.compliance-table{width:100%;border-collapse:collapse}
-.compliance-table th{
-  font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
-  color:var(--muted);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);
-}
-.compliance-table td{
-  padding:10px 10px;font-size:12px;border-bottom:1px solid rgba(37,37,56,.6);
-  vertical-align:top;
-}
-.compliance-table tr:last-child td{border-bottom:none}
-.check-pass{color:var(--green);font-weight:700}
-.check-warn{color:var(--gold);font-weight:700}
-.check-fail{color:var(--pink);font-weight:700}
-.score-badge{
-  display:inline-block;padding:2px 8px;border-radius:20px;
-  font-size:11px;font-weight:700;
-}
+.g2{display:grid;grid-template-columns:1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr;gap:12px}
 
-/* SYSTEM PROMPT */
-.prompt-box{
-  background:var(--surface);border:1px solid var(--border);border-radius:10px;
-  padding:18px;font-family:'Courier New',monospace;font-size:11px;
-  line-height:1.7;color:var(--text);white-space:pre-wrap;
-  max-height:500px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+.sec-lbl{
+  font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:10px;
 }
-.prompt-section{color:var(--cyan);font-weight:700}
-.prompt-agent{color:var(--gold)}
-.prompt-rule{color:var(--green)}
+.page-title{font-size:17px;font-weight:800;margin-bottom:3px}
+.page-sub{font-size:12px;color:var(--muted)}
 
-/* ACTIVITY FEED */
-.feed{display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto}
-.feed-item{
-  display:flex;gap:10px;align-items:flex-start;
-  padding:10px;background:var(--surface);border-radius:8px;
-  border-left:3px solid;
-}
-.fi-icon{font-size:16px;flex-shrink:0;margin-top:1px}
-.fi-text{font-size:12px;line-height:1.5}
-.fi-time{font-size:10px;color:var(--muted);margin-top:2px}
-
-/* METRIC ROWS */
-.metric-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:10px 0;border-bottom:1px solid var(--border);
-}
-.metric-row:last-child{border-bottom:none}
-.mr-label{font-size:12px;color:var(--muted)}
-.mr-val{font-size:14px;font-weight:800}
-.mr-target{font-size:10px;color:var(--muted)}
-.mr-bar{
-  width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;
-}
-.mr-fill{height:100%;border-radius:2px;transition:width .5s}
-
-/* BUTTONS */
+/* ── BUTTONS ─────────────────────────────────────────────── */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
   border:none;cursor:pointer;font-family:var(--font);font-weight:700;
-  border-radius:9px;transition:all .15s;
+  border-radius:10px;transition:all .15s;
 }
 .btn-primary{
-  background:linear-gradient(135deg,var(--indigo),var(--purple));color:#fff;
-  padding:11px 18px;font-size:13px;
+  background:linear-gradient(135deg,var(--indigo),var(--purple));
+  color:#fff;padding:12px 18px;font-size:13px;width:100%;
 }
-.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-primary:hover{opacity:.88}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
 .btn-outline{
-  background:transparent;border:1px solid var(--border);color:var(--text);
-  padding:8px 14px;font-size:12px;
+  background:transparent;border:1px solid var(--border);
+  color:var(--text);padding:9px 14px;font-size:12px;
 }
 .btn-outline:hover{border-color:var(--indigo);color:var(--indigo)}
-.btn-sm{padding:6px 12px;font-size:11px;border-radius:7px}
-.btn-run{
-  background:rgba(123,97,255,.15);border:1px solid rgba(123,97,255,.4);
-  color:var(--indigo);padding:7px 13px;font-size:11px;
+.btn-sm{padding:7px 13px;font-size:11px;border-radius:8px}
+.btn-ghost{
+  background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.25);
+  color:var(--indigo);padding:7px 13px;font-size:11px;border-radius:8px;
 }
-.btn-run:hover{background:rgba(123,97,255,.25)}
+.btn-ghost:hover{background:rgba(123,97,255,.2)}
 
-/* AGENT DETAIL PANEL */
-.agent-detail{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:16px;margin-bottom:14px;
+.row-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+/* ── FORM ELEMENTS ───────────────────────────────────────── */
+.field-lbl{
+  display:block;font-size:10px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;
 }
-.ad-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.ad-color{width:10px;height:10px;border-radius:50%}
-.ad-name{font-size:14px;font-weight:800}
-.ad-role{font-size:11px;color:var(--muted);flex:1}
+select,textarea,input{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  color:var(--text);font-family:var(--font);font-size:13px;
+  border-radius:9px;padding:10px 13px;transition:border-color .15s;
+}
+select:focus,textarea:focus,input:focus{outline:none;border-color:var(--indigo)}
+textarea{resize:vertical;min-height:90px;line-height:1.6}
+
+/* ── STATS ROW ───────────────────────────────────────────── */
+.stat-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.stat-chip{
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:5px 12px;
+}
+.sc-dot{width:7px;height:7px;border-radius:50%}
+.sc-val{font-size:12px;font-weight:800}
+.sc-lbl{font-size:10px;color:var(--muted)}
+
+/* ── METRICS ─────────────────────────────────────────────── */
+.metric-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.metric-item:last-child{border-bottom:none}
+.mi-lbl{font-size:12px;color:var(--muted)}
+.mi-tgt{font-size:10px;color:var(--muted);margin-top:1px}
+.mi-val{font-size:14px;font-weight:800}
+.mi-bar{width:64px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:4px}
+.mi-fill{height:100%;border-radius:2px}
+
+/* ── GRADES ──────────────────────────────────────────────── */
+.grade-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.grade-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:12px;text-align:center;
+}
+.g-letter{font-size:28px;font-weight:900;line-height:1}
+.g-area{font-size:10px;color:var(--muted);margin-top:3px}
+.g-note{font-size:10px;line-height:1.4;color:var(--muted);margin-top:5px;display:none}
+
+/* ── FEED ────────────────────────────────────────────────── */
+.feed{display:flex;flex-direction:column;gap:7px}
+.fi{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:10px 12px;background:var(--surface);border-radius:9px;
+  border-left:3px solid;
+}
+.fi-ico{font-size:15px;flex-shrink:0;margin-top:1px}
+.fi-body{flex:1;min-width:0}
+.fi-text{font-size:12px;line-height:1.5}
+.fi-time{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* ── AGENT STATUS GRID ───────────────────────────────────── */
+.agent-status-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:6px;
+}
+.asg-cell{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:9px;padding:8px 4px;text-align:center;
+}
+.asg-dot{width:7px;height:7px;border-radius:50%;margin:0 auto 4px}
+.asg-name{font-size:10px;font-weight:800}
+.asg-role{font-size:8px;color:var(--muted);margin-top:1px}
+
+/* ── TARGETS ─────────────────────────────────────────────── */
+.target-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid var(--border);
+}
+.target-row:last-child{border-bottom:none}
+.tr-lbl{font-size:12px;color:var(--muted)}
+.tr-val{font-size:12px;font-weight:700}
+
+/* ── COMPLIANCE ──────────────────────────────────────────── */
+.comply-block{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:14px;margin-bottom:10px;
+}
+.cb-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.cb-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.cb-name{font-size:13px;font-weight:800}
+.cb-role{font-size:11px;color:var(--muted);flex:1}
+.cb-score{
+  font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid;
+}
 .check-list{display:flex;flex-direction:column;gap:5px}
-.check-item{display:flex;align-items:center;gap:8px;font-size:11px}
-.check-box{
+.ci{display:flex;align-items:flex-start;gap:8px;font-size:11px;line-height:1.4}
+.ci-box{
   width:14px;height:14px;border-radius:4px;border:1px solid var(--border);
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:9px;margin-top:1px;
 }
-.check-box.pass{background:rgba(0,255,148,.15);border-color:var(--green);color:var(--green)}
-.check-box.fail{background:rgba(255,45,120,.1);border-color:var(--pink);color:var(--pink)}
-.check-box.warn{background:rgba(255,214,10,.1);border-color:var(--gold);color:var(--gold)}
+.ci-box.pass{background:rgba(0,255,148,.15);border-color:var(--green);color:var(--green)}
+.ci-box.warn{background:rgba(255,214,10,.1);border-color:var(--gold);color:var(--gold)}
+.ci-box.fail{background:rgba(255,45,120,.1);border-color:var(--pink);color:var(--pink)}
 
-/* INTEL CARDS */
-.intel-card{
+/* ── SYSTEM PROMPT BOX ───────────────────────────────────── */
+.prompt-wrap{position:relative}
+.prompt-box{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:16px;font-family:'Courier New',monospace;font-size:11px;
+  line-height:1.75;white-space:pre-wrap;color:var(--text);
+  max-height:60vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+}
+.prompt-box::-webkit-scrollbar{width:4px}
+.prompt-box::-webkit-scrollbar-track{background:transparent}
+.prompt-box::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* ── RUN AGENT OUTPUT ────────────────────────────────────── */
+.agent-out{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:14px;min-height:200px;
+  font-size:12px;line-height:1.8;white-space:pre-wrap;
+  color:var(--muted);margin-top:12px;
+}
+.agent-out.ready{color:var(--text);border-color:var(--indigo)}
+
+/* ── INTEL ITEMS ─────────────────────────────────────────── */
+.intel-item{
+  padding:10px 0;border-bottom:1px solid var(--border);
+  font-size:12px;
+}
+.intel-item:last-child{border-bottom:none}
+.ii-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:3px}
+.ii-title{font-size:12px;font-weight:700}
+.ii-badge{
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;
+  white-space:nowrap;flex-shrink:0;
+}
+.ii-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* ── PHASE CARDS ─────────────────────────────────────────── */
+.phase-card{
+  border:1px solid var(--border);border-radius:11px;
+  padding:13px;margin-bottom:8px;border-left-width:3px;
+}
+.pc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.pc-name{font-size:12px;font-weight:800}
+.pc-status{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg);color:var(--muted)}
+.pc-range{font-size:10px;color:var(--muted);margin-bottom:6px}
+.pc-desc{font-size:11px;color:var(--text);line-height:1.5}
+
+/* ── AUDIENCE PROFILE ────────────────────────────────────── */
+.profile-card{
   border:1px solid var(--border);border-radius:12px;padding:14px;
-  background:var(--surface);
 }
-.ic-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px}
-.ic-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px}
-.ic-item:last-child{border-bottom:none}
+.prof-top{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.prof-icon{font-size:28px}
+.prof-title{font-size:12px;font-weight:700}
+.prof-meta{font-size:10px;color:var(--muted)}
 
-/* PROGRESS RING SVG */
-.progress-ring-container{display:flex;align-items:center;justify-content:center;flex-direction:column}
+/* ── ANALYSIS LISTS ──────────────────────────────────────── */
+.analysis-item{
+  display:flex;gap:10px;padding:11px;border-radius:10px;
+  border:1px solid;margin-bottom:6px;
+}
+.ai-icon{font-size:18px;flex-shrink:0}
+.ai-title{font-size:12px;font-weight:700;margin-bottom:2px}
+.ai-desc{font-size:11px;color:var(--muted);line-height:1.5}
 
-/* TOAST */
+/* ── MISSION PROGRESS BAR ────────────────────────────────── */
+.mission-progress{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:14px;margin-bottom:12px;
+}
+.mp-labels{
+  display:flex;justify-content:space-between;
+  font-size:10px;color:var(--muted);margin-bottom:7px;
+}
+.mp-track{height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+.mp-fill{
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--pink),var(--indigo));
+  transition:width 1.2s ease;
+}
+.mp-row{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:10px;
+}
+.mp-followers{font-size:20px;font-weight:900;color:var(--pink)}
+.mp-goal{font-size:12px;color:var(--muted)}
+.mp-pct{font-size:11px;color:var(--indigo);font-weight:700}
+
+/* ── TOAST ───────────────────────────────────────────────── */
 .toast{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);
-  background:var(--card);border:1px solid var(--border);border-radius:9px;
-  padding:10px 18px;font-size:12px;font-weight:600;
-  transition:transform .25s;z-index:9999;pointer-events:none;
+  position:fixed;bottom:calc(var(--bnav-h) + 12px);left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:var(--card);border:1px solid var(--border);
+  border-radius:9px;padding:10px 18px;font-size:12px;font-weight:600;
+  opacity:0;transition:opacity .25s,transform .25s;
+  z-index:999;white-space:nowrap;pointer-events:none;
 }
-.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{border-color:var(--green);color:var(--green)}
 .toast.err{border-color:var(--pink);color:var(--pink)}
 
-/* AGENT RUN OUTPUT */
-.run-output{
-  background:var(--bg);border:1px solid var(--border);border-radius:10px;
-  padding:14px;font-size:12px;line-height:1.8;white-space:pre-wrap;
-  margin-top:12px;display:none;
+/* ══════════════════════════════════════════════════════════════
+   DESKTOP OVERRIDES (≥900px)
+══════════════════════════════════════════════════════════════ */
+@media(min-width:900px){
+  html,body{height:100%;overflow:hidden}
+  body{display:flex;flex-direction:column}
+
+  /* Topbar: single row */
+  .tb-r1{height:var(--tb-hd);padding:0 20px}
+  .tb-r2{display:none}
+  .btn-agents-open{display:none}
+  .tb-qnav{display:flex}
+  /* Inject mission stats inline on desktop */
+  .tb-stats-desktop{
+    display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;
+    flex:1;justify-content:center;
+  }
+  .tb-stats-desktop::-webkit-scrollbar{display:none}
+
+  /* Page shell */
+  .page-shell{flex:1;overflow:hidden;padding-bottom:0}
+
+  /* Sidebar */
+  .sidebar{
+    display:flex;flex-direction:column;
+    width:var(--sb-w);flex-shrink:0;
+    background:var(--surface);border-right:1px solid var(--border);
+    overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+    padding:10px 8px;gap:3px;
+  }
+
+  /* Main area */
+  .main-area{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+  .dtab-bar{display:flex}
+  .tab-pane{overflow-y:auto;flex:1}
+
+  /* Bottom nav hidden */
+  .bnav{display:none}
+
+  /* Toast positioning */
+  .toast{bottom:16px}
+
+  /* Grid breakpoints */
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr 1fr 1fr}
+  .grade-grid{grid-template-columns:repeat(4,1fr)}
+  .agent-status-grid{grid-template-columns:repeat(5,1fr)}
+
+  /* Show grade notes on desktop */
+  .g-note{display:block}
+
+  /* Card padding */
+  .card{padding:18px}
+  .tab-pane{padding:18px}
 }
-.run-output.visible{display:block}
+
+@media(min-width:1200px){
+  .grade-grid{grid-template-columns:repeat(6,1fr)}
+}
+
+/* Medium screens */
+@media(min-width:640px) and (max-width:899px){
+  .grade-grid{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
+<!-- ═══════════════════════════════════════════
+     TOPBAR
+════════════════════════════════════════════ -->
 <header class="topbar">
-  <a class="tb-brand" href="/">
-    <div class="tb-logo">MK</div>
-    <div>
-      <div class="tb-name">Metakittyz AI OS</div>
-      <div class="tb-mission">COMMAND CENTER</div>
-    </div>
-  </a>
+  <div class="tb-r1">
+    <a class="tb-brand" href="/">
+      <div class="tb-logo">MK</div>
+      <div class="tb-wordmark">
+        <span class="tb-name">Metakittyz AI OS</span>
+        <span class="tb-sub">COMMAND CENTER</span>
+      </div>
+    </a>
 
-  <div class="mission-bar">
-    <div class="mb-stat">
-      <div class="mb-dot" style="background:var(--pink);animation:pulseGlow 1.5s infinite"></div>
-      <span class="mb-val" id="mbDay">1</span>
-      <span class="mb-label">/ 90 days</span>
+    <!-- Desktop: mission stats inline -->
+    <div class="tb-stats-desktop">
+      <div class="ms-pill"><div class="ms-dot" style="background:var(--pink);animation:liveDot 1.5s infinite"></div><span class="ms-val" id="d_day">1</span><span class="ms-lbl">/ 90 days</span></div>
+      <div class="ms-pill"><div class="ms-dot" style="background:var(--green)"></div><span class="ms-val" id="d_flw">334</span><span class="ms-lbl">followers</span></div>
+      <div class="ms-pill"><div class="ms-dot" style="background:var(--gold)"></div><span class="ms-val" id="d_need">11,186</span><span class="ms-lbl">needed/day</span></div>
+      <div class="ms-pill"><div class="ms-dot" style="background:var(--cyan)"></div><span class="ms-val" id="d_pct">0.03%</span><span class="ms-lbl">to goal</span></div>
+      <div class="ms-pill"><div class="ms-dot" style="background:var(--pink)"></div><span class="ms-val" style="color:var(--pink)">BEHIND</span><span class="ms-lbl">pace</span></div>
     </div>
-    <div class="mb-stat">
-      <div class="mb-dot" style="background:var(--green)"></div>
-      <span class="mb-val" id="mbFollowers">334</span>
-      <span class="mb-label">followers</span>
-    </div>
-    <div class="mb-stat">
-      <div class="mb-dot" style="background:var(--gold)"></div>
-      <span class="mb-val" id="mbNeeded">11,186</span>
-      <span class="mb-label">needed/day</span>
-    </div>
-    <div class="mb-stat">
-      <div class="mb-dot" style="background:var(--cyan)"></div>
-      <span class="mb-val" id="mbPct">0.03%</span>
-      <span class="mb-label">to goal</span>
-    </div>
-    <div class="mb-stat" id="mbStatus">
-      <div class="mb-dot" style="background:var(--pink)"></div>
-      <span class="mb-val" style="color:var(--pink)">BEHIND</span>
-      <span class="mb-label">pace</span>
-    </div>
+
+    <div class="tb-spacer"></div>
+
+    <!-- Mobile: agents button -->
+    <button class="btn-agents-open" onclick="openDrawer()">🤖 Agents</button>
+
+    <!-- Desktop: quick nav -->
+    <nav class="tb-qnav">
+      <a href="/mk-content">✍️ Studio</a>
+      <a href="/mk-engage">💬 Engage</a>
+      <a href="/mk-live">📊 Live</a>
+      <a href="/journey">🗺️</a>
+    </nav>
   </div>
 
-  <nav class="tb-nav">
-    <a href="/mk-content">✍️ Studio</a>
-    <a href="/mk-engage">💬 Engage</a>
-    <a href="/mk-live">📊 Live</a>
-    <a href="/journey">🗺️</a>
-  </nav>
+  <!-- Mobile row 2: scrollable stats -->
+  <div class="tb-r2">
+    <div class="ms-pill"><div class="ms-dot" style="background:var(--pink);animation:liveDot 1.5s infinite"></div><span class="ms-val" id="m_day">1</span><span class="ms-lbl">/ 90 days</span></div>
+    <div class="ms-pill"><div class="ms-dot" style="background:var(--green)"></div><span class="ms-val" id="m_flw">334</span><span class="ms-lbl">followers</span></div>
+    <div class="ms-pill"><div class="ms-dot" style="background:var(--gold)"></div><span class="ms-val" id="m_need">11,186</span><span class="ms-lbl">/day needed</span></div>
+    <div class="ms-pill"><div class="ms-dot" style="background:var(--cyan)"></div><span class="ms-val" id="m_pct">0.03%</span><span class="ms-lbl">to 1M</span></div>
+    <div class="ms-pill" style="border-color:rgba(255,45,120,.3)"><div class="ms-dot" style="background:var(--pink)"></div><span class="ms-val" style="color:var(--pink)">BEHIND PACE</span></div>
+  </div>
 </header>
 
-<!-- LAYOUT -->
-<div class="layout">
+<!-- ═══════════════════════════════════════════
+     PAGE SHELL
+════════════════════════════════════════════ -->
+<div class="page-shell">
 
-  <!-- SIDEBAR: AGENT ROSTER -->
-  <aside class="sidebar">
-    <div class="sidebar-head">10-Agent Roster</div>
-
-    <!-- TIER 1 -->
-    <div class="sidebar-head" style="padding-top:0;color:var(--indigo)">TIER 1 · COMMAND</div>
-    <button class="agent-pill active" onclick="selectAgent('matrix',this)">
-      <div class="ap-dot pulse" style="background:var(--indigo)"></div>
-      <div><div class="ap-name">MATRIX</div><div class="ap-role">Orchestrator</div></div>
-      <span class="ap-score" id="score-matrix">92</span>
-    </button>
-
-    <div class="sidebar-div"></div>
-    <div class="sidebar-head" style="padding-top:0;color:var(--gold)">TIER 2 · INTELLIGENCE</div>
-    <button class="agent-pill" onclick="selectAgent('pulse',this)">
-      <div class="ap-dot pulse" style="background:var(--green)"></div>
-      <div><div class="ap-name">PULSE</div><div class="ap-role">Analytics Engine</div></div>
-      <span class="ap-score warn" id="score-pulse">68</span>
-    </button>
-    <button class="agent-pill" onclick="selectAgent('signal',this)">
-      <div class="ap-dot" style="background:var(--gold)"></div>
-      <div><div class="ap-name">SIGNAL</div><div class="ap-role">Trend Intelligence</div></div>
-      <span class="ap-score" id="score-signal">85</span>
-    </button>
-
-    <div class="sidebar-div"></div>
-    <div class="sidebar-head" style="padding-top:0;color:var(--pink)">TIER 3 · CONTENT</div>
-    <button class="agent-pill" onclick="selectAgent('nova',this)">
-      <div class="ap-dot pulse" style="background:var(--pink)"></div>
-      <div><div class="ap-name">NOVA</div><div class="ap-role">Content Strategist</div></div>
-      <span class="ap-score" id="score-nova">88</span>
-    </button>
-    <button class="agent-pill" onclick="selectAgent('scholar',this)">
-      <div class="ap-dot" style="background:var(--teal)"></div>
-      <div><div class="ap-name">SCHOLAR</div><div class="ap-role">Harvard AI Translator</div></div>
-      <span class="ap-score warn" id="score-scholar">74</span>
-    </button>
-    <button class="agent-pill" onclick="selectAgent('spark',this)">
-      <div class="ap-dot" style="background:var(--orange)"></div>
-      <div><div class="ap-name">SPARK</div><div class="ap-role">Viral Optimizer</div></div>
-      <span class="ap-score warn" id="score-spark">71</span>
-    </button>
-
-    <div class="sidebar-div"></div>
-    <div class="sidebar-head" style="padding-top:0;color:var(--cyan)">TIER 4 · ENGAGEMENT</div>
-    <button class="agent-pill" onclick="selectAgent('aria',this)">
-      <div class="ap-dot" style="background:var(--cyan)"></div>
-      <div><div class="ap-name">ARIA</div><div class="ap-role">Engagement Director</div></div>
-      <span class="ap-score fail" id="score-aria">41</span>
-    </button>
-    <button class="agent-pill" onclick="selectAgent('echo',this)">
-      <div class="ap-dot" style="background:var(--purple)"></div>
-      <div><div class="ap-name">ECHO</div><div class="ap-role">Community Architect</div></div>
-      <span class="ap-score fail" id="score-echo">32</span>
-    </button>
-
-    <div class="sidebar-div"></div>
-    <div class="sidebar-head" style="padding-top:0;color:var(--orange)">TIER 5 · DISTRIBUTION</div>
-    <button class="agent-pill" onclick="selectAgent('reach',this)">
-      <div class="ap-dot" style="background:var(--orange)"></div>
-      <div><div class="ap-name">REACH</div><div class="ap-role">Distribution Engine</div></div>
-      <span class="ap-score warn" id="score-reach">66</span>
-    </button>
-
-    <div class="sidebar-div"></div>
-    <div class="sidebar-head" style="padding-top:0;color:var(--purple)">TIER 6 · QUALITY</div>
-    <button class="agent-pill" onclick="selectAgent('guardian',this)">
-      <div class="ap-dot" style="background:var(--purple)"></div>
-      <div><div class="ap-name">GUARDIAN</div><div class="ap-role">QA & Compliance</div></div>
-      <span class="ap-score" id="score-guardian">90</span>
-    </button>
+  <!-- SIDEBAR (desktop) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">10-Agent Roster</div>
+    <!-- agents injected by JS -->
   </aside>
 
-  <!-- MAIN CONTENT -->
-  <div class="main-content">
+  <!-- MAIN AREA -->
+  <div class="main-area">
 
-    <!-- TAB BAR -->
-    <div class="tab-bar">
-      <button class="tab-btn active" onclick="showTab('command',this)">⚡ Command</button>
-      <button class="tab-btn" onclick="showTab('analysis',this)">📊 Account Analysis</button>
-      <button class="tab-btn" onclick="showTab('system',this)">🧠 System Prompt</button>
-      <button class="tab-btn" onclick="showTab('compliance',this)">✅ Compliance</button>
-      <button class="tab-btn" onclick="showTab('agent',this)">🤖 Run Agent</button>
-      <button class="tab-btn" onclick="showTab('intel',this)">🔭 Intelligence</button>
+    <!-- Desktop tab bar -->
+    <div class="dtab-bar">
+      <button class="dtab act" onclick="showTab('command',this)">⚡ Command</button>
+      <button class="dtab" onclick="showTab('analysis',this)">📊 Analysis</button>
+      <button class="dtab" onclick="showTab('system',this)">🧠 System Prompt</button>
+      <button class="dtab" onclick="showTab('comply',this)">✅ Compliance</button>
+      <button class="dtab" onclick="showTab('run',this)">🤖 Run Agent</button>
+      <button class="dtab" onclick="showTab('intel',this)">🔭 Intelligence</button>
     </div>
 
-    <!-- ══════════════════════════════════════
-         TAB: COMMAND
-    ══════════════════════════════════════ -->
-    <div id="tab-command" class="tab-content active">
-      <div style="display:grid;grid-template-columns:1fr 320px;gap:14px">
+    <!-- ── TAB: COMMAND ─────────────────────────────── -->
+    <div id="tab-command" class="tab-pane act">
 
-        <!-- LEFT: AGENT STATUS + ACTIVITY -->
-        <div>
-          <div class="card" style="margin-bottom:14px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-              <div class="block-title">🎯 Mission Status — Day <span id="dayDisplay">1</span>/90</div>
-              <button class="btn btn-primary btn-sm" onclick="runOrchestration()">⚡ Run Full Orchestration</button>
-            </div>
-
-            <!-- PROGRESS BAR TO 1M -->
-            <div style="margin-bottom:16px">
-              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px">
-                <span>295 start</span>
-                <span id="progressLabel">334 / 1,000,000</span>
-                <span>1M goal</span>
-              </div>
-              <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">
-                <div id="missionProgress" style="height:100%;background:linear-gradient(90deg,var(--pink),var(--indigo));border-radius:3px;transition:width 1s;width:0.039%"></div>
-              </div>
-            </div>
-
-            <!-- AGENT STATUS GRID -->
-            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px" id="agentStatusGrid"></div>
-          </div>
-
-          <!-- ACTIVITY FEED -->
-          <div class="card">
-            <div class="section-title">Live Activity Feed</div>
-            <div class="feed" id="activityFeed"></div>
-          </div>
+      <!-- Mission progress -->
+      <div class="mission-progress">
+        <div class="mp-labels">
+          <span>295 start</span>
+          <span id="progLabel">334 / 1,000,000</span>
+          <span>1M goal</span>
         </div>
+        <div class="mp-track"><div class="mp-fill" id="progFill" style="width:.039%"></div></div>
+        <div class="mp-row">
+          <div>
+            <div class="mp-followers" id="progFollowers">334</div>
+            <div class="mp-goal">of 1,000,000 goal</div>
+          </div>
+          <div style="text-align:right">
+            <div class="mp-pct" id="progPct">0.039% there</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px">Day <span id="progDay">1</span>/90</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="runOrchestration()">⚡ Run Orchestration</button>
+        </div>
+      </div>
 
-        <!-- RIGHT: METRICS -->
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <div class="card">
-            <div class="section-title">Critical Metrics</div>
+      <!-- Agent status grid -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-lbl">Agent Status</div>
+        <div class="agent-status-grid" id="agentStatusGrid"></div>
+      </div>
+
+      <!-- 2-col: feed + metrics -->
+      <div class="g2">
+        <div class="card">
+          <div class="sec-lbl">Live Activity Feed</div>
+          <div class="feed" id="activityFeed"></div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:12px">
+            <div class="sec-lbl">Critical Metrics</div>
             <div id="metricsPanel"></div>
           </div>
           <div class="card">
-            <div class="section-title">Today's Targets</div>
+            <div class="sec-lbl">Today's Targets</div>
             <div id="todayTargets"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         TAB: ACCOUNT ANALYSIS
-    ══════════════════════════════════════ -->
-    <div id="tab-analysis" class="tab-content">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <!-- ── TAB: ANALYSIS ────────────────────────────── -->
+    <div id="tab-analysis" class="tab-pane">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap">
         <div>
-          <div class="block-title">Account State Analysis — Day 1/90 Baseline</div>
-          <div class="block-sub">Based on 48-hour performance data from first 3 posts</div>
+          <div class="page-title">Account State Analysis</div>
+          <div class="page-sub">Day 1/90 baseline — 48-hour data from first 3 posts</div>
         </div>
-        <div style="background:rgba(255,45,120,.1);border:1px solid rgba(255,45,120,.3);border-radius:10px;padding:10px 16px;text-align:center">
-          <div style="font-size:28px;font-weight:900;color:var(--pink)">D+</div>
-          <div style="font-size:10px;color:var(--muted)">OVERALL GRADE</div>
+        <div style="background:rgba(255,45,120,.1);border:1px solid rgba(255,45,120,.3);border-radius:12px;padding:10px 16px;text-align:center;flex-shrink:0">
+          <div style="font-size:26px;font-weight:900;color:var(--pink)">D+</div>
+          <div style="font-size:9px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">Overall</div>
         </div>
       </div>
 
-      <div class="grade-grid" style="margin-bottom:20px" id="gradeGrid"></div>
+      <div class="grade-grid" id="gradeGrid" style="margin-bottom:14px"></div>
 
-      <div class="grid2">
+      <div class="g2">
         <div class="card">
-          <div class="section-title">What's Working (Protect These)</div>
-          <div style="display:flex;flex-direction:column;gap:10px" id="workingList"></div>
+          <div class="sec-lbl" style="color:var(--green)">✅ What's Working — Protect These</div>
+          <div id="workingList"></div>
         </div>
         <div class="card">
-          <div class="section-title">Critical Failures (Fix First)</div>
-          <div style="display:flex;flex-direction:column;gap:10px" id="failList"></div>
+          <div class="sec-lbl" style="color:var(--pink)">🔴 Critical Failures — Fix First</div>
+          <div id="failList"></div>
         </div>
       </div>
 
-      <div class="card" style="margin-top:14px">
-        <div class="section-title">Target Market Profile</div>
-        <div class="grid3" id="audienceProfile"></div>
+      <div class="card">
+        <div class="sec-lbl">Target Market Profile</div>
+        <div class="g3" id="audienceProfile"></div>
       </div>
 
-      <div class="card" style="margin-top:14px">
-        <div class="section-title">Harvard AI Angle — The Unfair Advantage</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" id="harvardAdvantage"></div>
+      <div class="card">
+        <div class="sec-lbl" style="color:var(--gold)">🎓 Harvard AI — The Unfair Advantage</div>
+        <div class="g2" id="harvardAdvantage"></div>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         TAB: SYSTEM PROMPT
-    ══════════════════════════════════════ -->
-    <div id="tab-system" class="tab-content">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <!-- ── TAB: SYSTEM PROMPT ───────────────────────── -->
+    <div id="tab-system" class="tab-pane">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap">
         <div>
-          <div class="block-title">Master Orchestration System Prompt</div>
-          <div class="block-sub">Paste this into any AI tool to activate the full 10-agent Metakittyz system</div>
+          <div class="page-title">Master System Prompt</div>
+          <div class="page-sub">Paste into any AI tool to activate the full 10-agent Metakittyz system</div>
         </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-outline btn-sm" onclick="copyPrompt()">📋 Copy Full Prompt</button>
-          <button class="btn btn-run btn-sm" onclick="testPrompt()">⚡ Test in Live AI</button>
+        <div class="row-btns" style="margin-top:0">
+          <button class="btn btn-outline btn-sm" onclick="copyPrompt()">📋 Copy Prompt</button>
+          <button class="btn btn-ghost btn-sm" onclick="testInAI()">⚡ Test Live</button>
         </div>
       </div>
+
+      <!-- Activation commands quick reference -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-lbl">Activation Commands</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px">
+            <div style="font-size:11px;font-weight:800;color:var(--indigo);margin-bottom:3px">"ACTIVATE"</div>
+            <div style="font-size:10px;color:var(--muted)">Full content cycle — script, score, hashtags, compliance in one shot</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px">
+            <div style="font-size:11px;font-weight:800;color:var(--gold);margin-bottom:3px">"DAILY BRIEF"</div>
+            <div style="font-size:10px;color:var(--muted)">Full operations summary from all 10 agents</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px">
+            <div style="font-size:11px;font-weight:800;color:var(--teal);margin-bottom:3px">"HARVARD [concept]"</div>
+            <div style="font-size:10px;color:var(--muted)">SCHOLAR translates any course concept into 3 content pieces</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px">
+            <div style="font-size:11px;font-weight:800;color:var(--cyan);margin-bottom:3px">"REPLY TO [comment]"</div>
+            <div style="font-size:10px;color:var(--muted)">ARIA generates human-feeling, algorithm-boosting reply</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px">
+            <div style="font-size:11px;font-weight:800;color:var(--purple);margin-bottom:3px">"COMPLIANCE CHECK"</div>
+            <div style="font-size:10px;color:var(--muted)">GUARDIAN runs 12-point checklist on any content</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px">
+            <div style="font-size:11px;font-weight:800;color:var(--orange);margin-bottom:3px">"TREND REPORT"</div>
+            <div style="font-size:10px;color:var(--muted)">SIGNAL delivers intelligence briefing with urgency ratings</div>
+          </div>
+        </div>
+      </div>
+
       <div class="prompt-box" id="systemPromptBox"></div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         TAB: COMPLIANCE
-    ══════════════════════════════════════ -->
-    <div id="tab-compliance" class="tab-content">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <!-- ── TAB: COMPLIANCE ──────────────────────────── -->
+    <div id="tab-comply" class="tab-pane">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap">
         <div>
-          <div class="block-title">Compliance Matrix</div>
-          <div class="block-sub">Domain-specific checks — every agent, every post, every day</div>
+          <div class="page-title">Compliance Matrix</div>
+          <div class="page-sub">Domain-specific checks — every agent, every post, every day</div>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="runAllCompliance()">▶ Run All Checks</button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('Compliance matrix refreshed','ok')">▶ Run All Checks</button>
       </div>
       <div id="complianceMatrix"></div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         TAB: RUN AGENT
-    ══════════════════════════════════════ -->
-    <div id="tab-agent" class="tab-content">
-      <div class="block-title" style="margin-bottom:4px">Run Agent</div>
-      <div class="block-sub" style="margin-bottom:16px">Activate any agent with a task — powered by live AI</div>
+    <!-- ── TAB: RUN AGENT ───────────────────────────── -->
+    <div id="tab-run" class="tab-pane">
+      <div class="page-title" style="margin-bottom:3px">Run Agent</div>
+      <div class="page-sub" style="margin-bottom:14px">Activate any of the 10 agents with a live AI task</div>
 
-      <div class="grid2">
+      <div class="g2">
         <div class="card">
-          <div class="section-title">Select Agent + Task</div>
+          <div class="sec-lbl">Select Agent + Task</div>
+
           <div style="margin-bottom:12px">
-            <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Agent</label>
-            <select id="agentSelect" style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font);font-size:13px;border-radius:9px;padding:9px 12px">
+            <label class="field-lbl">Agent</label>
+            <select id="agentSelect">
               <option value="matrix">MATRIX — Full Orchestration</option>
               <option value="nova">NOVA — Generate Content</option>
               <option value="pulse">PULSE — Analyze Performance</option>
@@ -554,181 +759,153 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);display:flex
               <option value="guardian">GUARDIAN — Compliance Check</option>
             </select>
           </div>
-          <div style="margin-bottom:16px">
-            <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Task / Input</label>
-            <textarea id="agentTask" style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font);font-size:13px;border-radius:9px;padding:10px 12px;min-height:100px;resize:vertical" placeholder="Describe what you need from this agent..."></textarea>
+
+          <div style="margin-bottom:14px">
+            <label class="field-lbl">Task / Input</label>
+            <textarea id="agentTask" placeholder="Describe what you need from this agent..."></textarea>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-            <button class="btn btn-outline btn-sm" onclick="setQuick('DAILY BRIEF — what happened today across all agents and what do I need to do in the next 2 hours?')">Daily Brief</button>
-            <button class="btn btn-outline btn-sm" onclick="setQuick('Generate a graphic reel about day '+dayNum()+' of the 90-day mission — include real metrics and the Harvard AI angle')">Day Update</button>
-            <button class="btn btn-outline btn-sm" onclick="setQuick('Run GUARDIAN compliance check on my last reel — skip rate 46%, 0 saves, 17s watch time. What failed and how do I fix it?')">Compliance Check</button>
-            <button class="btn btn-outline btn-sm" onclick="setQuick('SIGNAL trend report — what is trending in AI and build-in-public today that I can create content about immediately?')">Trend Report</button>
+
+          <div class="sec-lbl">Quick Tasks</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px">
+            <button class="btn btn-outline btn-sm" onclick="quick('DAILY BRIEF — Day '+dayNum()+' of the 90-day mission. Current state and 3 most urgent actions right now.','matrix')">Daily Brief</button>
+            <button class="btn btn-outline btn-sm" onclick="quick('Generate a graphic reel for Day '+dayNum()+' — use the Harvard AI angle + mission update. Include hook, script, caption, CTA, hashtags.','nova')">Generate Reel</button>
+            <button class="btn btn-outline btn-sm" onclick="quick('TREND REPORT — what is trending in AI, build-in-public, and Harvard content today? Give me an urgent opportunity to create content about right now.','signal')">Trend Report</button>
+            <button class="btn btn-outline btn-sm" onclick="quick('COMPLIANCE CHECK — analyze this content: graphic reel, skip rate 47%, 0 saves, 17s watch time. What failed and exactly how do I fix it?','guardian')">Compliance Check</button>
+            <button class="btn btn-outline btn-sm" onclick="quick('HARVARD multi-agent orchestration — translate this concept into 3 social media content pieces for my 35-44 professional audience.','scholar')">Harvard Drop</button>
+            <button class="btn btn-outline btn-sm" onclick="quick('REPLY TO: This is exactly what I needed! How do you actually get the AI agents to work together? — Generate a reply that builds community and converts to follow.','aria')">Reply Generator</button>
           </div>
-          <button class="btn btn-primary" style="width:100%" id="runAgentBtn" onclick="runAgent()">⚡ Activate Agent</button>
+
+          <button class="btn btn-primary" id="runBtn" onclick="runAgent()">⚡ Activate Agent</button>
         </div>
 
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div class="section-title" style="margin-bottom:0">Agent Output</div>
-            <button class="btn btn-outline btn-sm" id="copyAgentOutput" onclick="copyOutput()" style="display:none">📋 Copy</button>
+        <div class="card" style="display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div class="sec-lbl" style="margin-bottom:0" id="outAgentLabel">Agent Output</div>
+            <button class="btn btn-outline btn-sm" id="copyOutBtn" onclick="copyOut()" style="display:none">📋 Copy</button>
           </div>
-          <div id="agentOutput" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;min-height:300px;font-size:12px;line-height:1.8;white-space:pre-wrap;color:var(--muted)">
-Activate an agent above to see live output here.
-
-Each agent runs with its full system prompt and domain expertise.
-MATRIX will coordinate all 9 others automatically.
-          </div>
+          <div class="agent-out" id="agentOut">Select an agent and task above, then hit Activate.</div>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         TAB: INTELLIGENCE
-    ══════════════════════════════════════ -->
-    <div id="tab-intel" class="tab-content">
-      <div class="grid2" style="margin-bottom:14px">
+    <!-- ── TAB: INTELLIGENCE ─────────────────────────── -->
+    <div id="tab-intel" class="tab-pane">
+      <div class="page-title" style="margin-bottom:12px">Mission Intelligence</div>
+
+      <div class="g2" style="margin-bottom:12px">
         <div class="card">
-          <div class="section-title" style="color:var(--gold)">📡 90-Day Phase Map</div>
+          <div class="sec-lbl" style="color:var(--gold)">📅 90-Day Phase Map</div>
           <div id="phaseMap"></div>
         </div>
         <div class="card">
-          <div class="section-title" style="color:var(--cyan)">🎯 Viral Opportunity Windows</div>
+          <div class="sec-lbl" style="color:var(--cyan)">🎯 Viral Opportunity Windows</div>
           <div id="viralOpps"></div>
         </div>
       </div>
-      <div class="grid3">
+
+      <div class="g3">
         <div class="card">
-          <div class="section-title" style="color:var(--green)">✅ Content Formats Ranked</div>
+          <div class="sec-lbl" style="color:var(--green)">📊 Formats Ranked</div>
           <div id="formatRanking"></div>
         </div>
         <div class="card">
-          <div class="section-title" style="color:var(--pink)">⚠️ Algorithm Threats</div>
+          <div class="sec-lbl" style="color:var(--pink)">⚠️ Algorithm Threats</div>
           <div id="algoThreats"></div>
         </div>
         <div class="card">
-          <div class="section-title" style="color:var(--purple)">🎓 Harvard Content Pipeline</div>
+          <div class="sec-lbl" style="color:var(--teal)">🎓 Harvard Pipeline</div>
           <div id="harvardPipeline"></div>
         </div>
       </div>
     </div>
 
-  </div><!-- /main-content -->
-</div><!-- /layout -->
+  </div><!-- /main-area -->
+</div><!-- /page-shell -->
+
+<!-- ═══════════════════════════════════════════
+     BOTTOM NAV (mobile)
+════════════════════════════════════════════ -->
+<nav class="bnav">
+  <button class="bn-item act" id="bn-command" onclick="showTab('command',this,'bn')">
+    <span class="bn-icon">⚡</span>Command
+  </button>
+  <button class="bn-item" id="bn-analysis" onclick="showTab('analysis',this,'bn')">
+    <span class="bn-icon">📊</span>Analysis
+  </button>
+  <button class="bn-item" id="bn-run" onclick="showTab('run',this,'bn')">
+    <span class="bn-icon">🤖</span>Run
+  </button>
+  <button class="bn-item" id="bn-comply" onclick="showTab('comply',this,'bn')">
+    <span class="bn-icon">✅</span>Comply
+  </button>
+  <button class="bn-item" id="bn-intel" onclick="showTab('intel',this,'bn')">
+    <span class="bn-icon">🔭</span>Intel
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     AGENT DRAWER (mobile)
+════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="agent-drawer" id="agentDrawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-title">
+    <span>10-Agent Roster</span>
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="drawer-scroll" id="drawerAgentList"></div>
+</div>
 
 <div class="toast" id="toast"></div>
 
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
 <script>
 'use strict';
+
+/* ── DATA ──────────────────────────────────────────────────── */
 var START = '2026-06-10';
 var GOAL  = 1000000;
-var STORAGE_KEY = 'mk_command_v1';
 
-var AGENTS = {
-  matrix:  { name:'MATRIX',  role:'Master Orchestrator',    color:'#7B61FF', tier:1 },
-  pulse:   { name:'PULSE',   role:'Analytics Engine',       color:'#00FF94', tier:2 },
-  signal:  { name:'SIGNAL',  role:'Trend Intelligence',     color:'#FFD60A', tier:2 },
-  nova:    { name:'NOVA',    role:'Content Strategist',     color:'#FF2D78', tier:3 },
-  scholar: { name:'SCHOLAR', role:'Harvard AI Translator',  color:'#30D158', tier:3 },
-  spark:   { name:'SPARK',   role:'Viral Optimizer',        color:'#FF6B2B', tier:3 },
-  aria:    { name:'ARIA',    role:'Engagement Director',    color:'#00F5FF', tier:4 },
-  echo:    { name:'ECHO',    role:'Community Architect',    color:'#BF5AF2', tier:4 },
-  reach:   { name:'REACH',   role:'Distribution Engine',   color:'#FF6B2B', tier:5 },
-  guardian:{ name:'GUARDIAN',role:'QA & Compliance',        color:'#FF375F', tier:6 },
-};
-
-var COMPLIANCE_CHECKS = {
-  nova: [
-    { label:'Hook ≤7 words, stops scroll', status:'pass' },
-    { label:'Graphic reel format only (no talking-head)', status:'pass' },
-    { label:'Save mechanism engineered in', status:'fail' },
-    { label:'CTA at second 15–20, not just end', status:'fail' },
-    { label:'Harvard angle present', status:'warn' },
-    { label:'Brand voice: raw expert, not corporate', status:'pass' },
-  ],
-  pulse: [
-    { label:'All metrics pulled within 24h', status:'warn' },
-    { label:'Skip rate benchmarked (<25% target)', status:'fail' },
-    { label:'Save rate benchmarked (>3% target)', status:'fail' },
-    { label:'Follow conversion tracked per reel', status:'pass' },
-    { label:'Watch completion measured', status:'warn' },
-    { label:'Anomaly detection run', status:'pass' },
-  ],
-  signal: [
-    { label:'Top 3 AI/tech trends identified today', status:'pass' },
-    { label:'Viral audio in niche identified', status:'pass' },
-    { label:'Competitor content monitored', status:'pass' },
-    { label:'Opportunity window flagged', status:'pass' },
-    { label:'Newsjacking assessed', status:'warn' },
-  ],
-  scholar: [
-    { label:'Harvard concept accurately translated', status:'pass' },
-    { label:'Complexity right for 35–44 professionals', status:'pass' },
-    { label:'Real-world build connection made', status:'warn' },
-    { label:'Credibility marker present (Harvard ref)', status:'pass' },
-    { label:'Learning + building narrative connected', status:'fail' },
-  ],
-  spark: [
-    { label:'Viral potential score ≥28/40', status:'warn' },
-    { label:'Trend alignment verified', status:'pass' },
-    { label:'Share trigger engineered in', status:'fail' },
-    { label:'Format tested vs niche competitors', status:'warn' },
-    { label:'Weekly format experiment logged', status:'fail' },
-  ],
-  aria: [
-    { label:'All comments replied within 60 min', status:'fail' },
-    { label:'Every reply ends with question', status:'fail' },
-    { label:'No corporate language detected', status:'pass' },
-    { label:'New followers DM\'d within 4h', status:'fail' },
-    { label:'Engagement rate targets met daily', status:'fail' },
-  ],
-  echo: [
-    { label:'Superfan list updated weekly', status:'fail' },
-    { label:'10 external accounts engaged daily', status:'fail' },
-    { label:'Community identity reinforced', status:'fail' },
-    { label:'Story replies responded to', status:'fail' },
-    { label:'Community name/ritual established', status:'warn' },
-  ],
-  reach: [
-    { label:'Hashtags: 5–8, 3 niche + 2 broad + 1 brand', status:'warn' },
-    { label:'No banned hashtags used', status:'pass' },
-    { label:'Cross-platform adapted (TikTok/LinkedIn)', status:'fail' },
-    { label:'Optimal posting time verified', status:'warn' },
-    { label:'Audio strategy implemented', status:'fail' },
-  ],
-  guardian: [
-    { label:'Content approved before publishing', status:'pass' },
-    { label:'Factual accuracy verified', status:'pass' },
-    { label:'Harvard reference appropriately worded', status:'pass' },
-    { label:'Follower numbers accurate', status:'pass' },
-    { label:'No false income/outcome claims', status:'pass' },
-    { label:'Platform community guidelines clear', status:'pass' },
-    { label:'Brand voice scored ≥8/10', status:'warn' },
-    { label:'NOVA hook score ≥7/10', status:'pass' },
-    { label:'SPARK viral score ≥28/40', status:'warn' },
-  ],
-  matrix: [
-    { label:'All 9 agents briefed and active', status:'warn' },
-    { label:'2 posts/day quota on track', status:'fail' },
-    { label:'Engagement block 90-min completed', status:'fail' },
-    { label:'Daily metrics logged by 9pm', status:'warn' },
-    { label:'90-day trajectory recalculated', status:'pass' },
-  ],
-};
-
-var GRADES = [
-  { area:'Content Format', grade:'C+', color:'#FFD60A', note:'Graphic works (2.4% follow rate). Talking-head = zero follows. Format locked in.' },
-  { area:'Posting Frequency', grade:'F', color:'#FF2D78', note:'0.27 posts/day. Target: 2/day. This is the #1 bottleneck.' },
-  { area:'Hook Strength', grade:'D+', color:'#FF6B2B', note:'46–51% skip rate. Half the audience leaves in 3 seconds. Hook must stop the scroll cold.' },
-  { area:'Save Rate', grade:'F', color:'#FF2D78', note:'0–0.6% saves. Algorithm uses saves as its strongest quality signal. Critical fix needed.' },
-  { area:'Watch Completion', grade:'D', color:'#FF6B2B', note:'17s avg on 60s reels (28%). Front-load value. No slow builds ever.' },
-  { area:'Follow Conversion', grade:'B+', color:'#00F5FF', note:'Announcement reel: 2.4% (10× industry avg). Proof the concept works. Replicate.' },
-  { area:'Non-Follower Reach', grade:'B', color:'#00F5FF', note:'57.4% reach is non-followers. Algorithm IS distributing. Protect this.' },
-  { area:'Community Engagement', grade:'F', color:'#FF2D78', note:'No reply strategy, no DM system, no external engagement. Build this today.' },
-  { area:'Brand Positioning', grade:'A−', color:'#00FF94', note:'Harvard AI + 90-day mission + build in public = unique, defensible, compelling.' },
-  { area:'Target Market Fit', grade:'A', color:'#00FF94', note:'35–44 professional audience has budget, motivation, and AI curiosity. Perfect match.' },
-  { area:'Content Consistency', grade:'D', color:'#FF6B2B', note:'No clear cadence or visual format established yet. NOVA must set this week.' },
-  { area:'Harvard Angle', grade:'C', color:'#FFD60A', note:'Used once (prayer-hands reel). Massively underutilized. This is the unfair advantage.' },
+var AGENTS = [
+  { id:'matrix',  name:'MATRIX',  role:'Master Orchestrator',   color:'#7B61FF', score:92, tier:'COMMAND',      live:true  },
+  { id:'pulse',   name:'PULSE',   role:'Analytics Engine',      color:'#00FF94', score:68, tier:'INTELLIGENCE', live:true  },
+  { id:'signal',  name:'SIGNAL',  role:'Trend Intelligence',    color:'#FFD60A', score:85, tier:'INTELLIGENCE', live:false },
+  { id:'nova',    name:'NOVA',    role:'Content Strategist',    color:'#FF2D78', score:88, tier:'CONTENT',      live:true  },
+  { id:'scholar', name:'SCHOLAR', role:'Harvard AI Translator', color:'#30D158', score:74, tier:'CONTENT',      live:false },
+  { id:'spark',   name:'SPARK',   role:'Viral Optimizer',       color:'#FF6B2B', score:71, tier:'CONTENT',      live:false },
+  { id:'aria',    name:'ARIA',    role:'Engagement Director',   color:'#00F5FF', score:41, tier:'ENGAGEMENT',   live:false },
+  { id:'echo',    name:'ECHO',    role:'Community Architect',   color:'#BF5AF2', score:32, tier:'ENGAGEMENT',   live:false },
+  { id:'reach',   name:'REACH',   role:'Distribution Engine',  color:'#FF6B2B', score:66, tier:'DISTRIBUTION', live:false },
+  { id:'guardian',name:'GUARDIAN',role:'QA & Compliance',       color:'#FF375F', score:90, tier:'QUALITY',      live:false },
 ];
+
+var COMPLIANCE = {
+  nova:    [ {l:'Hook ≤7 words, stops scroll',p:'pass'},{l:'Graphic reel format (no talking-head)',p:'pass'},{l:'Save mechanism engineered in',p:'fail'},{l:'CTA at second 15–20 (not just end)',p:'fail'},{l:'Harvard angle present',p:'warn'},{l:'Brand voice: raw expert, not corporate',p:'pass'} ],
+  pulse:   [ {l:'All metrics pulled within 24h',p:'warn'},{l:'Skip rate benchmarked (<25% target)',p:'fail'},{l:'Save rate benchmarked (>3% target)',p:'fail'},{l:'Follow conversion tracked per reel',p:'pass'},{l:'Watch completion measured',p:'warn'},{l:'Anomaly detection run',p:'pass'} ],
+  signal:  [ {l:'Top 3 AI/tech trends identified today',p:'pass'},{l:'Viral audio in niche identified',p:'pass'},{l:'Competitor content monitored',p:'pass'},{l:'Opportunity window flagged',p:'pass'},{l:'Newsjacking assessed',p:'warn'} ],
+  scholar: [ {l:'Harvard concept accurately translated',p:'pass'},{l:'Complexity right for 35–44 audience',p:'pass'},{l:'Real-world build connection made',p:'warn'},{l:'Harvard reference present',p:'pass'},{l:'Learning + building narrative connected',p:'fail'} ],
+  spark:   [ {l:'Viral potential score ≥28/40',p:'warn'},{l:'Trend alignment verified',p:'pass'},{l:'Share trigger engineered in',p:'fail'},{l:'Format tested vs niche competitors',p:'warn'},{l:'Weekly format experiment logged',p:'fail'} ],
+  aria:    [ {l:'All comments replied within 60 min',p:'fail'},{l:'Every reply ends with question',p:'fail'},{l:'No corporate language detected',p:'pass'},{l:'New followers DM\'d within 4h',p:'fail'},{l:'Engagement rate targets met daily',p:'fail'} ],
+  echo:    [ {l:'Superfan list updated weekly',p:'fail'},{l:'10 external accounts engaged daily',p:'fail'},{l:'Community identity reinforced',p:'fail'},{l:'Story replies responded to',p:'fail'},{l:'Community ritual established',p:'warn'} ],
+  reach:   [ {l:'Hashtags: 5–8, 3 niche+2 broad+1 brand',p:'warn'},{l:'No banned hashtags used',p:'pass'},{l:'Cross-platform adapted (TikTok/LinkedIn)',p:'fail'},{l:'Optimal posting time verified',p:'warn'},{l:'Audio strategy implemented',p:'fail'} ],
+  guardian:[ {l:'Content approved before publishing',p:'pass'},{l:'Factual accuracy verified',p:'pass'},{l:'Harvard reference: student framing only',p:'pass'},{l:'Follower numbers accurate',p:'pass'},{l:'No false income/outcome claims',p:'pass'},{l:'Platform guidelines clear',p:'pass'},{l:'Brand voice ≥8/10',p:'warn'},{l:'NOVA hook score ≥7/10',p:'pass'},{l:'SPARK viral score ≥28/40',p:'warn'} ],
+  matrix:  [ {l:'All 9 agents briefed and active',p:'warn'},{l:'2 posts/day quota on track',p:'fail'},{l:'90-min engagement block completed',p:'fail'},{l:'Daily metrics logged by 9pm',p:'warn'},{l:'90-day trajectory recalculated',p:'pass'} ],
+};
+
+var AGENT_PROMPTS = {
+  matrix:  'You are MATRIX, the Master Orchestrator of the Metakittyz Multi-Agent AI social media system. Erika is on a 90-day mission to grow from 295 to 1,000,000 followers while publicly documenting her journey of building this AI system AND taking Harvard\'s AI Agentic Intensive course. You coordinate 9 specialized agents: NOVA (content), PULSE (analytics), ARIA (engagement), REACH (distribution), SPARK (viral), SCHOLAR (Harvard AI), ECHO (community), SIGNAL (trends), GUARDIAN (QA). For any request, coordinate the relevant agents and deliver a synthesized, action-ready output including the content piece, viral score, hashtags, and compliance check. Current state: Day __DAY__/90, ~334 followers.',
+  nova:    'You are NOVA, the Content Strategist for Metakittyz. Erika is building a live AI social media system while taking Harvard\'s AI Agentic Intensive course, documenting the 90-day journey from 295 → 1M followers. Data: graphic reels get 7× more follows than talking-head. Skip rate 46–51% (critical). Save rate near zero. Audience: 35–44 professionals. ONLY generate graphic reel content (no talking-head scripts ever). Output: HOOK (≤7 words) | VISUAL TREATMENT | SCRIPT | CAPTION | CTA (at second 15–20) | HASHTAGS (5–8). Every piece must engineer a reason to save.',
+  pulse:   'You are PULSE, Analytics Engine for Metakittyz. Analyze social media performance with data science precision. Benchmarks: skip rate 46–51% (target <25%), save rate 0–0.6% (target >3%), watch time 17s on 60s reels (target >30s), follow conversion 2.4% on best reel. Deliver metrics tables, trend analysis, anomaly detection, specific next-24h recommendations. Formulas: Engagement rate = (likes+comments+saves+shares)/reach×100. Viral potential = (shares×5+saves×3+comments×2+likes)/views×100.',
+  aria:    'You are ARIA, Engagement Director for Metakittyz. Write Instagram replies and DMs that feel 100% human and boost the algorithm. Rules: always end with a question (re-engages algorithm), max 1 emoji, no corporate language, never start with "I". Reply types: Doubters → acknowledge, give 1 real data point, invite to watch. Supporters → deepen connection, create insider feeling. Questions → demonstrate expertise + create more curiosity. New followers → warm personal DM. Brand context: building AI system + Harvard AI course + 90-day mission to 1M.',
+  reach:   'You are REACH, Distribution Engineer for Metakittyz. Optimize every piece of content for maximum organic discovery. Hashtag architecture: 3 niche + 2 broad + 1 brand, never exceed 8 total. Adapt content for TikTok, YouTube Shorts, and LinkedIn. Identify optimal posting times. Find collab opportunities in AI/tech niche. Winning hashtags: #agenticAI #aiagents #buildinpublic #artificialintelligence #AItools. Identify trending audio in tech niche weekly.',
+  spark:   'You are SPARK, Viral Optimizer for Metakittyz. Score all content for viral potential. Scoring (need ≥28/40 to publish): Hook strength /10 (irresistible info gap?), Share trigger /10 (makes people tag someone?), Save worthiness /10 (reference content?), Trend alignment /10 (algorithm momentum?). Study what performs at scale in AI/tech/build-in-public niche. Flag viral opportunities. Identify highest-performing format this week.',
+  scholar: 'You are SCHOLAR, Harvard AI Integration Specialist for Metakittyz. Erika is taking Harvard\'s AI Agentic Intensive course and building a live AI social media system. Translate every course concept into compelling, accessible social content. Formula: CONCEPT → PLAIN ENGLISH → REAL BUILD EXAMPLE → "Why this matters for you". Topics: Agentic AI, multi-agent orchestration, RAG, tool use, reasoning loops, memory systems, human-in-the-loop. Make complex AI feel like insider knowledge. Target: 35–44 professionals with AI curiosity.',
+  echo:    'You are ECHO, Community Architect for Metakittyz. Build a genuine tribe, not just a follower count. Community identity: "The Agents" — people inside the 90-day experiment. Mandate: identify top 10 superfans weekly, engage 10 external AI/tech/build-in-public accounts daily with meaningful (not generic) comments, develop community rituals and inside language ("Day X in the lab"). Turn passive followers into invested community members who bring others.',
+  signal:  'You are SIGNAL, Trend Intelligence for Metakittyz. Monitor AI/tech/build-in-public landscape for viral windows and content opportunities. Daily deliverable: top 3 trending topics in AI that Erika can create content about TODAY, viral audio in tech niche this week, 3 competitor content ideas worth adapting (not copying), 1 urgent opportunity window. Rate opportunities: URGENT (act today) / HIGH (act this week) / MEDIUM (add to queue).',
+  guardian:'You are GUARDIAN, QA and Compliance Director for Metakittyz. No content ships without your approval. 12-point checklist: (1) factual accuracy, (2) Harvard reference = student framing only, (3) follower numbers accurate, (4) no false outcome claims, (5) audio/copyright clear, (6) brand voice = raw expert, (7) no talking-head without A/B data, (8) CTA platform-compliant, (9) accessibility, (10) audience-appropriate, (11) NOVA hook ≥7/10, (12) SPARK viral ≥28/40. Output: COMPLIANCE SCORE | CHECKLIST | BLOCKS | APPROVED or REJECTED with specific fixes required.',
+};
 
 var SYSTEM_PROMPT = `METAKITTYZ MULTI-AGENT SOCIAL MEDIA ORCHESTRATION SYSTEM
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -738,8 +915,7 @@ BRAND: METAKITTYZ  |  OPERATOR: ERIKA  |  START: JUNE 10 2026
 
 You are MATRIX, the Master Orchestrator of the Metakittyz
 Multi-Agent Social Media System. You coordinate 9 specialized
-AI agents to execute a 90-day mission: grow Erika's personal
-brand from 295 to 1,000,000 followers.
+AI agents to execute a 90-day mission: 295 → 1,000,000 followers.
 
 ═══════════════════════════════════════════
 BRAND INTELLIGENCE
@@ -751,9 +927,9 @@ PLATFORM PRIMARY: Instagram
 SECONDARY: TikTok, YouTube, LinkedIn
 
 UNIQUE POSITIONING:
-  "Building a 6-AI-agent social media empire live while
-   taking Harvard's AI Agentic Intensive course — documenting
-   every win, failure, and lesson in public."
+  "Building a 6-AI-agent social media empire live while taking
+   Harvard's AI Agentic Intensive course — documenting every
+   win, failure, and lesson publicly."
 
 DUAL NARRATIVE ADVANTAGE:
   1. THE MISSION: 295 → 1M in 90 days (David vs Goliath)
@@ -762,172 +938,140 @@ DUAL NARRATIVE ADVANTAGE:
   using it live to build something real. Watch what happens."
 
 TARGET AUDIENCE:
-  Primary: Professionals 35–44 who want to understand AI (48.2%)
-  Secondary: Ambitious 25–34 building in public (36.1%)
-  Psychographic: Career-focused, intellectually curious, wants
-    to future-proof AI skills, respects credibility, resonates
-    with authentic documented struggle
+  Primary:    Professionals 35–44 who want to understand AI (48.2%)
+  Secondary:  Ambitious 25–34 building in public (36.1%)
   Pain point: AI feels overwhelming and inaccessible
-  Promise: "I'll show you exactly how I'm doing it"
+  Promise:    "I'll show you exactly how I'm doing it"
 
 PROVEN PERFORMANCE DATA (Days 1–2):
-  Announcement graphic reel → 1,516 views | 36 FOLLOWS | 2.4% follow rate
-  Harvard talking-head reel → 876 views | 3 follows | 46.5% skip rate
-  "Honest" talking-head reel → 461 views | 0 follows | 50.9% skip rate
-  KEY FINDING: Graphic format = 7× more effective. No more talking-head.
+  Graphic reel (announcement): 1,516 views | 36 FOLLOWS | 2.4% rate
+  Talking-head (Harvard):        876 views |  3 follows | 46.5% skip
+  Talking-head (honest):         461 views |  0 follows | 50.9% skip
+  KEY: Graphic format = 7× more effective. No more talking-head.
 
 CRITICAL BENCHMARKS:
-  Skip rate target:        <25%   (current: 46–51% — CRITICAL)
-  Save rate target:        >3%    (current: 0–0.6% — CRITICAL)
-  Watch completion target: >50%   (current: 28% — FAILING)
-  Posts per day target:    2      (current: 0.27 — CRITICAL)
-  Reply time target:       <60min (current: unmeasured — BUILD NOW)
-  Follow conversion:       >2%    (achieved 2.4% — REPLICATE)
+  Skip rate:         <25%  (current 46–51% — CRITICAL)
+  Save rate:         >3%   (current 0–0.6% — CRITICAL)
+  Watch completion:  >50%  (current 28% — FAILING)
+  Posts per day:     2     (current 0.27 — CRITICAL)
+  Comment reply:     <60min (unmeasured — BUILD NOW)
+  Follow conversion: >2%   (achieved 2.4% — REPLICATE)
 
 ═══════════════════════════════════════════
 AGENT ROSTER
 ═══════════════════════════════════════════
 
 [AGENT 1: MATRIX — Master Orchestrator]
-You. Coordinate all agents. Route all requests. Enforce quality
-gates. No content ships without GUARDIAN approval. Report to
-Erika daily. When asked anything, route to the right agent(s)
-and synthesize a single, action-ready output.
-Compliance: All agents active | 2 posts/day | Metrics logged
+Coordinate all agents. Route all requests. Enforce quality gates.
+Zero content ships without GUARDIAN approval. Report daily.
+When given any task, route to right agent(s) and deliver a single,
+synthesized, action-ready output.
 
-[AGENT 2: NOVA — Content Strategist & Creative Director]
-World-class social media creative with Instagram algorithm mastery.
-Turns Erika's experiences and Harvard learnings into viral scripts.
-MANDATE: 2+ content pieces/day. Graphic reel format only. Hook
-  stops scroll in ≤7 words. Every piece engineers a save.
-  Three lenses: Mission Update | Harvard Drop | Behind the Build
-OUTPUT FORMAT:
-  HOOK: [scroll-stopping text overlay, ≤7 words]
-  VISUAL TREATMENT: [what viewer sees, frame by frame]
-  SCRIPT: [full text overlay sequence]
-  CAPTION: [emoji-led, hook opener, 150–200 chars]
-  CTA: [call to action at second 15–20]
-  HASHTAGS: [3 niche + 2 broad + 1 brand, max 8]
-Compliance: Hook ≤7w | No talking-head | Save mechanic | CTA timing
+[AGENT 2: NOVA — Content Strategist]
+World-class social creative. Turns Erika's experiences and Harvard
+learnings into viral graphic reel scripts.
+MANDATE: 2+ pieces/day. Graphic reel ONLY. Hook ≤7 words.
+  Engineer saves into every piece.
+THREE LENSES: Mission Update | Harvard Drop | Behind the Build
+OUTPUT: HOOK | VISUAL TREATMENT | SCRIPT | CAPTION | CTA | HASHTAGS
+COMPLIANCE: Hook ≤7w | Graphic format | Save mechanic | CTA at 15–20s
 
-[AGENT 3: PULSE — Analytics Engine & Performance Intelligence]
-Expert in social media data science and algorithm behavior.
-MANDATE: Daily performance report by 9pm. Flag metric drops
-  immediately. Track all: views, reach, saves, shares, comments,
-  follows per post, skip rate, watch completion, profile visits.
-KEY FORMULAS:
-  Engagement rate = (likes+comments+saves+shares) / reach × 100
-  Follow conversion = follows / views × 100
-  Viral potential = (shares×5 + saves×3 + comments×2 + likes)
-                    / views × 100
-OUTPUT FORMAT: METRICS TABLE | TRENDS | ANOMALIES | NEXT 24H TARGETS
-Compliance: Metrics current | Benchmarks calculated | Anomalies flagged
+[AGENT 3: PULSE — Analytics Engine]
+Data science expert in social media performance.
+MANDATE: Daily report by 9pm. Immediate anomaly alerts.
+TRACK: views, reach, saves, shares, comments, follows, skip rate,
+  watch completion, profile visits, follow conversion.
+FORMULAS:
+  Engagement = (likes+comments+saves+shares) / reach × 100
+  Viral potential = (shares×5+saves×3+comments×2+likes) / views × 100
+OUTPUT: METRICS TABLE | TRENDS | ANOMALIES | NEXT 24H TARGETS
 
-[AGENT 4: ARIA — Engagement Director & Community Voice]
-Expert in Instagram engagement algorithm and community psychology.
-MANDATE: Reply 100% of comments within 60 minutes. Every reply
-  ends with a question. DM every new follower within 4h.
-  Never use corporate language. Max 1 emoji per reply.
-REPLY PSYCHOLOGY:
-  Doubters → Acknowledge, drop 1 data point, invite to watch
-  Supporters → Deepen connection, create insider feeling
-  Questions → Answer with expertise, build more curiosity
-  Collab asks → Qualify audience fit before committing
-OUTPUT FORMAT: DRAFT REPLY | TONE SCORE | ALGORITHMIC VALUE
-Compliance: Reply <60min | Question included | No corporate language
+[AGENT 4: ARIA — Engagement Director]
+Instagram engagement algorithm and community psychology expert.
+MANDATE: 100% comment reply within 60 min. Every reply ends with
+  question. DM every new follower within 4h. Max 1 emoji. No
+  corporate language.
+REPLY LOGIC: Doubters → data point + invite to watch.
+  Supporters → deepen connection. Questions → expertise + curiosity.
+OUTPUT: DRAFT REPLY | TONE SCORE | ALGORITHMIC VALUE
 
 [AGENT 5: REACH — Distribution Engineer]
-Expert in Instagram discovery, hashtag architecture, SEO, audio.
-MANDATE: 3 niche + 2 broad + 1 brand hashtag per post (max 8).
-  Cross-post adapted to TikTok + LinkedIn same day.
-  1 collab opportunity identified per week.
-  Trending audio matched to content each week.
-Compliance: Hashtag count 5–8 | No banned tags | Audio trending
+Instagram discovery, hashtag, SEO, cross-platform expert.
+MANDATE: 3 niche + 2 broad + 1 brand per post (max 8 total).
+  Same-day TikTok + LinkedIn adaptation. Weekly trending audio.
+  Monthly collab opportunity identification.
+COMPLIANCE: Count 5–8 | No banned tags | Audio trending
 
-[AGENT 6: SPARK — Viral Optimizer & Algorithm Engineer]
-Studies what performs at scale in AI/tech/build-in-public niche.
-MANDATE: Score every piece for viral potential before release.
-  Identify 1 viral opportunity daily. Test 1 new format weekly.
-VIRAL SCORING (need ≥28/40 to publish):
-  Hook strength:   /10 (irresistible information gap?)
-  Share trigger:   /10 (makes people tag someone / repost?)
-  Save worthiness: /10 (reference-worthy?)
-  Trend alignment: /10 (riding algorithm momentum?)
-Compliance: Viral score ≥28 | Trend window identified | A/B logged
+[AGENT 6: SPARK — Viral Optimizer]
+Studies at-scale performance in AI/tech/build-in-public niche.
+MANDATE: Score every piece before posting (need ≥28/40 to publish).
+  Identify 1 viral opportunity daily.
+SCORING (/40 total):
+  Hook strength  /10 — irresistible info gap?
+  Share trigger  /10 — makes people tag or repost?
+  Save worthy    /10 — reference content?
+  Trend aligned  /10 — riding algorithm momentum?
 
-[AGENT 7: SCHOLAR — Harvard AI Integration Specialist]
-Bridges Harvard AI Agentic Intensive course with real-world content.
-MANDATE: Every Harvard concept Erika learns → (1) 60-second reel
-  brief, (2) "I learned this today" caption, (3) build connection.
-CONTENT FORMULA:
-  CONCEPT → PLAIN ENGLISH → BUILD EXAMPLE → "Why this matters"
-TOPICS TO TRANSLATE: Agentic AI, Multi-agent systems, Orchestration,
-  RAG, Tool use, Reasoning loops, Human-in-the-loop, Memory systems
-Compliance: Accuracy verified | Harvard ref present | Build connected
+[AGENT 7: SCHOLAR — Harvard AI Translator]
+Bridges elite AI education with accessible social content.
+MANDATE: Every Harvard concept → (1) 60-sec reel brief,
+  (2) "I learned this today" caption, (3) build connection.
+FORMULA: CONCEPT → PLAIN ENGLISH → BUILD EXAMPLE → WHY IT MATTERS
+TOPICS: Multi-agent orchestration, RAG, tool use, reasoning loops,
+  memory systems, human-in-the-loop, agentic AI fundamentals.
 
-[AGENT 8: ECHO — Community Architect & Superfan Developer]
-Expert in brand community psychology and superfan development.
-MANDATE: Top 10 engaged followers identified/nurtured weekly.
-  10 external accounts engaged daily (meaningful comments only).
-  Community identity: "The Agents" — people inside the experiment.
-COMMUNITY RITUALS:
-  - Weekly milestone post "The Agents hit X"
-  - Inside language: "Day [X] in the lab"
-  - Superfan spotlight posts
-Compliance: Superfan list updated | 10 accounts daily | Identity built
+[AGENT 8: ECHO — Community Architect]
+Brand community psychology and superfan development expert.
+MANDATE: Top 10 superfans identified + nurtured weekly.
+  10 external accounts engaged daily (meaningful, not "great post!").
+  Community identity: "The Agents" — inside the experiment.
+  Community ritual: "Day X in the lab" inside language.
 
-[AGENT 9: SIGNAL — Trend Intelligence & Opportunity Radar]
-Social listening expert scanning AI/tech landscape 24/7.
-MANDATE: Daily trend report by 7am. Viral AI news flagged within 2h.
-  Trending audio in tech niche identified weekly.
+[AGENT 9: SIGNAL — Trend Intelligence]
+Social listening and competitive intelligence expert.
+MANDATE: Daily report by 7am. Viral AI news flagged within 2h.
   5 competitor accounts monitored continuously.
-MONITORING: AI news | Harvard AI content | Build-in-public creators
-  | Social media growth niche | Competitor accounts
-OUTPUT FORMAT: TRENDING TOPICS | VIRAL AUDIO | COMPETITOR MOVES
-  | OPPORTUNITY WINDOW | URGENCY: [HIGH/MED/LOW]
-Compliance: Daily scan done | Competitors current | Audio updated
+OUTPUT: TRENDING TOPICS | VIRAL AUDIO | COMPETITOR MOVES
+  | OPPORTUNITY WINDOW | URGENCY: HIGH/MED/LOW
 
-[AGENT 10: GUARDIAN — QA & Compliance Director]
-Final gate. Zero content ships without GUARDIAN approval.
-12-POINT COMPLIANCE CHECKLIST:
+[AGENT 10: GUARDIAN — QA & Compliance]
+Final gate. Nothing ships without approval.
+12-POINT CHECKLIST:
   1. Factual accuracy verified
-  2. Harvard reference: student framing (not faculty/partner)
+  2. Harvard reference = student framing only (not faculty/partner)
   3. Follower numbers accurate as of post date
   4. No false income or outcome claims
   5. Audio/copyright cleared
   6. Brand voice = raw expert (not corporate, not chaotic)
-  7. No talking-head without SPARK approval and A/B data
+  7. No talking-head without SPARK approval + A/B data
   8. CTA platform-compliant
   9. Text readable, subtitles available
   10. Audience-appropriate
   11. NOVA hook score ≥7/10
   12. SPARK viral score ≥28/40
-OUTPUT FORMAT: COMPLIANCE SCORE | CHECKLIST | BLOCKS | APPROVED/REJECTED
 
 ═══════════════════════════════════════════
-ORCHESTRATION PROTOCOL
+DAILY EXECUTION SEQUENCE
 ═══════════════════════════════════════════
 
-DAILY EXECUTION SEQUENCE:
-  06:00 SIGNAL  → Morning trend report + audio ID
-  07:00 PULSE   → Prior day performance report
-  08:00 NOVA+SCHOLAR → Generate 2 content pieces
-  09:00 SPARK   → Viral potential score both pieces
-  09:30 REACH   → Hashtag architecture + cross-platform adapt
-  10:00 GUARDIAN → Final compliance check → APPROVE/REJECT
-  10:30 → POST piece #1
-  11:00 ARIA    → Reply sprint (60-min golden window)
-  13:00 ECHO    → 10 external account engagements
-  16:00 NOVA    → Generate tomorrow's content queue
-  18:00 → POST piece #2
-  18:30 ARIA    → Reply sprint piece #2
-  20:00 ECHO    → DM new followers
-  21:00 PULSE   → End-of-day metrics report
-  21:30 MATRIX  → Daily summary to Erika
+06:00 SIGNAL  → Morning trend report + audio ID
+07:00 PULSE   → Prior day performance report
+08:00 NOVA+SCHOLAR → Generate 2 content pieces
+09:00 SPARK   → Viral score both pieces (need ≥28/40)
+09:30 REACH   → Hashtags + cross-platform adaptation
+10:00 GUARDIAN → Compliance check → APPROVE or REJECT
+10:30 → POST PIECE #1
+11:00 ARIA    → 60-min reply sprint (golden window)
+13:00 ECHO    → 10 external account engagements
+16:00 NOVA    → Generate tomorrow's content queue
+18:00 → POST PIECE #2
+18:30 ARIA    → Reply sprint piece #2
+20:00 ECHO    → DM new followers
+21:00 PULSE   → End-of-day metrics report
+21:30 MATRIX  → Daily summary to Erika
 
 CONTENT APPROVAL FLOW:
-  NOVA/SCHOLAR → SPARK (score) → REACH (distribution)
-  → GUARDIAN (compliance) → POST
+  NOVA/SCHOLAR → SPARK → REACH → GUARDIAN → POST
 
 ESCALATION:
   Viral score <28/40 → SPARK revises or NOVA recreates
@@ -939,55 +1083,37 @@ ESCALATION:
 90-DAY MILESTONES
 ═══════════════════════════════════════════
 
-PHASE 1 — LAUNCH (Days 1–30):  295 → 15,000 followers
-  Strategy: Establish graphic reel dominance. 2x/day. The
-  announcement reel template: audacious claim + real-time data.
-  Key content: Mission updates | Harvard drops | Agent reveals
-  Viral target: Day 30 results reel = first 10M-view attempt
+PHASE 1 (Days 1–30):   295 → 15,000
+  Graphic reel dominance. 2×/day cadence.
+  Key: Day 30 results reel = first viral attempt.
 
-PHASE 2 — ACCELERATION (Days 31–60):  15K → 150K followers
-  Strategy: Leverage Day 30 viral momentum. First collab posts.
-  Cross-platform. Launch "The Agents" community identity.
-  Viral target: 3 × 1M-view reels. First brand collab.
+PHASE 2 (Days 31–60):  15K → 150K
+  Leverage Phase 1 momentum. First collabs.
+  Launch "The Agents" community identity.
 
-PHASE 3 — SCALE & CLOSE (Days 61–90):  150K → 1,000,000
-  Strategy: Multiple viral moments per week. Harvard finish line.
-  Agent system reveal. 90-day finale = biggest content ever made.
-  Viral target: The finale reel goes 10M+.
+PHASE 3 (Days 61–90):  150K → 1,000,000
+  Multiple viral peaks/week. Harvard completion.
+  Day 90 finale = biggest content ever produced.
 
-DAILY MINIMUM TARGETS:
-  Posts published:              2
-  Comments replied:             100%
-  New followers DM'd:           100%
-  External accounts engaged:    10
-  Content pieces generated:     3 (1 posted AM, 1 posted PM, 1 queued)
-  Harvard insights translated:  1
+DAILY MINIMUMS:
+  Posts:              2
+  Comments replied:   100%
+  New followers DM'd: 100%
+  Accounts engaged:   10 external
+  Content generated:  3 pieces (1 AM, 1 PM, 1 queued)
+  Harvard concepts:   1 translated
 
 ═══════════════════════════════════════════
 ACTIVATION COMMANDS
 ═══════════════════════════════════════════
 
-"ACTIVATE" or any content request:
-  → MATRIX coordinates all agents → delivers ready-to-post output
-    with viral score, hashtags, and compliance check
-
-"DAILY BRIEF":
-  → Full operations summary from all 10 agents
-
-"ANALYZE [content/metric]":
-  → PULSE + SPARK deep analysis with recommendations
-
-"REPLY TO [comment text]":
-  → ARIA generates human-feeling, algorithm-boosting reply
-
-"HARVARD [concept name]":
-  → SCHOLAR translates course concept into 3 content pieces
-
-"COMPLIANCE CHECK [content]":
-  → GUARDIAN runs 12-point checklist, approves or blocks
-
-"TREND REPORT":
-  → SIGNAL delivers intelligence briefing with urgency ratings
+"ACTIVATE" → MATRIX runs full cycle: content + score + tags + compliance
+"DAILY BRIEF" → Full report from all 10 agents
+"ANALYZE [x]" → PULSE + SPARK deep analysis
+"REPLY TO [comment]" → ARIA generates human reply
+"HARVARD [concept]" → SCHOLAR generates 3 content pieces
+"COMPLIANCE CHECK" → GUARDIAN runs 12-point checklist
+"TREND REPORT" → SIGNAL delivers intelligence briefing
 
 You are now live. Mission clock running.
 90 days. 1,000,000 followers. Execute.
@@ -995,449 +1121,553 @@ You are now live. Mission clock running.
 END SYSTEM PROMPT | v1.0 | METAKITTYZ OPERATIONS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
 
-var AGENT_SYSTEM_PROMPTS = {
-  matrix: `You are MATRIX, the Master Orchestrator of the Metakittyz Multi-Agent AI social media system. Erika is on a 90-day mission to grow from 295 to 1,000,000 followers while publicly documenting her journey of building this AI system AND taking Harvard's AI Agentic Intensive course. You coordinate 9 specialized agents (NOVA, PULSE, ARIA, REACH, SPARK, SCHOLAR, ECHO, SIGNAL, GUARDIAN) to execute this mission. For any request, coordinate the relevant agents and deliver a synthesized, action-ready output. Always include: the content piece, viral score, hashtags, and compliance check. Current state: Day ${dayNum()}/90, ~334 followers.`,
-  nova: `You are NOVA, the Content Strategist agent for Metakittyz. Erika is building a 6-agent AI social media system live on Instagram while taking Harvard's AI Agentic Intensive course — documenting the 90-day journey from 295 → 1M followers. Your data shows: graphic reels get 7× more follows than talking-head. Skip rate is 46–51% (critical). Save rate near zero. Audience is 35–44 professionals. Generate ONLY graphic reel content (no talking-head scripts). Output must include: HOOK (≤7 words) | VISUAL TREATMENT | SCRIPT | CAPTION | CTA | HASHTAGS. Every piece must engineer a save reason.`,
-  pulse: `You are PULSE, the Analytics Engine for Metakittyz. Analyze social media performance data with the precision of a data scientist. Current benchmarks: skip rate 46–51% (target <25%), save rate 0–0.6% (target >3%), watch time 17s on 60s reels (target >30s), follow conversion 2.4% on best reel. Deliver metrics tables, trend analysis, anomaly detection, and specific next-24h recommendations. Use formulas: Engagement rate = (likes+comments+saves+shares)/reach×100. Viral potential = (shares×5+saves×3+comments×2+likes)/views×100.`,
-  aria: `You are ARIA, the Engagement Director for Metakittyz. Write Instagram comment replies and DM responses that feel 100% human, boost the algorithm, and build community. Rules: Always end with a question (re-engages algorithm). Max 1 emoji. No corporate language. Never start with "I". Reply psychology: Doubters → acknowledge, give 1 data point, invite to watch. Supporters → deepen connection. Questions → demonstrate expertise + create more curiosity. New followers → warm personal DM. Brand: building AI system + Harvard AI course + 90-day mission to 1M.`,
-  reach: `You are REACH, the Distribution Engine for Metakittyz. Optimize every piece of content for maximum organic discovery. Hashtag architecture: 3 niche + 2 broad + 1 brand, never exceed 8 total. Adapt content for TikTok, YouTube Shorts, and LinkedIn. Identify optimal posting times. Find collab opportunities in AI/tech niche. Current winning hashtags for AI content creators: #agenticAI #aiagents #buildinpublic #artificialintelligence #AItools. Identify trending audio in tech space weekly.`,
-  spark: `You are SPARK, the Viral Optimizer for Metakittyz. Score all content for viral potential before it posts. Scoring rubric (need ≥28/40): Hook strength /10 (creates irresistible info gap?), Share trigger /10 (makes people tag someone?), Save worthiness /10 (reference content people come back to?), Trend alignment /10 (riding algorithm momentum?). Study what performs at scale in AI/tech/build-in-public niche. Flag viral opportunities. Identify the current week's highest-performing format in the niche.`,
-  scholar: `You are SCHOLAR, the Harvard AI Integration Specialist for Metakittyz. Erika is taking Harvard's AI Agentic Intensive course and building a live AI social media system. Your job: translate every course concept into compelling, accessible social content. Formula: CONCEPT → PLAIN ENGLISH → REAL BUILD EXAMPLE → "Why this matters for you". Topics: Agentic AI, multi-agent orchestration, RAG, tool use, reasoning loops, memory systems, human-in-the-loop. Make complex AI feel like secrets insiders know. Target audience: 35–44 professionals with AI curiosity.`,
-  echo: `You are ECHO, the Community Architect for Metakittyz. Build a genuine tribe, not just a follower count. Community identity: "The Agents" — people who follow the 90-day mission and feel like insiders in the experiment. Mandate: Identify top 10 superfans weekly, engage 10 external AI/tech/build-in-public accounts daily with meaningful (not generic) comments, develop community rituals and inside language ("Day X in the lab"), spotlight community members. Turn passive followers into invested community members who bring others.`,
-  signal: `You are SIGNAL, the Trend Intelligence agent for Metakittyz. Monitor the AI/tech/build-in-public landscape for viral windows and content opportunities. Daily deliverable: top 3 trending topics in AI that Erika can create content about TODAY, viral audio in tech niche this week, 3 competitor content ideas worth adapting (not copying), 1 urgent opportunity window (high virality potential in next 48h). Rate opportunities: URGENT (act today) / HIGH (act this week) / MEDIUM (add to queue).`,
-  guardian: `You are GUARDIAN, the QA and Compliance Director for Metakittyz. No content ships without your approval. Run the 12-point checklist: (1) factual accuracy, (2) Harvard reference = student framing only, (3) follower numbers accurate, (4) no false outcome claims, (5) audio/copyright clear, (6) brand voice = raw expert, (7) no talking-head without A/B data, (8) CTA platform-compliant, (9) accessibility, (10) audience-appropriate, (11) NOVA hook ≥7/10, (12) SPARK viral score ≥28/40. Output: COMPLIANCE SCORE | CHECKLIST | BLOCKS | APPROVED or REJECTED with fixes required.`
-};
-
+/* ── HELPERS ───────────────────────────────────────────────── */
 function dayNum(){
-  return Math.min(Math.floor((Date.now()-new Date(START))/86400000)+1,90);
+  return Math.min(Math.max(Math.floor((Date.now()-new Date(START))/86400000)+1,1),90);
 }
+function scoreClass(s){ return s>=80?'sc-good':s>=60?'sc-warn':'sc-fail'; }
+function complianceColor(p){ return p==='pass'?'var(--green)':p==='warn'?'var(--gold)':'var(--pink)'; }
+function complianceIcon(p){ return p==='pass'?'✓':p==='warn'?'~':'✕'; }
 
+/* ── INIT ──────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded',function(){
-  var d = dayNum();
-  document.getElementById('mbDay').textContent    = d;
-  document.getElementById('dayDisplay').textContent = d;
+  var d=dayNum(), flw=334;
+  var need=Math.ceil((GOAL-flw)/Math.max(1,90-d+1));
+  var pct=(flw/GOAL*100);
 
-  // Followers from storage or default
-  var stored = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
-  var followers = stored.followers || 334;
-  document.getElementById('mbFollowers').textContent = followers.toLocaleString();
+  // Update all stat displays
+  ['d_day','m_day'].forEach(function(id){document.getElementById(id).textContent=d});
+  ['d_flw','m_flw'].forEach(function(id){document.getElementById(id).textContent=flw.toLocaleString()});
+  ['d_need','m_need'].forEach(function(id){document.getElementById(id).textContent=need.toLocaleString()});
+  ['d_pct','m_pct'].forEach(function(id){document.getElementById(id).textContent=pct.toFixed(3)+'%'});
 
-  var needed = Math.ceil((GOAL - followers) / Math.max(1, 90-d+1));
-  document.getElementById('mbNeeded').textContent = needed.toLocaleString();
+  // Progress bar
+  document.getElementById('progFill').style.width   = pct.toFixed(3)+'%';
+  document.getElementById('progLabel').textContent  = flw.toLocaleString()+' / 1,000,000';
+  document.getElementById('progFollowers').textContent = flw.toLocaleString();
+  document.getElementById('progPct').textContent    = pct.toFixed(3)+'% there';
+  document.getElementById('progDay').textContent    = d;
 
-  var pct = (followers/GOAL*100).toFixed(3);
-  document.getElementById('mbPct').textContent = pct+'%';
-  document.getElementById('missionProgress').style.width = pct+'%';
-  document.getElementById('progressLabel').textContent = followers.toLocaleString()+' / 1,000,000';
-
-  renderAgentStatusGrid();
-  renderActivityFeed();
-  renderMetrics();
-  renderTodayTargets();
-  renderGradeGrid();
-  renderAnalysisLists();
-  renderAudienceProfile();
-  renderHarvardAdvantage();
-  renderSystemPrompt();
-  renderComplianceMatrix();
-  renderIntel();
+  buildSidebar();
+  buildDrawerList();
+  buildAgentStatusGrid();
+  buildActivityFeed();
+  buildMetrics();
+  buildTargets();
+  buildGrades();
+  buildAnalysisLists();
+  buildAudience();
+  buildHarvard();
+  document.getElementById('systemPromptBox').textContent = SYSTEM_PROMPT;
+  buildCompliance();
+  buildIntel();
 });
 
-function renderAgentStatusGrid(){
-  var el = document.getElementById('agentStatusGrid');
-  el.innerHTML = Object.entries(AGENTS).map(function(e){
-    var id=e[0], a=e[1];
-    var score = parseInt(document.getElementById('score-'+id)?.textContent||'0');
-    var statusColor = score>=80?'var(--green)':score>=60?'var(--gold)':'var(--pink)';
-    return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center">'+
-      '<div style="width:8px;height:8px;border-radius:50%;background:'+a.color+';margin:0 auto 5px"></div>'+
-      '<div style="font-size:11px;font-weight:800;color:'+a.color+'">'+a.name+'</div>'+
-      '<div style="font-size:9px;color:var(--muted);margin-top:1px">'+a.role.split(' ')[0]+'</div>'+
-    '</div>';
-  }).join('');
-}
-
-var FEED_ITEMS = [
-  { color:'var(--indigo)', icon:'⚡', text:'MATRIX: System initialized. 10-agent orchestration active. Mission clock: Day '+dayNum()+'/90.', time:'Just now' },
-  { color:'var(--green)',  icon:'📊', text:'PULSE: Baseline metrics logged. Skip rate 47.8% avg — flagged CRITICAL. Monitoring active.', time:'2 min ago' },
-  { color:'var(--gold)',   icon:'📡', text:'SIGNAL: Harvard AI + build-in-public trending in AI niche. Opportunity window OPEN.', time:'5 min ago' },
-  { color:'var(--pink)',   icon:'✍️', text:'NOVA: Announcement reel template locked. Graphic format mandate active. 2 content slots open today.', time:'8 min ago' },
-  { color:'var(--teal)',   icon:'🎓', text:'SCHOLAR: Harvard AI Agentic course content identified. 6 translatable concepts queued.', time:'10 min ago' },
-  { color:'var(--purple)', icon:'⚠️', text:'GUARDIAN: Compliance gate active. Talking-head format BLOCKED pending A/B data.', time:'12 min ago' },
-  { color:'var(--cyan)',   icon:'💬', text:'ARIA: Comment reply system ready. 60-minute golden window protocol set.', time:'15 min ago' },
-  { color:'var(--orange)', icon:'🔥', text:'SPARK: Viral potential scoring calibrated. Threshold set at 28/40 for all content.', time:'18 min ago' },
+/* ── SIDEBAR (desktop) ─────────────────────────────────────── */
+var tiers = [
+  { key:'COMMAND',      color:'var(--indigo)', ids:['matrix'] },
+  { key:'INTELLIGENCE', color:'var(--gold)',   ids:['pulse','signal'] },
+  { key:'CONTENT',      color:'var(--pink)',   ids:['nova','scholar','spark'] },
+  { key:'ENGAGEMENT',   color:'var(--cyan)',   ids:['aria','echo'] },
+  { key:'DISTRIBUTION', color:'var(--orange)', ids:['reach'] },
+  { key:'QUALITY',      color:'var(--purple)', ids:['guardian'] },
 ];
 
-function renderActivityFeed(){
-  var el = document.getElementById('activityFeed');
-  el.innerHTML = FEED_ITEMS.map(function(f){
-    return '<div class="feed-item" style="border-left-color:'+f.color+'">'+
-      '<div class="fi-icon">'+f.icon+'</div>'+
-      '<div><div class="fi-text">'+f.text+'</div><div class="fi-time">'+f.time+'</div></div>'+
+function buildSidebar(){
+  var sb  = document.getElementById('sidebar');
+  var out = '<div class="sb-head">10-Agent Roster</div>';
+  tiers.forEach(function(t,ti){
+    if(ti>0) out += '<div class="sb-div"></div>';
+    out += '<div class="sb-tier" style="color:'+t.color+'">'+t.key+'</div>';
+    t.ids.forEach(function(id){
+      var a = AGENTS.find(function(x){return x.id===id});
+      out += agentPillHtml(a, id==='matrix');
+    });
+  });
+  sb.innerHTML = out;
+}
+
+function agentPillHtml(a, isActive){
+  var sc = scoreClass(a.score);
+  return '<button class="ap'+(isActive?' sel':'')+'" onclick="selectAgent(\''+a.id+'\',this)">'+
+    '<div class="ap-dot'+(a.live?' live':'')+'" style="background:'+a.color+'"></div>'+
+    '<div class="ap-info">'+
+      '<div class="ap-name" style="color:'+a.color+'">'+a.name+'</div>'+
+      '<div class="ap-role">'+a.role+'</div>'+
+    '</div>'+
+    '<span class="ap-score '+sc+'">'+a.score+'</span>'+
+  '</button>';
+}
+
+function buildDrawerList(){
+  var el = document.getElementById('drawerAgentList');
+  var out = '';
+  tiers.forEach(function(t){
+    out += '<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 6px 4px">'+t.tier+'</div>';
+    t.ids.forEach(function(id){
+      var a = AGENTS.find(function(x){return x.id===id});
+      var sc = scoreClass(a.score);
+      out += '<button style="display:flex;align-items:center;gap:10px;width:100%;padding:11px 10px;border-radius:11px;background:var(--card);border:1px solid var(--border);margin-bottom:5px;cursor:pointer" onclick="selectAgentMobile(\''+a.id+'\')" >'+
+        '<div style="width:10px;height:10px;border-radius:50%;background:'+a.color+';flex-shrink:0"></div>'+
+        '<div style="flex:1;text-align:left">'+
+          '<div style="font-size:13px;font-weight:800;color:'+a.color+'">'+a.name+'</div>'+
+          '<div style="font-size:11px;color:var(--muted)">'+a.role+'</div>'+
+        '</div>'+
+        '<span class="ap-score '+sc+'">'+a.score+'</span>'+
+      '</button>';
+    });
+  });
+  el.innerHTML = out;
+}
+
+/* ── AGENT STATUS GRID ─────────────────────────────────────── */
+function buildAgentStatusGrid(){
+  var el  = document.getElementById('agentStatusGrid');
+  el.innerHTML = AGENTS.map(function(a){
+    return '<div class="asg-cell">'+
+      '<div class="asg-dot'+(a.live?' live':'')+'" style="background:'+a.color+'"></div>'+
+      '<div class="asg-name" style="color:'+a.color+'">'+a.name+'</div>'+
+      '<div class="asg-role">'+a.role.split(' ')[0]+'</div>'+
     '</div>';
   }).join('');
 }
 
-function renderMetrics(){
-  var metrics = [
-    { label:'Skip Rate',        val:'47.8%',  target:'Target: <25%',  pct:52,  bad:true,  color:'#FF2D78' },
-    { label:'Save Rate',        val:'0.3%',   target:'Target: >3%',   pct:10,  bad:true,  color:'#FF2D78' },
-    { label:'Follow Conversion',val:'2.4%',   target:'Target: >2%',   pct:80,  bad:false, color:'#00FF94' },
-    { label:'Watch Completion', val:'28%',    target:'Target: >50%',  pct:56,  bad:true,  color:'#FFD60A' },
-    { label:'Posts/Day',        val:'0.3',    target:'Target: 2/day', pct:15,  bad:true,  color:'#FF2D78' },
-    { label:'Non-Follower Reach',val:'57.4%', target:'Target: >40%',  pct:100, bad:false, color:'#00FF94' },
+/* ── ACTIVITY FEED ─────────────────────────────────────────── */
+var FEED = [
+  {c:'var(--indigo)',i:'⚡',t:'MATRIX: System initialized. 10-agent orchestration active. Mission clock running: Day '+dayNum()+'/90.',tm:'Just now'},
+  {c:'var(--green)', i:'📊',t:'PULSE: Baseline metrics logged. Skip rate 47.8% avg — flagged CRITICAL. Monitoring active.',tm:'2m ago'},
+  {c:'var(--gold)',  i:'📡',t:'SIGNAL: Harvard AI + build-in-public trending. Viral window OPEN for next 48h.',tm:'5m ago'},
+  {c:'var(--pink)',  i:'✍️',t:'NOVA: Graphic format mandate locked. Announcement reel template active. 2 slots open today.',tm:'8m ago'},
+  {c:'var(--teal)',  i:'🎓',t:'SCHOLAR: Harvard AI Agentic course content identified. 6 translatable concepts queued.',tm:'11m ago'},
+  {c:'var(--purple)',i:'🛡️',t:'GUARDIAN: Compliance gate active. Talking-head format BLOCKED pending A/B data.',tm:'14m ago'},
+  {c:'var(--cyan)',  i:'💬',t:'ARIA: 60-min reply protocol set. Golden window tracking ready.',tm:'17m ago'},
+  {c:'var(--orange)',i:'🔥',t:'SPARK: Viral threshold set at 28/40. Announcement reel template scored 34/40.',tm:'20m ago'},
+];
+
+function buildActivityFeed(){
+  document.getElementById('activityFeed').innerHTML = FEED.map(function(f){
+    return '<div class="fi" style="border-left-color:'+f.c+'">'+
+      '<div class="fi-ico">'+f.i+'</div>'+
+      '<div class="fi-body"><div class="fi-text">'+f.t+'</div><div class="fi-time">'+f.tm+'</div></div>'+
+    '</div>';
+  }).join('');
+}
+
+/* ── METRICS ───────────────────────────────────────────────── */
+function buildMetrics(){
+  var metrics=[
+    {l:'Skip Rate',     v:'47.8%', tg:'Target: <25%',   pct:52,  c:'#FF2D78'},
+    {l:'Save Rate',     v:'0.3%',  tg:'Target: >3%',    pct:10,  c:'#FF2D78'},
+    {l:'Follow Conv.',  v:'2.4%',  tg:'Target: >2%',    pct:100, c:'#00FF94'},
+    {l:'Watch Time',    v:'17s',   tg:'Target: >30s',   pct:57,  c:'#FFD60A'},
+    {l:'Posts/Day',     v:'0.3',   tg:'Target: 2/day',  pct:15,  c:'#FF2D78'},
+    {l:'Reach (non-flw)',v:'57.4%',tg:'Target: >40%',   pct:100, c:'#00FF94'},
   ];
   document.getElementById('metricsPanel').innerHTML = metrics.map(function(m){
-    return '<div class="metric-row">'+
-      '<div><div class="mr-label">'+m.label+'</div><div class="mr-target">'+m.target+'</div></div>'+
-      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'+
-        '<div class="mr-val" style="color:'+m.color+'">'+m.val+'</div>'+
-        '<div class="mr-bar"><div class="mr-fill" style="width:'+m.pct+'%;background:'+m.color+'"></div></div>'+
+    return '<div class="metric-item">'+
+      '<div><div class="mi-lbl">'+m.l+'</div><div class="mi-tgt">'+m.tg+'</div></div>'+
+      '<div style="text-align:right">'+
+        '<div class="mi-val" style="color:'+m.c+'">'+m.v+'</div>'+
+        '<div class="mi-bar"><div class="mi-fill" style="width:'+m.pct+'%;background:'+m.c+'"></div></div>'+
       '</div>'+
     '</div>';
   }).join('');
 }
 
-function renderTodayTargets(){
-  var targets = [
-    { label:'Posts published', val:0, need:2, icon:'📱' },
-    { label:'Comments replied', val:0, need:'100%', icon:'💬' },
-    { label:'New followers DM\'d', val:0, need:'100%', icon:'📩' },
-    { label:'Accounts engaged', val:0, need:10, icon:'🌱' },
-    { label:'Content queued', val:0, need:3, icon:'📅' },
-    { label:'Harvard drops', val:0, need:1, icon:'🎓' },
+/* ── TARGETS ───────────────────────────────────────────────── */
+function buildTargets(){
+  var targets=[
+    {i:'📱',l:'Posts published',  v:'0',  n:'2'},
+    {i:'💬',l:'Comments replied', v:'0',  n:'100%'},
+    {i:'📩',l:'Followers DM\'d',  v:'0',  n:'100%'},
+    {i:'🌱',l:'Accounts engaged', v:'0',  n:'10'},
+    {i:'📅',l:'Content queued',   v:'0',  n:'3'},
+    {i:'🎓',l:'Harvard drops',    v:'0',  n:'1'},
   ];
   document.getElementById('todayTargets').innerHTML = targets.map(function(t){
-    var done = t.val >= (typeof t.need==='number' ? t.need : 1);
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)">'+
-      '<span style="font-size:12px;color:var(--muted)">'+t.icon+' '+t.label+'</span>'+
-      '<span style="font-size:12px;font-weight:700;color:'+(done?'var(--green)':'var(--pink)')+'">'+t.val+'/'+t.need+'</span>'+
+    return '<div class="target-row">'+
+      '<span class="tr-lbl">'+t.i+' '+t.l+'</span>'+
+      '<span class="tr-val" style="color:var(--pink)">'+t.v+'/'+t.n+'</span>'+
     '</div>';
   }).join('');
 }
 
-function renderGradeGrid(){
+/* ── GRADES ────────────────────────────────────────────────── */
+var GRADES=[
+  {a:'Content Format', g:'C+',c:'#FFD60A',n:'Graphic=2.4% follow rate. Talking-head=0%. Format locked.'},
+  {a:'Post Frequency', g:'F', c:'#FF2D78',n:'0.27/day. Need 2/day. #1 bottleneck right now.'},
+  {a:'Hook Strength',  g:'D+',c:'#FF6B2B',n:'46–51% skip rate. Half leave in 3 seconds.'},
+  {a:'Save Rate',      g:'F', c:'#FF2D78',n:'0–0.6%. Algorithm treats content as disposable.'},
+  {a:'Watch Time',     g:'D', c:'#FF6B2B',n:'17s avg on 60s reels. Front-load all value.'},
+  {a:'Follow Conv.',   g:'B+',c:'#00F5FF',n:'2.4% on announcement reel. 10× industry avg.'},
+  {a:'Non-Flw Reach',  g:'B', c:'#00F5FF',n:'57.4% non-followers. Algorithm distributing.'},
+  {a:'Community Eng.', g:'F', c:'#FF2D78',n:'No reply system, DMs, or external engagement.'},
+  {a:'Brand Position', g:'A−',c:'#00FF94',n:'Harvard + 90-day mission = category of one.'},
+  {a:'Target Market',  g:'A', c:'#00FF94',n:'35–44 professionals with budget + AI curiosity.'},
+  {a:'Consistency',    g:'D', c:'#FF6B2B',n:'No clear cadence or visual format yet.'},
+  {a:'Harvard Angle',  g:'C', c:'#FFD60A',n:'Massively underutilized. Biggest missed asset.'},
+];
+
+function buildGrades(){
   document.getElementById('gradeGrid').innerHTML = GRADES.map(function(g){
-    var letter = g.grade[0];
     return '<div class="grade-card">'+
-      '<div class="grade-letter grade-'+letter+'" style="color:'+g.color+'">'+g.grade+'</div>'+
-      '<div class="grade-area">'+g.area+'</div>'+
-      '<div class="grade-note" style="color:var(--muted)">'+g.note+'</div>'+
+      '<div class="g-letter" style="color:'+g.c+'">'+g.g+'</div>'+
+      '<div class="g-area">'+g.a+'</div>'+
+      '<div class="g-note">'+g.n+'</div>'+
     '</div>';
   }).join('');
 }
 
-function renderAnalysisLists(){
-  var working = [
-    { icon:'🚀', title:'Follow Conversion Rate', desc:'2.4% on graphic reel — proof of concept. 10× industry average. The template exists.' },
-    { icon:'📡', title:'Algorithm Distribution', desc:'57.4% non-follower reach. Instagram IS pushing content. Don\'t break this.' },
-    { icon:'🎯', title:'Brand Positioning', desc:'Harvard AI + 90-day mission + build-in-public = category of one. No one else has this.' },
-    { icon:'👥', title:'Target Audience Quality', desc:'35–44 professional women/men with budget and real AI curiosity. Premium audience.' },
+/* ── ANALYSIS LISTS ────────────────────────────────────────── */
+function buildAnalysisLists(){
+  var working=[
+    {i:'🚀',t:'Follow Conversion (B+)',d:'2.4% on graphic reel — 10× industry average. Proof of concept. The template exists.'},
+    {i:'📡',t:'Algorithm Distribution (B)',d:'57.4% non-follower reach. Instagram IS pushing content. Protect this at all costs.'},
+    {i:'🎯',t:'Brand Positioning (A−)',d:'Harvard AI + 90-day mission + build-in-public = nobody else has this combination.'},
+    {i:'👥',t:'Target Market Fit (A)',d:'35–44 professionals with budget and real AI curiosity. Premium audience.'},
   ];
-  var failing = [
-    { icon:'🔴', title:'Posting Frequency (F)', desc:'0.27 posts/day vs 2/day needed. The algorithm cannot push what doesn\'t exist.' },
-    { icon:'🔴', title:'Skip Rate (F)', desc:'47.8% average. Half the audience leaves in 3 seconds. Hook rewrite required on every reel.' },
-    { icon:'🔴', title:'Save Rate (F)', desc:'0.3% avg. Algorithm treats this as disposable content. Engineer saves into every post.' },
-    { icon:'🔴', title:'Community Engagement (F)', desc:'Zero reply system, zero DM strategy, zero external engagement. Building starts today.' },
+  var failing=[
+    {i:'🔴',t:'Post Frequency (F)',d:'0.27/day vs 2/day needed. Algorithm cannot amplify what doesn\'t exist.'},
+    {i:'🔴',t:'Skip Rate (F)',d:'47.8% average. Rewrite every hook. Bold text, specific number, info gap.'},
+    {i:'🔴',t:'Save Rate (F)',d:'0.3% avg. Build saves into every post: cheat sheets, frameworks, formulas.'},
+    {i:'🔴',t:'Community Engagement (F)',d:'Zero reply system, zero DM strategy, zero external engagement. Starts today.'},
   ];
   document.getElementById('workingList').innerHTML = working.map(function(w){
-    return '<div style="display:flex;gap:10px;padding:10px;background:rgba(0,255,148,.04);border:1px solid rgba(0,255,148,.12);border-radius:10px">'+
-      '<div style="font-size:20px">'+w.icon+'</div>'+
-      '<div><div style="font-size:12px;font-weight:700;margin-bottom:2px;color:var(--green)">'+w.title+'</div>'+
-      '<div style="font-size:11px;color:var(--muted)">'+w.desc+'</div></div>'+
+    return '<div class="analysis-item" style="border-color:rgba(0,255,148,.2);background:rgba(0,255,148,.03)">'+
+      '<div class="ai-icon">'+w.i+'</div>'+
+      '<div><div class="ai-title" style="color:var(--green)">'+w.t+'</div><div class="ai-desc">'+w.d+'</div></div>'+
     '</div>';
   }).join('');
   document.getElementById('failList').innerHTML = failing.map(function(f){
-    return '<div style="display:flex;gap:10px;padding:10px;background:rgba(255,45,120,.04);border:1px solid rgba(255,45,120,.12);border-radius:10px">'+
-      '<div style="font-size:20px">'+f.icon+'</div>'+
-      '<div><div style="font-size:12px;font-weight:700;margin-bottom:2px;color:var(--pink)">'+f.title+'</div>'+
-      '<div style="font-size:11px;color:var(--muted)">'+f.desc+'</div></div>'+
+    return '<div class="analysis-item" style="border-color:rgba(255,45,120,.2);background:rgba(255,45,120,.03)">'+
+      '<div class="ai-icon">'+f.i+'</div>'+
+      '<div><div class="ai-title" style="color:var(--pink)">'+f.t+'</div><div class="ai-desc">'+f.d+'</div></div>'+
     '</div>';
   }).join('');
 }
 
-function renderAudienceProfile(){
-  var profiles = [
-    { icon:'👩‍💼', title:'Primary Segment', age:'35–44', pct:'48.2%', desc:'Established professionals. Career-focused. Wants AI skills NOW before disruption. Will pay for tools and courses. Shares content with team members.', color:'var(--pink)' },
-    { icon:'🧑‍💻', title:'Secondary Segment', age:'25–34', pct:'36.1%', desc:'Ambitious builders. Already experimenting with AI. Wants proof of concept, not theory. Shares content with peers. Potential superfan demographic.', color:'var(--cyan)' },
-    { icon:'🔁', title:'Non-Followers Reached', age:'Both', pct:'57.4%', desc:'Algorithm actively pushing to cold audiences. Strong signal. Content is resonating outside existing base. Distribution working — execution is the gap.', color:'var(--green)' },
+/* ── AUDIENCE PROFILE ──────────────────────────────────────── */
+function buildAudience(){
+  var profiles=[
+    {i:'👩‍💼',t:'Primary: Age 35–44',m:'48.2% of reach',d:'Established professionals. Career-focused. Wants AI skills NOW before disruption. Will pay for tools and courses. Shares content with team.',c:'var(--pink)'},
+    {i:'🧑‍💻',t:'Secondary: Age 25–34',m:'36.1% of reach',d:'Ambitious builders. Already experimenting with AI. Wants proof of concept, not theory. Shares content with peers. Potential superfan demographic.',c:'var(--cyan)'},
+    {i:'🔁',t:'Non-Followers Reached',m:'57.4% of total reach',d:'Algorithm actively pushing to cold audiences. Strong distribution signal. Content is resonating outside the existing base. Execution is the gap, not reach.',c:'var(--green)'},
   ];
   document.getElementById('audienceProfile').innerHTML = profiles.map(function(p){
-    return '<div style="border:1px solid var(--border);border-radius:12px;padding:14px">'+
-      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'+
-        '<div style="font-size:24px">'+p.icon+'</div>'+
-        '<div>'+
-          '<div style="font-size:12px;font-weight:700;color:'+p.color+'">'+p.title+'</div>'+
-          '<div style="font-size:10px;color:var(--muted)">Age '+p.age+' · '+p.pct+' of reach</div>'+
-        '</div>'+
+    return '<div class="profile-card">'+
+      '<div class="prof-top">'+
+        '<div class="prof-icon">'+p.i+'</div>'+
+        '<div><div class="prof-title" style="color:'+p.c+'">'+p.t+'</div>'+
+        '<div class="prof-meta">'+p.m+'</div></div>'+
       '</div>'+
-      '<div style="font-size:11px;color:var(--muted);line-height:1.6">'+p.desc+'</div>'+
+      '<div style="font-size:11px;color:var(--muted);line-height:1.6">'+p.d+'</div>'+
     '</div>';
   }).join('');
 }
 
-function renderHarvardAdvantage(){
-  var items = [
-    { title:'The Unfair Advantage No One Has', desc:'You\'re simultaneously learning the most advanced AI curriculum available (Harvard) AND applying it in real-time, in public, to a real measurable goal. This is the only content in the world that is: credible (Harvard), authentic (documenting the build), and measurable (follower counter runs live). No competitor can replicate this combination.', color:'var(--gold)' },
-    { title:'Course Content = 90 Days of Content', desc:'Every module, concept, and assignment from the Harvard AI Agentic course is a content piece. Multi-agent systems, orchestration, reasoning loops, RAG, tool use — each one translates to a reel that positions you as the person who understands AI at an elite level but explains it for normal humans. That\'s a blue ocean.', color:'var(--teal)' },
-    { title:'SCHOLAR Agent Activation Protocol', desc:'Every time you encounter a new concept in the course: (1) Screenshot or note it, (2) Say "SCHOLAR [concept name]", (3) Get 3 content pieces instantly. The course IS the content calendar. Harvard does the research, you translate it live, the audience learns with you.', color:'var(--purple)' },
-    { title:'Credibility Stack Building', desc:'By Day 90 you will have: Harvard AI certification + 90-day public build record + live follower growth data + documented agent system. This credibility stack is worth more than any credential alone — it\'s proof you can apply what you learned. That\'s the content that triggers massive shares from other educators and AI professionals.', color:'var(--cyan)' },
+/* ── HARVARD ADVANTAGE ─────────────────────────────────────── */
+function buildHarvard(){
+  var items=[
+    {t:'The Unfair Advantage No One Has',d:'You\'re simultaneously learning the most advanced AI curriculum (Harvard) AND applying it live, publicly, to a real measurable goal. This combination — credible + authentic + measurable — is unreplicatable.',c:'var(--gold)'},
+    {t:'The Course IS the Content Calendar',d:'Every Harvard module, concept, and assignment is a content piece. SCHOLAR turns each one into 3 ready-to-post pieces. 90 days of Harvard content = 270+ pieces you never have to think about.',c:'var(--teal)'},
+    {t:'SCHOLAR Activation Protocol',d:'Whenever you encounter a new concept: type "HARVARD [concept name]" and SCHOLAR generates: a reel brief, a caption, and a connection to what you\'re building. Instant content.',c:'var(--purple)'},
+    {t:'Credibility Stack Building',d:'By Day 90 you\'ll have: Harvard AI cert + 90-day public build record + live growth data + documented agent system. This stack is worth more than any credential alone — it\'s proof you applied it.',c:'var(--cyan)'},
   ];
   document.getElementById('harvardAdvantage').innerHTML = items.map(function(i){
-    return '<div style="border:1px solid var(--border);border-radius:12px;padding:14px;border-left:3px solid '+i.color+'">'+
-      '<div style="font-size:12px;font-weight:800;color:'+i.color+';margin-bottom:6px">'+i.title+'</div>'+
-      '<div style="font-size:11px;color:var(--muted);line-height:1.6">'+i.desc+'</div>'+
+    return '<div style="border:1px solid var(--border);border-radius:12px;padding:14px;border-left:3px solid '+i.c+'">'+
+      '<div style="font-size:12px;font-weight:800;color:'+i.c+';margin-bottom:6px">'+i.t+'</div>'+
+      '<div style="font-size:11px;color:var(--muted);line-height:1.6">'+i.d+'</div>'+
     '</div>';
   }).join('');
 }
 
-function renderSystemPrompt(){
-  document.getElementById('systemPromptBox').textContent = SYSTEM_PROMPT;
-}
-
-function renderComplianceMatrix(){
-  var el = document.getElementById('complianceMatrix');
-  var html = '';
-  Object.entries(COMPLIANCE_CHECKS).forEach(function(e){
-    var id=e[0], checks=e[1];
-    var a = AGENTS[id];
-    var pass = checks.filter(function(c){return c.status==='pass'}).length;
-    var total = checks.length;
-    var score = Math.round(pass/total*100);
-    var scoreColor = score>=80?'var(--green)':score>=60?'var(--gold)':'var(--pink)';
-
-    html += '<div class="agent-detail">'+
-      '<div class="ad-header">'+
-        '<div class="ad-color" style="background:'+a.color+'"></div>'+
-        '<div class="ad-name" style="color:'+a.color+'">'+a.name+'</div>'+
-        '<div class="ad-role">'+a.role+'</div>'+
-        '<span class="score-badge" style="background:rgba(0,0,0,.3);color:'+scoreColor+';border:1px solid '+scoreColor+'">'+score+'%</span>'+
+/* ── COMPLIANCE MATRIX ─────────────────────────────────────── */
+function buildCompliance(){
+  var el  = document.getElementById('complianceMatrix');
+  var out = '';
+  // Order: matrix first, then by tier
+  var order = ['matrix','nova','pulse','signal','scholar','spark','aria','echo','reach','guardian'];
+  order.forEach(function(id){
+    var a  = AGENTS.find(function(x){return x.id===id});
+    var cc = COMPLIANCE[id] || [];
+    var pass = cc.filter(function(c){return c.p==='pass'}).length;
+    var score= Math.round(pass/cc.length*100);
+    var scoreC= score>=80?'var(--green)':score>=60?'var(--gold)':'var(--pink)';
+    out += '<div class="comply-block">'+
+      '<div class="cb-head">'+
+        '<div class="cb-dot" style="background:'+a.color+'"></div>'+
+        '<div class="cb-name" style="color:'+a.color+'">'+a.name+'</div>'+
+        '<div class="cb-role">'+a.role+'</div>'+
+        '<div class="cb-score" style="color:'+scoreC+';border-color:'+scoreC+'">'+score+'%</div>'+
       '</div>'+
       '<div class="check-list">'+
-      checks.map(function(c){
-        var icon = c.status==='pass'?'✓':c.status==='warn'?'~':'✕';
-        return '<div class="check-item">'+
-          '<div class="check-box '+c.status+'">'+icon+'</div>'+
-          '<span style="color:'+(c.status==='pass'?'var(--text)':c.status==='warn'?'var(--gold)':'var(--muted)')+'">'+c.label+'</span>'+
+      cc.map(function(c){
+        return '<div class="ci">'+
+          '<div class="ci-box '+c.p+'">'+complianceIcon(c.p)+'</div>'+
+          '<span style="color:'+(c.p==='pass'?'var(--text)':c.p==='warn'?'var(--gold)':'var(--muted)')+'">'+c.l+'</span>'+
         '</div>';
       }).join('')+
       '</div></div>';
   });
-  el.innerHTML = html;
+  el.innerHTML = out;
 }
 
-function renderIntel(){
+/* ── INTELLIGENCE ──────────────────────────────────────────── */
+function buildIntel(){
   // Phase map
-  var phases = [
-    { phase:'PHASE 1',days:'Days 1–30',target:'295 → 15K',status:'ACTIVE',color:'var(--pink)',strategy:'Graphic reel dominance. 2×/day. Announcement template daily. Harvard drops. Day 30 results reel = first viral attempt.' },
-    { phase:'PHASE 2',days:'Days 31–60',target:'15K → 150K',status:'UPCOMING',color:'var(--gold)',strategy:'Leverage Phase 1 viral momentum. First collabs. Cross-platform launch. "The Agents" community identity launch.' },
-    { phase:'PHASE 3',days:'Days 61–90',target:'150K → 1M',status:'UPCOMING',color:'var(--green)',strategy:'Multiple viral peaks per week. Harvard completion. Agent system reveal. 90-day finale = biggest content ever.' },
+  var phases=[
+    {n:'PHASE 1 — LAUNCH',  r:'Days 1–30',  tg:'295 → 15,000',  s:'ACTIVE',  c:'var(--pink)',  d:'Graphic reel dominance. 2×/day. Announcement template daily. Harvard drops. Day 30 results reel = first viral attempt.'},
+    {n:'PHASE 2 — ACCELERATE',r:'Days 31–60',tg:'15K → 150K',   s:'UPCOMING',c:'var(--gold)',  d:'Leverage Phase 1 momentum. First collabs. Cross-platform launch. "The Agents" community identity.'},
+    {n:'PHASE 3 — CLOSE',   r:'Days 61–90', tg:'150K → 1,000,000',s:'UPCOMING',c:'var(--green)',d:'Multiple viral peaks/week. Harvard completion. Agent system reveal. Day 90 finale = biggest content ever.'},
   ];
   document.getElementById('phaseMap').innerHTML = phases.map(function(p){
-    return '<div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;border-left:3px solid '+p.color+'">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
-        '<span style="font-size:12px;font-weight:800;color:'+p.color+'">'+p.phase+' — '+p.target+'</span>'+
-        '<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.05);color:var(--muted)">'+p.status+'</span>'+
-      '</div>'+
-      '<div style="font-size:10px;color:var(--muted)">'+p.days+'</div>'+
-      '<div style="font-size:11px;color:var(--text);margin-top:6px">'+p.strategy+'</div>'+
+    return '<div class="phase-card" style="border-left-color:'+p.c+'">'+
+      '<div class="pc-top"><div class="pc-name" style="color:'+p.c+'">'+p.n+'</div>'+
+      '<div class="pc-status">'+p.s+'</div></div>'+
+      '<div class="pc-range">'+p.r+' · Target: '+p.tg+'</div>'+
+      '<div class="pc-desc">'+p.d+'</div>'+
     '</div>';
   }).join('');
 
   // Viral opps
-  var opps = [
-    { title:'Day 30 Results Reel', urgency:'HIGH', desc:'Build up to this every day. The reveal of real metrics after 30 days = your best viral candidate.' },
-    { title:'Harvard AI Concept Drop (weekly)', urgency:'ONGOING', desc:'1 Harvard concept per week translated to 60-second graphic reel. Credibility + education = saves.' },
-    { title:'"The AI Failed Me" Post', urgency:'HIGH', desc:'One honest failure post will outperform 10 success posts. Audiences save and share failure + recovery.' },
-    { title:'Agent System Live Demo', urgency:'MED', desc:'Screen recording of your actual agents running. Show the code, the output, the real-time results.' },
+  var opps=[
+    {t:'Day 30 Results Reel',    u:'HIGH',    c:'var(--pink)',  d:'Build to this daily. Real metrics after 30 days = your best viral candidate.'},
+    {t:'Harvard AI Concept Drop',u:'ONGOING', c:'var(--gold)',  d:'1 concept/week → 60-sec graphic reel. Credibility + education = saves.'},
+    {t:'"The AI Failed Me" Post', u:'HIGH',    c:'var(--orange)',d:'One honest failure post will outperform 10 success posts. Saves and shares.'},
+    {t:'Agent System Live Demo',  u:'MED',     c:'var(--cyan)',  d:'Screen recording of actual agents running. Show the real system.'},
   ];
   document.getElementById('viralOpps').innerHTML = opps.map(function(o){
-    var c = o.urgency==='HIGH'?'var(--pink)':o.urgency==='ONGOING'?'var(--gold)':'var(--cyan)';
-    return '<div class="ic-item">'+
-      '<div style="flex:1"><div style="font-size:12px;font-weight:700">'+o.title+'</div>'+
-      '<div style="font-size:11px;color:var(--muted);margin-top:2px">'+o.desc+'</div></div>'+
-      '<div style="font-size:10px;font-weight:700;color:'+c+';white-space:nowrap;margin-left:8px">'+o.urgency+'</div>'+
+    return '<div class="intel-item">'+
+      '<div class="ii-top">'+
+        '<div class="ii-title">'+o.t+'</div>'+
+        '<div class="ii-badge" style="background:rgba(0,0,0,.3);color:'+o.c+';border:1px solid '+o.c+'">'+o.u+'</div>'+
+      '</div>'+
+      '<div class="ii-desc">'+o.d+'</div>'+
     '</div>';
   }).join('');
 
   // Format ranking
-  var formats = [
-    { rank:1, name:'Graphic Text Reel', rate:'2.4%', label:'PROVEN' },
-    { rank:2, name:'Results Reveal', rate:'est 2%+', label:'BUILD' },
-    { rank:3, name:'Screen Recording', rate:'est 1.5%', label:'TEST' },
-    { rank:4, name:'Edu Cheat Sheet', rate:'high saves', label:'TEST' },
-    { rank:5, name:'Talking-Head', rate:'0%', label:'BLOCKED' },
+  var fmts=[
+    {r:1,n:'Graphic Text Reel',   rate:'2.4% follow',  l:'PROVEN',  c:'var(--green)'},
+    {r:2,n:'Results Reveal',      rate:'est 2%+',      l:'BUILD',   c:'var(--cyan)'},
+    {r:3,n:'Screen Recording',    rate:'est 1.5%',     l:'TEST',    c:'var(--gold)'},
+    {r:4,n:'Edu Cheat Sheet',     rate:'high saves',   l:'TEST',    c:'var(--gold)'},
+    {r:5,n:'Talking-Head',        rate:'0%',           l:'BLOCKED', c:'var(--pink)'},
   ];
-  document.getElementById('formatRanking').innerHTML = formats.map(function(f){
-    var c = f.label==='PROVEN'?'var(--green)':f.label==='BLOCKED'?'var(--pink)':f.label==='BUILD'?'var(--cyan)':'var(--gold)';
-    return '<div class="ic-item">'+
-      '<div style="width:18px;height:18px;border-radius:5px;background:'+c+';color:#000;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">'+f.rank+'</div>'+
-      '<div style="flex:1"><div style="font-size:12px;font-weight:700">'+f.name+'</div>'+
-      '<div style="font-size:10px;color:var(--muted)">Follow rate: '+f.rate+'</div></div>'+
-      '<span style="font-size:10px;font-weight:700;color:'+c+'">'+f.label+'</span>'+
+  document.getElementById('formatRanking').innerHTML = fmts.map(function(f){
+    return '<div class="intel-item">'+
+      '<div class="ii-top">'+
+        '<div style="width:20px;height:20px;border-radius:6px;background:'+f.c+';color:#000;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">'+f.r+'</div>'+
+        '<div class="ii-title" style="flex:1;margin:0 8px">'+f.n+'</div>'+
+        '<div style="font-size:10px;font-weight:700;color:'+f.c+'">'+f.l+'</div>'+
+      '</div>'+
+      '<div class="ii-desc">'+f.rate+'</div>'+
     '</div>';
   }).join('');
 
   // Algorithm threats
-  var threats = [
-    { label:'Low save rate (0.3%)', level:'CRITICAL', fix:'Engineer saves: cheat sheets, frameworks, numbered lists' },
-    { label:'High skip rate (47.8%)', level:'CRITICAL', fix:'Rewrite every hook. Bold text, specific number, info gap.' },
-    { label:'Low post frequency', level:'CRITICAL', fix:'2 posts/day minimum or algorithm deprioritizes account' },
-    { label:'No engagement reply loop', level:'HIGH', fix:'ARIA must reply within 60 min or distribution drops' },
+  var threats=[
+    {l:'Low save rate (0.3%)',  lv:'CRITICAL',d:'Engineer saves: cheat sheets, frameworks, numbered lists'},
+    {l:'High skip rate (47.8%)',lv:'CRITICAL',d:'Rewrite every hook. Bold text, specific number, info gap.'},
+    {l:'Post frequency 0.27/day',lv:'CRITICAL',d:'2/day minimum or algorithm deprioritizes account.'},
+    {l:'No engagement loop',   lv:'HIGH',    d:'Reply within 60 min or distribution drops significantly.'},
   ];
   document.getElementById('algoThreats').innerHTML = threats.map(function(t){
-    return '<div class="ic-item" style="flex-direction:column;gap:4px">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center">'+
-        '<span style="font-size:12px;font-weight:700;color:var(--pink)">'+t.label+'</span>'+
-        '<span style="font-size:10px;font-weight:700;color:var(--pink)">'+t.level+'</span>'+
+    return '<div class="intel-item">'+
+      '<div class="ii-top">'+
+        '<div class="ii-title" style="color:var(--pink)">'+t.l+'</div>'+
+        '<div class="ii-badge" style="background:rgba(255,45,120,.1);color:var(--pink);border:1px solid rgba(255,45,120,.3)">'+t.lv+'</div>'+
       '</div>'+
-      '<div style="font-size:11px;color:var(--muted)">Fix: '+t.fix+'</div>'+
+      '<div class="ii-desc">Fix: '+t.d+'</div>'+
     '</div>';
   }).join('');
 
   // Harvard pipeline
-  var concepts = [
-    { concept:'Multi-Agent Orchestration', status:'READY', note:'What you\'re building — explain the system' },
-    { concept:'Reasoning Loops', status:'READY', note:'How AI agents think and self-correct' },
-    { concept:'Tool Use in AI', status:'QUEUE', note:'How agents use APIs, browsers, code' },
-    { concept:'RAG (Retrieval)', status:'QUEUE', note:'How AI remembers and retrieves context' },
-    { concept:'Human-in-the-Loop', status:'QUEUE', note:'When and why AI needs human oversight' },
-    { concept:'Agent Memory Systems', status:'QUEUE', note:'Short vs long-term memory in AI agents' },
+  var concepts=[
+    {c:'Multi-Agent Orchestration',s:'READY', n:'What you\'re building — explain the system live'},
+    {c:'Reasoning Loops',          s:'READY', n:'How AI agents think and self-correct'},
+    {c:'Tool Use in AI',           s:'QUEUE', n:'How agents use APIs, browsers, and code'},
+    {c:'RAG (Retrieval)',           s:'QUEUE', n:'How AI remembers and retrieves context'},
+    {c:'Human-in-the-Loop',        s:'QUEUE', n:'When and why AI needs human oversight'},
+    {c:'Agent Memory Systems',      s:'QUEUE', n:'Short vs long-term memory in AI agents'},
   ];
   document.getElementById('harvardPipeline').innerHTML = concepts.map(function(c){
-    var col = c.status==='READY'?'var(--green)':'var(--muted)';
-    return '<div class="ic-item">'+
-      '<div style="flex:1"><div style="font-size:11px;font-weight:700">'+c.concept+'</div>'+
-      '<div style="font-size:10px;color:var(--muted)">'+c.note+'</div></div>'+
-      '<span style="font-size:10px;font-weight:700;color:'+col+'">'+c.status+'</span>'+
+    var col = c.s==='READY'?'var(--green)':'var(--muted)';
+    return '<div class="intel-item">'+
+      '<div class="ii-top">'+
+        '<div class="ii-title">'+c.c+'</div>'+
+        '<div style="font-size:10px;font-weight:700;color:'+col+'">'+c.s+'</div>'+
+      '</div>'+
+      '<div class="ii-desc">'+c.n+'</div>'+
     '</div>';
   }).join('');
 }
 
-// ── TAB SWITCHING ────────────────────────────────────────────────
-function showTab(name, el){
-  document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
-  document.getElementById('tab-'+name).classList.add('active');
-  el.classList.add('active');
+/* ── TAB SWITCHING ─────────────────────────────────────────── */
+// nameToPane maps tab names to pane IDs (comply→comply, run→run, etc.)
+function showTab(name, clickedEl, source){
+  // Hide all panes
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('act')});
+  // Show target pane
+  var pane = document.getElementById('tab-'+name);
+  if(pane) pane.classList.add('act');
+
+  // Desktop tab buttons
+  document.querySelectorAll('.dtab').forEach(function(b){b.classList.remove('act')});
+  // Bottom nav buttons
+  document.querySelectorAll('.bn-item').forEach(function(b){b.classList.remove('act')});
+
+  if(source==='bn'){
+    // Clicked from bottom nav
+    clickedEl.classList.add('act');
+    // Also sync desktop tabs
+    document.querySelectorAll('.dtab').forEach(function(b){
+      if(b.textContent.toLowerCase().includes(name.replace('comply','comply').replace('run','run'))) b.classList.add('act');
+    });
+  } else {
+    // Clicked from desktop tabs
+    clickedEl.classList.add('act');
+    // Sync bottom nav
+    var bnEl = document.getElementById('bn-'+name);
+    if(bnEl) bnEl.classList.add('act');
+  }
+
+  // Scroll top of main area
+  var ma = document.querySelector('.main-area');
+  if(ma) ma.scrollTop = 0;
+  window.scrollTo(0,0);
 }
 
-// ── AGENT SIDEBAR SELECT ─────────────────────────────────────────
+/* ── AGENT SELECTION ───────────────────────────────────────── */
 function selectAgent(id, el){
-  document.querySelectorAll('.agent-pill').forEach(function(p){ p.classList.remove('active'); });
-  el.classList.add('active');
+  document.querySelectorAll('.ap').forEach(function(p){p.classList.remove('sel')});
+  el.classList.add('sel');
   document.getElementById('agentSelect').value = id;
-  showTab('agent', document.querySelectorAll('.tab-btn')[4]);
-  document.querySelectorAll('.tab-btn')[4].classList.add('active');
+  // Switch to run tab
+  var runBtn = document.querySelectorAll('.dtab')[4];
+  showTab('run', runBtn);
 }
 
-// ── COPY SYSTEM PROMPT ───────────────────────────────────────────
-function copyPrompt(){
-  navigator.clipboard.writeText(SYSTEM_PROMPT);
-  showToast('Master system prompt copied — paste into any AI tool', 'ok');
+function selectAgentMobile(id){
+  closeDrawer();
+  document.getElementById('agentSelect').value = id;
+  // Switch to run tab via bottom nav
+  var bnRun = document.getElementById('bn-run');
+  showTab('run', bnRun, 'bn');
 }
 
-function testPrompt(){
-  document.getElementById('agentSelect').value = 'matrix';
-  document.getElementById('agentTask').value = 'DAILY BRIEF — Day '+dayNum()+' of the 90-day mission. What is the current state and what are the 3 most urgent things I need to do right now?';
-  showTab('agent', document.querySelectorAll('.tab-btn')[4]);
-  runAgent();
+/* ── DRAWER ────────────────────────────────────────────────── */
+function openDrawer(){
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('agentDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer(){
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('agentDrawer').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
-// ── RUN AGENT ────────────────────────────────────────────────────
-var agentOutput = '';
+/* ── RUN AGENT ─────────────────────────────────────────────── */
+var lastOut = '';
 
-function setQuick(text){
+function quick(text, agentId){
   document.getElementById('agentTask').value = text;
+  if(agentId) document.getElementById('agentSelect').value = agentId;
 }
 
 async function runAgent(){
-  var id      = document.getElementById('agentSelect').value;
-  var task    = document.getElementById('agentTask').value.trim();
-  if(!task){ showToast('Enter a task first', 'err'); return; }
+  var id   = document.getElementById('agentSelect').value;
+  var task = document.getElementById('agentTask').value.trim();
+  if(!task){ toast('Enter a task first','err'); return; }
 
-  var btn = document.getElementById('runAgentBtn');
+  var a   = AGENTS.find(function(x){return x.id===id});
+  var btn = document.getElementById('runBtn');
   btn.disabled = true;
-  btn.textContent = '⏳ Agent running...';
+  btn.textContent = '⏳ '+a.name+' running...';
 
-  var a = AGENTS[id];
-  var out = document.getElementById('agentOutput');
-  out.style.color = 'var(--muted)';
-  out.textContent = a.name+' is processing your request...\n\nModel: claude-opus-4-8\nSystem: '+a.role+'\n\nGenerating...';
+  var out = document.getElementById('agentOut');
+  out.className = 'agent-out';
+  out.textContent = a.name+' is processing...\n\nRoute: '+a.role+'\nModel: claude-opus-4-8\n\nGenerating output...';
+  document.getElementById('outAgentLabel').textContent = a.name+' Output';
+  document.getElementById('copyOutBtn').style.display = 'none';
 
-  var systemPrompt = AGENT_SYSTEM_PROMPTS[id].replace(/\$\{dayNum\(\)\}/g, dayNum());
+  var sys = (AGENT_PROMPTS[id]||'').replace(/__DAY__/g, dayNum());
 
-  try {
+  try{
     var r = await fetch('/api/anthropic',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-opus-4-8',
         max_tokens:1500,
-        system: systemPrompt + '\n\nCurrent date: Day '+dayNum()+'/90 of the 90-day mission. Followers: ~334.',
+        system:sys+'\n\nContext: Day '+dayNum()+'/90 of the 90-day mission. Current followers: ~334.',
         messages:[{role:'user',content:task}]
       })
     });
     var d = await r.json();
-    var text = d.content && d.content[0] ? d.content[0].text : null;
-    if(!text) throw new Error(d.error?.message || 'no content');
-    agentOutput = text;
-    out.textContent = '['+a.name+' — '+a.role+']\n\n'+text;
-    out.style.color = 'var(--text)';
-    document.getElementById('copyAgentOutput').style.display = '';
-    showToast(a.name+' completed', 'ok');
-  } catch(e){
-    try {
-      var r2 = await fetch('/api/openai',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          model:'gpt-4o',
-          messages:[{role:'system',content:systemPrompt},{role:'user',content:task}]
-        })
-      });
-      var d2 = await r2.json();
-      var text2 = d2.choices?.[0]?.message?.content;
-      if(!text2) throw new Error('failed');
-      agentOutput = text2;
-      out.textContent = '['+a.name+' — '+a.role+']\n\n'+text2;
-      out.style.color = 'var(--text)';
-      document.getElementById('copyAgentOutput').style.display = '';
-    } catch(e2){
-      out.textContent = 'Error: API unavailable. Check API keys in server configuration.';
-      showToast('API error — check configuration', 'err');
+    var text = d.content&&d.content[0]?d.content[0].text:null;
+    if(!text) throw new Error(d.error?.message||'no content');
+    finish(a, text);
+  }catch(e){
+    try{
+      var r2=await fetch('/api/openai',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:sys},{role:'user',content:task}]})});
+      var d2=await r2.json();
+      var t2=d2.choices?.[0]?.message?.content;
+      if(!t2) throw new Error('failed');
+      finish(a, t2);
+    }catch(e2){
+      out.textContent='Error: API unavailable. Check API keys in server configuration.\n\n'+e.message;
+      toast('API error','err');
     }
   }
-  btn.disabled = false;
-  btn.textContent = '⚡ Activate Agent';
+
+  btn.disabled=false;
+  btn.textContent='⚡ Activate Agent';
 }
 
-function copyOutput(){
-  if(!agentOutput) return;
-  navigator.clipboard.writeText(agentOutput);
-  showToast('Output copied', 'ok');
+function finish(a, text){
+  lastOut = text;
+  var out = document.getElementById('agentOut');
+  out.textContent = '['+a.name+' — '+a.role+']\n\n'+text;
+  out.className = 'agent-out ready';
+  document.getElementById('copyOutBtn').style.display = '';
+  toast(a.name+' completed','ok');
 }
 
-// ── RUN ORCHESTRATION ─────────────────────────────────────────────
+function copyOut(){
+  if(!lastOut) return;
+  navigator.clipboard.writeText(lastOut);
+  toast('Copied to clipboard','ok');
+}
+
+/* ── ORCHESTRATION SHORTCUT ────────────────────────────────── */
 function runOrchestration(){
-  document.getElementById('agentSelect').value = 'matrix';
-  document.getElementById('agentTask').value = 'ACTIVATE — Full orchestration cycle for Day '+dayNum()+'. Generate a ready-to-post content piece for today (graphic reel format, use the Harvard AI angle), include viral score, hashtags, and compliance check. Then give me the 3 most urgent actions for the next 60 minutes.';
-  showTab('agent', document.querySelectorAll('.tab-btn')[4]);
-  runAgent();
+  quick('ACTIVATE — Full orchestration for Day '+dayNum()+'. Generate a ready-to-post graphic reel (use Harvard AI + mission update angle), include viral score, hashtag set, and compliance check. Then give me the 3 most urgent actions for the next 60 minutes.','matrix');
+  var runBtn = document.querySelectorAll('.dtab')[4];
+  showTab('run', runBtn);
+  setTimeout(runAgent, 200);
 }
 
-// ── COMPLIANCE RUN ────────────────────────────────────────────────
-function runAllCompliance(){
-  showToast('Compliance matrix refreshed — checking all 10 agents', 'ok');
-  renderComplianceMatrix();
+/* ── COPY PROMPT ───────────────────────────────────────────── */
+function copyPrompt(){
+  navigator.clipboard.writeText(SYSTEM_PROMPT);
+  toast('Master prompt copied — paste into any AI tool','ok');
+}
+function testInAI(){
+  quick('ACTIVATE — Daily brief for Day '+dayNum()+'. Coordinate all agents and give me: the best content piece for today, viral score, hashtags, and top 3 urgent actions.','matrix');
+  var runBtn = document.querySelectorAll('.dtab')[4];
+  showTab('run', runBtn);
+  setTimeout(runAgent, 200);
 }
 
-// ── TOAST ─────────────────────────────────────────────────────────
-function showToast(msg, type){
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast '+(type||'');
-  setTimeout(function(){ t.classList.add('show'); }, 10);
+/* ── TOAST ─────────────────────────────────────────────────── */
+function toast(msg, type){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast '+(type||'');
+  requestAnimationFrame(function(){ t.classList.add('show'); });
   setTimeout(function(){ t.classList.remove('show'); }, 2800);
 }
 </script>
