@@ -519,6 +519,77 @@ textarea{resize:vertical;min-height:90px;line-height:1.6}
   .grade-grid{grid-template-columns:repeat(3,1fr)}
   .g2{grid-template-columns:1fr 1fr}
 }
+
+/* ══════════════════════════════════════════════════════════════
+   DESIGN STUDIO
+══════════════════════════════════════════════════════════════ */
+.design-type-tabs{
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+  margin-bottom:14px;padding-bottom:2px;
+}
+.design-type-tabs::-webkit-scrollbar{display:none}
+.dt-tab{
+  padding:7px 14px;font-size:11px;font-weight:700;
+  border-radius:20px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);cursor:pointer;
+  transition:all .15s;white-space:nowrap;flex-shrink:0;
+}
+.dt-tab.act{background:rgba(123,97,255,.15);border-color:var(--indigo);color:var(--indigo)}
+
+.design-gallery{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  margin-bottom:16px;
+}
+.design-card{
+  border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;background:var(--surface);
+  display:flex;flex-direction:column;transition:border-color .15s;
+}
+.design-card:hover{border-color:var(--indigo)}
+.design-thumb{
+  width:100%;aspect-ratio:1;overflow:hidden;
+  background:linear-gradient(135deg,rgba(123,97,255,.15),rgba(255,45,120,.15));
+  display:flex;align-items:center;justify-content:center;
+}
+.design-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.design-thumb-placeholder{font-size:28px}
+.design-meta{padding:9px 10px;flex:1;display:flex;flex-direction:column;gap:4px}
+.design-type-badge{
+  font-size:9px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);
+}
+.design-label{font-size:11px;font-weight:700;line-height:1.3}
+.design-open-btn{
+  margin-top:6px;padding:6px 10px;font-size:10px;font-weight:700;
+  border-radius:7px;border:1px solid rgba(123,97,255,.4);
+  background:rgba(123,97,255,.1);color:var(--indigo);
+  cursor:pointer;text-decoration:none;display:block;
+  text-align:center;transition:background .15s;
+}
+.design-open-btn:hover{background:rgba(123,97,255,.22)}
+
+.studio-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.studio-badges{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.studio-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--muted);
+}
+.studio-badge.canva{border-color:rgba(0,200,180,.4);color:#00C8B4}
+.studio-badge.figma{border-color:rgba(162,89,255,.4);color:#A259FF}
+
+.brief-out{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:14px;min-height:110px;
+  font-size:12px;line-height:1.8;white-space:pre-wrap;
+  color:var(--muted);margin-top:12px;
+}
+.brief-out.ready{color:var(--text);border-color:var(--pink)}
+
+@media(min-width:900px){
+  .design-gallery{grid-template-columns:repeat(4,1fr)}
+  .design-thumb{aspect-ratio:4/3}
+}
 </style>
 </head>
 <body>
@@ -591,6 +662,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.6}
       <button class="dtab" onclick="showTab('comply',this)">✅ Compliance</button>
       <button class="dtab" onclick="showTab('run',this)">🤖 Run Agent</button>
       <button class="dtab" onclick="showTab('intel',this)">🔭 Intelligence</button>
+      <button class="dtab" onclick="showTab('create',this)">🎨 Create</button>
     </div>
 
     <!-- ── TAB: COMMAND ─────────────────────────────── -->
@@ -822,6 +894,77 @@ textarea{resize:vertical;min-height:90px;line-height:1.6}
       </div>
     </div>
 
+    <!-- ── TAB: CREATE ──────────────────────────────── -->
+    <div id="tab-create" class="tab-pane">
+
+      <div class="studio-header">
+        <div>
+          <div class="page-title">Design Studio</div>
+          <div class="page-sub">AI-generated Metakittyz content — Canva + Figma connected</div>
+        </div>
+        <div class="studio-badges">
+          <span class="studio-badge canva">🎨 Canva</span>
+          <span class="studio-badge figma">📐 Figma</span>
+        </div>
+      </div>
+
+      <!-- Content type filter -->
+      <div class="design-type-tabs">
+        <button class="dt-tab act" onclick="filterDesigns('all',this)">All (12)</button>
+        <button class="dt-tab" onclick="filterDesigns('post',this)">📸 Instagram Post</button>
+        <button class="dt-tab" onclick="filterDesigns('story',this)">📱 Story</button>
+        <button class="dt-tab" onclick="filterDesigns('thumb',this)">▶️ YouTube Thumb</button>
+      </div>
+
+      <!-- Generated designs gallery -->
+      <div class="sec-lbl">AI-Generated Designs — Click to Open &amp; Edit in Canva</div>
+      <div class="design-gallery" id="designGallery"></div>
+
+      <!-- Generate new design -->
+      <div class="card">
+        <div class="sec-lbl">Generate New Design with NOVA</div>
+        <div class="g2" style="margin-bottom:10px">
+          <div>
+            <label class="field-lbl">Content Type</label>
+            <select id="newDesignType">
+              <option value="instagram_post">Instagram Post (1080×1350)</option>
+              <option value="your_story">Instagram Story (1080×1920)</option>
+              <option value="youtube_thumbnail">YouTube Thumbnail (1280×720)</option>
+              <option value="twitter_post">Twitter / X Post</option>
+              <option value="reel_cover">Reel Cover (Square)</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-lbl">Vibe</label>
+            <select id="newDesignVibe">
+              <option value="educational">Educational / Harvard AI Insight</option>
+              <option value="bts">Behind-the-Scenes Build</option>
+              <option value="announcement">Announcement / Hype Drop</option>
+              <option value="results">Data / Results Reveal</option>
+              <option value="inspirational">Inspirational</option>
+            </select>
+          </div>
+        </div>
+        <label class="field-lbl">Topic / Hook (what this post is about)</label>
+        <textarea id="newDesignTopic" rows="2" placeholder="e.g. Day 4 — built NOVA agent today. Harvard concept: multi-agent orchestration explained visually. Show the system running live..."></textarea>
+        <div class="row-btns" style="margin-top:10px">
+          <button class="btn btn-primary" style="width:auto;flex:1" id="briefBtn" onclick="generateDesignBrief()">🤖 NOVA: Generate Brief + Canva Prompt</button>
+          <button class="btn btn-outline btn-sm" onclick="openCanvaCreate()">🎨 Canva</button>
+          <button class="btn btn-outline btn-sm" onclick="openFigmaCreate()">📐 Figma</button>
+        </div>
+        <div class="brief-out" id="briefOut">NOVA will write: a creative brief, ready-to-post caption, hashtag set, and a Canva AI prompt you can paste directly. Enter your topic above and hit Generate.</div>
+        <div id="briefActions" style="display:none;margin-top:10px">
+          <div class="row-btns">
+            <button class="btn btn-ghost btn-sm" onclick="copyBriefSection('canva')">📐 Copy Canva Prompt</button>
+            <button class="btn btn-ghost btn-sm" onclick="copyBriefSection('caption')">📋 Copy Caption</button>
+            <button class="btn btn-ghost btn-sm" onclick="copyBriefSection('hashtags')">📋 Copy Hashtags</button>
+            <button class="btn btn-outline btn-sm" onclick="openCanvaCreate()">Open Canva →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div><!-- /main-area -->
 </div><!-- /page-shell -->
 
@@ -843,6 +986,9 @@ textarea{resize:vertical;min-height:90px;line-height:1.6}
   </button>
   <button class="bn-item" id="bn-intel" onclick="showTab('intel',this,'bn')">
     <span class="bn-icon">🔭</span>Intel
+  </button>
+  <button class="bn-item" id="bn-create" onclick="showTab('create',this,'bn')">
+    <span class="bn-icon">🎨</span>Create
   </button>
 </nav>
 
@@ -1164,6 +1310,7 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('systemPromptBox').textContent = SYSTEM_PROMPT;
   buildCompliance();
   buildIntel();
+  renderDesignGallery();
 });
 
 /* ── SIDEBAR (desktop) ─────────────────────────────────────── */
@@ -1663,6 +1810,205 @@ function testInAI(){
   var runBtn = document.querySelectorAll('.dtab')[4];
   showTab('run', runBtn);
   setTimeout(runAgent, 200);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DESIGN STUDIO
+══════════════════════════════════════════════════════════════ */
+var DESIGNS = [
+  /* Instagram Posts — generated by Canva AI */
+  {id:'p1',type:'post',label:'Building AI In Public',
+   thumb:'https://design.canva.ai/xsOncw_2zHCEinH',
+   url:'https://www.canva.com/d/eF31cdRyL3qJ-U2'},
+  {id:'p2',type:'post',label:'10 Agents · 90 Days',
+   thumb:'https://design.canva.ai/FUtVFIhhH_kmZn3',
+   url:'https://www.canva.com/d/qHQH_T03gwD6WFt'},
+  {id:'p3',type:'post',label:'Mission: 1M Followers',
+   thumb:'https://design.canva.ai/MijRmIsNdqA1TAI',
+   url:'https://www.canva.com/d/LMD_SBqVkP2B0Zg'},
+  {id:'p4',type:'post',label:'Metakittyz AI OS Live',
+   thumb:'https://design.canva.ai/U1QwdAEz5nXSSwp',
+   url:'https://www.canva.com/d/kXqqs9P1eLh9xUK'},
+  /* Instagram Stories */
+  {id:'s1',type:'story',label:'Daily Mission Update',
+   thumb:'https://design.canva.ai/vK5nYF3h4CYLA9w',
+   url:'https://www.canva.com/d/S7brJBxMiePsoBt'},
+  {id:'s2',type:'story',label:'Day Counter Story',
+   thumb:'https://design.canva.ai/qMAqQTJoV3-MPSW',
+   url:'https://www.canva.com/d/Zzqh-p4IIQ7Ca2O'},
+  {id:'s3',type:'story',label:'Agent Reveal',
+   thumb:'https://design.canva.ai/YEeG7UNuUaAo1by',
+   url:'https://www.canva.com/d/Oo5fIW73Wi5iD1W'},
+  {id:'s4',type:'story',label:'Progress Check',
+   thumb:'https://design.canva.ai/9ijNDphUd5H3qs6',
+   url:'https://www.canva.com/d/_meZr8TGSiTfgqJ'},
+  /* YouTube Thumbnails */
+  {id:'t1',type:'thumb',label:'I Built This With AI',
+   thumb:'https://design.canva.ai/CvpeMwuH2HSg4S9',
+   url:'https://www.canva.com/d/zaHnKvIy2X8FAYt'},
+  {id:'t2',type:'thumb',label:'Live Build Stream',
+   thumb:'https://design.canva.ai/6utjMn1XB_GEjFA',
+   url:'https://www.canva.com/d/BjRRkFqQ-u_mPmr'},
+  {id:'t3',type:'thumb',label:'10-Agent System',
+   thumb:'https://design.canva.ai/y0yLNrs3m2bt1qn',
+   url:'https://www.canva.com/d/LJ6Z0ZJwkgQVoUl'},
+  {id:'t4',type:'thumb',label:'Harvard AI Reveal',
+   thumb:'https://design.canva.ai/r8fmvnUPlKcauTZ',
+   url:'https://www.canva.com/d/hgA_x6zaZOecn-u'},
+];
+
+var currentDesignFilter = 'all';
+var lastBrief = '';
+var lastBriefData = {};
+
+var DESIGN_TYPE_LABELS = {
+  post:'Instagram Post',
+  story:'Instagram Story',
+  thumb:'YouTube Thumbnail',
+};
+var DESIGN_TYPE_EMOJI = { post:'📸', story:'📱', thumb:'▶️' };
+
+function renderDesignGallery(){
+  var g = document.getElementById('designGallery');
+  if(!g) return;
+  var list = currentDesignFilter === 'all'
+    ? DESIGNS
+    : DESIGNS.filter(function(d){ return d.type === currentDesignFilter; });
+  g.innerHTML = list.map(function(d){
+    return '<div class="design-card">' +
+      '<div class="design-thumb">' +
+        '<img src="'+d.thumb+'" alt="'+d.label+'" loading="lazy"' +
+        ' onerror="this.parentNode.innerHTML=\'<span class=design-thumb-placeholder>'+DESIGN_TYPE_EMOJI[d.type]+'</span>\'">' +
+      '</div>' +
+      '<div class="design-meta">' +
+        '<div class="design-type-badge">'+DESIGN_TYPE_LABELS[d.type]+'</div>' +
+        '<div class="design-label">'+d.label+'</div>' +
+        '<a href="'+d.url+'" target="_blank" class="design-open-btn">Open &amp; Edit in Canva →</a>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function filterDesigns(type, btn){
+  currentDesignFilter = type;
+  document.querySelectorAll('.dt-tab').forEach(function(b){ b.classList.remove('act'); });
+  btn.classList.add('act');
+  renderDesignGallery();
+}
+
+async function generateDesignBrief(){
+  var type  = document.getElementById('newDesignType').value;
+  var vibe  = document.getElementById('newDesignVibe').value;
+  var topic = document.getElementById('newDesignTopic').value.trim();
+  if(!topic){ toast('Enter a topic / hook first','err'); return; }
+
+  var TYPE_NAMES = {
+    instagram_post:'Instagram Post (1080×1350 portrait)',
+    your_story:'Instagram Story (1080×1920 vertical)',
+    youtube_thumbnail:'YouTube Thumbnail (1280×720 landscape)',
+    twitter_post:'Twitter/X Post (1600×900)',
+    reel_cover:'Reel Cover (1080×1080 square)',
+  };
+  var VIBE_NAMES = {
+    educational:'Educational / Harvard AI insight',
+    bts:'Behind-the-Scenes Build session',
+    announcement:'Announcement / Hype drop',
+    results:'Data / Results reveal',
+    inspirational:'Inspirational milestone',
+  };
+
+  var out = document.getElementById('briefOut');
+  var btn = document.getElementById('briefBtn');
+  out.className = 'brief-out';
+  out.textContent = 'NOVA is generating your design brief and Canva prompt for Day '+dayNum()+'...';
+  document.getElementById('briefActions').style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = '⏳ NOVA generating...';
+
+  var sys = 'You are NOVA, Content Strategist for @metakittyz — Erika\'s personal AI brand on a 90-day mission to 1M Instagram followers (started Day 1 with 334 followers, currently Day '+dayNum()+'/90). She is documenting her journey building a 10-agent AI orchestration system while taking Harvard\'s AI Intensive course. Brand aesthetic: dark cyberpunk, hot pink #FF2D78, indigo #7B61FF, near-black #07070D background. GRAPHIC REELS ONLY — no talking-head videos. All content must pass GUARDIAN compliance: hook ≤7 words, IG-appropriate.';
+
+  var userMsg = 'Generate a complete design brief.\n\nFormat: '+TYPE_NAMES[type]+'\nVibe: '+VIBE_NAMES[vibe]+'\nTopic: '+topic+'\nDay: '+dayNum()+'/90\n\nOutput EXACTLY in this structure (no extra sections):\n\nCANVA PROMPT:\n[One detailed paragraph for Canva AI — specify colors, font styles, layout zones, exact text overlays, brand elements, mood]\n\nCAPTION:\n[Full ready-to-post Instagram caption: hook line, 2–3 value sentences, CTA, @metakittyz tag]\n\nHASHTAGS:\n[30 hashtags space-separated]\n\nDESIGN NOTES:\n[3 bullet points on specific design choices that maximize engagement for this format]';
+
+  try {
+    var r = await fetch('/api/anthropic',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-opus-4-8',
+        max_tokens:1400,
+        system:sys,
+        messages:[{role:'user',content:userMsg}]
+      })
+    });
+    var d = await r.json();
+    var text = d.content&&d.content[0] ? d.content[0].text : null;
+    if(!text) throw new Error(d.error&&d.error.message||'no content');
+    finishBrief(text);
+  } catch(e) {
+    try {
+      var r2 = await fetch('/api/openai',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:sys},{role:'user',content:userMsg}]})});
+      var d2 = await r2.json();
+      var t2 = d2.choices&&d2.choices[0]&&d2.choices[0].message&&d2.choices[0].message.content;
+      if(!t2) throw new Error('gpt-4o failed');
+      finishBrief(t2);
+    } catch(e2) {
+      out.textContent = 'Error: AI API unavailable. Check server API keys.\n\n'+e.message;
+      toast('API error','err');
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🤖 NOVA: Generate Brief + Canva Prompt';
+}
+
+function finishBrief(text){
+  lastBrief = text;
+  lastBriefData = parseBriefSections(text);
+  var out = document.getElementById('briefOut');
+  out.textContent = text;
+  out.className = 'brief-out ready';
+  document.getElementById('briefActions').style.display = '';
+  toast('NOVA brief ready — copy sections below','ok');
+}
+
+function parseBriefSections(text){
+  var data = {};
+  var m;
+  m = text.match(/CANVA PROMPT:\n([\s\S]*?)(?=\n\n[A-Z]|$)/);
+  if(m) data.canva = m[1].trim();
+  m = text.match(/CAPTION:\n([\s\S]*?)(?=\n\n[A-Z]|$)/);
+  if(m) data.caption = m[1].trim();
+  m = text.match(/HASHTAGS:\n([\s\S]*?)(?=\n\n[A-Z]|$)/);
+  if(m) data.hashtags = m[1].trim();
+  return data;
+}
+
+function copyBriefSection(section){
+  var map = {canva:lastBriefData.canva, caption:lastBriefData.caption, hashtags:lastBriefData.hashtags};
+  var text = map[section] || lastBrief;
+  if(!text){ toast('Generate a brief first','err'); return; }
+  navigator.clipboard.writeText(text);
+  var labels = {canva:'Canva prompt', caption:'Caption', hashtags:'Hashtags'};
+  toast((labels[section]||'Brief')+' copied — paste into Canva / IG','ok');
+}
+
+var CANVA_URL_MAP = {
+  instagram_post:'instagram-posts',
+  your_story:'instagram-stories',
+  youtube_thumbnail:'youtube-thumbnails',
+  twitter_post:'twitter-posts',
+  reel_cover:'instagram-reels',
+};
+
+function openCanvaCreate(){
+  var type = (document.getElementById('newDesignType')||{}).value || 'instagram_post';
+  var slug = CANVA_URL_MAP[type] || 'instagram-posts';
+  window.open('https://www.canva.com/create/'+slug+'/', '_blank');
+}
+
+function openFigmaCreate(){
+  window.open('https://www.figma.com/design/', '_blank');
 }
 
 /* ── TOAST ─────────────────────────────────────────────────── */
