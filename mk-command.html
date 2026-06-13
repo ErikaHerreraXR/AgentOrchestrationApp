@@ -76,8 +76,8 @@ button{font-family:var(--font);cursor:pointer}
 
 /* Row 2: scrollable mission stats */
 .tb-r2{
-  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
-  padding:0 16px 10px;
+  display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;
+  padding:4px 16px 10px;flex-wrap:nowrap;
 }
 .tb-r2::-webkit-scrollbar{display:none}
 .ms-pill{
@@ -148,6 +148,9 @@ button{font-family:var(--font);cursor:pointer}
 }
 .dtab:hover{color:var(--text)}
 .dtab.act{color:var(--text);border-bottom-color:var(--indigo)}
+
+/* Desktop stats strip — hidden on mobile, shown via media query */
+.tb-stats-desktop{display:none}
 
 /* ── TAB CONTENTS ─────────────────────────────────────────── */
 .tab-pane{display:none;padding:16px}
