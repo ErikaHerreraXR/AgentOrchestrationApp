@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Products & Resources · Metakittyz</title>
+<meta name="description" content="AI prompts, courses, templates, and digital tools from Metakittyz — Erika Herrera's AI content creation toolkit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0015;--surf:rgba(255,255,255,.04);--border:rgba(255,255,255,.07);
+  --pk:#FF2D78;--tl:#00F5D4;--yl:#FFE000;--pu:#7B2FFF;--or:#FF6B35;--gr:#00FF41;
+  --txt:#e8e8f0;--muted:#666;--card:#0f0022;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:clip;}
+
+/* ── SITE NAV ── */
+.site-nav{position:sticky;top:0;z-index:200;background:rgba(10,0,21,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 clamp(14px,4vw,32px);}
+.sn-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:13px;letter-spacing:.12em;color:#fff;text-decoration:none;padding:14px 0;white-space:nowrap;}
+.sn-logo span{background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:rbshift 4s linear infinite;}
+@keyframes rbshift{from{background-position:0%}to{background-position:200%}}
+.sn-spacer{flex:1;}
+.sn-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;align-items:center;}
+.sn-tabs::-webkit-scrollbar{display:none;}
+.sn-tab{font-family:'Space Mono',monospace;font-size:10px;padding:5px 13px;border-radius:100px;border:1px solid rgba(255,255,255,.08);color:var(--muted);white-space:nowrap;transition:all .15s;letter-spacing:.05em;text-decoration:none;display:inline-block;}
+.sn-tab:hover{color:#ccc;border-color:rgba(255,255,255,.25);}
+.sn-tab.on{background:rgba(255,107,53,.15);border-color:rgba(255,107,53,.5);color:var(--or);}
+.sn-tab-lab{border-color:rgba(255,224,0,.3);color:var(--yl);}
+.sn-tab-lab:hover{background:rgba(255,224,0,.08);border-color:var(--yl);color:var(--yl);}
+.rb{height:2px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);background-size:200%;animation:rbshift 4s linear infinite;}
+
+/* ── HERO ── */
+.hero{padding:clamp(48px,8vw,96px) clamp(18px,5vw,64px) clamp(32px,5vw,64px);text-align:center;position:relative;}
+.hero-badge{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--or);border:1px solid rgba(255,107,53,.3);border-radius:100px;padding:5px 14px;display:inline-block;margin-bottom:20px;}
+.hero-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(28px,6vw,62px);line-height:1.1;text-wrap:balance;margin-bottom:16px;}
+.hero-title .hl{background:linear-gradient(90deg,#FF6B35,#FFE000);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:clamp(14px,1.8vw,18px);color:var(--muted);max-width:560px;margin:0 auto 32px;line-height:1.6;}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.chip{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;padding:5px 12px;border-radius:100px;border:1px solid var(--border);color:var(--muted);}
+
+/* ── PRODUCTS GRID ── */
+.products-wrap{max-width:1100px;margin:0 auto;padding:0 clamp(18px,5vw,48px) 120px;}
+.section-hdr{text-align:center;margin-bottom:48px;}
+.section-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--or);margin-bottom:10px;}
+.section-title{font-family:'Orbitron',monospace;font-weight:700;font-size:clamp(18px,3vw,26px);}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
+
+/* ── PRODUCT CARD ── */
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .2s;position:relative;}
+.pcard:hover{transform:translateY(-3px);}
+.pcard-accent{height:3px;width:100%;}
+.pcard-body{padding:24px 24px 20px;flex:1;display:flex;flex-direction:column;gap:12px;}
+.pcard-tag{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border-radius:100px;border:1px solid;display:inline-block;width:fit-content;}
+.pcard-icon{font-size:32px;line-height:1;}
+.pcard-title{font-family:'Orbitron',monospace;font-weight:700;font-size:14px;letter-spacing:.04em;line-height:1.3;}
+.pcard-desc{font-size:13px;color:var(--muted);line-height:1.6;flex:1;}
+.pcard-features{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.pcard-features li{font-size:11px;color:#888;display:flex;gap:6px;align-items:flex-start;}
+.pcard-features li::before{content:'→';color:var(--or);flex-shrink:0;margin-top:1px;}
+.pcard-foot{padding:0 24px 24px;}
+.pcard-badge{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;color:#555;margin-bottom:12px;}
+.btn-learn{width:100%;padding:13px 20px;border-radius:100px;border:none;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:700;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+
+/* card accent colors by type */
+.pcard-prompts .pcard-accent{background:linear-gradient(90deg,#FF2D78,#FF6B35);}
+.pcard-prompts .pcard-tag{color:#FF2D78;border-color:rgba(255,45,120,.3);}
+.pcard-prompts .btn-learn{background:linear-gradient(90deg,#FF2D78,#FF6B35);color:#fff;}
+.pcard-prompts .btn-learn:hover{opacity:.88;transform:scale(1.01);}
+
+.pcard-course .pcard-accent{background:linear-gradient(90deg,#7B2FFF,#00F5D4);}
+.pcard-course .pcard-tag{color:#7B2FFF;border-color:rgba(123,47,255,.3);}
+.pcard-course .btn-learn{background:linear-gradient(90deg,#7B2FFF,#00F5D4);color:#fff;}
+.pcard-course .btn-learn:hover{opacity:.88;transform:scale(1.01);}
+
+.pcard-template .pcard-accent{background:linear-gradient(90deg,#FFE000,#FF6B35);}
+.pcard-template .pcard-tag{color:#FFE000;border-color:rgba(255,224,0,.3);}
+.pcard-template .btn-learn{background:linear-gradient(90deg,#FFE000,#FF6B35);color:#0A0015;}
+.pcard-template .btn-learn:hover{opacity:.88;transform:scale(1.01);}
+
+.pcard-session .pcard-accent{background:linear-gradient(90deg,#00F5D4,#00FF41);}
+.pcard-session .pcard-tag{color:#00F5D4;border-color:rgba(0,245,212,.3);}
+.pcard-session .btn-learn{background:linear-gradient(90deg,#00F5D4,#00FF41);color:#0A0015;}
+.pcard-session .btn-learn:hover{opacity:.88;transform:scale(1.01);}
+
+.pcard-kit .pcard-accent{background:linear-gradient(90deg,#FF6B35,#FFE000);}
+.pcard-kit .pcard-tag{color:#FF6B35;border-color:rgba(255,107,53,.3);}
+.pcard-kit .btn-learn{background:linear-gradient(90deg,#FF6B35,#FFE000);color:#0A0015;}
+.pcard-kit .btn-learn:hover{opacity:.88;transform:scale(1.01);}
+
+.pcard-bundle .pcard-accent{background:linear-gradient(90deg,#FF2D78,#7B2FFF,#00F5D4);}
+.pcard-bundle .pcard-tag{color:#FF2D78;border-color:rgba(255,45,120,.3);}
+.pcard-bundle .btn-learn{background:linear-gradient(90deg,#FF2D78,#7B2FFF);color:#fff;}
+.pcard-bundle .btn-learn:hover{opacity:.88;transform:scale(1.01);}
+.pcard-bundle{border-color:rgba(255,45,120,.25);}
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(10,0,21,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:#0f0022;border-radius:20px;width:100%;max-width:420px;overflow:hidden;position:relative;}
+.modal-rb{height:3px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);background-size:200%;animation:rbshift 4s linear infinite;}
+.modal-body{padding:32px;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:#666;cursor:pointer;font-size:20px;line-height:1;padding:4px 8px;transition:color .15s;}
+.modal-close:hover{color:#fff;}
+.modal-icon{font-size:36px;margin-bottom:12px;}
+.modal-title{font-family:'Orbitron',monospace;font-weight:700;font-size:16px;margin-bottom:6px;}
+.modal-sub{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:20px;}
+.modal-product-name{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--or);text-transform:uppercase;margin-bottom:20px;}
+.modal-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 16px;font-family:'Inter',sans-serif;font-size:14px;color:#fff;outline:none;transition:border-color .15s;margin-bottom:12px;}
+.modal-input:focus{border-color:rgba(255,107,53,.6);}
+.modal-submit{width:100%;padding:14px 20px;border-radius:100px;border:none;background:linear-gradient(90deg,#FF6B35,#FFE000);color:#0A0015;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;font-weight:700;text-transform:uppercase;cursor:pointer;transition:opacity .15s;}
+.modal-submit:hover{opacity:.88;}
+.modal-note{font-size:10px;color:#555;text-align:center;margin-top:10px;letter-spacing:.03em;}
+.modal-success{display:none;text-align:center;padding:8px 0;}
+.modal-success-ic{font-size:48px;margin-bottom:12px;}
+.modal-success-title{font-family:'Orbitron',monospace;font-weight:700;font-size:15px;margin-bottom:8px;}
+.modal-success-sub{font-size:13px;color:var(--muted);line-height:1.5;}
+
+/* ── BOTTOM CTA ── */
+.bottom-cta{background:rgba(255,45,120,.05);border-top:1px solid rgba(255,45,120,.12);border-bottom:1px solid rgba(255,45,120,.12);padding:clamp(40px,6vw,72px) clamp(18px,5vw,48px);text-align:center;}
+.bottom-cta-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(18px,3.5vw,32px);margin-bottom:12px;text-wrap:balance;}
+.bottom-cta-sub{font-size:14px;color:var(--muted);max-width:480px;margin:0 auto 24px;line-height:1.6;}
+.bottom-cta-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-ghost{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;padding:10px 20px;border-radius:100px;border:1px solid rgba(255,255,255,.15);color:#aaa;text-decoration:none;transition:all .2s;text-transform:uppercase;}
+.btn-ghost:hover{border-color:rgba(255,45,120,.5);color:var(--pk);}
+
+/* ── MOBILE NAV ── */
+.mob-nav{position:fixed;bottom:0;left:0;right:0;z-index:3000;background:rgba(10,0,21,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,45,120,.2);display:none;align-items:stretch;height:60px;padding-bottom:env(safe-area-inset-bottom,0px);}
+.mob-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);}
+@media(max-width:768px){.mob-nav{display:flex;}body{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px)) !important;}}
+.mnav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;text-decoration:none;color:#3a3a3a;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:8px 2px;min-height:44px;}
+.mnav-item.on{color:#FF6B35;}
+.mnav-ic{font-size:19px;line-height:1.1;}
+.mnav-lb{font-family:'Space Mono',monospace;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;}
+
+/* ── MOBILE SITE NAV ── */
+@media(max-width:768px){
+  body{padding-top:52px !important;}
+  .site-nav{position:fixed !important;left:0 !important;right:0 !important;top:0 !important;width:100% !important;}
+  .sn-name{display:none;}
+  .sn-tabs{gap:3px;}
+  .sn-tab{font-size:9px;padding:5px 9px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="sn-logo" href="/"><span>METAKITTYZ</span></a>
+  <div class="sn-spacer"></div>
+  <div class="sn-tabs">
+    <a class="sn-tab" href="/">🏠 Home</a>
+    <a class="sn-tab" href="/guide.html">📖 Guide</a>
+    <a class="sn-tab" href="/community.html">🌐 Community</a>
+    <a class="sn-tab sn-tab-lab" href="/kitty-lab.html">🧪 Kitty Lab</a>
+    <a class="sn-tab" href="/about.html">⚡ About</a>
+    <a class="sn-tab" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:#7B2FFF;">📋 Playbook</a>
+    <a class="sn-tab on" href="/learn-more.html">🛍 Products</a>
+  </div>
+</nav>
+<div class="rb"></div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-badge">🛍 Digital Products & Resources</div>
+  <h1 class="hero-title">Tools built by an AI builder<br><span class="hl">for AI builders.</span></h1>
+  <p class="hero-sub">Prompts, courses, templates, and live sessions — everything Erika uses and teaches, packaged so you can start immediately.</p>
+  <div class="hero-chips">
+    <span class="chip">No fluff</span>
+    <span class="chip">Immediately usable</span>
+    <span class="chip">Built in public</span>
+    <span class="chip">Continuously updated</span>
+  </div>
+</section>
+
+<!-- ── PRODUCTS ── -->
+<div class="products-wrap">
+  <div class="section-hdr">
+    <div class="section-label">WHAT'S INSIDE</div>
+    <h2 class="section-title">Pick what matches your build phase</h2>
+  </div>
+
+  <div class="products-grid">
+
+    <!-- CARD 1: AI Prompt Pack -->
+    <div class="pcard pcard-prompts">
+      <div class="pcard-accent"></div>
+      <div class="pcard-body">
+        <span class="pcard-tag">Prompt Pack</span>
+        <div class="pcard-icon">⚡</div>
+        <div class="pcard-title">40 AI Prompts for Content Creators</div>
+        <div class="pcard-desc">The exact prompts Erika uses across the 6-agent pipeline — tested and refined across 90+ days of live builds.</div>
+        <ul class="pcard-features">
+          <li>Copy-paste ready for Claude, GPT-4o & Gemini</li>
+          <li>Covers hooks, scripts, captions, carousels, emails</li>
+          <li>Organized by content type + platform</li>
+          <li>Bonus: GUARDIAN QA checklist prompts</li>
+        </ul>
+      </div>
+      <div class="pcard-foot">
+        <div class="pcard-badge">INSTANT DOWNLOAD · PDF + NOTION</div>
+        <button class="btn-learn" onclick="openModal('prompts-pack','⚡ 40 AI Prompts for Content Creators')">Learn More →</button>
+      </div>
+    </div>
+
+    <!-- CARD 2: AI Agent Course -->
+    <div class="pcard pcard-course">
+      <div class="pcard-accent"></div>
+      <div class="pcard-body">
+        <span class="pcard-tag">Course</span>
+        <div class="pcard-icon">🤖</div>
+        <div class="pcard-title">Build Your First AI Agent — Full Course</div>
+        <div class="pcard-desc">Go from zero to a fully functional 6-agent content system in under a week. Video + written modules, self-paced.</div>
+        <ul class="pcard-features">
+          <li>12 modules — setup through deployment</li>
+          <li>Includes all agent system prompts</li>
+          <li>Netlify + Anthropic API walkthrough</li>
+          <li>90-day build challenge access</li>
+        </ul>
+      </div>
+      <div class="pcard-foot">
+        <div class="pcard-badge">VIDEO COURSE · SELF-PACED</div>
+        <button class="btn-learn" onclick="openModal('ai-agent-course','🤖 Build Your First AI Agent — Full Course')">Learn More →</button>
+      </div>
+    </div>
+
+    <!-- CARD 3: Notion Template -->
+    <div class="pcard pcard-template">
+      <div class="pcard-accent"></div>
+      <div class="pcard-body">
+        <span class="pcard-tag">Template</span>
+        <div class="pcard-icon">📋</div>
+        <div class="pcard-title">AI Content System — Notion Template</div>
+        <div class="pcard-desc">The exact Notion workspace Erika runs her content operation in. Pre-built for the 6-agent workflow.</div>
+        <ul class="pcard-features">
+          <li>Content calendar with GUARDIAN QA tracker</li>
+          <li>Agent prompt library (all 6 agents)</li>
+          <li>90-day build roadmap pre-loaded</li>
+          <li>Duplicate & go — works immediately</li>
+        </ul>
+      </div>
+      <div class="pcard-foot">
+        <div class="pcard-badge">NOTION TEMPLATE · INSTANT ACCESS</div>
+        <button class="btn-learn" onclick="openModal('notion-template','📋 AI Content System — Notion Template')">Learn More →</button>
+      </div>
+    </div>
+
+    <!-- CARD 4: Live Workshop (FREE) -->
+    <div class="pcard pcard-session">
+      <div class="pcard-accent"></div>
+      <div class="pcard-body">
+        <span class="pcard-tag">Live Workshop</span>
+        <div class="pcard-icon">🎙</div>
+        <div class="pcard-title">AI Prompt Workshop — Live Group Session</div>
+        <div class="pcard-desc">A 90-minute live group session where you build your first AI agent alongside Erika. Recording included.</div>
+        <ul class="pcard-features">
+          <li>Limited seats — small group format</li>
+          <li>Build your first AI agent together</li>
+          <li>Q&amp;A + live prompt feedback in real time</li>
+          <li>Recording included for all attendees</li>
+          <li>Upsell path to full course</li>
+        </ul>
+      </div>
+      <div class="pcard-foot">
+        <div class="pcard-badge">FREE · LIMITED SEATS · 90 MIN LIVE</div>
+        <button class="btn-learn" onclick="openModal('live-workshop','🎙 AI Prompt Workshop — Live Group Session')">Learn More →</button>
+      </div>
+    </div>
+
+    <!-- CARD 5: Starter Kit -->
+    <div class="pcard pcard-kit">
+      <div class="pcard-accent"></div>
+      <div class="pcard-body">
+        <span class="pcard-tag">Starter Kit</span>
+        <div class="pcard-icon">🧰</div>
+        <div class="pcard-title">AI Creator Starter Kit</div>
+        <div class="pcard-desc">Everything a brand-new AI content creator needs: tools checklist, setup guide, first 10 prompts, and a 30-day plan.</div>
+        <ul class="pcard-features">
+          <li>Recommended tools stack (free + paid)</li>
+          <li>Platform-by-platform prompt formulas</li>
+          <li>30-day content challenge calendar</li>
+          <li>Community Discord access included</li>
+        </ul>
+      </div>
+      <div class="pcard-foot">
+        <div class="pcard-badge">PDF · INSTANT DOWNLOAD</div>
+        <button class="btn-learn" onclick="openModal('starter-kit','🧰 AI Creator Starter Kit')">Learn More →</button>
+      </div>
+    </div>
+
+    <!-- CARD 6: Full Bundle -->
+    <div class="pcard pcard-bundle">
+      <div class="pcard-accent"></div>
+      <div class="pcard-body">
+        <span class="pcard-tag">Bundle</span>
+        <div class="pcard-icon">🌈</div>
+        <div class="pcard-title">The Metakittyz Complete Bundle</div>
+        <div class="pcard-desc">All five products above, plus early access to new releases and a one-on-one strategy call with Erika.</div>
+        <ul class="pcard-features">
+          <li>40 Prompts + Course + Notion Template</li>
+          <li>Live Workshop seat reserved</li>
+          <li>AI Creator Starter Kit</li>
+          <li>1:1 strategy call (30 min)</li>
+          <li>All future updates included</li>
+        </ul>
+      </div>
+      <div class="pcard-foot">
+        <div class="pcard-badge">BEST VALUE · EVERYTHING INCLUDED</div>
+        <button class="btn-learn" onclick="openModal('full-bundle','🌈 The Metakittyz Complete Bundle')">Learn More →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── BOTTOM CTA ── -->
+<div class="bottom-cta">
+  <h2 class="bottom-cta-title">Building AI in the open. Come learn with us.</h2>
+  <p class="bottom-cta-sub">Every product is built live, tested in real workflows, and shared with the community. No gatekeeping.</p>
+  <div class="bottom-cta-links">
+    <a class="btn-ghost" href="/guide.html">📖 Read the Guide</a>
+    <a class="btn-ghost" href="/playbook.html">📋 Get the Playbook</a>
+    <a class="btn-ghost" href="/community.html">🌐 Join Community</a>
+    <a class="btn-ghost" href="/about.html">⚡ About Erika</a>
+  </div>
+</div>
+
+<!-- ── EMAIL CAPTURE MODAL ── -->
+<div class="modal-overlay" id="emailModal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-rb"></div>
+    <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    <div class="modal-body">
+      <div id="modalForm">
+        <div class="modal-icon" id="modalIcon">🛍</div>
+        <div class="modal-title">Get the details</div>
+        <div class="modal-product-name" id="modalProductName"></div>
+        <div class="modal-sub">Enter your email and I'll send you everything you need to know — including how to get access.</div>
+        <input class="modal-input" type="email" id="modalEmail" placeholder="your@email.com" autocomplete="email" autocapitalize="none">
+        <button class="modal-submit" onclick="submitModal()">Send Me the Details →</button>
+        <div class="modal-note">No spam. Unsubscribe anytime. Erika sends these personally.</div>
+      </div>
+      <div class="modal-success" id="modalSuccess">
+        <div class="modal-success-ic">✅</div>
+        <div class="modal-success-title">You're on the list!</div>
+        <div class="modal-success-sub">Check your inbox — details are on the way. If you don't see it in 5 minutes, check spam.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" aria-label="Site navigation">
+  <a class="mnav-item" href="/"><span class="mnav-ic">🏠</span><span class="mnav-lb">Home</span></a>
+  <a class="mnav-item" href="/guide.html"><span class="mnav-ic">📖</span><span class="mnav-lb">Guide</span></a>
+  <a class="mnav-item" href="/playbook.html"><span class="mnav-ic">📋</span><span class="mnav-lb">Playbook</span></a>
+  <a class="mnav-item on" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
+  <a class="mnav-item" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
+</nav>
+
+<script>
+var currentProduct = '';
+
+function openModal(productId, productName) {
+  currentProduct = productName;
+  document.getElementById('modalProductName').textContent = productName;
+  document.getElementById('modalForm').style.display = 'block';
+  document.getElementById('modalSuccess').style.display = 'none';
+  document.getElementById('modalEmail').value = '';
+  document.getElementById('modalEmail').style.borderColor = 'rgba(255,255,255,.12)';
+  document.getElementById('emailModal').classList.add('open');
+  setTimeout(function(){ document.getElementById('modalEmail').focus(); }, 100);
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('emailModal')) {
+    document.getElementById('emailModal').classList.remove('open');
+  }
+}
+
+function closeModalBtn() {
+  document.getElementById('emailModal').classList.remove('open');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('emailModal').classList.remove('open');
+});
+
+function submitModal() {
+  var input = document.getElementById('modalEmail');
+  var val = input.value.trim();
+  if (!val || !val.includes('@') || !val.includes('.')) {
+    input.style.borderColor = 'rgba(255,45,120,.7)';
+    input.focus();
+    return;
+  }
+  document.getElementById('modalForm').style.display = 'none';
+  document.getElementById('modalSuccess').style.display = 'block';
+}
+</script>
+</body>
+</html>

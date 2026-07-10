@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Erika — AI Prompt Engineer, System Analyst & Creator | Metakittyz</title>
+<meta name="description" content="Erika Herrera is an AI prompt engineer, system analyst, and creator building the Metakittyz 6-agent AI system live on stream. Buy AI tools, book coaching, or catch the livestream.">
+<meta property="og:title" content="About Erika — AI Prompt Engineer & Creator | Metakittyz">
+<meta property="og:description" content="The creator behind the AI command center. Courses, coaching, digital tools, and a 6-agent AI system built fully in the open.">
+<meta property="og:image" content="/erika-hero.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;background:#0A0015;}
+body{background:#0A0015;color:#E8E0F0;font-family:'Space Mono','Courier New',monospace;font-size:13px;line-height:1.7;min-height:100vh;}
+
+/* ── TOKENS ── */
+:root{
+  --bg:#0A0015;--bg2:#0f001e;--bg3:#140028;
+  --pk:#FF2D78;--tl:#00F5D4;--yl:#FFE000;--pu:#7B2FFF;--gr:#00FF41;--or:#FF6B35;
+  --txt:#E8E0F0;--txt2:#9A90B0;
+  --brd:rgba(255,45,120,.18);--brd2:rgba(255,255,255,.06);
+  --rb:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);
+  --r:14px;
+}
+
+/* ── RAINBOW BAR ── */
+.rb{height:4px;background:var(--rb);background-size:200% 100%;animation:rbshift 4s linear infinite;width:100%;}
+@keyframes rbshift{to{background-position:200% 0;}}
+
+/* ── AMBIENT ORBS ── */
+.orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);}
+.o1{width:600px;height:600px;background:#FF2D78;opacity:.1;top:-200px;left:-150px;}
+.o2{width:500px;height:500px;background:#7B2FFF;opacity:.09;bottom:0;right:-100px;}
+.o3{width:350px;height:350px;background:#00F5D4;opacity:.07;top:55%;left:-80px;}
+
+/* ── SITE NAV ── */
+.site-nav{position:sticky;top:0;z-index:9000;background:rgba(10,0,21,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px;padding:0 clamp(14px,3.5vw,48px);height:52px;flex-shrink:0;position:sticky;}
+.sn-brand{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.sn-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#FF2D78,#7B2FFF);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:10px;color:#fff;flex-shrink:0;}
+.sn-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(10px,1.2vw,13px);letter-spacing:.08em;background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;}
+.sn-spacer{flex:1;}
+.sn-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;align-items:center;}
+.sn-tabs::-webkit-scrollbar{display:none;}
+.sn-tab{font-family:'Space Mono',monospace;font-size:10px;padding:5px 13px;border-radius:100px;border:1px solid rgba(255,255,255,.08);color:#555;text-decoration:none;letter-spacing:.05em;white-space:nowrap;transition:all .15s;}
+.sn-tab:hover{color:#ccc;border-color:rgba(255,255,255,.25);}
+.sn-tab.on{background:rgba(255,45,120,.1);border-color:rgba(255,45,120,.4);color:#FF2D78;}
+.sn-tab-lab{border-color:rgba(255,224,0,.3);color:#FFE000;}
+.sn-tab-lab:hover{background:rgba(255,224,0,.1);border-color:#FFE000;color:#FFE000;}
+
+/* ── PAGE WRAP ── */
+.page{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
+.section{width:100%;padding:clamp(48px,6vw,88px) clamp(16px,5vw,80px);}
+.section-inner{max-width:1100px;margin:0 auto;width:100%;}
+
+/* ── SECTION LABEL ── */
+.s-header{display:flex;align-items:center;gap:16px;margin-bottom:clamp(24px,3vw,40px);}
+.s-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);}
+.s-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--pk);white-space:nowrap;font-weight:700;}
+.section-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(22px,4vw,42px);line-height:1.1;margin-bottom:10px;letter-spacing:.02em;}
+.section-sub{font-size:clamp(12px,1.2vw,15px);color:var(--txt2);line-height:1.8;max-width:680px;}
+
+/* ── HERO ── */
+.hero{width:100%;position:relative;overflow:hidden;display:flex;align-items:stretch;min-height:clamp(400px,60vh,640px);background:var(--bg);}
+.hero-img-col{width:clamp(220px,35%,420px);flex-shrink:0;position:relative;}
+.hero-img-col img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;opacity:.85;}
+.hero-img-col::after{content:'';position:absolute;top:0;right:0;bottom:0;width:60%;background:linear-gradient(to right,transparent,var(--bg));}
+.hero-content-col{flex:1;padding:clamp(32px,4vw,64px) clamp(24px,4vw,64px);display:flex;flex-direction:column;justify-content:center;gap:16px;}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--pk);text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--pk);}
+.hero-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(30px,5vw,68px);line-height:.95;letter-spacing:.01em;color:#fff;}
+.hero-roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.hero-role{font-family:'Space Mono',monospace;font-size:10px;padding:5px 14px;border-radius:100px;border:1px solid;letter-spacing:.07em;font-weight:700;}
+.hero-role-pk{border-color:rgba(255,45,120,.5);color:var(--pk);background:rgba(255,45,120,.08);}
+.hero-role-tl{border-color:rgba(0,245,212,.5);color:var(--tl);background:rgba(0,245,212,.08);}
+.hero-role-yl{border-color:rgba(255,224,0,.5);color:var(--yl);background:rgba(255,224,0,.08);}
+.hero-bio{font-family:'Inter',sans-serif;font-size:clamp(13px,1.3vw,17px);color:var(--txt2);line-height:1.75;max-width:520px;}
+.hero-bio strong{color:#fff;}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;}
+.hero-btn{font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:.07em;padding:13px 28px;border-radius:100px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .18s;white-space:nowrap;}
+.hero-btn-pk{background:linear-gradient(135deg,#FF2D78,#7B2FFF);color:#fff;box-shadow:0 0 28px rgba(255,45,120,.3);}
+.hero-btn-pk:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(255,45,120,.5);}
+.hero-btn-out{background:transparent;color:var(--tl);border:1.5px solid rgba(0,245,212,.4);}
+.hero-btn-out:hover{background:rgba(0,245,212,.08);border-color:var(--tl);transform:translateY(-2px);}
+.hero-stats{display:flex;gap:clamp(14px,2vw,28px);flex-wrap:wrap;margin-top:12px;}
+.hero-stat .n{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(24px,3.5vw,40px);color:var(--pk);line-height:1;}
+.hero-stat .l{font-family:'Space Mono',monospace;font-size:9px;color:var(--txt2);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;}
+.hero-divider{width:1px;background:var(--brd2);}
+@media(max-width:700px){
+  .hero{flex-direction:column;}
+  .hero-img-col{width:100%;height:260px;}
+  .hero-img-col::after{top:auto;bottom:0;left:0;right:0;width:100%;height:50%;background:linear-gradient(to bottom,transparent,var(--bg));}
+}
+
+/* ── ROLES GRID ── */
+.roles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+.role-card{background:var(--bg2);border:1px solid var(--brd2);border-radius:var(--r);padding:24px;position:relative;overflow:hidden;transition:transform .18s,border-color .18s;}
+.role-card:hover{transform:translateY(-4px);}
+.role-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.role-card.pk::before{background:var(--pk);}
+.role-card.tl::before{background:var(--tl);}
+.role-card.yl::before{background:var(--yl);}
+.role-card:hover.pk{border-color:rgba(255,45,120,.3);}
+.role-card:hover.tl{border-color:rgba(0,245,212,.3);}
+.role-card:hover.yl{border-color:rgba(255,224,0,.3);}
+.rc-icon{font-size:28px;margin-bottom:12px;}
+.rc-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.06em;margin-bottom:8px;}
+.rc-desc{font-size:11px;color:var(--txt2);line-height:1.7;}
+.rc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+.rc-tag{font-size:9px;padding:3px 9px;border-radius:100px;border:1px solid;letter-spacing:.06em;font-weight:700;}
+
+/* ── SHOP SECTION ── */
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
+.product-card{background:var(--bg2);border:1px solid var(--brd2);border-radius:var(--r);overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;}
+.product-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.product-header{padding:28px 24px 20px;position:relative;overflow:hidden;}
+.product-header::before{content:'';position:absolute;inset:0;opacity:.08;}
+.product-badge{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.16em;text-transform:uppercase;padding:3px 10px;border-radius:100px;border:1px solid;display:inline-block;margin-bottom:12px;}
+.product-price{font-family:'Orbitron',sans-serif;font-weight:900;font-size:40px;line-height:1;}
+.product-price sub{font-size:16px;vertical-align:top;margin-top:6px;font-weight:400;opacity:.5;}
+.product-name{font-family:'Orbitron',sans-serif;font-weight:700;font-size:15px;color:#fff;margin:8px 0 3px;}
+.product-tagline{font-size:10px;color:var(--txt2);}
+.product-body{padding:20px 24px 24px;flex:1;display:flex;flex-direction:column;}
+.product-features{list-style:none;margin-bottom:20px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.product-features li{font-size:11px;color:rgba(255,255,255,.55);display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+.product-features li::before{content:"✓";color:var(--tl);font-weight:700;flex-shrink:0;margin-top:1px;}
+.btn-product{width:100%;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:14px;border-radius:100px;border:none;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s;color:#fff;}
+.btn-product:hover{transform:translateY(-1px);}
+
+/* ── LIVESTREAM SECTION ── */
+.stream-card{background:var(--bg2);border:1px solid rgba(255,45,120,.2);border-radius:var(--r);overflow:hidden;}
+.stream-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:20px 24px;background:rgba(255,45,120,.05);border-bottom:1px solid rgba(255,45,120,.12);}
+.stream-live-pill{display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--pk);letter-spacing:.14em;text-transform:uppercase;}
+.stream-dot{width:8px;height:8px;border-radius:50%;background:var(--pk);animation:lpulse 1.8s ease-in-out infinite;}
+@keyframes lpulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.stream-schedule{font-family:'Space Mono',monospace;font-size:10px;color:var(--txt2);}
+.stream-schedule strong{color:var(--yl);}
+.stream-platforms{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:24px;}
+.stream-btn{display:flex;align-items:center;gap:12px;padding:18px 20px;border-radius:10px;border:1px solid;text-decoration:none;transition:all .18s;}
+.stream-btn:hover{transform:translateY(-2px);}
+.stream-btn.yt{border-color:rgba(255,45,120,.3);background:rgba(255,45,120,.06);}
+.stream-btn.yt:hover{border-color:rgba(255,45,120,.6);background:rgba(255,45,120,.12);}
+.stream-btn.tw{border-color:rgba(123,47,255,.3);background:rgba(123,47,255,.06);}
+.stream-btn.tw:hover{border-color:rgba(123,47,255,.6);background:rgba(123,47,255,.12);}
+.stream-btn-icon{font-size:24px;flex-shrink:0;}
+.stream-btn-text .t{font-family:'Orbitron',sans-serif;font-weight:900;font-size:12px;color:#fff;letter-spacing:.04em;}
+.stream-btn-text .s{font-size:10px;color:var(--txt2);margin-top:2px;}
+.stream-embed-preview{padding:0 24px 24px;}
+.stream-embed-preview .label{font-family:'Space Mono',monospace;font-size:9px;color:var(--txt2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
+.embed-row{display:flex;gap:12px;flex-wrap:wrap;}
+.embed-pill{padding:8px 16px;border-radius:100px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:var(--txt2);text-decoration:none;font-family:'Space Mono',monospace;transition:all .15s;display:flex;align-items:center;gap:6px;}
+.embed-pill:hover{border-color:var(--pk);color:var(--pk);}
+@media(max-width:560px){.stream-platforms{grid-template-columns:1fr;}}
+
+/* ── TRANSPARENCY SECTION ── */
+.transparency-intro{font-family:'Inter',sans-serif;font-size:14px;color:var(--txt2);line-height:1.8;max-width:700px;margin-bottom:32px;padding:20px 24px;background:rgba(255,224,0,.05);border:1px solid rgba(255,224,0,.2);border-left:4px solid var(--yl);border-radius:10px;}
+.transparency-intro strong{color:#fff;}
+.build-log{display:flex;flex-direction:column;gap:20px;}
+.log-card{background:var(--bg2);border:1px solid var(--brd2);border-radius:var(--r);overflow:hidden;}
+.log-header{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;transition:background .15s;user-select:none;}
+.log-header:hover{background:rgba(255,255,255,.02);}
+.log-num{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;flex-shrink:0;}
+.log-title-wrap{flex:1;}
+.log-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:12px;letter-spacing:.06em;color:#fff;}
+.log-status{font-size:10px;color:var(--tl);margin-top:2px;letter-spacing:.06em;}
+.log-chevron{color:var(--txt2);font-size:16px;transition:transform .2s;flex-shrink:0;}
+.log-card.open .log-chevron{transform:rotate(180deg);}
+.log-body{display:none;padding:0 22px 22px;}
+.log-card.open .log-body{display:block;}
+.log-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:4px;}
+.log-col{background:rgba(0,0,0,.3);border-radius:10px;padding:16px;}
+.log-col-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:8px;}
+.log-col-label.red{color:var(--pk);}
+.log-col-label.grn{color:var(--gr);}
+.log-col-label.yl{color:var(--yl);}
+.log-col-label.tl{color:var(--tl);}
+.log-col ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.log-col ul li{font-size:11px;color:var(--txt2);display:flex;align-items:flex-start;gap:7px;line-height:1.55;}
+.log-col ul li .i{flex-shrink:0;margin-top:1px;font-size:12px;}
+
+/* ── SERVICES ── */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.svc-card{background:var(--bg2);border:1px solid var(--brd2);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:14px;transition:border-color .18s,transform .18s;}
+.svc-card:hover{border-color:rgba(255,45,120,.3);transform:translateY(-4px);}
+.svc-icon{font-size:28px;}
+.svc-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.06em;color:#fff;}
+.svc-price{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;}
+.svc-desc{font-size:11px;color:var(--txt2);line-height:1.65;}
+.svc-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.svc-list li{font-size:11px;color:rgba(255,255,255,.5);display:flex;align-items:flex-start;gap:7px;line-height:1.5;}
+.svc-list li::before{content:"→";color:var(--tl);flex-shrink:0;}
+.svc-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:100px;font-family:'Orbitron',sans-serif;font-weight:700;font-size:10px;letter-spacing:.08em;text-decoration:none;color:#fff;margin-top:auto;transition:all .18s;}
+.svc-btn:hover{transform:translateY(-2px);}
+
+/* ── TESTIMONIALS ── */
+.vibes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+.vibe-card{background:var(--bg2);border:1px solid var(--brd2);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px;}
+.vibe-stars{font-size:14px;letter-spacing:2px;}
+.vibe-quote{font-family:'Inter',sans-serif;font-size:13px;color:var(--txt2);line-height:1.7;font-style:italic;}
+.vibe-quote::before{content:'"';color:var(--pk);font-size:24px;line-height:.6;display:block;margin-bottom:6px;font-style:normal;}
+.vibe-author{display:flex;align-items:center;gap:10px;}
+.vibe-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.vibe-name{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:#fff;letter-spacing:.06em;}
+.vibe-handle{font-size:9px;color:var(--txt2);}
+
+/* ── EMAIL / JOIN ── */
+.join-card{background:linear-gradient(135deg,rgba(255,45,120,.08),rgba(123,47,255,.08));border:1px solid rgba(255,45,120,.2);border-radius:var(--r);padding:clamp(28px,4vw,48px) clamp(24px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.join-text h2{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(18px,3vw,30px);line-height:1.15;margin-bottom:8px;}
+.join-text h2 span{background:linear-gradient(90deg,#FF2D78,#FFE000);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.join-text p{font-size:12px;color:var(--txt2);line-height:1.7;}
+.join-form{display:flex;gap:10px;flex-wrap:wrap;}
+.join-input{padding:13px 18px;border-radius:100px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font-family:'Space Mono',monospace;font-size:11px;min-width:220px;flex:1;transition:border-color .15s;}
+.join-input::placeholder{color:#444;}
+.join-input:focus{outline:none;border-color:rgba(255,45,120,.4);}
+.join-submit{padding:13px 28px;border-radius:100px;background:linear-gradient(135deg,#FF2D78,#7B2FFF);border:none;color:#fff;font-family:'Orbitron',sans-serif;font-weight:700;font-size:10px;letter-spacing:.08em;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.join-submit:hover{transform:translateY(-2px);box-shadow:0 0 28px rgba(255,45,120,.4);}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:40px 20px;border-top:1px solid var(--brd2);font-size:10px;color:var(--txt2);letter-spacing:.08em;}
+.ft-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;background:var(--rb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 100%;animation:rbshift 4s linear infinite;}
+.ft-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin:12px 0 8px;}
+.ft-link{color:var(--txt2);text-decoration:none;font-size:10px;transition:color .15s;}
+.ft-link:hover{color:var(--pk);}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:36px;max-width:460px;width:100%;position:relative;}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;}
+.modal-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;margin-bottom:8px;color:#fff;}
+.modal-eyebrow{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--pk);text-transform:uppercase;font-weight:700;margin-bottom:10px;}
+.modal-desc{font-size:12px;color:var(--txt2);line-height:1.7;margin-bottom:18px;}
+.modal-email{width:100%;padding:13px 18px;border-radius:100px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font-family:'Space Mono',monospace;font-size:11px;box-sizing:border-box;margin-bottom:12px;transition:border-color .15s;}
+.modal-email::placeholder{color:#444;}
+.modal-email:focus{outline:none;border-color:rgba(255,45,120,.4);}
+.modal-success-text{font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;text-align:center;color:var(--tl);margin:12px 0 8px;}
+.modal-success-sub{font-size:12px;color:var(--txt2);text-align:center;line-height:1.7;}
+.modal-buy{width:100%;padding:15px;border-radius:100px;background:linear-gradient(135deg,#FF2D78,#7B2FFF);border:none;color:#fff;font-family:'Orbitron',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;cursor:pointer;transition:all .18s;}
+.modal-buy:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(255,45,120,.4);}
+.modal-note{text-align:center;font-size:9px;color:#333;margin-top:10px;letter-spacing:.08em;}
+
+/* ── UTILITY ── */
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.card{background:var(--bg2);border:1px solid var(--brd2);border-radius:var(--r);padding:22px;}
+
+@media(max-width:700px){
+  .section{padding:40px 16px;}
+  .stream-platforms{grid-template-columns:1fr;}
+  .join-card{flex-direction:column;}
+}
+/* ── MOBILE FIXES ── */
+@media(max-width:768px){
+  body{padding-top:52px !important;}
+  .site-nav,.nav{position:fixed !important;left:0 !important;right:0 !important;top:0 !important;width:100% !important;}
+  .sn-name{display:none;}
+  .sn-tabs{gap:3px;}
+  .sn-tab{font-size:9px;padding:5px 9px;}
+}
+/* ── MOBILE BOTTOM NAV ── */
+.mob-nav{position:fixed;bottom:0;left:0;right:0;z-index:3000;background:rgba(10,0,21,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,45,120,.2);display:none;align-items:stretch;height:60px;padding-bottom:env(safe-area-inset-bottom,0px);}
+.mob-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);}
+@media(max-width:768px){.mob-nav{display:flex;}body{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px)) !important;}}
+.mnav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;text-decoration:none;color:#3a3a3a;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:8px 2px;min-height:44px;}
+.mnav-item.on{color:#FF2D78;}
+.mnav-ic{font-size:19px;line-height:1.1;}
+.mnav-lb{font-family:'Space Mono',monospace;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<div class="orbs">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
+
+<div class="rb"></div>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <a class="sn-brand" href="/">
+    <div class="sn-logo">MK</div>
+    <span class="sn-name">METAKITTYZ</span>
+  </a>
+  <div class="sn-spacer"></div>
+  <div class="sn-tabs">
+    <a class="sn-tab" href="/">🏠 Home</a>
+    <a class="sn-tab" href="/guide.html">📖 Guide</a>
+    <a class="sn-tab" href="/community.html">🌐 Community</a>
+    <a class="sn-tab sn-tab-lab" href="/kitty-lab.html">🧪 Kitty Lab</a>
+    <a class="sn-tab on" href="/about.html">⚡ About</a>
+    <a class="sn-tab" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:#7B2FFF;">📋 Playbook</a>
+    <a class="sn-tab" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ══ HERO ══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-img-col">
+    <img src="/erika-about.jpg" alt="Erika Herrera — Metakittyz">
+  </div>
+  <div class="hero-content-col">
+    <div class="hero-eyebrow">Metakittyz · Building AI in the open</div>
+    <div class="hero-name">ERIKA<br>HERRERA</div>
+    <div class="hero-roles">
+      <span class="hero-role hero-role-pk">AI Prompt Engineer</span>
+      <span class="hero-role hero-role-tl">System Analyst</span>
+      <span class="hero-role hero-role-yl">Creator &amp; Educator</span>
+    </div>
+    <p class="hero-bio">
+      I'm taking the <strong>Harvard AI Intensive</strong> and teaching you <em>everything</em> I learn — live, on stream, in real time. No gatekeeping. No polished highlight reels. Just the real build: what works, what breaks, and exactly how we fix it.<br><br>
+      I built a <strong>6-agent AI command system</strong>, a live prompt lab, and this entire site with zero prior coding background — and I documented every mistake along the way.
+    </p>
+    <div class="hero-ctas">
+      <a class="hero-btn hero-btn-pk" href="#shop">Shop AI Tools ✦</a>
+      <a class="hero-btn hero-btn-out" href="#stream">🔴 Catch the Stream</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="n">6</div><div class="l">AI Agents</div></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><div class="n">18</div><div class="l">Episodes</div></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><div class="n">40+</div><div class="l">Prompts</div></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><div class="n">90</div><div class="l">Day Mission</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHAT I DO ════════════════════════════════ -->
+<section class="section" style="background:var(--bg2);">
+  <div class="section-inner">
+    <div class="s-header">
+      <div class="s-line"></div>
+      <div class="s-tag">01 — what i do</div>
+      <div class="s-line"></div>
+    </div>
+    <h2 class="section-title">Three Roles. One Mission.</h2>
+    <p class="section-sub" style="margin-bottom:32px;">From AI prompt engineering to systems architecture to growing a creator brand — it's all connected, and it's all built live in front of you.</p>
+    <div class="roles-grid">
+      <div class="role-card pk">
+        <div class="rc-icon">✍️</div>
+        <div class="rc-title" style="color:var(--pk);">AI Prompt Engineer</div>
+        <div class="rc-desc">I design prompt systems that actually produce consistent, high-quality outputs across ChatGPT, Claude, and Gemini. Every agent in the Metakittyz system has a hand-crafted system prompt with role, rules, and output spec. I teach this live — from basic zero-shot to complex multi-agent orchestration.</div>
+        <div class="rc-tags">
+          <span class="rc-tag" style="border-color:rgba(255,45,120,.3);color:var(--pk);">Claude claude-opus-4-8</span>
+          <span class="rc-tag" style="border-color:rgba(255,45,120,.3);color:var(--pk);">GPT-4o</span>
+          <span class="rc-tag" style="border-color:rgba(255,45,120,.3);color:var(--pk);">System Prompts</span>
+        </div>
+      </div>
+      <div class="role-card tl">
+        <div class="rc-icon">🧠</div>
+        <div class="rc-title" style="color:var(--tl);">System Analyst</div>
+        <div class="rc-desc">I architect the full pipeline — from API cascade logic (Claude → OpenAI fallback with +3 retry) to GUARDIAN QA gates to Netlify serverless functions. I break down how complex AI systems work so non-technical creators can actually understand and use them without a dev team.</div>
+        <div class="rc-tags">
+          <span class="rc-tag" style="border-color:rgba(0,245,212,.3);color:var(--tl);">Pipeline Design</span>
+          <span class="rc-tag" style="border-color:rgba(0,245,212,.3);color:var(--tl);">Netlify Functions</span>
+          <span class="rc-tag" style="border-color:rgba(0,245,212,.3);color:var(--tl);">QA Gates</span>
+        </div>
+      </div>
+      <div class="role-card yl">
+        <div class="rc-icon">🎥</div>
+        <div class="rc-title" style="color:var(--yl);">Creator &amp; Educator</div>
+        <div class="rc-desc">I'm building everything live on Twitch and YouTube — the website, the agents, the brand — while explaining every decision in real time. Metakittyz is a master class in AI-powered creator systems, and the audience is part of the build. No filter. No fake success. Real learning.</div>
+        <div class="rc-tags">
+          <span class="rc-tag" style="border-color:rgba(255,224,0,.3);color:var(--yl);">Twitch Live</span>
+          <span class="rc-tag" style="border-color:rgba(255,224,0,.3);color:var(--yl);">YouTube Builds</span>
+          <span class="rc-tag" style="border-color:rgba(255,224,0,.3);color:var(--yl);">Community</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SHOP ════════════════════════════════════ -->
+<section class="section" id="shop">
+  <div class="section-inner">
+    <div class="s-header">
+      <div class="s-line"></div>
+      <div class="s-tag">02 — digital products</div>
+      <div class="s-line"></div>
+    </div>
+    <h2 class="section-title">AI Tools Built for Creators</h2>
+    <p class="section-sub" style="margin-bottom:32px;">Everything I use in my own workflow — packaged as tools you can use today. No coding required. Just results.</p>
+
+    <div class="shop-grid">
+
+      <!-- $12 Cheat Sheet -->
+      <div class="product-card">
+        <div class="product-header" style="background:linear-gradient(135deg,rgba(0,245,212,.15),rgba(0,245,212,.04));">
+          <div class="product-header::before" style="background:var(--tl);"></div>
+          <span class="product-badge" style="border-color:rgba(0,245,212,.4);color:var(--tl);">Best Seller</span>
+          <div class="product-name">AI Prompt Cheat Sheet</div>
+          <div class="product-tagline">50+ prompts that actually work</div>
+        </div>
+        <div class="product-body">
+          <ul class="product-features">
+            <li>50+ battle-tested prompt templates</li>
+            <li>Covers Claude, GPT-4o, and Gemini</li>
+            <li>Content, strategy, research &amp; more</li>
+            <li>Copy-paste ready — no setup</li>
+            <li>Instant PDF download</li>
+          </ul>
+          <button class="btn-product" style="background:linear-gradient(135deg,#00F5D4,#7B2FFF);"
+            onclick="openLearnMore('AI Prompt Cheat Sheet','BEST SELLER · INSTANT DOWNLOAD','50+ copy-paste prompt templates across Claude, GPT-4o, and Gemini — the exact prompts powering the Metakittyz 6-agent system. Content creation, research, strategy, and more.')">
+            Learn More →
+          </button>
+        </div>
+      </div>
+
+      <!-- $37 Course -->
+      <div class="product-card" style="border-color:rgba(255,45,120,.15);">
+        <div class="product-header" style="background:linear-gradient(135deg,rgba(255,45,120,.15),rgba(123,47,255,.1));">
+          <span class="product-badge" style="border-color:rgba(255,45,120,.4);color:var(--pk);">⭐ Most Valuable</span>
+          <div class="product-name">AI Agent System Course</div>
+          <div class="product-tagline">Build your own 6-agent AI system</div>
+        </div>
+        <div class="product-body">
+          <ul class="product-features">
+            <li>Full 18-episode video course</li>
+            <li>Build the Metakittyz 6-agent system</li>
+            <li>Harvard AI Intensive concepts — simplified</li>
+            <li>All 40+ prompt templates included</li>
+            <li>GUARDIAN QA setup walkthrough</li>
+            <li>Lifetime access + future updates</li>
+          </ul>
+          <button class="btn-product" style="background:linear-gradient(135deg,#FF2D78,#7B2FFF);"
+            onclick="openLearnMore('AI Agent System Course','⭐ MOST VALUABLE · FULL COURSE','Build your own 6-agent AI command system from scratch. 18 episodes covering MATRIX, NOVA, SPARK, PULSE, ARIA, and GUARDIAN — the complete Metakittyz stack. Lifetime access + all 40+ prompts included.')">
+            Learn More →
+          </button>
+        </div>
+      </div>
+
+      <!-- $29 Bundle -->
+      <div class="product-card">
+        <div class="product-header" style="background:linear-gradient(135deg,rgba(255,224,0,.1),rgba(255,107,53,.08));">
+          <span class="product-badge" style="border-color:rgba(255,224,0,.4);color:var(--yl);">Launch Price</span>
+          <div class="product-name">AI Hacks Mega-Bundle</div>
+          <div class="product-tagline">Every cheat sheet in one download</div>
+        </div>
+        <div class="product-body">
+          <ul class="product-features">
+            <li>All current + future cheat sheets</li>
+            <li>100+ prompts across all categories</li>
+            <li>Content, growth, analytics &amp; QA</li>
+            <li>Instagram + Reels specific packs</li>
+            <li>Special launch pricing — goes up soon</li>
+          </ul>
+          <button class="btn-product" style="background:linear-gradient(135deg,#FFE000,#FF6B35);color:#000;"
+            onclick="openLearnMore('AI Hacks Mega-Bundle','LAUNCH PRICE · BEST VALUE','Every Metakittyz cheat sheet bundled together — 100+ prompts across content, growth, analytics, and engagement. Launching soon. Drop your email for early access + launch pricing.')">
+            Learn More →
+          </button>
+        </div>
+      </div>
+
+      <!-- FREE Workshop -->
+      <div class="product-card" style="border-color:rgba(0,255,65,.2);box-shadow:0 0 32px rgba(0,255,65,.06);">
+        <div class="product-header" style="background:linear-gradient(135deg,rgba(0,255,65,.11),rgba(0,245,212,.07));">
+          <span class="product-badge" style="border-color:rgba(0,255,65,.7);color:var(--gr);font-size:9px;">🎁 FREE EVENT</span>
+          <div class="product-name">AI Prompt Workshop</div>
+          <div class="product-tagline">Free 90-min live session · limited seats</div>
+        </div>
+        <div class="product-body">
+          <ul class="product-features">
+            <li>90-minute live group session</li>
+            <li>Build your first AI agent together</li>
+            <li>Q&amp;A + prompt feedback in real time</li>
+            <li>Recording included</li>
+            <li>Gateway into the full paid course</li>
+          </ul>
+          <button class="btn-product" style="background:linear-gradient(135deg,#00FF41,#00F5D4);color:#000;"
+            onclick="openLearnMore('AI Prompt Workshop — FREE','🎁 FREE · LIMITED SEATS','A free 90-minute live group session where we build your first AI prompt system together. Limited seats. Recording included. Your gateway into the full course — no credit card needed.')">
+            Claim Free Spot →
+          </button>
+        </div>
+      </div>
+
+      <!-- $100/hr Coaching -->
+      <div class="product-card">
+        <div class="product-header" style="background:linear-gradient(135deg,rgba(123,47,255,.15),rgba(123,47,255,.04));">
+          <span class="product-badge" style="border-color:rgba(123,47,255,.5);color:var(--pu);">1-on-1</span>
+          <div class="product-name">Private Coaching Session</div>
+          <div class="product-tagline">Your AI workflow, personally rebuilt</div>
+        </div>
+        <div class="product-body">
+          <ul class="product-features">
+            <li>60-min Zoom — just you and Erika</li>
+            <li>Full audit of your current AI workflow</li>
+            <li>Custom prompt system built for you</li>
+            <li>Recorded + notes delivered after</li>
+            <li>Follow-up voice memo included</li>
+          </ul>
+          <button class="btn-product" style="background:linear-gradient(135deg,#7B2FFF,#FF2D78);"
+            onclick="openLearnMore('Private Coaching Session','1-ON-1 · LIMITED AVAILABILITY','A private 60-minute Zoom session where Erika rebuilds your AI workflow from scratch. Custom prompt system, full session recording, and follow-up notes — all tailored to your exact needs.')">
+            Learn More →
+          </button>
+        </div>
+      </div>
+
+      <!-- $5/mo Membership -->
+      <div class="product-card" style="border-color:rgba(255,45,120,.12);">
+        <div class="product-header" style="background:linear-gradient(135deg,rgba(255,45,120,.12),rgba(123,47,255,.1));">
+          <span class="product-badge" style="border-color:rgba(255,45,120,.4);color:var(--pk);">Inner Circle</span>
+          <div class="product-name">Metakitty Membership</div>
+          <div class="product-tagline">Behind the scenes of everything</div>
+        </div>
+        <div class="product-body">
+          <ul class="product-features">
+            <li>Exclusive prompts not in the cheat sheet</li>
+            <li>Behind-the-scenes build content</li>
+            <li>Early access to all new products</li>
+            <li>Monthly live Q&amp;A with Erika</li>
+            <li>Discord inner-circle channel access</li>
+          </ul>
+          <button class="btn-product" style="background:linear-gradient(135deg,#FF2D78,#FF6B35);"
+            onclick="openLearnMore('Metakitty Membership','INNER CIRCLE · EXCLUSIVE ACCESS','Exclusive prompts, behind-the-scenes build content, early access to everything, monthly live Q&amp;A with Erika, and a private Discord inner-circle channel. Cancel anytime.')">
+            Learn More →
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CATCH THE STREAM ══════════════════════ -->
+<section class="section" id="stream" style="background:var(--bg2);">
+  <div class="section-inner">
+    <div class="s-header">
+      <div class="s-line"></div>
+      <div class="s-tag">03 — watch live</div>
+      <div class="s-line"></div>
+    </div>
+    <h2 class="section-title">The Build Is Live. Join It.</h2>
+    <p class="section-sub" style="margin-bottom:28px;">This isn't a polished tutorial. It's the real build — errors, fixes, decisions, and all. The best way to learn AI systems is to watch one get built from nothing.</p>
+    <div class="stream-card">
+      <div class="stream-top">
+        <div class="stream-live-pill">
+          <div class="stream-dot"></div>
+          Live on Twitch &amp; YouTube
+        </div>
+        <div class="stream-schedule">
+          Primary: <strong>Thursday 7 PM PST</strong> &nbsp;·&nbsp; Also: <strong>Tuesday 6:30 PM PST</strong>
+        </div>
+      </div>
+      <div class="stream-platforms">
+        <a class="stream-btn yt" href="https://youtube.com/@metakittyz" target="_blank" rel="noopener">
+          <div class="stream-btn-icon">▶️</div>
+          <div class="stream-btn-text">
+            <div class="t">YouTube</div>
+            <div class="s">@metakittyz · VODs + Shorts</div>
+          </div>
+        </a>
+        <a class="stream-btn tw" href="https://twitch.tv/metakittyz" target="_blank" rel="noopener">
+          <div class="stream-btn-icon">🟣</div>
+          <div class="stream-btn-text">
+            <div class="t">Twitch</div>
+            <div class="s">twitch.tv/metakittyz · Live chat</div>
+          </div>
+        </a>
+      </div>
+      <div class="stream-embed-preview">
+        <div class="label">Quick access →</div>
+        <div class="embed-row">
+          <a class="embed-pill" href="/" target="_blank">📺 Watch Live on Homepage</a>
+          <a class="embed-pill" href="/kitty-lab.html">🧪 Try Prompts in Kitty Lab</a>
+          <a class="embed-pill" href="https://discord.gg/metakittyz" target="_blank" rel="noopener">💬 Discord</a>
+          <a class="embed-pill" href="https://instagram.com/metakittyz" target="_blank" rel="noopener">📸 Instagram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ THE BUILD: PROBLEMS → SOLUTIONS ══════ -->
+<section class="section" id="transparent">
+  <div class="section-inner">
+    <div class="s-header">
+      <div class="s-line"></div>
+      <div class="s-tag">04 — the real build</div>
+      <div class="s-line"></div>
+    </div>
+    <h2 class="section-title">The Full Truth: What Broke &amp; How We Fixed It</h2>
+    <div class="transparency-intro">
+      <strong>This is not a highlight reel.</strong> Every section of the Metakittyz build hit real problems. We're documenting all of them here — not to look impressive, but because watching something break and get fixed is the actual education. If you're building your own AI system, these are the exact errors you'll hit too.
+    </div>
+
+    <div class="build-log">
+
+      <!-- 1. Website & Video Embeds -->
+      <div class="log-card open" id="log1">
+        <div class="log-header" onclick="toggleLog('log1')">
+          <div class="log-num" style="background:rgba(255,45,120,.15);color:var(--pk);">01</div>
+          <div class="log-title-wrap">
+            <div class="log-title">Website — Video Embeds Were Completely Broken</div>
+            <div class="log-status">✅ RESOLVED — watch.html + index.html fixed</div>
+          </div>
+          <div class="log-chevron">▾</div>
+        </div>
+        <div class="log-body">
+          <div class="log-cols">
+            <div class="log-col">
+              <div class="log-col-label red">⚠️ The Problem</div>
+              <ul>
+                <li><span class="i">❌</span>YouTube embed used <code>live_stream?channel=UCmetakittyz</code> — not a valid embed URL</li>
+                <li><span class="i">❌</span>Twitch both player and chat iframes had literal text <code>DOMAIN_PLACEHOLDER</code> that was never replaced</li>
+                <li><span class="i">❌</span>YouTube live chat used channel URL instead of specific video ID</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label grn">✅ The Fix</div>
+              <ul>
+                <li><span class="i">→</span>YouTube embed: changed to <code>youtube.com/embed/{VIDEO_ID}?autoplay=1</code></li>
+                <li><span class="i">→</span>YouTube chat: changed to <code>live_chat?v={VIDEO_ID}&amp;embed_domain=metakittyz.com</code></li>
+                <li><span class="i">→</span>Twitch: replaced <code>DOMAIN_PLACEHOLDER</code> with <code>parent=metakittyz.com</code> in both iframes</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label yl">💡 Lessons Learned</div>
+              <ul>
+                <li><span class="i">→</span>YouTube requires a specific <strong>video ID</strong>, not a channel ID, for embeds to work</li>
+                <li><span class="i">→</span>Twitch's <code>parent=</code> must exactly match the live domain — no wildcards, no placeholders</li>
+                <li><span class="i">→</span>Update the YouTube video ID before each stream — build this into the pre-stream checklist</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 10 Agents → 6 Agents -->
+      <div class="log-card" id="log2">
+        <div class="log-header" onclick="toggleLog('log2')">
+          <div class="log-num" style="background:rgba(0,245,212,.1);color:var(--tl);">02</div>
+          <div class="log-title-wrap">
+            <div class="log-title">Agent System — 10 Agents Was Too Many</div>
+            <div class="log-status">✅ RESOLVED — trimmed to 6 core agents</div>
+          </div>
+          <div class="log-chevron">▾</div>
+        </div>
+        <div class="log-body">
+          <div class="log-cols">
+            <div class="log-col">
+              <div class="log-col-label red">⚠️ The Problem</div>
+              <ul>
+                <li><span class="i">❌</span>Started with 10 agents: MATRIX, NOVA, SPARK, PULSE, SIGNAL, SCHOLAR, ECHO, REACH, ARIA, GUARDIAN</li>
+                <li><span class="i">❌</span>Too complex to explain on stream — confused new viewers</li>
+                <li><span class="i">❌</span>SCHOLAR was specific to Harvard course, SIGNAL and ECHO overlapped with PULSE and ARIA</li>
+                <li><span class="i">❌</span>Inconsistency between playbook (showing 10) and site (should show 6)</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label grn">✅ The Fix</div>
+              <ul>
+                <li><span class="i">→</span>Trimmed to 6 essential agents: MATRIX, NOVA, SPARK, PULSE, ARIA, GUARDIAN</li>
+                <li><span class="i">→</span>Each agent now has a clearly distinct role — no overlap</li>
+                <li><span class="i">→</span>Updated Kitty Lab dropdown, system prompts, templates, and playbook to match exactly</li>
+                <li><span class="i">→</span>Pipeline flow diagram added: MATRIX → NOVA → SPARK → PULSE → ARIA → GUARDIAN</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label yl">💡 Lessons Learned</div>
+              <ul>
+                <li><span class="i">→</span>Start with the <strong>minimum viable agent set</strong>. Add agents when a gap is proven, not assumed</li>
+                <li><span class="i">→</span>Every agent needs a unique, non-overlapping role or it creates confusion</li>
+                <li><span class="i">→</span>Consistency across every file matters — one number wrong = trust broken</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. API Cascade & Fallback -->
+      <div class="log-card" id="log3">
+        <div class="log-header" onclick="toggleLog('log3')">
+          <div class="log-num" style="background:rgba(255,224,0,.1);color:var(--yl);">03</div>
+          <div class="log-title-wrap">
+            <div class="log-title">Kitty Lab — API Has No Live Fallback Yet</div>
+            <div class="log-status">⚙️ IN PROGRESS — Netlify Functions being built</div>
+          </div>
+          <div class="log-chevron">▾</div>
+        </div>
+        <div class="log-body">
+          <div class="log-cols">
+            <div class="log-col">
+              <div class="log-col-label red">⚠️ The Problem</div>
+              <ul>
+                <li><span class="i">❌</span>Kitty Lab calls <code>/api/anthropic</code> and <code>/api/openai</code> — but these Netlify Functions don't exist yet</li>
+                <li><span class="i">❌</span>Right now, running a prompt gives an API error unless the user copies the prompt into Claude/ChatGPT manually</li>
+                <li><span class="i">❌</span>The fallback shows a graceful error message, but the full live pipeline isn't wired yet</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label grn">✅ The Fix (In Progress)</div>
+              <ul>
+                <li><span class="i">→</span>Building <code>netlify/functions/anthropic.js</code> with Claude claude-opus-4-8</li>
+                <li><span class="i">→</span>Building <code>netlify/functions/openai.js</code> as fallback with GPT-4o</li>
+                <li><span class="i">→</span>+3 retry with 2s/4s/8s exponential backoff implemented in the cascade logic</li>
+                <li><span class="i">→</span>Deploying live on stream — watch it get built in real time</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label yl">💡 Lessons Learned</div>
+              <ul>
+                <li><span class="i">→</span>Ship the front-end first so users can use it immediately (copy prompt to Claude)</li>
+                <li><span class="i">→</span>A graceful error message that tells users what to do is better than a silent failure</li>
+                <li><span class="i">→</span>Never ship something that silently fails — always surface the error with context</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Stream Simultaneous Multi-Platform -->
+      <div class="log-card" id="log4">
+        <div class="log-header" onclick="toggleLog('log4')">
+          <div class="log-num" style="background:rgba(123,47,255,.12);color:var(--pu);">04</div>
+          <div class="log-title-wrap">
+            <div class="log-title">Streaming — Getting Twitch + YouTube Running Simultaneously</div>
+            <div class="log-status">✅ RESOLVED — Restream.io configured</div>
+          </div>
+          <div class="log-chevron">▾</div>
+        </div>
+        <div class="log-body">
+          <div class="log-cols">
+            <div class="log-col">
+              <div class="log-col-label red">⚠️ The Problem</div>
+              <ul>
+                <li><span class="i">❌</span>OBS can only stream to one RTMP endpoint natively</li>
+                <li><span class="i">❌</span>Twitch and YouTube require separate RTMP ingest URLs</li>
+                <li><span class="i">❌</span>Splitting manually means double the encoder load and sync issues</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label grn">✅ The Fix</div>
+              <ul>
+                <li><span class="i">→</span>Restream.io Professional ($41/mo) handles the split — one OBS output, two platforms</li>
+                <li><span class="i">→</span>OBS → Restream RTMP → splits to Twitch + YouTube simultaneously</li>
+                <li><span class="i">→</span>Both platforms get the same stream at the same quality</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label yl">💡 Lessons Learned</div>
+              <ul>
+                <li><span class="i">→</span>Don't try to DIY multi-platform streaming — the tools exist and aren't expensive</li>
+                <li><span class="i">→</span>The $41/mo is worth it vs. the engineering time to build a custom solution</li>
+                <li><span class="i">→</span>Test the stream at least 10 minutes before going live — not 2 minutes before</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Navigation Across Pages -->
+      <div class="log-card" id="log5">
+        <div class="log-header" onclick="toggleLog('log5')">
+          <div class="log-num" style="background:rgba(0,255,65,.08);color:var(--gr);">05</div>
+          <div class="log-title-wrap">
+            <div class="log-title">Site Navigation — Pages Were Invisible to Each Other</div>
+            <div class="log-status">✅ RESOLVED — sticky nav added to all pages</div>
+          </div>
+          <div class="log-chevron">▾</div>
+        </div>
+        <div class="log-body">
+          <div class="log-cols">
+            <div class="log-col">
+              <div class="log-col-label red">⚠️ The Problem</div>
+              <ul>
+                <li><span class="i">❌</span>guide.html, community.html, and kitty-lab.html existed but had no links to each other or to index.html</li>
+                <li><span class="i">❌</span>Users had to know the exact URL to find each page — there was zero discoverability</li>
+                <li><span class="i">❌</span>index.html had no site navigation at all — just the hero page</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label grn">✅ The Fix</div>
+              <ul>
+                <li><span class="i">→</span>Added sticky `.site-nav` to index.html with tabs: Home / Guide / Community / Kitty Lab / About</li>
+                <li><span class="i">→</span>Added cross-page links to guide.html and community.html matching their color schemes</li>
+                <li><span class="i">→</span>Built kitty-lab.html with the same nav system pre-wired from the start</li>
+              </ul>
+            </div>
+            <div class="log-col">
+              <div class="log-col-label yl">💡 Lessons Learned</div>
+              <ul>
+                <li><span class="i">→</span>Navigation is not a feature — it's the foundation. Build it first, not last</li>
+                <li><span class="i">→</span>A page that can't be found from the site might as well not exist</li>
+                <li><span class="i">→</span>Every page should link to every other page — no dead ends</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /build-log -->
+  </div>
+</section>
+
+<!-- ══ SERVICES ═════════════════════════════ -->
+<section class="section" style="background:var(--bg2);" id="services">
+  <div class="section-inner">
+    <div class="s-header">
+      <div class="s-line"></div>
+      <div class="s-tag">05 — services</div>
+      <div class="s-line"></div>
+    </div>
+    <h2 class="section-title">Work With Me Directly</h2>
+    <p class="section-sub" style="margin-bottom:32px;">Not just a product seller — I actually work with creators, founders, and teams on their AI systems. Here's how to get me in your workflow.</p>
+    <div class="services-grid">
+      <div class="svc-card">
+        <div class="svc-icon">💬</div>
+        <div class="svc-name">Prompt Strategy Coaching</div>
+        <div class="svc-price" style="color:var(--pk);">$100<span style="font-size:13px;color:var(--txt2)">/hr</span></div>
+        <div class="svc-desc">We audit your current AI workflow and rebuild your prompt system from scratch. You leave with a system that actually produces consistent results — not one-off lucky outputs.</div>
+        <ul class="svc-list">
+          <li>Full workflow audit + rebuild</li>
+          <li>Custom prompts for your use case</li>
+          <li>Session recording + notes</li>
+          <li>60 min via Zoom</li>
+        </ul>
+        <a class="svc-btn" style="background:linear-gradient(135deg,#FF2D78,#7B2FFF);"
+          href="mailto:erika@productimagination.com?subject=1:1 Coaching Inquiry">Book Session →</a>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🏗️</div>
+        <div class="svc-name">AI System Architecture</div>
+        <div class="svc-price" style="color:var(--tl);">Custom</div>
+        <div class="svc-desc">Need a multi-agent system for your team or product? I design the architecture, write the agent system prompts, and set up the full pipeline — from Claude API to GUARDIAN QA gates.</div>
+        <ul class="svc-list">
+          <li>Multi-agent system design</li>
+          <li>System prompt engineering</li>
+          <li>QA + compliance pipeline</li>
+          <li>Deliverable: full spec + prompts</li>
+        </ul>
+        <a class="svc-btn" style="background:linear-gradient(135deg,#00F5D4,#7B2FFF);color:#000;"
+          href="mailto:erika@productimagination.com?subject=AI System Architecture Inquiry">Get a Quote →</a>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">📊</div>
+        <div class="svc-name">Content Strategy for AI Brands</div>
+        <div class="svc-price" style="color:var(--yl);">$75–$150<span style="font-size:13px;color:var(--txt2)">/session</span></div>
+        <div class="svc-desc">I work with AI companies and creators to develop content strategies that explain complex tech clearly. The NOVA agent's methodology — applied to your brand.</div>
+        <ul class="svc-list">
+          <li>Platform-specific content system</li>
+          <li>Graphic-first content approach</li>
+          <li>Hook writing + viral optimization</li>
+          <li>60–90 min via Zoom</li>
+        </ul>
+        <a class="svc-btn" style="background:linear-gradient(135deg,#FFE000,#FF6B35);color:#000;"
+          href="mailto:erika@productimagination.com?subject=Content Strategy Inquiry">Let's Talk →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMMUNITY VIBES ═══════════════════════ -->
+<section class="section" id="community">
+  <div class="section-inner">
+    <div class="s-header">
+      <div class="s-line"></div>
+      <div class="s-tag">06 — community vibes</div>
+      <div class="s-line"></div>
+    </div>
+    <h2 class="section-title">What the Community Is Saying</h2>
+    <p class="section-sub" style="margin-bottom:28px;">Real feedback from people using the tools, watching the builds, and working with me directly.</p>
+    <div class="vibes-grid">
+      <div class="vibe-card">
+        <div class="vibe-stars">★★★★★</div>
+        <div class="vibe-quote">The prompt cheat sheet alone saved me 3 hours a week. Worth 10x the price. Metakittyz actually gets how to teach this stuff.</div>
+        <div class="vibe-author">
+          <div class="vibe-avatar" style="background:rgba(0,245,212,.15);">✨</div>
+          <div>
+            <div class="vibe-name">Sarah K.</div>
+            <div class="vibe-handle">Content Creator · @sarahktv</div>
+          </div>
+        </div>
+      </div>
+      <div class="vibe-card">
+        <div class="vibe-stars">★★★★★</div>
+        <div class="vibe-quote">The 1:1 coaching session transformed how I use AI at work. Legitimately the best $100 I've spent this year. Book it.</div>
+        <div class="vibe-author">
+          <div class="vibe-avatar" style="background:rgba(255,45,120,.12);">🚀</div>
+          <div>
+            <div class="vibe-name">Marcus D.</div>
+            <div class="vibe-handle">SaaS Founder · @marcusdbuilds</div>
+          </div>
+        </div>
+      </div>
+      <div class="vibe-card">
+        <div class="vibe-stars">★★★★★</div>
+        <div class="vibe-quote">I watched the stream and saw the Twitch embed literally broken in real time, then watched Erika fix it. That's the best coding tutorial I've ever seen.</div>
+        <div class="vibe-author">
+          <div class="vibe-avatar" style="background:rgba(255,224,0,.1);">🧠</div>
+          <div>
+            <div class="vibe-name">Lex P.</div>
+            <div class="vibe-handle">AI Enthusiast · Discord member</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Discord CTA -->
+    <div style="margin-top:28px;background:linear-gradient(135deg,rgba(88,101,242,.1),rgba(123,47,255,.1));border:1px solid rgba(88,101,242,.3);border-radius:var(--r);padding:28px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+      <div style="font-size:48px;flex-shrink:0;">💬</div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(16px,2vw,22px);color:#fff;margin-bottom:6px;">Join the <span style="color:#5865F2;">Discord</span></div>
+        <div style="font-size:11px;color:var(--txt2);line-height:1.6;max-width:500px;">The real community lives in Discord. Share your prompts, get feedback on your AI systems, watch the builds happen in real time, and be part of The Agents — the inner circle building with Erika.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+          <span style="font-family:'Space Mono',monospace;font-size:8px;padding:3px 10px;border-radius:100px;background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.28);color:#aaa;letter-spacing:.06em;">Daily Prompts</span>
+          <span style="font-family:'Space Mono',monospace;font-size:8px;padding:3px 10px;border-radius:100px;background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.28);color:#aaa;letter-spacing:.06em;">Live Build Alerts</span>
+          <span style="font-family:'Space Mono',monospace;font-size:8px;padding:3px 10px;border-radius:100px;background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.28);color:#aaa;letter-spacing:.06em;">Agent Feedback</span>
+          <span style="font-family:'Space Mono',monospace;font-size:8px;padding:3px 10px;border-radius:100px;background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.28);color:#aaa;letter-spacing:.06em;">Free Resources</span>
+        </div>
+      </div>
+      <a href="https://discord.gg/metakittyz" target="_blank" rel="noopener"
+        style="background:linear-gradient(135deg,#5865F2,#7B2FFF);color:#fff;text-decoration:none;font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:.07em;padding:15px 28px;border-radius:100px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 0 24px rgba(88,101,242,.3);transition:all .18s;white-space:nowrap;"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 0 40px rgba(88,101,242,.5)';"
+        onmouseout="this.style.transform='';this.style.boxShadow='0 0 24px rgba(88,101,242,.3)';">
+        Join Discord 💬
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ JOIN THE REALM (EMAIL) ══════════════ -->
+<section class="section" style="background:var(--bg2);">
+  <div class="section-inner">
+    <div class="join-card">
+      <div class="join-text">
+        <h2>Get the <span>Free Quick Start Pack</span></h2>
+        <p style="margin-top:8px;">18 episodes. 6 agents. 40 prompts. Zero coding required. The 2-page PDF that maps the entire Metakittyz AI build — free download, delivered instantly.</p>
+      </div>
+      <form class="join-form" onsubmit="handleJoin(event)">
+        <input class="join-input" type="email" placeholder="your@email.com" required id="joinEmail">
+        <button class="join-submit" type="submit">Get the Free Pack →</button>
+      </form>
+    </div>
+    <div id="join-success" style="display:none;text-align:center;padding:20px;font-family:'Orbitron',sans-serif;font-size:14px;color:var(--tl);">
+      ✓ You're in! Check your email for the Quick Start Pack.
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════ -->
+<footer>
+  <div class="rb" style="margin-bottom:20px;"></div>
+  <div class="ft-brand">METAKITTYZ</div>
+  <div class="ft-links">
+    <a class="ft-link" href="/">Home</a>
+    <a class="ft-link" href="/guide.html">Guide</a>
+    <a class="ft-link" href="/community.html">Community</a>
+    <a class="ft-link" href="/kitty-lab.html">Kitty Lab</a>
+    <a class="ft-link" href="/about.html">About</a>
+    <a class="ft-link" href="https://instagram.com/metakittyz" target="_blank">Instagram</a>
+    <a class="ft-link" href="https://youtube.com/@metakittyz" target="_blank">YouTube</a>
+    <a class="ft-link" href="https://twitch.tv/metakittyz" target="_blank">Twitch</a>
+    <a class="ft-link" href="mailto:erika@productimagination.com">Contact</a>
+  </div>
+  <div style="margin-top:6px;color:#222;">METAKITTYZ LLC · EST. 2025 · BUILDING AI IN THE OPEN</div>
+</footer>
+
+</div><!-- /page -->
+
+<!-- ══ LEARN MORE MODAL ══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalCheck(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-eyebrow" id="modalEyebrow">EXCLUSIVE ACCESS</div>
+    <div class="modal-title" id="modalTitle">Product Name</div>
+    <div class="modal-desc" id="modalDesc">Description here.</div>
+    <div id="modalForm">
+      <input class="modal-email" type="email" placeholder="your@email.com" id="modalEmailInput">
+      <button class="modal-buy" onclick="submitLearnMore()">Send Me the Details →</button>
+    </div>
+    <div id="modalSuccess" style="display:none;padding:16px 0 8px;">
+      <div class="modal-success-text">✦ Check Your Inbox!</div>
+      <div class="modal-success-sub">Erika will reach out within 24 hours with everything you need to get started.</div>
+    </div>
+    <div class="modal-note">No spam · No pressure · Unsubscribe anytime</div>
+  </div>
+</div>
+
+<script>
+// Learn More email capture modal
+function openLearnMore(title, eyebrow, desc) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalEyebrow').textContent = eyebrow;
+  document.getElementById('modalDesc').textContent = desc;
+  document.getElementById('modalEmailInput').value = '';
+  document.getElementById('modalEmailInput').style.borderColor = '';
+  document.getElementById('modalForm').style.display = 'block';
+  document.getElementById('modalSuccess').style.display = 'none';
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalCheck(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+function submitLearnMore() {
+  var input = document.getElementById('modalEmailInput');
+  if (!input.value.trim() || !input.value.includes('@')) {
+    input.style.borderColor = 'rgba(255,45,120,.7)';
+    input.focus();
+    return;
+  }
+  document.getElementById('modalForm').style.display = 'none';
+  document.getElementById('modalSuccess').style.display = 'block';
+}
+
+// Build log toggles
+function toggleLog(id) {
+  var card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// Email join
+function handleJoin(e) {
+  e.preventDefault();
+  document.querySelector('.join-card').style.display = 'none';
+  document.getElementById('join-success').style.display = 'block';
+}
+
+// Escape key closes modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" aria-label="Site navigation">
+  <a class="mnav-item" href="/"><span class="mnav-ic">🏠</span><span class="mnav-lb">Home</span></a>
+  <a class="mnav-item" href="/guide.html"><span class="mnav-ic">📖</span><span class="mnav-lb">Guide</span></a>
+  <a class="mnav-item" href="/playbook.html"><span class="mnav-ic">📋</span><span class="mnav-lb">Playbook</span></a>
+  <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
+  <a class="mnav-item on" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
+</nav>
+
+</body>
+</html>

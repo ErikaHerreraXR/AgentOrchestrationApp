@@ -1,0 +1,69 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/intro.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/watch.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/discord.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/Metakittyz_QuickStart_2Page.pdf"
+  [headers.values]
+    Content-Disposition = "attachment; filename=Metakittyz_QuickStart_2Page.pdf"
+    Content-Type = "application/pdf"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/metakittyz-intro.mp4"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+    Accept-Ranges = "bytes"
+
+[[headers]]
+  for = "/erika-hero.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/build-series-thursday.mov"
+  [headers.values]
+    Content-Type = "video/quicktime"
+    Cache-Control = "public, max-age=604800"
+    Accept-Ranges = "bytes"
+
+[[headers]]
+  for = "/build-series.mp4"
+  [headers.values]
+    Content-Type = "video/mp4"
+    Cache-Control = "public, max-age=604800"
+    Accept-Ranges = "bytes"
+
+[[headers]]
+  for = "/guide.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/community.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Cache-Control = "public, max-age=3600"
