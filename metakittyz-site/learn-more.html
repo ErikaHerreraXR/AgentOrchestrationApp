@@ -406,7 +406,8 @@ function submitModal() {
     input.focus();
     return;
   }
-  // Trigger download if this product has one
+
+  // Show success immediately — don't make the user wait on the network
   var dlPath = DOWNLOADABLE[currentProductId];
   if (dlPath) {
     var link = document.createElement('a');
@@ -418,6 +419,17 @@ function submitModal() {
   }
   document.getElementById('modalForm').style.display = 'none';
   document.getElementById('modalSuccess').style.display = 'block';
+
+  // Fire-and-forget: store email in backend
+  fetch('/.netlify/functions/collect-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: val,
+      product: currentProduct,
+      source: 'learn-more'
+    })
+  }).catch(function() {}); // silent fail — user already has their content
 }
 </script>
 </body>

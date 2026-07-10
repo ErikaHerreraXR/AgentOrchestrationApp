@@ -1,11 +1,35 @@
 [build]
   publish = "."
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 [[headers]]
   for = "/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/admin.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/Metakittyz-40-AI-Prompts-v1.0.pdf"
+  [headers.values]
+    Content-Disposition = "attachment; filename=Metakittyz-40-AI-Prompts-v1.0.pdf"
+    Content-Type = "application/pdf"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/Metakittyz-AI-Build-Playbook-v1.0.pdf"
+  [headers.values]
+    Content-Disposition = "attachment; filename=Metakittyz-AI-Build-Playbook-v1.0.pdf"
+    Content-Type = "application/pdf"
+    Cache-Control = "public, max-age=86400"
 
 [[headers]]
   for = "/intro.html"

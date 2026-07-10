@@ -1452,7 +1452,7 @@ function submitPdfCapture() {
     input.focus();
     return;
   }
-  // Trigger the PDF download immediately
+  // Trigger the PDF download immediately — don't wait on network
   var link = document.createElement('a');
   link.href = '/Metakittyz-AI-Build-Playbook-v1.0.pdf';
   link.download = 'Metakittyz-AI-Build-Playbook-v1.0.pdf';
@@ -1462,6 +1462,16 @@ function submitPdfCapture() {
   // Show success state
   document.getElementById('pdfForm').style.display = 'none';
   document.getElementById('pdfSuccess').style.display = 'block';
+  // Fire-and-forget: store email in backend
+  fetch('/.netlify/functions/collect-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: val,
+      product: 'AI Build Playbook PDF',
+      source: 'playbook'
+    })
+  }).catch(function() {}); // silent fail — user already has their PDF
 }
 </script>
 <!-- MOBILE BOTTOM NAV -->
