@@ -362,14 +362,24 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;min-he
 
 <script>
 var currentProduct = '';
+var currentProductId = '';
+var DOWNLOADABLE = {
+  'prompts-pack': '/Metakittyz-40-AI-Prompts-v1.0.pdf'
+};
 
 function openModal(productId, productName) {
   currentProduct = productName;
+  currentProductId = productId;
   document.getElementById('modalProductName').textContent = productName;
   document.getElementById('modalForm').style.display = 'block';
   document.getElementById('modalSuccess').style.display = 'none';
   document.getElementById('modalEmail').value = '';
   document.getElementById('modalEmail').style.borderColor = 'rgba(255,255,255,.12)';
+  // Update success message based on whether there's a download
+  var hasDl = DOWNLOADABLE[productId];
+  document.getElementById('modalSuccess').innerHTML = hasDl
+    ? '<div class="modal-success-ic">✅</div><div class="modal-success-title">Downloading now!</div><div class="modal-success-sub">Your PDF is downloading. Check your inbox too — Erika will follow up with the full details.</div>'
+    : '<div class="modal-success-ic">✅</div><div class="modal-success-title">You\'re on the list!</div><div class="modal-success-sub">Check your inbox — details are on the way. If you don\'t see it in 5 minutes, check spam.</div>';
   document.getElementById('emailModal').classList.add('open');
   setTimeout(function(){ document.getElementById('modalEmail').focus(); }, 100);
 }
@@ -395,6 +405,16 @@ function submitModal() {
     input.style.borderColor = 'rgba(255,45,120,.7)';
     input.focus();
     return;
+  }
+  // Trigger download if this product has one
+  var dlPath = DOWNLOADABLE[currentProductId];
+  if (dlPath) {
+    var link = document.createElement('a');
+    link.href = dlPath;
+    link.download = dlPath.split('/').pop();
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
   document.getElementById('modalForm').style.display = 'none';
   document.getElementById('modalSuccess').style.display = 'block';
