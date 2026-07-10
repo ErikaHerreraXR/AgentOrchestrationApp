@@ -105,9 +105,19 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--txt
   border: none; border-radius: 100px; padding: 9px 18px;
   font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .08em;
   font-weight: 700; text-transform: uppercase; cursor: pointer; transition: opacity .15s;
-  white-space: nowrap;
+  white-space: nowrap; text-decoration: none; display: inline-block;
 }
 .btn-export:hover { opacity: .88; }
+.btn-dl {
+  background: linear-gradient(90deg,#FF6B35,#FFE000); color: #0A0015;
+  border: none; border-radius: 100px; padding: 9px 18px;
+  font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .08em;
+  font-weight: 700; text-transform: uppercase; cursor: pointer; transition: opacity .15s;
+  white-space: nowrap; text-decoration: none; display: inline-block;
+}
+.btn-dl:hover { opacity: .88; }
+.dl-row { display: flex; gap: 8px; align-items: center; padding: 14px 22px 14px; border-top: 1px solid var(--border); }
+.dl-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; margin-right: 4px; }
 .result-count { font-size: 11px; color: var(--muted); white-space: nowrap; }
 
 /* ── TABLE ── */
@@ -186,10 +196,15 @@ tr:hover td { background: rgba(255,255,255,.02); }
       <!-- Stats -->
       <div class="stats-row" id="statsRow"></div>
 
-      <!-- Product breakdown -->
+      <!-- Product breakdown + direct download -->
       <div class="breakdown">
         <div class="section-label">Signups by Product</div>
         <div class="prod-rows" id="prodRows"></div>
+        <div class="dl-row">
+          <span class="dl-label">Download all emails:</span>
+          <a class="btn-dl" id="dlCsvBtn" href="#" download>⬇ CSV File</a>
+          <a class="btn-export" id="dlJsonBtn" href="#" download>{ } JSON</a>
+        </div>
       </div>
 
       <!-- Toolbar -->
@@ -282,8 +297,13 @@ async function fetchDashboard(pw) {
     document.getElementById('dashLoading').style.display = 'none';
     document.getElementById('dashContent').style.display = 'block';
 
-    // Store pw in memory so refresh works (not localStorage for security)
+    // Store pw in memory so download links and refresh work
     window.__adminPw = pw;
+
+    // Wire direct download links — hitting these URLs triggers a server-side file download
+    var base = '/.netlify/functions/download-emails?password=' + encodeURIComponent(pw);
+    document.getElementById('dlCsvBtn').href  = base + '&format=csv';
+    document.getElementById('dlJsonBtn').href = base + '&format=json';
 
   } catch (err) {
     document.getElementById('dashLoading').style.display = 'none';
@@ -293,16 +313,11 @@ async function fetchDashboard(pw) {
 }
 
 function renderStats(data) {
-  var latest = ALL_ENTRIES[0] ? fmtDate(ALL_ENTRIES[0].date) : '—';
-  var today = ALL_ENTRIES.filter(function(e) {
-    return new Date(e.date).toDateString() === new Date().toDateString();
-  }).length;
-
   document.getElementById('statsRow').innerHTML =
-    statCard(data.total, 'Total Signups', '', 'sv-pk') +
-    statCard(data.unique, 'Unique Emails', '', 'sv-tl') +
-    statCard(today, 'Today', '', 'sv-yl') +
-    statCard(Object.keys(data.byProduct || {}).length, 'Products', 'with signups', 'sv-pu');
+    statCard(data.total,                                   'Total Signups',  '',             'sv-pk') +
+    statCard(data.unique,                                  'Unique Emails',  '',             'sv-tl') +
+    statCard(data.todayCount || 0,                         'Today',          '',             'sv-yl') +
+    statCard(Object.keys(data.byProduct || {}).length,     'Products',       'with signups', 'sv-pu');
 }
 
 function statCard(val, label, sub, cls) {

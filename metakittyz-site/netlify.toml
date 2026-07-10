@@ -5,6 +5,10 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Netlify Blobs store — provisioned automatically on first deploy
+[[blobs]]
+  name = "email-submissions"
+
 [[headers]]
   for = "/*"
   [headers.values]

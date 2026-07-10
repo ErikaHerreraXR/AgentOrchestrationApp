@@ -1,4 +1,14 @@
+/**
+ * admin-emails — GET /.netlify/functions/admin-emails?password=xxx
+ *
+ * Returns the full email list as JSON for the admin dashboard.
+ * Requires ADMIN_PASSWORD env var set in Netlify → Site settings → Environment variables.
+ */
+
 const { getStore } = require('@netlify/blobs');
+
+const STORE_NAME = 'email-submissions';
+const BLOB_KEY   = 'all-emails';
 
 exports.handler = async (event) => {
   const headers = {
@@ -7,71 +17,44 @@ exports.handler = async (event) => {
     'X-Robots-Tag': 'noindex',
   };
 
-  // Check password — set ADMIN_PASSWORD env var in Netlify dashboard
-  const provided = event.queryStringParameters?.password || '';
+  // ── Auth ──────────────────────────────────────────────────────
+  const provided = (event.queryStringParameters || {}).password || '';
   const expected = process.env.ADMIN_PASSWORD || '';
 
   if (!expected) {
-    return {
-      statusCode: 503,
-      headers,
-      body: JSON.stringify({ error: 'ADMIN_PASSWORD env var not configured' }),
-    };
+    return { statusCode: 503, headers, body: JSON.stringify({ error: 'ADMIN_PASSWORD not configured — add it in Netlify → Site settings → Environment variables' }) };
   }
-
   if (provided !== expected) {
-    return {
-      statusCode: 401,
-      headers,
-      body: JSON.stringify({ error: 'Unauthorized' }),
-    };
+    return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized' }) };
   }
 
+  // ── Read blob ─────────────────────────────────────────────────
   try {
-    const store = getStore('email-submissions');
-    const { blobs } = await store.list();
-
-    const entries = (
-      await Promise.all(
-        blobs.map(async (blob) => {
-          try {
-            return await store.get(blob.key, { type: 'json' });
-          } catch {
-            return null;
-          }
-        })
-      )
-    ).filter(Boolean);
+    const store = getStore(STORE_NAME);
+    const data  = await store.get(BLOB_KEY, { type: 'json' });
+    const list  = Array.isArray(data) ? data : [];
 
     // Sort newest first
-    entries.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-    // Product summary
+    // Stats
+    const unique = new Set(list.map(e => e.email)).size;
+    const today  = new Date().toDateString();
+    const todayCount = list.filter(e => new Date(e.date).toDateString() === today).length;
+
     const byProduct = {};
-    for (const e of entries) {
+    for (const e of list) {
       const p = e.product || 'unknown';
       byProduct[p] = (byProduct[p] || 0) + 1;
     }
 
-    // Unique emails
-    const unique = new Set(entries.map((e) => e.email)).size;
-
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({
-        total: entries.length,
-        unique,
-        byProduct,
-        entries,
-      }),
+      body: JSON.stringify({ total: list.length, unique, todayCount, byProduct, entries: list }),
     };
   } catch (err) {
-    console.error('[admin-emails] error:', err.message);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: 'Failed to fetch entries', detail: err.message }),
-    };
+    console.error('[admin-emails]', err.message);
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to read blob', detail: err.message }) };
   }
 };
