@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metakittyz · AI Marketing Production Prompt Library</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0A0015;--bg2:#0d001f;--bg3:#12002a;--card:#0f0022;--surf:#160030;
+  --pk:#FF2D78;--tl:#00F5D4;--pu:#7B2FFF;--gr:#00FF41;--yl:#FFE000;--or:#FF6B35;
+  --txt:#E8E0F0;--muted:#9A90B0;--dim:#4a4060;
+  --rb:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);
+}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.75;display:flex}
+
+/* SIDEBAR */
+.sidenav{position:fixed;top:0;left:0;width:230px;height:100vh;background:#06000e;border-right:1px solid var(--dim);overflow-y:auto;z-index:100;padding:20px 0;scrollbar-width:thin}
+.sidenav::-webkit-scrollbar{width:3px}
+.sidenav::-webkit-scrollbar-thumb{background:var(--dim)}
+.sn-logo{padding:0 18px 20px;border-bottom:1px solid var(--dim);margin-bottom:12px}
+.sn-brand{font-family:'Trebuchet MS',sans-serif;font-weight:900;font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:var(--rb);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sn-sub{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;margin-top:2px}
+.sn-cat{padding:5px 18px;font-family:'Courier New',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-top:10px}
+.sn-link{display:flex;align-items:center;gap:8px;padding:6px 18px;font-size:11px;color:var(--muted);text-decoration:none;transition:all .15s;border-left:2px solid transparent;line-height:1.4}
+.sn-link:hover{background:rgba(255,255,255,.04);color:var(--txt);border-left-color:var(--pk)}
+.sn-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:.5}
+.sn-step{font-family:'Courier New',monospace;font-size:8px;margin-left:auto;opacity:.5;flex-shrink:0}
+
+/* MAIN */
+.main{margin-left:230px;flex:1;min-width:0}
+.page{max-width:900px;margin:0 auto;padding:0 clamp(20px,4vw,52px)}
+
+/* RAINBOW */
+.rb-bar{height:3px;background:var(--rb);background-size:200%;animation:rbshift 4s linear infinite}
+@keyframes rbshift{to{background-position:200% 0}}
+
+/* TYPOGRAPHY */
+.display{font-family:'Trebuchet MS','Century Gothic','Arial Black',sans-serif;font-weight:900;letter-spacing:.07em;text-transform:uppercase;line-height:1.05}
+.mono{font-family:'Courier New',monospace;letter-spacing:.05em}
+
+/* HERO */
+.hero{padding:clamp(52px,8vw,100px) 0 clamp(32px,4vw,56px);border-bottom:1px solid var(--dim)}
+.hero-eyebrow{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.3em;color:var(--gr);text-transform:uppercase;margin-bottom:14px}
+.hero-eyebrow::before{content:'> '}
+.hero-title{font-family:'Trebuchet MS','Century Gothic','Arial Black',sans-serif;font-weight:900;font-size:clamp(30px,5vw,60px);letter-spacing:.05em;text-transform:uppercase;line-height:1.05;margin-bottom:14px}
+.hero-title span{background:var(--rb);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:rbshift 4s linear infinite}
+.hero-desc{font-size:clamp(14px,1.3vw,17px);color:var(--muted);max-width:680px;line-height:1.85;margin-bottom:28px}
+.hero-stats{display:flex;flex-wrap:wrap;gap:24px}
+.stat{text-align:center}
+.stat-n{font-family:'Trebuchet MS',sans-serif;font-weight:900;font-size:clamp(24px,3.5vw,36px);line-height:1}
+.stat-l{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-top:3px}
+
+/* SECTION HEADER */
+.sec-hdr{padding:clamp(48px,6vw,72px) 0 clamp(20px,3vw,28px)}
+.sec-eyebrow{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.sec-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--vc,var(--pk)),transparent)}
+.sec-title{font-family:'Trebuchet MS','Century Gothic','Arial Black',sans-serif;font-weight:900;font-size:clamp(22px,3.5vw,40px);letter-spacing:.05em;text-transform:uppercase;line-height:1.1}
+.sec-desc{font-size:clamp(13px,1.2vw,15px);color:var(--muted);max-width:640px;line-height:1.8;margin-top:10px}
+
+/* STEP BADGE */
+.step-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,45,120,.08);border:1px solid rgba(255,45,120,.25);border-radius:100px;padding:5px 14px;font-family:'Courier New',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--pk);margin-bottom:12px}
+
+/* PROMPT CARD */
+.prompt-card{background:var(--card);border:1px solid var(--dim);border-radius:16px;padding:clamp(20px,2.5vw,32px);margin-bottom:20px;position:relative;overflow:hidden;transition:border-color .2s}
+.prompt-card:hover{border-color:rgba(255,45,120,.35)}
+.prompt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--vc,var(--pk))}
+.pc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.pc-title{font-family:'Trebuchet MS',sans-serif;font-weight:900;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--txt)}
+.pc-tags{display:flex;gap:6px;flex-wrap:wrap}
+.pc-tag{font-family:'Courier New',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:100px;border:1px solid var(--dim);color:var(--muted)}
+.pc-tag.tool{border-color:rgba(0,245,212,.3);color:var(--tl)}
+.pc-tag.paid{border-color:rgba(255,45,120,.3);color:var(--pk)}
+.pc-tag.free{border-color:rgba(0,255,65,.3);color:var(--gr)}
+.pc-tag.tip{border-color:rgba(255,224,0,.3);color:var(--yl)}
+
+/* PROMPT BOX */
+.prompt-box{background:#02000a;border:1px solid rgba(0,245,212,.15);border-radius:10px;padding:16px 18px;margin:12px 0;position:relative}
+.prompt-label{font-family:'Courier New',monospace;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--tl);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.prompt-label::before{content:'◈';font-size:10px}
+.prompt-text{font-family:'Courier New',monospace;font-size:12px;line-height:1.9;color:#c8fdf0;white-space:pre-wrap;word-break:break-word}
+.neg-box{background:#02000a;border:1px solid rgba(255,45,120,.12);border-radius:10px;padding:14px 18px;margin:8px 0}
+.neg-label{font-family:'Courier New',monospace;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,45,120,.6);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.neg-label::before{content:'⊗';font-size:10px}
+.neg-text{font-family:'Courier New',monospace;font-size:11px;line-height:1.8;color:rgba(255,45,120,.7)}
+
+/* PARAMS ROW */
+.params{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.param{background:rgba(123,47,255,.08);border:1px solid rgba(123,47,255,.2);border-radius:8px;padding:5px 10px;font-family:'Courier New',monospace;font-size:10px;color:var(--pu)}
+.param span{color:var(--txt);font-weight:700}
+
+/* TACTIC BLOCK */
+.tactic{background:rgba(255,224,0,.04);border:1px solid rgba(255,224,0,.2);border-radius:12px;padding:16px 20px;margin-top:14px}
+.tactic-label{font-family:'Courier New',monospace;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--yl);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tactic-label::before{content:'💰'}
+.tactic-text{font-size:13px;color:var(--txt);line-height:1.75}
+.tactic-text strong{color:var(--yl)}
+
+/* QUALITY BOX */
+.quality{background:rgba(0,255,65,.03);border:1px solid rgba(0,255,65,.15);border-radius:10px;padding:12px 16px;margin-top:10px}
+.q-label{font-family:'Courier New',monospace;font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--gr);margin-bottom:6px}
+.q-items{display:flex;flex-wrap:wrap;gap:6px}
+.q-item{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.q-item::before{content:'✓';color:var(--gr);font-size:10px}
+
+/* WORKFLOW STEPS */
+.workflow{display:flex;flex-direction:column;gap:0;position:relative;margin:clamp(20px,3vw,36px) 0}
+.workflow::before{content:'';position:absolute;left:23px;top:36px;bottom:36px;width:2px;background:linear-gradient(to bottom,var(--pk),var(--pu),var(--tl))}
+.wf-step{display:flex;align-items:flex-start;gap:18px;padding:14px 0}
+.wf-num{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Trebuchet MS',sans-serif;font-weight:900;font-size:15px;flex-shrink:0;position:relative;z-index:1}
+.wf-body{flex:1;padding-top:6px}
+.wf-title{font-family:'Trebuchet MS',sans-serif;font-weight:900;font-size:13px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.wf-desc{font-size:13px;color:var(--muted);line-height:1.65}
+
+/* TOOL COMPARE */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:clamp(16px,2vw,24px) 0}
+.tool-card{background:var(--card);border:1px solid var(--dim);border-radius:12px;padding:18px}
+.tool-name{font-family:'Trebuchet MS',sans-serif;font-weight:900;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.tool-price{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
+.tool-feat{font-size:11px;color:var(--muted);line-height:1.65}
+.tool-rating{display:flex;gap:4px;margin-top:8px}
+.star{color:var(--yl);font-size:10px}
+
+/* CALLOUT */
+.callout{background:var(--card);border-left:3px solid var(--vc,var(--pk));border-radius:0 12px 12px 0;padding:18px 22px;margin:20px 0;font-size:14px;color:var(--txt);line-height:1.75}
+.callout strong{color:var(--vc,var(--pk))}
+
+/* DISTRIBUTION ROW */
+.dist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:16px 0}
+.dist-card{background:var(--card);border:1px solid var(--dim);border-radius:10px;padding:14px;text-align:center}
+.dist-icon{font-size:22px;margin-bottom:6px}
+.dist-name{font-family:'Trebuchet MS',sans-serif;font-weight:900;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.dist-spec{font-family:'Courier New',monospace;font-size:9px;color:var(--muted);line-height:1.6}
+
+/* INTEGRATION BOX */
+.integration{background:linear-gradient(135deg,rgba(255,45,120,.06),rgba(0,245,212,.04));border:1px solid rgba(0,245,212,.2);border-radius:16px;padding:clamp(20px,3vw,36px);margin:24px 0}
+.int-title{font-family:'Trebuchet MS',sans-serif;font-weight:900;font-size:16px;letter-spacing:.07em;text-transform:uppercase;color:var(--tl);margin-bottom:12px}
+.int-url{font-family:'Courier New',monospace;font-size:11px;background:rgba(0,245,212,.08);border:1px solid rgba(0,245,212,.2);border-radius:6px;padding:5px 12px;display:inline-block;color:var(--tl);margin-bottom:14px}
+.int-items{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.int-items{grid-template-columns:1fr}}
+.int-item{background:rgba(0,0,0,.3);border-radius:8px;padding:12px 14px}
+.int-item-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--tl);margin-bottom:4px}
+.int-item-val{font-size:12px;color:var(--txt);line-height:1.6}
+
+/* FOOTER */
+footer{border-top:1px solid var(--dim);padding:40px 0;text-align:center;margin-top:60px}
+.footer-logo{font-family:'Trebuchet MS',sans-serif;font-weight:900;font-size:16px;letter-spacing:.12em;text-transform:uppercase;background:var(--rb);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:rbshift 4s linear infinite;margin-bottom:6px}
+.footer-url{font-family:'Courier New',monospace;font-size:10px;color:var(--tl);letter-spacing:.15em}
+
+@media(max-width:768px){.sidenav{display:none}.main{margin-left:0}}
+</style>
+</head>
+<body>
+
+<nav class="sidenav">
+  <div class="sn-logo">
+    <div class="sn-brand">Metakittyz</div>
+    <div class="sn-sub">Prompt Library v1.0</div>
+  </div>
+  <div class="sn-cat">Workflow</div>
+  <a href="#overview" class="sn-link"><span class="sn-dot" style="color:var(--gr)"></span>Production Overview<span class="sn-step">00</span></a>
+  <a href="#tools" class="sn-link"><span class="sn-dot" style="color:var(--tl)"></span>Tool Stack<span class="sn-step">01</span></a>
+  <div class="sn-cat">Avatar Creation</div>
+  <a href="#avatar-base" class="sn-link"><span class="sn-dot" style="color:var(--pk)"></span>Base Character Setup<span class="sn-step">02</span></a>
+  <a href="#headshots" class="sn-link"><span class="sn-dot" style="color:var(--pk)"></span>Headshot Angles<span class="sn-step">03</span></a>
+  <a href="#bodyshots" class="sn-link"><span class="sn-dot" style="color:var(--pk)"></span>Body Shot Angles<span class="sn-step">04</span></a>
+  <a href="#consistency" class="sn-link"><span class="sn-dot" style="color:var(--pk)"></span>Consistency System<span class="sn-step">05</span></a>
+  <div class="sn-cat">Video Production</div>
+  <a href="#higgsfield" class="sn-link"><span class="sn-dot" style="color:var(--pu)"></span>Higgsfield AI Prompts<span class="sn-step">06</span></a>
+  <a href="#budget-video" class="sn-link"><span class="sn-dot" style="color:var(--pu)"></span>Budget Video Tools<span class="sn-step">07</span></a>
+  <a href="#voiceover" class="sn-link"><span class="sn-dot" style="color:var(--pu)"></span>Voiceover & Audio<span class="sn-step">08</span></a>
+  <div class="sn-cat">Marketing Ads</div>
+  <a href="#product-ads" class="sn-link"><span class="sn-dot" style="color:var(--or)"></span>Product Ad Prompts<span class="sn-step">09</span></a>
+  <a href="#ugc" class="sn-link"><span class="sn-dot" style="color:var(--or)"></span>UGC / Testimonial<span class="sn-step">10</span></a>
+  <a href="#hooks" class="sn-link"><span class="sn-dot" style="color:var(--or)"></span>Hook Sequences<span class="sn-step">11</span></a>
+  <div class="sn-cat">Social Media</div>
+  <a href="#social" class="sn-link"><span class="sn-dot" style="color:var(--tl)"></span>Platform Formats<span class="sn-step">12</span></a>
+  <a href="#captions" class="sn-link"><span class="sn-dot" style="color:var(--tl)"></span>Caption Prompts<span class="sn-step">13</span></a>
+  <div class="sn-cat">Distribution</div>
+  <a href="#distribution" class="sn-link"><span class="sn-dot" style="color:var(--yl)"></span>Distribution Pipeline<span class="sn-step">14</span></a>
+  <a href="#digital-product" class="sn-link"><span class="sn-dot" style="color:var(--yl)"></span>Sell as Digital Product<span class="sn-step">15</span></a>
+  <a href="#metakittyz" class="sn-link"><span class="sn-dot" style="color:var(--gr)"></span>Metakittyz Integration<span class="sn-step">16</span></a>
+</nav>
+
+<div class="main">
+<div class="rb-bar"></div>
+
+<div class="page">
+
+<!-- ══ HERO ══ -->
+<div class="hero" id="overview">
+  <div class="hero-eyebrow mono">metakittyz.com · AI Marketing Production System · v1.0</div>
+  <div class="hero-title display"><span>AI Marketing</span><br>Prompt Library</div>
+  <p class="hero-desc">Production-ready prompts for creating avatar characters, marketing ads, UGC content, product showcases, and full social media campaigns using Higgsfield AI and budget AI video tools. Every prompt engineered for zero artifacts, zero smears, maximum output quality.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n display" style="color:var(--pk)">60+</div><div class="stat-l mono">Production Prompts</div></div>
+    <div class="stat"><div class="stat-n display" style="color:var(--tl)">8</div><div class="stat-l mono">AI Tools Covered</div></div>
+    <div class="stat"><div class="stat-n display" style="color:var(--pu)">6</div><div class="stat-l mono">Platforms</div></div>
+    <div class="stat"><div class="stat-n display" style="color:var(--gr)">16</div><div class="stat-l mono">Workflow Steps</div></div>
+  </div>
+</div>
+
+<!-- ══ PRODUCTION WORKFLOW ══ -->
+<div class="sec-hdr">
+  <div class="sec-eyebrow mono" style="--vc:var(--gr)">Step 00</div>
+  <div class="sec-title display" style="color:var(--gr)">Production Workflow</div>
+  <div class="sec-desc">The exact sequence from zero to published marketing content. Follow this order every time for production-ready results.</div>
+</div>
+
+<div class="workflow">
+  <div class="wf-step"><div class="wf-num" style="background:rgba(255,45,120,.15);border:2px solid var(--pk);color:var(--pk)">1</div><div class="wf-body"><div class="wf-title display" style="color:var(--pk)">Define Product + Offer</div><div class="wf-desc">Write your product name, price, key benefit (one sentence), and target customer before touching any AI tool. This becomes the brief every prompt is built on.</div></div></div>
+  <div class="wf-step"><div class="wf-num" style="background:rgba(255,107,53,.15);border:2px solid var(--or);color:var(--or)">2</div><div class="wf-body"><div class="wf-title display" style="color:var(--or)">Generate Base Avatar</div><div class="wf-desc">Create your AI spokesperson using the Avatar Base prompts. Save the seed/reference image — this is your character's identity card used in every subsequent generation.</div></div></div>
+  <div class="wf-step"><div class="wf-num" style="background:rgba(255,224,0,.15);border:2px solid var(--yl);color:var(--yl)">3</div><div class="wf-body"><div class="wf-title display" style="color:var(--yl)">Generate All Angle Variants</div><div class="wf-desc">Produce 8–12 angle variants (headshots + body shots) using consistency prompts. All must match the base character before moving forward.</div></div></div>
+  <div class="wf-step"><div class="wf-num" style="background:rgba(0,245,212,.15);border:2px solid var(--tl);color:var(--tl)">4</div><div class="wf-body"><div class="wf-title display" style="color:var(--tl)">Produce Marketing Ad Video</div><div class="wf-desc">Use Higgsfield or budget tool prompts to animate your avatar into a product ad. Hook → Problem → Solution → CTA structure. 15–30 seconds.</div></div></div>
+  <div class="wf-step"><div class="wf-num" style="background:rgba(123,47,255,.15);border:2px solid var(--pu);color:var(--pu)">5</div><div class="wf-body"><div class="wf-title display" style="color:var(--pu)">Add Voice + Audio</div><div class="wf-desc">Generate voiceover using ElevenLabs or Higgsfield voice. Layer background music (royalty-free). Mix to -14 LUFS for social platforms.</div></div></div>
+  <div class="wf-step"><div class="wf-num" style="background:rgba(0,255,65,.15);border:2px solid var(--gr);color:var(--gr)">6</div><div class="wf-body"><div class="wf-title display" style="color:var(--gr)">Format Per Platform</div><div class="wf-desc">Export in 9:16 (Reels/TikTok/Shorts), 1:1 (Instagram feed), 16:9 (YouTube). Add captions, on-screen text, and CTAs per platform spec.</div></div></div>
+  <div class="wf-step"><div class="wf-num" style="background:rgba(255,45,120,.15);border:2px solid var(--pk);color:var(--pk)">7</div><div class="wf-body"><div class="wf-title display" style="color:var(--pk)">Distribute + Sell</div><div class="wf-desc">Schedule across all platforms. List the prompt pack as a digital product on metakittyz.com. Track CTR, saves, and conversions per piece.</div></div></div>
+</div>
+
+<!-- ══ TOOL STACK ══ -->
+<div class="sec-hdr" id="tools">
+  <div class="sec-eyebrow mono" style="--vc:var(--tl)">Step 01</div>
+  <div class="sec-title display" style="color:var(--tl)">Tool Stack</div>
+  <div class="sec-desc">Every tool in the production pipeline with pricing and use case. Build your stack before starting.</div>
+</div>
+
+<div class="tool-grid">
+  <div class="tool-card" style="border-color:rgba(123,47,255,.3)">
+    <div class="tool-name display" style="color:var(--pu)">Higgsfield AI</div>
+    <div class="tool-price mono" style="color:var(--pu)">~$49–$99/mo</div>
+    <div class="tool-feat">Character animation, UGC-style ads, avatar-to-video, lip sync, motion control. Best for premium ads.</div>
+    <div class="tool-rating"><span class="star">★★★★★</span><span style="font-size:10px;color:var(--muted);margin-left:6px">Primary tool</span></div>
+  </div>
+  <div class="tool-card" style="border-color:rgba(0,245,212,.3)">
+    <div class="tool-name display" style="color:var(--tl)">Kling AI</div>
+    <div class="tool-price mono" style="color:var(--tl)">Free / $8–$28/mo</div>
+    <div class="tool-feat">High-quality img-to-video, realistic motion, 5–10 sec clips. Best budget option for product showcases.</div>
+    <div class="tool-rating"><span class="star">★★★★</span><span class="star" style="opacity:.3">★</span><span style="font-size:10px;color:var(--muted);margin-left:6px">Best budget</span></div>
+  </div>
+  <div class="tool-card" style="border-color:rgba(255,107,53,.3)">
+    <div class="tool-name display" style="color:var(--or)">Runway ML</div>
+    <div class="tool-price mono" style="color:var(--or)">$15–$35/mo</div>
+    <div class="tool-feat">Gen-3 Alpha video generation, inpainting, motion brush. Strong for cinematic product ads.</div>
+    <div class="tool-rating"><span class="star">★★★★</span><span class="star" style="opacity:.3">★</span></div>
+  </div>
+  <div class="tool-card" style="border-color:rgba(255,224,0,.3)">
+    <div class="tool-name display" style="color:var(--yl)">Midjourney</div>
+    <div class="tool-price mono" style="color:var(--yl)">$10–$60/mo</div>
+    <div class="tool-feat">Best-in-class avatar and product image generation. Use for base character creation before animating.</div>
+    <div class="tool-rating"><span class="star">★★★★★</span></div>
+  </div>
+  <div class="tool-card" style="border-color:rgba(0,255,65,.3)">
+    <div class="tool-name display" style="color:var(--gr)">ElevenLabs</div>
+    <div class="tool-price mono" style="color:var(--gr)">Free / $5–$22/mo</div>
+    <div class="tool-feat">Clone your voice or pick from 3,000+ voices. Generate marketing voiceovers in seconds.</div>
+    <div class="tool-rating"><span class="star">★★★★★</span></div>
+  </div>
+  <div class="tool-card" style="border-color:rgba(255,45,120,.3)">
+    <div class="tool-name display" style="color:var(--pk)">Pika 2.0</div>
+    <div class="tool-price mono" style="color:var(--pk)">Free / $8/mo</div>
+    <div class="tool-feat">Fast text-to-video and img-to-video. Great for quick social content and B-roll generation.</div>
+    <div class="tool-rating"><span class="star">★★★</span><span class="star" style="opacity:.3">★★</span></div>
+  </div>
+  <div class="tool-card" style="border-color:rgba(123,47,255,.3)">
+    <div class="tool-name display" style="color:var(--pu)">CapCut Pro</div>
+    <div class="tool-price mono" style="color:var(--pu)">Free / $10/mo</div>
+    <div class="tool-feat">Final edit, captions, templates, platform export. Non-negotiable in the stack for finishing.</div>
+    <div class="tool-rating"><span class="star">★★★★</span><span class="star" style="opacity:.3">★</span></div>
+  </div>
+  <div class="tool-card" style="border-color:rgba(0,245,212,.3)">
+    <div class="tool-name display" style="color:var(--tl)">Luma Dream</div>
+    <div class="tool-price mono" style="color:var(--tl)">Free / $30/mo</div>
+    <div class="tool-feat">Photorealistic video generation with Ray2 model. Best for environment/scene generation around avatars.</div>
+    <div class="tool-rating"><span class="star">★★★★</span><span class="star" style="opacity:.3">★</span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ AVATAR BASE ══════════════════════════ -->
+<div class="sec-hdr" id="avatar-base" style="--vc:var(--pk)">
+  <div class="sec-eyebrow mono">Step 02 · Avatar Creation</div>
+  <div class="sec-title display" style="color:var(--pk)">Base Character Setup</div>
+  <div class="sec-desc">Create your AI spokesperson with a locked, consistent visual identity. Save the exact seed number from every successful generation. These are your character's DNA.</div>
+</div>
+
+<div class="callout" style="--vc:var(--pk)">
+  <strong>Before generating:</strong> Write your character brief. Age range, skin tone, hair style/color, eye color, body type, style aesthetic (streetwear / professional / casual / luxury), and any brand-specific elements (colors in outfit, logo placement). The more specific, the more consistent your character will be across hundreds of generations.
+</div>
+
+<!-- PROMPT 1 -->
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header">
+    <div class="pc-title">Female Influencer · Premium Lifestyle Brand</div>
+    <div class="pc-tags"><span class="pc-tag tool">Midjourney</span><span class="pc-tag tool">DALL-E 3</span><span class="pc-tag tip">Base Character</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Image Generation Prompt</div>
+    <div class="prompt-text">professional brand ambassador, [25-32 year old woman / adjust age], [skin tone: e.g. warm brown / olive / fair], confident expression, direct eye contact with camera, [hair: e.g. long dark wavy hair / short natural curls / sleek blonde bob], wearing [brand color, e.g. hot pink] fitted top, minimal gold jewelry, soft studio lighting, clean white/cream seamless background, sharp focus on face, ultra-detailed skin texture, photorealistic, editorial fashion photography, Sony A7R V camera, 85mm portrait lens, f/1.8 aperture, professional retouching, commercial ready --ar 1:1 --style raw --v 6.1 --q 2</div>
+  </div>
+  <div class="neg-box">
+    <div class="neg-label mono">Negative Prompt (add to all generators that support it)</div>
+    <div class="neg-text">blurry, motion blur, grain, noise, artifacts, deformed hands, extra fingers, distorted face, asymmetrical eyes, double face, melting features, watermark, text overlay, low resolution, pixelated, oversaturated, unnatural skin, plastic skin, airbrushed, cartoon, illustration, painting, sketch</div>
+  </div>
+  <div class="params">
+    <div class="param">Aspect Ratio <span>1:1</span></div>
+    <div class="param">Quality <span>Max/HD</span></div>
+    <div class="param">Style <span>Photorealistic</span></div>
+    <div class="param">Save Seed <span>✓ Required</span></div>
+  </div>
+  <div class="quality">
+    <div class="q-label mono">Quality Checklist Before Saving</div>
+    <div class="q-items">
+      <div class="q-item">Eyes are symmetrical and in-focus</div>
+      <div class="q-item">Skin texture is natural, not plastic</div>
+      <div class="q-item">No extra fingers or distorted hands</div>
+      <div class="q-item">Background is clean with no artifacts</div>
+      <div class="q-item">Hair strands are individual, not merged</div>
+      <div class="q-item">Teeth visible naturally (if mouth open)</div>
+    </div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic · Digital Product Angle</div>
+    <div class="tactic-text">Bundle 5 base character prompts (different ethnicities, styles, ages) into a <strong>"Brand Spokesperson Starter Pack"</strong>. Price at <strong>$27</strong> as an instant digital download on metakittyz.com. Upsell to full prompt library at $97. Lead gen: post one free character creation video on TikTok showing the process → link to product in bio.</div>
+  </div>
+</div>
+
+<!-- PROMPT 2 -->
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header">
+    <div class="pc-title">Male Influencer · Tech / Business Niche</div>
+    <div class="pc-tags"><span class="pc-tag tool">Midjourney</span><span class="pc-tag tool">Ideogram</span><span class="pc-tag tip">Base Character</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Image Generation Prompt</div>
+    <div class="prompt-text">successful entrepreneur and content creator, [28-38 year old man], [e.g. dark brown skin, clean fade haircut / light skin, styled dark hair / medium skin, curly hair], sharp jawline, confident relaxed smile, wearing fitted dark navy crew-neck or premium casual wear, minimal silver watch, modern home office background with soft bokeh (bookshelves, plants, warm lamp light), three-point studio lighting, photorealistic, commercial photography, editorial quality, Canon EOS R5, 85mm, f/2.0, ultra sharp, skin pores visible, commercial advertising ready --ar 4:5 --style raw --v 6.1 --q 2</div>
+  </div>
+  <div class="neg-box">
+    <div class="neg-label mono">Negative Prompt</div>
+    <div class="neg-text">blurry, artifacts, deformed, extra limbs, distorted, watermark, text, low quality, cartoon, unrealistic lighting, neon colors, oversaturated, plastic skin, asymmetrical features, double exposure, ghosting</div>
+  </div>
+  <div class="params">
+    <div class="param">Aspect Ratio <span>4:5</span></div>
+    <div class="param">Background <span>Environmental</span></div>
+    <div class="param">Save Seed <span>✓ Required</span></div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic</div>
+    <div class="tactic-text">Use this character as the face of your <strong>MATRIX OS™ course ad</strong>. Position him as a student success story: "I built a $10K/month AI business using this system." Run as a TikTok spark ad. Link to metakittyz.com/matrix-os.</div>
+  </div>
+</div>
+
+<!-- ══ HEADSHOTS ══ -->
+<div class="sec-hdr" id="headshots" style="--vc:var(--pk)">
+  <div class="sec-eyebrow mono">Step 03 · Avatar Creation</div>
+  <div class="sec-title display" style="color:var(--pk)">Headshot Angle Prompts</div>
+  <div class="sec-desc">Generate 6 headshot angles from your base character using image-to-image or character reference workflows. Use the same seed/reference image each time to maintain consistency.</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header"><div class="pc-title">Angle 01 · Direct Front-Facing</div><div class="pc-tags"><span class="pc-tag tip">Headshot</span><span class="pc-tag tool">Midjourney --cref</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt (append after --cref [your base image URL])</div>
+    <div class="prompt-text">same person, direct front-facing portrait, camera-level eye contact, neutral confident expression, slight natural smile, sharp focus on eyes, soft diffused studio lighting, white seamless background, commercial headshot, editorial quality, 85mm equivalent, f/2.8, photorealistic --cref [BASE_IMAGE_URL] --cw 80 --ar 1:1 --style raw --v 6.1</div>
+  </div>
+  <div class="params"><div class="param">--cw <span>80 (character weight)</span></div><div class="param">Use <span>--cref flag</span></div></div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header"><div class="pc-title">Angle 02 · 3/4 Turn Left</div><div class="pc-tags"><span class="pc-tag tip">Headshot</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt</div>
+    <div class="prompt-text">same person, three-quarter profile view, face turned 45 degrees to the left, eyes looking forward at camera, confident side-lit portrait, rembrandt lighting, commercial photography, studio white background, ultra sharp skin detail, photorealistic, editorial --cref [BASE_IMAGE_URL] --cw 80 --ar 1:1 --style raw --v 6.1</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header"><div class="pc-title">Angle 03 · 3/4 Turn Right</div><div class="pc-tags"><span class="pc-tag tip">Headshot</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt</div>
+    <div class="prompt-text">same person, three-quarter profile view, face turned 45 degrees to the right, looking slightly upward, eyes connecting with camera, golden hour warmth, editorial portrait, studio setting, photorealistic commercial photography --cref [BASE_IMAGE_URL] --cw 80 --ar 1:1 --style raw --v 6.1</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header"><div class="pc-title">Angle 04 · Over-Shoulder Look-Back</div><div class="pc-tags"><span class="pc-tag tip">Headshot</span><span class="pc-tag tip">High Engagement</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt</div>
+    <div class="prompt-text">same person, turned away from camera, looking back over right shoulder, candid over-shoulder glance, slight smile, natural outdoor light or warm indoor light, lifestyle editorial feel, depth of field blur on background, photorealistic, high fashion editorial --cref [BASE_IMAGE_URL] --cw 75 --ar 4:5 --style raw --v 6.1</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic</div>
+    <div class="tactic-text">The over-shoulder look stops the scroll better than front-facing. Use this angle as the <strong>first frame of every Reel and TikTok</strong> — it creates curiosity before the video starts playing.</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header"><div class="pc-title">Angle 05 · Low-Angle Authority Shot</div><div class="pc-tags"><span class="pc-tag tip">Headshot</span><span class="pc-tag tip">Power Pose</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt</div>
+    <div class="prompt-text">same person, shot from slightly below eye level looking upward, commanding presence, chin slightly raised, confident power expression, dramatic side lighting with rim light, dark dramatic background, cinematic portrait, commercial advertising photography, magazine cover quality --cref [BASE_IMAGE_URL] --cw 80 --ar 2:3 --style raw --v 6.1</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header"><div class="pc-title">Angle 06 · Candid Laughing / Authentic</div><div class="pc-tags"><span class="pc-tag tip">Headshot</span><span class="pc-tag tip">Highest CTR</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt</div>
+    <div class="prompt-text">same person, genuine laugh expression, eyes slightly crinkled with joy, mouth open naturally showing teeth, candid moment style photography, natural light streaming from left, warm and approachable, lifestyle brand photography, unposed authentic feel, editorial quality --cref [BASE_IMAGE_URL] --cw 75 --ar 1:1 --style raw --v 6.1</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic</div>
+    <div class="tactic-text">Authentic laughing images have <strong>47% higher CTR</strong> than posed ones in Meta ad testing. Use this angle for Facebook/Instagram feed ads and thumbnails. Pair with copy: "I couldn't believe it actually worked."</div>
+  </div>
+</div>
+
+<!-- ══ BODY SHOTS ══ -->
+<div class="sec-hdr" id="bodyshots" style="--vc:var(--or)">
+  <div class="sec-eyebrow mono">Step 04 · Avatar Creation</div>
+  <div class="sec-title display" style="color:var(--or)">Body Shot Angle Prompts</div>
+  <div class="sec-desc">Full body and mid-body shots for product demonstrations, lifestyle content, and ad creatives. Always include the full outfit description from your character brief.</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--or)">
+  <div class="pc-header"><div class="pc-title">Body Shot 01 · Full Body Standing</div><div class="pc-tags"><span class="pc-tag tip">Body Shot</span><span class="pc-tag tool">Midjourney</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt</div>
+    <div class="prompt-text">same person, full body standing portrait, confident posture, weight on one hip, arms relaxed at sides, [outfit: e.g. fitted hot pink blazer, white tee, dark jeans, white sneakers], white seamless studio background, full length head-to-toe visible, three-point lighting, commercial fashion photography, no cropping at any body part, photorealistic, editorial quality --cref [BASE_IMAGE_URL] --cw 80 --ar 2:3 --style raw --v 6.1</div>
+  </div>
+  <div class="neg-box">
+    <div class="neg-label mono">Negative Prompt — Critical for Body Shots</div>
+    <div class="neg-text">cropped feet, missing limbs, extra legs, distorted torso, floating hands, unnatural proportions, elongated neck, too thin waist, unrealistic body, plastic mannequin, artifacts on clothing, merged fingers, blurry lower body</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--or)">
+  <div class="pc-header"><div class="pc-title">Body Shot 02 · Waist-Up with Product Hold</div><div class="pc-tags"><span class="pc-tag tip">Body Shot</span><span class="pc-tag tip">Product Ad</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt — Replace [PRODUCT] with your actual product</div>
+    <div class="prompt-text">same person, waist-up portrait, holding [PRODUCT: e.g. a sleek white supplement bottle / a phone showing an app / a digital tablet] in both hands at chest level, product clearly visible and in focus, face looking at camera with warm confident smile, [outfit matching brand colors], studio lighting, clean gradient background [brand color], product display shot style, commercial advertising photography, sharp product detail --cref [BASE_IMAGE_URL] --cw 75 --ar 4:5 --style raw --v 6.1</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic</div>
+    <div class="tactic-text">This is your <strong>primary ad creative</strong>. The person + product in one frame is the highest-converting image format for Meta, TikTok, and Pinterest ads. Create 3 versions with different expressions: smiling, surprised, serious. A/B test all three in your first $50 of ad spend.</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--or)">
+  <div class="pc-header"><div class="pc-title">Body Shot 03 · Seated / Working Setup</div><div class="pc-tags"><span class="pc-tag tip">Body Shot</span><span class="pc-tag tip">Lifestyle</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt</div>
+    <div class="prompt-text">same person, seated at a clean minimal desk, laptop open in front of them, looking up at camera mid-work, [home office or co-working space environment], warm afternoon light from window on left, lifestyle editorial photography, natural authentic moment, shallow depth of field blurring background, photorealistic, commercial lifestyle ad --cref [BASE_IMAGE_URL] --cw 75 --ar 16:9 --style raw --v 6.1</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--or)">
+  <div class="pc-header"><div class="pc-title">Body Shot 04 · Action / Dynamic Pose</div><div class="pc-tags"><span class="pc-tag tip">Body Shot</span><span class="pc-tag tip">High Energy</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Prompt</div>
+    <div class="prompt-text">same person, dynamic walking pose, mid-stride, looking at camera with energy and confidence, slight motion blur on background suggesting movement, urban street or modern building exterior, golden hour lighting, fashion editorial dynamic shot, hair with natural movement, clothing with natural fold/movement, photorealistic, commercial campaign quality --cref [BASE_IMAGE_URL] --cw 75 --ar 4:5 --style raw --v 6.1</div>
+  </div>
+</div>
+
+<!-- ══ CONSISTENCY ══ -->
+<div class="sec-hdr" id="consistency" style="--vc:var(--pk)">
+  <div class="sec-eyebrow mono">Step 05 · Avatar Creation</div>
+  <div class="sec-title display" style="color:var(--pk)">Character Consistency System</div>
+  <div class="sec-desc">The biggest challenge in AI avatar marketing is keeping the same character across 50+ images and videos. Follow this protocol exactly.</div>
+</div>
+
+<div class="callout" style="--vc:var(--tl)">
+  <strong>The Consistency Rule:</strong> Every generation that uses your avatar must include the exact same core descriptors — copy-paste them at the start of every new prompt. Never rephrase them. Midjourney's --cref flag + same descriptors = 85–95% visual consistency.
+</div>
+
+<div class="prompt-card" style="--vc:var(--tl)">
+  <div class="pc-header"><div class="pc-title">Character Anchor Block — Copy-Paste Into Every Prompt</div><div class="pc-tags"><span class="pc-tag tip">Consistency Key</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Your Character Anchor (fill in once, use everywhere)</div>
+    <div class="prompt-text">ANCHOR TEMPLATE — replace brackets with your character's specifics:
+
+[AGE]-year-old [GENDER], [SKIN TONE] skin, [HAIR DESCRIPTION], [EYE COLOR] eyes, [DISTINGUISHING FEATURE e.g. small nose ring / sharp cheekbones / strong brow], [BODY TYPE: slim / athletic / curvy / stocky], always wearing [SIGNATURE COLOR ELEMENT e.g. hot pink accessories / gold jewelry / dark minimalist clothing]
+
+EXAMPLE FILLED ANCHOR:
+28-year-old woman, warm brown skin, long dark wavy hair with highlights, dark brown almond eyes, strong defined cheekbones, slim athletic build, always wearing hot pink or gold accents, natural makeup, clear glowing skin</div>
+  </div>
+  <div class="quality">
+    <div class="q-label mono">Consistency Protocol</div>
+    <div class="q-items">
+      <div class="q-item">Save anchor block in a notes doc you open before every session</div>
+      <div class="q-item">Use --cref with your best base image every time in Midjourney</div>
+      <div class="q-item">Keep --cw between 70–85 (lower = more creative, higher = more locked)</div>
+      <div class="q-item">Regenerate any image where face differs by more than 10% before moving forward</div>
+      <div class="q-item">Build a reference sheet: 6 approved angles saved in one folder labeled "CANON"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HIGGSFIELD AI ══ -->
+<div class="sec-hdr" id="higgsfield" style="--vc:var(--pu)">
+  <div class="sec-eyebrow mono">Step 06 · Video Production</div>
+  <div class="sec-title display" style="color:var(--pu)">Higgsfield AI Prompts</div>
+  <div class="sec-desc">Production-ready video prompts for Higgsfield's character animation, UGC-style ads, and product showcases. Always start from your approved avatar image.</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pu)">
+  <div class="pc-header">
+    <div class="pc-title">UGC Style Ad · Hook + Problem + Solution</div>
+    <div class="pc-tags"><span class="pc-tag tool">Higgsfield</span><span class="pc-tag tip">UGC Ad</span><span class="pc-tag paid">15–30 sec</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Higgsfield Video Prompt — Use generate_video tool</div>
+    <div class="prompt-text">A confident woman speaks directly to camera in a bright, minimal home setting. She starts with a surprised expression, leans slightly toward camera and says "I cannot believe I wasted 3 years doing it the hard way—" then her expression shifts to warm and knowing as she continues explaining. Natural hand gestures. Realistic head movement. Soft window light from the left. Background: clean white wall with one plant visible. Shot on iPhone-style, slightly shaky handheld — authentic UGC aesthetic. High resolution. No motion artifacts. Smooth natural movement throughout.</div>
+  </div>
+  <div class="params">
+    <div class="param">Model <span>Higgsfield character</span></div>
+    <div class="param">Duration <span>15–30s</span></div>
+    <div class="param">Reference <span>Upload avatar image</span></div>
+    <div class="param">Ratio <span>9:16</span></div>
+  </div>
+  <div class="neg-box">
+    <div class="neg-label mono">Avoid in Higgsfield</div>
+    <div class="neg-text">rapid camera cuts, multiple people, text overlays (add in CapCut instead), extreme close-ups that distort face, unnatural eye blinking, mouth artifacts during speech, jittery motion — all must be handled in post if they appear</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic</div>
+    <div class="tactic-text">UGC-style ads (real-person look, slightly shaky camera) outperform polished studio ads by <strong>32% in CTR</strong> on TikTok. This format sells the digital prompt pack itself: "I used AI to create this entire ad — here's the exact prompt." Drive to metakittyz.com digital product page.</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pu)">
+  <div class="pc-header">
+    <div class="pc-title">Product Showcase · Talking Head + B-Roll</div>
+    <div class="pc-tags"><span class="pc-tag tool">Higgsfield</span><span class="pc-tag tip">Product Ad</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Higgsfield Video Prompt</div>
+    <div class="prompt-text">A poised woman in a bright studio environment holds a [PRODUCT] in her right hand, bringing it up to frame at eye level. She looks at the product, then looks directly into camera with a smile, nodding slightly as if confirming something excellent. Natural breathing movement. Hair has gentle natural movement. Smooth camera slow push-in from medium to medium-close during the 8 seconds. Professional lighting: key light right, fill light left, hair light above-behind. Clean white or gradient background. Cinematic color grade. Photorealistic. No artifacts. 4K quality motion.</div>
+  </div>
+  <div class="params">
+    <div class="param">Duration <span>8–12s</span></div>
+    <div class="param">Ratio <span>4:5 or 9:16</span></div>
+    <div class="param">Camera <span>Slow push-in</span></div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pu)">
+  <div class="pc-header">
+    <div class="pc-title">Testimonial Style · Before/After Reveal</div>
+    <div class="pc-tags"><span class="pc-tag tool">Higgsfield</span><span class="pc-tag tip">Testimonial</span><span class="pc-tag tip">High Converter</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Higgsfield Video Prompt</div>
+    <div class="prompt-text">A woman sits on a couch in a cozy living room, speaking naturally to camera as if sharing a personal story with a friend. She starts with a more subdued, slightly tired expression while describing a past frustration, then her face brightens dramatically and she sits forward with energy as she describes the solution. Authentic micro-expressions: raised eyebrows at the revelation moment, genuine smile. Natural light from large window. Cozy pillows and warm background decor visible. Handheld camera feel, subtle natural movement. Real, not performative. No obvious AI artifacts. Human-like eye movement and blinking throughout.</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic</div>
+    <div class="tactic-text">Testimonial format is the <strong>#1 converting ad type</strong> for digital products. Pair this video with the caption "POV: you finally found the system that actually works" and link to your metakittyz.com product page. Add real text testimonials from customers as on-screen captions in CapCut.</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pu)">
+  <div class="pc-header">
+    <div class="pc-title">Lifestyle B-Roll · Environment Generation</div>
+    <div class="pc-tags"><span class="pc-tag tool">Higgsfield</span><span class="pc-tag tool">Luma Dream</span><span class="pc-tag tip">B-Roll</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">B-Roll Scene Prompts — Generate 4–6 per ad</div>
+    <div class="prompt-text">SCENE 1 — Hands typing on laptop:
+Close-up of woman's hands typing quickly on a sleek MacBook Pro, hot pink manicured nails, warm desk lamp light, coffee cup visible at edge of frame, shallow depth of field, 4K quality, no motion blur, cinematic
+
+SCENE 2 — Phone notification moment:
+Close-up of phone screen showing a notification "[Your product name] — New Order $97", hand picks up phone with excitement, camera slowly pulls back to reveal smiling face, natural light, authentic moment
+
+SCENE 3 — Results dashboard reveal:
+Screen recording style of a clean analytics dashboard showing upward trending graph, numbers increasing, cursor hovering over metrics, professional screen capture quality, no reflection glare
+
+SCENE 4 — Walking with confidence:
+Woman walking in slow motion through a bright modern space, slight smile, looking straight ahead, hair movement, lifestyle brand feel, warm golden hour light, cinematic 24fps look</div>
+  </div>
+</div>
+
+<!-- ══ BUDGET VIDEO TOOLS ══ -->
+<div class="sec-hdr" id="budget-video" style="--vc:var(--tl)">
+  <div class="sec-eyebrow mono">Step 07 · Video Production</div>
+  <div class="sec-title display" style="color:var(--tl)">Budget AI Video Prompts</div>
+  <div class="sec-desc">Kling AI, Runway, and Pika prompts optimized for quality output at lower cost. Use these when Higgsfield credits are limited.</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--tl)">
+  <div class="pc-header">
+    <div class="pc-title">Kling AI · Image-to-Video Product Reveal</div>
+    <div class="pc-tags"><span class="pc-tag tool">Kling AI</span><span class="pc-tag free">Budget Pick</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Kling AI Motion Prompt (upload your avatar image first)</div>
+    <div class="prompt-text">The person in the image slowly turns their head from looking slightly left to facing directly at camera, makes brief eye contact, then breaks into a warm genuine smile. Subtle natural breathing movement throughout. Hair moves slightly with the head turn. Realistic smooth motion. No distortion of face during movement. Hold on the smile at end of clip for 2 seconds.</div>
+  </div>
+  <div class="params">
+    <div class="param">Mode <span>Image-to-Video</span></div>
+    <div class="param">Duration <span>5s</span></div>
+    <div class="param">Motion <span>Standard</span></div>
+    <div class="param">Quality <span>High</span></div>
+  </div>
+  <div class="quality">
+    <div class="q-label mono">Kling Quality Tips — Prevents Artifacts</div>
+    <div class="q-items">
+      <div class="q-item">Keep motion description to ONE simple action — Kling fails on complex multi-step motions</div>
+      <div class="q-item">Always describe the ending state ("hold on X for 2 seconds")</div>
+      <div class="q-item">Use "smooth," "realistic," "no distortion" as quality keywords</div>
+      <div class="q-item">Start with a perfectly clean, sharp still image — garbage in, garbage out</div>
+      <div class="q-item">Generate 3 versions, pick best — Kling output is inconsistent run-to-run</div>
+    </div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--tl)">
+  <div class="pc-header">
+    <div class="pc-title">Runway Gen-3 · Cinematic Product Scene</div>
+    <div class="pc-tags"><span class="pc-tag tool">Runway ML</span><span class="pc-tag tip">Cinematic</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Runway Text-to-Video Prompt</div>
+    <div class="prompt-text">Cinematic close-up of [PRODUCT] sitting on a minimal white surface. Camera slowly orbits the product from left to right over 8 seconds, revealing all angles. Soft diffused light from above, subtle reflection on surface below. Premium product photography motion, shallow depth of field with edges softly blurred. No people. Pure product focus. Commercial advertising quality. 4K. Color grade: clean, slightly cool, professional.</div>
+  </div>
+  <div class="params">
+    <div class="param">Model <span>Gen-3 Alpha Turbo</span></div>
+    <div class="param">Duration <span>10s</span></div>
+    <div class="param">Ratio <span>16:9 or 1:1</span></div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic</div>
+    <div class="tactic-text">Pure product cinematics work as <strong>silent-scroll ads</strong> on Instagram and Pinterest. No voiceover needed — just the product, premium motion, and overlaid text. Cost: $0.20 of Runway credits. Value as a product showcase: high. Pair with the copy: "This is what $[PRICE] looks like."</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--tl)">
+  <div class="pc-header">
+    <div class="pc-title">Pika 2.0 · Quick Hook Video</div>
+    <div class="pc-tags"><span class="pc-tag tool">Pika</span><span class="pc-tag free">Fast / Cheap</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Pika Prompt — Fast social content</div>
+    <div class="prompt-text">Woman looking at camera with a shocked disbelieving expression, covers mouth with hand, slowly lowers hand revealing a wide smile of disbelief-turning-to-joy, shakes head slightly as if saying "I can't believe this", natural indoor light, vertical format, authentic reaction, no background distractions</div>
+  </div>
+  <div class="quality">
+    <div class="q-label mono">Pika Tip</div>
+    <div class="q-items">
+      <div class="q-item">Pika excels at emotional reaction shots — use it for hook frames only</div>
+      <div class="q-item">Keep prompts under 50 words — Pika degrades quality with long prompts</div>
+      <div class="q-item">Always use "no background distractions" to keep focus on subject</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VOICEOVER ══ -->
+<div class="sec-hdr" id="voiceover" style="--vc:var(--pu)">
+  <div class="sec-eyebrow mono">Step 08 · Audio Production</div>
+  <div class="sec-title display" style="color:var(--pu)">Voiceover Scripts + Audio Prompts</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pu)">
+  <div class="pc-header">
+    <div class="pc-title">ElevenLabs Voice Script · 15-Second Product Ad</div>
+    <div class="pc-tags"><span class="pc-tag tool">ElevenLabs</span><span class="pc-tag tip">15-sec VO</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Script Template — Replace [brackets]</div>
+    <div class="prompt-text">Hook (0–3s): "Wait — if you're still doing [OLD WAY], stop right now."
+
+Problem (3–8s): "I spent [TIME PERIOD] trying to [DESIRED OUTCOME] and getting nowhere. Sound familiar?"
+
+Solution (8–13s): "Then I found [PRODUCT NAME] and everything changed. In just [TIMEFRAME], I [RESULT]."
+
+CTA (13–15s): "Link in bio. Seriously, go now."</div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">ElevenLabs Voice Settings</div>
+    <div class="prompt-text">Voice: Rachel (warm, professional) or Bella (younger, energetic)
+Stability: 0.65
+Similarity: 0.80
+Style Exaggeration: 0.25
+Speaker Boost: ON
+Model: eleven_turbo_v2_5
+Export: MP3 192kbps, then convert to WAV for editing</div>
+  </div>
+  <div class="params">
+    <div class="param">Target LUFS <span>-14 LUFS</span></div>
+    <div class="param">True Peak <span>-1 dBTP</span></div>
+    <div class="param">Music Mix <span>-25 to -30 LUFS under VO</span></div>
+  </div>
+</div>
+
+<!-- ══ PRODUCT ADS ══ -->
+<div class="sec-hdr" id="product-ads" style="--vc:var(--or)">
+  <div class="sec-eyebrow mono">Step 09 · Marketing Ads</div>
+  <div class="sec-title display" style="color:var(--or)">Product Ad Prompts</div>
+  <div class="sec-desc">Complete ad creation prompts for any product. Swap [PRODUCT] and [BENEFIT] to generate ads for any niche.</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--or)">
+  <div class="pc-header">
+    <div class="pc-title">Digital Product Ad · AI / Tech Tool</div>
+    <div class="pc-tags"><span class="pc-tag tool">Higgsfield</span><span class="pc-tag tip">Digital Product</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Full Ad Scene Prompt</div>
+    <div class="prompt-text">Woman at a sleek minimal desk, laptop open with a colorful dashboard visible on screen. She's speaking to camera with high energy and hand gestures pointing at the screen. She turns the laptop to show the viewer, gestures excitedly at the results. Then closes laptop and looks directly at camera with a knowing smile. Natural home office light. Authentic, educational, aspirational tone. 20 seconds total. Smooth transitions between positions. High production quality despite authentic feel.</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic · Prompt Pack as Digital Product</div>
+    <div class="tactic-text">This entire prompt library is your digital product. Package it as <strong>"The AI Marketing Creator Kit"</strong> — price at <strong>$47 (entry) / $97 (full library) / $297 (with video walkthrough)</strong>. Sell on metakittyz.com. The ad that sells it IS made using the prompts inside it — that's your social proof. Caption: "Made this entire ad with AI in 2 hours. The prompts are in my kit — link in bio."</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--or)">
+  <div class="pc-header">
+    <div class="pc-title">Physical Product Ad · Skincare / Wellness</div>
+    <div class="pc-tags"><span class="pc-tag tool">Higgsfield</span><span class="pc-tag tool">Kling AI</span><span class="pc-tag tip">Physical Product</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Scene 1 — Avatar Introduction (Higgsfield)</div>
+    <div class="prompt-text">Woman looking at camera, fresh-faced, glowing skin, no heavy makeup. Bathroom or bright skincare setting. She touches her cheek gently, looks at camera with genuine satisfaction, says "[product name] changed my skin in 30 days." Natural light. Clean aesthetic. 5 seconds.</div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Scene 2 — Product Close-Up (Runway / Kling)</div>
+    <div class="prompt-text">Luxury close-up of [skincare product] — clean white or marble surface. Camera slowly pushes in. Product texture, packaging detail, and elegant branding visible. Water droplets or ingredient elements floating around product. Premium cosmetics commercial aesthetic. 5 seconds.</div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Scene 3 — Results / CTA (Higgsfield)</div>
+    <div class="prompt-text">Same woman as Scene 1, now smiling brightly, pointing to her clear glowing skin, giving thumbs up, looking at camera and mouthing "Link in bio." 3 seconds. Cut to black with text overlay (add in CapCut).</div>
+  </div>
+</div>
+
+<!-- ══ UGC / TESTIMONIAL ══ -->
+<div class="sec-hdr" id="ugc" style="--vc:var(--or)">
+  <div class="sec-eyebrow mono">Step 10 · Marketing Ads</div>
+  <div class="sec-title display" style="color:var(--or)">UGC &amp; Testimonial Prompts</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--or)">
+  <div class="pc-header">
+    <div class="pc-title">Unboxing Style UGC Ad</div>
+    <div class="pc-tags"><span class="pc-tag tool">Higgsfield</span><span class="pc-tag tip">UGC</span><span class="pc-tag tip">Top Converter</span></div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Higgsfield Prompt</div>
+    <div class="prompt-text">Woman sitting cross-legged on a bed or floor, opening a box with genuine excitement. She pulls out [PRODUCT], holds it up to camera with a "oh wow" expression, examines it closely, then looks back at camera and nods approvingly. Messy-bun hair, casual outfit. Natural morning light. iPhone camera aesthetic — slightly imperfect, authentic, not staged. Genuine reactions only. No stiff movements. 15 seconds of real unboxing energy.</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic</div>
+    <div class="tactic-text">Unboxing UGC has a <strong>3–5× lower CPM</strong> than polished ads on Meta. Create 3 versions with different avatars (different ethnicities/ages) for A/B testing. The diversity increases total addressable audience. Run all three for $5/day each for 3 days — kill lowest performer, scale winner to $50/day.</div>
+  </div>
+</div>
+
+<!-- ══ HOOKS ══ -->
+<div class="sec-hdr" id="hooks" style="--vc:var(--pk)">
+  <div class="sec-eyebrow mono">Step 11 · Marketing Ads</div>
+  <div class="sec-title display" style="color:var(--pk)">Hook Sequence Prompts</div>
+  <div class="sec-desc">The first 1–3 seconds determine everything. These are the highest-converting hook formats with the visual prompts to generate them.</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header"><div class="pc-title">Hook Type 01 · The Shock Open</div><div class="pc-tags"><span class="pc-tag tip">Hook</span><span class="pc-tag tip">Highest Stop-Scroll</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Visual Prompt</div>
+    <div class="prompt-text">Extreme close-up of woman's eyes going wide with shock/disbelief, then zooming out to medium shot as she says "I made [AMOUNT] in [TIMEFRAME] using only AI — and I'm going to show you exactly how." Camera starts tight on eyes and pulls out quickly over 2 seconds. High contrast lighting. Very sharp. Immediate, no slow build.</div>
+  </div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">On-Screen Text (add in CapCut)</div>
+    <div class="prompt-text">Frame 1 (0–0.5s): "WAIT" [large, white, bold]
+Frame 2 (0.5–2s): "I made $[X] using AI in [timeframe]" [medium, brand color]
+Frame 3 (2–3s): "Here's how 👇" [small, white]</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--pk)">
+  <div class="pc-header"><div class="pc-title">Hook Type 02 · The Question Open</div><div class="pc-tags"><span class="pc-tag tip">Hook</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Visual Prompt</div>
+    <div class="prompt-text">Woman looking directly at camera, tilts head slightly and raises one eyebrow with a knowing look, then points at camera as if pointing at the viewer. Natural conversational energy. She says "Are you STILL [doing old way]?" with genuine curiosity — not aggressive. 3 seconds. Clean background. Eye contact maintained entire time.</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic · Sell the Hook Pack Separately</div>
+    <div class="tactic-text">Package 10 hook visual prompts + 10 hook scripts as a <strong>"$17 Hook Pack"</strong> — the lowest-barrier digital product you can sell. Use it as a tripwire after a free lead magnet. Most buyers will then purchase the full library at $97. List at metakittyz.com/hook-pack.</div>
+  </div>
+</div>
+
+<!-- ══ SOCIAL MEDIA ══ -->
+<div class="sec-hdr" id="social" style="--vc:var(--tl)">
+  <div class="sec-eyebrow mono">Step 12 · Social Media</div>
+  <div class="sec-title display" style="color:var(--tl)">Platform Format Specs</div>
+</div>
+
+<div class="dist-grid">
+  <div class="dist-card"><div class="dist-icon">📱</div><div class="dist-name display" style="color:var(--pk)">TikTok</div><div class="dist-spec mono">9:16 · 1080×1920<br>15–60s ideal<br>Auto-captions ON<br>Hook in frame 1<br>Post: 7–9am or 7–9pm</div></div>
+  <div class="dist-card"><div class="dist-icon">📷</div><div class="dist-name display" style="color:var(--or)">Instagram Reels</div><div class="dist-spec mono">9:16 · 1080×1920<br>15–30s ideal<br>Safe zone: 150px top/bottom<br>First frame = thumbnail<br>Post: 9am–11am</div></div>
+  <div class="dist-card"><div class="dist-icon">▶️</div><div class="dist-name display" style="color:var(--pk)">YouTube Shorts</div><div class="dist-spec mono">9:16 · 1080×1920<br>Under 60s<br>Title in first 3s<br>Loop strategy works<br>Post: 12pm–3pm</div></div>
+  <div class="dist-card"><div class="dist-icon">💼</div><div class="dist-name display" style="color:var(--tl)">LinkedIn</div><div class="dist-spec mono">1:1 or 4:5<br>1080×1080 or 1350<br>No music needed<br>Captions critical<br>Post: Tue–Thu 8–10am</div></div>
+  <div class="dist-card"><div class="dist-icon">📌</div><div class="dist-name display" style="color:var(--pk)">Pinterest</div><div class="dist-spec mono">2:3 · 1000×1500<br>Long-form pins<br>Keyword titles<br>Product links in pin<br>Post: 8–11pm</div></div>
+  <div class="dist-card"><div class="dist-icon">𝕏</div><div class="dist-name display" style="color:var(--muted)">X / Twitter</div><div class="dist-spec mono">16:9 or 1:1<br>Under 2min 20s<br>No mute = views drop<br>Reply to own thread<br>Post: 8am or 5pm</div></div>
+</div>
+
+<!-- ══ CAPTIONS ══ -->
+<div class="sec-hdr" id="captions" style="--vc:var(--tl)">
+  <div class="sec-eyebrow mono">Step 13 · Social Media</div>
+  <div class="sec-title display" style="color:var(--tl)">Caption Generation Prompts</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--tl)">
+  <div class="pc-header"><div class="pc-title">Caption Prompt Template — Works for Any Product</div><div class="pc-tags"><span class="pc-tag tip">Caption</span><span class="pc-tag tool">Claude / ChatGPT</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">AI Caption Generation Prompt</div>
+    <div class="prompt-text">Write 5 different captions for a [TikTok / Instagram Reel / LinkedIn] post about [PRODUCT/SERVICE]. Each caption must:
+
+1. Open with a HOOK that stops the scroll (no "I" as first word, no "Hey guys")
+2. Include exactly ONE specific result or number (e.g. "saved 4 hours a day" not "saved time")
+3. Have a clear single CTA at the end (link in bio, comment X, save this)
+4. Use line breaks after every 1–2 sentences for mobile readability
+5. Be [Platform tone: TikTok = casual/punchy / LinkedIn = professional/insightful / Instagram = aspirational/warm]
+6. Include 3–5 hashtags at the end only (not buried in copy)
+
+Product details: [paste your product description here]
+Target customer: [describe your ideal buyer]
+Tone: [Challenger-Authority / Warm Guide / Educational]</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Marketing Tactic</div>
+    <div class="tactic-text">Package 30 done-for-you captions (5 per platform × 6 platforms) as a <strong>"$37 Caption Pack"</strong> for your niche. Influencers buy these because writing captions is the task they hate most. Sell at metakittyz.com — position as "30 days of captions done in 10 minutes."</div>
+  </div>
+</div>
+
+<!-- ══ DISTRIBUTION ══ -->
+<div class="sec-hdr" id="distribution" style="--vc:var(--yl)">
+  <div class="sec-eyebrow mono">Step 14 · Distribution</div>
+  <div class="sec-title display" style="color:var(--yl)">Content Distribution Pipeline</div>
+  <div class="sec-desc">From one piece of video content, generate a full week of cross-platform distribution.</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--yl)">
+  <div class="pc-header"><div class="pc-title">Content Repurposing System — 1 Video → 12 Posts</div><div class="pc-tags"><span class="pc-tag tip">Distribution</span><span class="pc-tag tip">1 video = 1 week</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Repurposing Map</div>
+    <div class="prompt-text">FROM 1 × 30-second marketing video, produce:
+
+IMMEDIATE (same day):
+→ 1× TikTok (9:16, original cut, trending audio)
+→ 1× Instagram Reel (same cut, custom audio)
+→ 1× YouTube Short (same cut, keyword title)
+
+DAY 2:
+→ 1× Instagram static image (best frame + caption)
+→ 1× Pinterest pin (keyframed image + product link)
+→ 1× LinkedIn post (professional angle caption + native upload)
+
+DAY 3:
+→ 1× X/Twitter video clip (15s best moment extract)
+→ 1× Email newsletter feature (embed + story context)
+→ 1× Blog embed (product article linking to metakittyz.com)
+
+DAY 5:
+→ 3× Instagram Stories (3 frames from the ad: Hook / Middle / CTA)
+  Frame 1: grab from video → add "swipe up" or sticker
+  Frame 2: product image → add link sticker to metakittyz.com
+  Frame 3: quote from video → "save this" CTA</div>
+  </div>
+</div>
+
+<!-- ══ SELL AS DIGITAL PRODUCT ══ -->
+<div class="sec-hdr" id="digital-product" style="--vc:var(--yl)">
+  <div class="sec-eyebrow mono">Step 15 · Monetization</div>
+  <div class="sec-title display" style="color:var(--yl)">Sell This Library as a Digital Product</div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--yl)">
+  <div class="pc-header"><div class="pc-title">Product Pricing Architecture</div><div class="pc-tags"><span class="pc-tag tip">Revenue Model</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Tiered Pricing — metakittyz.com/ai-creator-kit</div>
+    <div class="prompt-text">TIER 1 — "AI Hook Pack" · $17
+→ 10 hook visual prompts
+→ 10 hook scripts (fill-in-the-blank)
+→ 1 caption template
+→ Delivery: instant PDF download
+→ Tactic: Impulse buy. No-brainer tripwire.
+
+TIER 2 — "AI Marketing Creator Kit" · $47
+→ Everything in Tier 1
+→ 30 avatar creation prompts (all angles)
+→ 20 video prompts (Higgsfield + budget tools)
+→ 30 caption templates (all platforms)
+→ Tool stack guide
+→ Delivery: instant PDF + Google Doc
+
+TIER 3 — "Full Production Library" · $97
+→ Everything in Tier 2
+→ 60+ prompts (full library)
+→ Distribution pipeline system
+→ Character consistency guide
+→ 90-day content calendar template
+→ Access to future prompt updates
+→ Delivery: members area on metakittyz.com
+
+TIER 4 — "Done-With-You Workshop" · $297
+→ Everything in Tier 3
+→ 2-hour live Zoom walkthrough
+→ Watch Erika build a full ad live
+→ Q&A
+→ Replay access</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">Launch Tactic</div>
+    <div class="tactic-text">Launch Tier 1 first at <strong>$17</strong> to build buyers list. Within 7 days of purchase, email with Tier 2 upgrade offer at <strong>$47 - $17 = $30</strong> ("you already paid $17, upgrade for $30 more"). Buyers who upgrade once are 5× more likely to buy Tier 3. Target: 100 × $17 sales in week 1 = $1,700. Convert 30% to $30 upgrades = $900 additional. Total week 1: $2,600. Run one TikTok showing the process daily using this library's prompts.</div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--yl)">
+  <div class="pc-header"><div class="pc-title">Sales Page Copy Prompt</div><div class="pc-tags"><span class="pc-tag tool">Claude / GPT-4o</span><span class="pc-tag tip">Sales Copy</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Sales Page Generation Prompt</div>
+    <div class="prompt-text">Write a high-converting sales page for a digital product called "The AI Marketing Creator Kit" sold at metakittyz.com. The buyer is a content creator or small business owner who wants to create professional AI-generated marketing videos and ads without expensive agencies or technical skills.
+
+Structure the page as:
+1. HEADLINE — outcome-focused, specific result, no more than 12 words
+2. SUB-HEADLINE — who this is for and what they get
+3. PROBLEM SECTION — 3 pain points they recognize immediately
+4. SOLUTION — what the kit is (one paragraph, plain language)
+5. WHAT'S INCLUDED — bullet list, specific and tangible
+6. SOCIAL PROOF — 3 short testimonial formats (fill in with real ones)
+7. PRICE REVEAL — frame the value before showing the number
+8. GUARANTEE — 30-day no-questions refund
+9. CTA BUTTON — action verb + outcome, not "Buy Now"
+10. FAQ — 5 most common objections answered
+
+Voice: Confident, direct, Challenger-Authority tone. No hype. No "life-changing." Specific numbers and outcomes only. Sounds like Erika @metakittyz wrote it personally.</div>
+  </div>
+</div>
+
+<!-- ══ METAKITTYZ INTEGRATION ══ -->
+<div class="sec-hdr" id="metakittyz" style="--vc:var(--gr)">
+  <div class="sec-eyebrow mono">Step 16 · Platform Integration</div>
+  <div class="sec-title display" style="color:var(--gr)">Metakittyz.com Integration</div>
+  <div class="sec-desc">Wire this entire production system into your existing platform for a complete content creation and distribution engine.</div>
+</div>
+
+<div class="integration">
+  <div class="int-title">metakittyz.com Content + Commerce Integration Map</div>
+  <div class="int-url mono">metakittyz.com</div>
+  <div class="int-items">
+    <div class="int-item">
+      <div class="int-item-label mono">Product Pages to Create</div>
+      <div class="int-item-val">
+        /ai-creator-kit — Full prompt library ($97)<br>
+        /hook-pack — Hook prompts only ($17)<br>
+        /avatar-kit — Avatar prompts only ($47)<br>
+        /workshop — Live workshop ($297)<br>
+        /matrix-os — MATRIX OS system (existing)
+      </div>
+    </div>
+    <div class="int-item">
+      <div class="int-item-label mono">Content Hub Pages</div>
+      <div class="int-item-val">
+        /blog/how-to-create-ai-ads — SEO article<br>
+        /blog/higgsfield-prompts — Search traffic<br>
+        /free-tools — Lead magnet hub<br>
+        /prompt-library — Teaser of full kit<br>
+        /community — Link to Discord/group
+      </div>
+    </div>
+    <div class="int-item">
+      <div class="int-item-label mono">Email Sequences to Build</div>
+      <div class="int-item-val">
+        Sequence 1: 7-day free avatar creation course (lead gen)<br>
+        Sequence 2: Post-purchase prompt kit walkthrough<br>
+        Sequence 3: Weekly new prompt drop (retention)<br>
+        Sequence 4: Workshop upsell (day 7 after Tier 2 purchase)
+      </div>
+    </div>
+    <div class="int-item">
+      <div class="int-item-label mono">Content → Commerce Flow</div>
+      <div class="int-item-val">
+        TikTok/Reel (free content)<br>
+        ↓ "Full prompts at link in bio"<br>
+        ↓ metakittyz.com/ai-creator-kit<br>
+        ↓ Email capture (free hook pack)<br>
+        ↓ Email sequence → paid product<br>
+        ↓ Discord community → retention<br>
+        ↓ Workshop upsell → $297
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="prompt-card" style="--vc:var(--gr)">
+  <div class="pc-header"><div class="pc-title">Weekly Content Schedule — metakittyz Distribution</div><div class="pc-tags"><span class="pc-tag tip">Schedule</span><span class="pc-tag tip">90-Day Plan</span></div></div>
+  <div class="prompt-box">
+    <div class="prompt-label mono">Repeating Weekly Content Calendar</div>
+    <div class="prompt-text">MONDAY — "Make It Monday"
+→ Create one new AI avatar or ad using this library
+→ Film the process (screen record + voiceover)
+→ Post: TikTok + Reel + Short
+→ Caption: "How I made this with AI in [X mins]"
+
+TUESDAY — Educational
+→ Share one prompt from the library with an example output
+→ Platform: LinkedIn + Twitter thread
+→ Caption: "The exact prompt I used to generate this ↓"
+
+WEDNESDAY — Social Proof
+→ Share a result: yours or a customer's
+→ Before/After format — old way vs. AI way
+→ Platforms: Instagram Story + TikTok
+
+THURSDAY — Product Push
+→ Explicit promotion of one product tier
+→ Full ad video (use this library to create it)
+→ Clear CTA: "Kit at metakittyz.com — link in bio"
+
+FRIDAY — Behind the Scenes
+→ Unfiltered: what worked this week, what flopped
+→ Format: talking head, casual, no script
+→ Drive to community or email list
+
+SATURDAY — Remix / Repurpose
+→ Take your best-performing piece of the week
+→ Remix it with a new angle or platform format
+→ Pinterest pins + LinkedIn carousel
+
+SUNDAY — Plan Next Week
+→ Generate 5 new prompts for next week's content
+→ Batch-create all avatar images for the week
+→ Schedule all posts in advance</div>
+  </div>
+  <div class="tactic">
+    <div class="tactic-label mono">90-Day Follower Growth Tactic</div>
+    <div class="tactic-text">Week 1–2: Post daily educational content showing AI prompt results → build curiosity.<br>
+    Week 3–4: Launch $17 hook pack → first revenue, first buyers list.<br>
+    Week 5–8: Upgrade buyers to $47 kit → scale winners as TikTok Spark Ads at $20/day.<br>
+    Week 9–12: Launch $297 workshop → announce to full email list + community.<br>
+    <strong>Follower flywheel:</strong> Every piece of content uses this library → every piece includes a link to the library → buyers create content using the library → they tag @metakittyz → your reach compounds. The product and the content are the same thing.</div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<div class="rb-bar"></div>
+
+<footer>
+  <div class="page">
+    <div class="footer-logo">Metakittyz · AI Production System</div>
+    <div class="footer-url mono">metakittyz.com · @metakittyz · Prompt Library v1.0 · 2026</div>
+    <div style="margin-top:12px;font-family:'Courier New',monospace;font-size:9px;color:var(--dim);letter-spacing:.15em">60+ PROMPTS · 8 TOOLS · 6 PLATFORMS · 4 REVENUE TIERS · 1 SYSTEM</div>
+  </div>
+</footer>
+
+</div><!-- /main -->
+</body>
+</html>
