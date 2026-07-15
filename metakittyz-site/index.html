@@ -24,6 +24,8 @@
 
 <!-- Favicon (inline SVG as data URI) -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
@@ -246,7 +248,7 @@ body { background:#000; display:flex; justify-content:center; min-height:100vh; 
 }
 .section-title {
   font-family:'Orbitron',sans-serif; font-weight:900;
-  font-size:clamp(11px,1.2vw,16px); letter-spacing:.2em;
+  font-size:clamp(22px,3vw,44px); letter-spacing:.15em;
   text-transform:uppercase; white-space:nowrap;
 }
 
@@ -330,18 +332,18 @@ body { background:#000; display:flex; justify-content:center; min-height:100vh; 
    ═══════════════════ */
 .channel-cards{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,24px);margin-bottom:clamp(16px,2.5vw,36px);}
 @media(max-width:600px){.channel-cards{grid-template-columns:1fr;}}
-.channel-card{display:flex;flex-direction:column;gap:14px;background:#0c0020;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:clamp(22px,3vw,38px);text-decoration:none;transition:transform .2s,border-color .2s;}
-.channel-card:hover{transform:translateY(-2px);}
-.channel-yt:hover{border-color:rgba(255,45,120,.35);}
-.channel-tw:hover{border-color:rgba(123,47,255,.4);}
-.ch-badge{font-family:'Space Mono',monospace;font-size:clamp(8px,.85vw,10px);font-weight:700;letter-spacing:.12em;padding:4px 12px;border-radius:100px;display:inline-block;width:fit-content;}
-.ch-badge-yt{background:rgba(255,45,120,.1);border:1px solid rgba(255,45,120,.35);color:#FF2D78;}
-.ch-badge-tw{background:rgba(123,47,255,.12);border:1px solid rgba(123,47,255,.35);color:#7B2FFF;}
-.ch-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(20px,2.8vw,34px);color:#fff;line-height:1;}
-.ch-desc{font-size:clamp(11px,1vw,13px);color:#555;line-height:1.75;}
+.channel-card{display:flex;flex-direction:column;gap:18px;background:#0c0020;border:2px solid rgba(255,255,255,.1);border-radius:20px;padding:clamp(28px,4vw,56px);text-decoration:none;transition:transform .2s,border-color .2s,box-shadow .2s;}
+.channel-card:hover{transform:translateY(-3px);}
+.channel-yt{border-color:rgba(255,45,120,.25);box-shadow:0 0 32px rgba(255,45,120,.08);}
+.channel-yt:hover{border-color:rgba(255,45,120,.6);box-shadow:0 0 48px rgba(255,45,120,.2);}
+.channel-tw{border-color:rgba(123,47,255,.25);box-shadow:0 0 32px rgba(123,47,255,.08);}
+.channel-tw:hover{border-color:rgba(123,47,255,.6);box-shadow:0 0 48px rgba(123,47,255,.2);}
+.ch-header{width:100%;height:auto;display:block;border-radius:10px;}
+.ch-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(28px,4vw,52px);color:#fff;line-height:1;}
+.ch-desc{font-size:clamp(17px,1.8vw,22px);color:#aaa;line-height:1.75;}
 .ch-tags{display:flex;flex-wrap:wrap;gap:6px;}
 .ch-tags span{font-family:'Space Mono',monospace;font-size:clamp(7px,.75vw,9px);color:#333;border:1px solid #1a1a1a;border-radius:100px;padding:3px 10px;letter-spacing:.06em;}
-.ch-cta{font-family:'Space Mono',monospace;font-size:clamp(9px,.9vw,11px);font-weight:700;letter-spacing:.1em;padding-top:12px;border-top:1px solid rgba(255,255,255,.05);margin-top:auto;}
+.ch-cta{font-family:'Space Mono',monospace;font-size:clamp(18px,2.8vw,42px);font-weight:700;letter-spacing:.06em;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto;line-height:1.2;}
 .ch-cta-yt{color:#FF2D78;}
 .ch-cta-tw{color:#7B2FFF;}
 
@@ -994,6 +996,7 @@ body { background:#000; display:flex; justify-content:center; min-height:100vh; 
       <a class="sn-tab" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:#7B2FFF;">📋 Playbook</a>
       <a class="sn-tab" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
     </div>
+    <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
   </nav>
 
   <div class="rb"></div>
@@ -1029,29 +1032,15 @@ body { background:#000; display:flex; justify-content:center; min-height:100vh; 
 
         <!-- YouTube -->
         <a class="channel-card channel-yt" href="https://www.youtube.com/@metakittyz" target="_blank" rel="noopener">
-          <div class="ch-badge ch-badge-yt">▶ YouTube</div>
-          <div class="ch-name">@metakittyz</div>
+          <img src="/yt-channel-header.png" class="ch-header" alt="@Metakittyz on YouTube">
           <div class="ch-desc">Full build series, AI agent tutorials, VODs and Shorts. Subscribe to get notified every time we go live and drop new content.</div>
-          <div class="ch-tags">
-            <span>🎬 Build Series</span>
-            <span>🤖 AI Agents</span>
-            <span>📺 Live Streams</span>
-            <span>✂ Shorts</span>
-          </div>
           <div class="ch-cta ch-cta-yt">Watch on YouTube →</div>
         </a>
 
         <!-- Twitch -->
         <a class="channel-card channel-tw" href="https://www.twitch.tv/metakittyz" target="_blank" rel="noopener">
-          <div class="ch-badge ch-badge-tw">🎮 Twitch</div>
-          <div class="ch-name">metakittyz</div>
+          <img src="/tw-channel-header.png" class="ch-header" alt="@Metakittyz on Twitch">
           <div class="ch-desc">Live AI builds with real-time chat. Ask questions, follow along, and build your own agentic system alongside me as we stream.</div>
-          <div class="ch-tags">
-            <span>🔴 Live Builds</span>
-            <span>💬 Chat</span>
-            <span>⚡ Real-Time</span>
-            <span>🤝 Interactive</span>
-          </div>
           <div class="ch-cta ch-cta-tw">Watch on Twitch →</div>
         </a>
 
@@ -1242,13 +1231,13 @@ body { background:#000; display:flex; justify-content:center; min-height:100vh; 
       </div>
       <div style="width:100%;display:flex;justify-content:center;margin-bottom:clamp(8px,1.2vw,16px);">
       <a href="/watch.html" style="
-        font-family:Orbitron,sans-serif;font-weight:700;font-size:clamp(12px,1.3vw,18px);
+        font-family:Orbitron,sans-serif;font-weight:900;font-size:clamp(18px,2.2vw,32px);
         color:#fff;text-decoration:none;letter-spacing:.06em;
-        background:linear-gradient(135deg,rgba(255,45,120,.2),rgba(123,47,255,.2));
-        border:2px solid rgba(255,45,120,.5);border-radius:100px;
-        padding:clamp(10px,1.2vw,16px) clamp(24px,3vw,48px);
-        display:inline-flex;align-items:center;gap:10px;
-        box-shadow:0 0 28px rgba(255,45,120,.2);
+        background:linear-gradient(135deg,rgba(255,45,120,.25),rgba(123,47,255,.25));
+        border:3px solid rgba(255,45,120,.7);border-radius:100px;
+        padding:clamp(16px,2vw,28px) clamp(36px,5vw,80px);
+        display:inline-flex;align-items:center;gap:14px;
+        box-shadow:0 0 48px rgba(255,45,120,.35),0 0 80px rgba(123,47,255,.15);
         transition:transform .18s,box-shadow .18s;">
         📺 &nbsp;Watch Live — YouTube &amp; Twitch
       </a>
@@ -1598,6 +1587,11 @@ function toggleLiveChat(name) {
   <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
   <a class="mnav-item" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
 </nav>
+
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
+</script>
 
 </body>
 </html>

@@ -71,6 +71,16 @@
     Cache-Control = "public, max-age=604800"
 
 [[headers]]
+  for = "/yt-channel-header.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/tw-channel-header.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
   for = "/build-series-thursday.mov"
   [headers.values]
     Content-Type = "video/quicktime"

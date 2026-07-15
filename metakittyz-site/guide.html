@@ -6,6 +6,8 @@
 <title>Build Series Guide — MetakittyZ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
 :root{
   --pk:#FF2D78;--tl:#00F5D4;--yl:#FFE000;--pu:#7B2FFF;--co:#FF6B35;--mx:#00FF41;
@@ -14,7 +16,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;}
 
 /* scanline overlay */
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999;}
@@ -168,7 +170,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 }
 /* ── MOBILE FIXES ── */
 @media(max-width:768px){
-  body{overflow-x:clip !important;padding-top:52px !important;}
+  body{padding-top:52px !important;}
   .nav{position:fixed !important;left:0 !important;right:0 !important;top:0 !important;width:100% !important;flex-wrap:nowrap !important;}
   .nav-links{display:none !important;}
   .nav-home{display:none !important;}
@@ -204,6 +206,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
     <a class="nav-link" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:var(--pu);">📋 Playbook</a>
     <a class="nav-link" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
   </div>
+  <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
   <a class="nav-home" href="/">← Home</a>
 </nav>
 
@@ -664,5 +667,9 @@ buildRef();
   <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
   <a class="mnav-item" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
 </nav>
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
+</script>
 </body>
 </html>

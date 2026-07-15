@@ -7,6 +7,8 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
 /* ── RESET & BASE ── */
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -281,6 +283,7 @@ code{background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.2);border-
     <a class="sn-tab on" href="/playbook.html">📋 Playbook</a>
     <a class="sn-tab" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
   </div>
+    <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
 </nav>
 <div class="rb"></div>
 
@@ -371,7 +374,7 @@ code{background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.2);border-
       <tr><td><span class="var">[BRAND_NAME]</span></td><td>METAKITTYZ</td><td>________________</td><td>All sections</td></tr>
       <tr><td><span class="var">[BRAND_DOMAIN]</span></td><td>metakittyz.com</td><td>________________</td><td>§03, §08</td></tr>
       <tr><td><span class="var">[BRAND_EMAIL]</span></td><td>erika@productimagination.com</td><td>________________</td><td>§03, §08</td></tr>
-      <tr><td><span class="var">[GITHUB_USER]</span></td><td>erikaherreraxr</td><td>________________</td><td>§03, §07</td></tr>
+      <tr><td><span class="var">[GITHUB_USER]</span></td><td>metakittyz</td><td>________________</td><td>§03, §07</td></tr>
       <tr><td><span class="var">[GOAL]</span></td><td>1M Followers in 90 Days</td><td>________________</td><td>§01, §06</td></tr>
       <tr><td><span class="var">[PLATFORM]</span></td><td>Twitch / YouTube</td><td>________________</td><td>§01, §05</td></tr>
       <tr><td><span class="var">[NICHE]</span></td><td>AI Creator & Educator</td><td>________________</td><td>§01, §06</td></tr>
@@ -478,7 +481,7 @@ code{background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.2);border-
   <div class="sec-title">Cloud Architecture — GitHub to Netlify</div>
   <p class="sec-sub">The entire site runs on a JAMstack pipeline: static HTML/CSS/JS on GitHub, deployed instantly to Netlify via CI/CD, with serverless functions handling all AI API calls.</p>
 
-  <div class="info-box">📌 <strong style="color:var(--tl)">Metakittyz Stack:</strong> GitHub repo <code>erikaherreraxr/agentorchestrationapp</code> → Netlify auto-deploy → <code>metakittyz.com</code> — push to main = live in under 60 seconds.</div>
+  <div class="info-box">📌 <strong style="color:var(--tl)">Metakittyz Stack:</strong> GitHub repo <code>metakittyz/agentorchestrationapp</code> → Netlify auto-deploy → <code>metakittyz.com</code> — push to main = live in under 60 seconds.</div>
 
   <h3 class="sub">Repository Structure</h3>
   <div class="step-cmd">your-repo/
@@ -1482,5 +1485,9 @@ function submitPdfCapture() {
   <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
   <a class="mnav-item" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
 </nav>
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
+</script>
 </body>
 </html>

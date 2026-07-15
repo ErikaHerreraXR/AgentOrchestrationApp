@@ -9,7 +9,8 @@
 <meta property="og:description" content="The creator behind the AI command center. Courses, coaching, digital tools, and a 6-agent AI system built fully in the open.">
 <meta property="og:image" content="/erika-hero.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
-
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
 
@@ -296,6 +297,7 @@ footer{text-align:center;padding:40px 20px;border-top:1px solid var(--brd2);font
     <a class="sn-tab" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:#7B2FFF;">📋 Playbook</a>
     <a class="sn-tab" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
   </div>
+    <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
 </nav>
 
 <div class="page">
@@ -1042,6 +1044,11 @@ document.addEventListener('keydown', function(e) {
   <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
   <a class="mnav-item on" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
 </nav>
+
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
+</script>
 
 </body>
 </html>

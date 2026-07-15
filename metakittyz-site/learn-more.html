@@ -7,6 +7,8 @@
 <meta name="description" content="AI prompts, courses, templates, and digital tools from Metakittyz — Erika Herrera's AI content creation toolkit.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
 :root{
   --bg:#0A0015;--surf:rgba(255,255,255,.04);--border:rgba(255,255,255,.07);
@@ -15,7 +17,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:clip;}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;min-height:100vh;}
 
 /* ── SITE NAV ── */
 .site-nav{position:sticky;top:0;z-index:200;background:rgba(10,0,21,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 clamp(14px,4vw,32px);}
@@ -159,6 +161,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;min-he
     <a class="sn-tab" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:#7B2FFF;">📋 Playbook</a>
     <a class="sn-tab on" href="/learn-more.html">🛍 Products</a>
   </div>
+    <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
 </nav>
 <div class="rb"></div>
 
@@ -431,6 +434,10 @@ function submitModal() {
     })
   }).catch(function() {}); // silent fail — user already has their content
 }
+</script>
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
 </script>
 </body>
 </html>
