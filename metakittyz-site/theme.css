@@ -1,0 +1,93 @@
+/* =====================================================
+   METAKITTYZ — LIGHT THEME OVERRIDES
+   Activated via: html[data-theme="light"]
+   Persisted in: localStorage key "mk-theme"
+   ===================================================== */
+
+/* ── CSS variable overrides (all pages that use vars) ── */
+html[data-theme="light"] {
+  --bg:#f5f3ff; --bg2:#ede9ff; --bg3:#e5e0ff;
+  --glass:rgba(255,255,255,.95); --surf:rgba(255,255,255,.9);
+  --card:#ffffff;
+  --border:rgba(10,0,21,.1); --brd:rgba(255,45,120,.25); --brd2:rgba(10,0,21,.07);
+  --text:#0A0015; --txt:#0A0015; --muted:#555; --txt2:#555; --dim:#444;
+  --pk:#FF2D78;--tl:#00F5D4;--yl:#FFE000;--pu:#7B2FFF;
+  --gr:#00FF41;--or:#FF6B35;--mx:#00FF41;--co:#FF6B35;--sp:#FFB3D9;
+}
+
+/* ── Global base (index.html uses hardcoded #000) ── */
+html[data-theme="light"]                    { background:#f5f3ff !important; }
+html[data-theme="light"] body               { background:#f5f3ff !important; color:#0A0015; }
+html[data-theme="light"] .page              { background:#f5f3ff !important; }
+html[data-theme="light"] .glass             { background:rgba(245,243,255,.99) !important; color:#0A0015; }
+
+/* ── Navigation ── */
+html[data-theme="light"] .site-nav,
+html[data-theme="light"] .nav {
+  background:rgba(245,243,255,.97) !important;
+  border-bottom-color:rgba(10,0,21,.12) !important;
+}
+html[data-theme="light"] .mob-nav {
+  background:rgba(245,243,255,.97) !important;
+  border-top-color:rgba(255,45,120,.3) !important;
+}
+html[data-theme="light"] .mnav-item         { color:#444; }
+html[data-theme="light"] .mnav-item.on      { color:#FF2D78; }
+
+/* ── Site nav tabs (index/about/playbook/learn-more) ── */
+html[data-theme="light"] .sn-tab            { color:#555; border-color:rgba(10,0,21,.15); }
+html[data-theme="light"] .sn-tab:hover      { color:#0A0015; background:rgba(10,0,21,.05); border-color:rgba(10,0,21,.25); }
+html[data-theme="light"] .sn-tab.on         { color:#FF2D78 !important; border-color:rgba(255,45,120,.4) !important; background:rgba(255,45,120,.1) !important; }
+html[data-theme="light"] .sn-name           { background:linear-gradient(90deg,#FF2D78,#7B2FFF,#00F5D4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+/* ── Nav links (guide/community/kitty-lab) ── */
+html[data-theme="light"] .nav-link          { color:#555; border-color:rgba(10,0,21,.15); }
+html[data-theme="light"] .nav-link:hover,
+html[data-theme="light"] .nav-link.on       { color:#FF2D78; border-color:rgba(255,45,120,.4); background:rgba(255,45,120,.06); }
+html[data-theme="light"] .nav-logo          { -webkit-text-fill-color:transparent; background:linear-gradient(90deg,#FF2D78,#7B2FFF,#00F5D4); -webkit-background-clip:text; background-clip:text; }
+
+/* ── Watch Live cards (index.html) ── */
+html[data-theme="light"] .channel-card      { background:#fff !important; }
+html[data-theme="light"] .ch-desc           { color:#444 !important; }
+html[data-theme="light"] .ch-tags span      { color:#555; border-color:rgba(10,0,21,.12); }
+html[data-theme="light"] .section-header-line { background:linear-gradient(90deg,transparent,rgba(10,0,21,.15),transparent); }
+
+/* ── Orbs ── */
+html[data-theme="light"] .orb               { opacity:.04 !important; }
+
+/* ── Start banner (index.html mobile) ── */
+html[data-theme="light"] .start-banner      { background:rgba(255,45,120,.08); border-color:rgba(255,45,120,.2); color:#0A0015; }
+
+/* ── Video section ── */
+html[data-theme="light"] .video-card,
+html[data-theme="light"] .video-block       { background:rgba(255,255,255,.8) !important; border-color:rgba(10,0,21,.1) !important; }
+
+/* ── Stats ── */
+html[data-theme="light"] .sc                { background:rgba(10,0,21,.04); border-color:rgba(10,0,21,.08); }
+
+/* ── Socials / footer ── */
+html[data-theme="light"] .social-link       { color:#555; }
+html[data-theme="light"] .social-link:hover { color:#FF2D78; }
+
+/* ── Hero fade ── */
+html[data-theme="light"] .hero-fade         { background:linear-gradient(to bottom,transparent 60%,#f5f3ff); }
+
+/* ── theme toggle button (shared) ── */
+.theme-btn {
+  background:none;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:100px;
+  padding:5px 11px;
+  cursor:pointer;
+  font-size:16px;
+  line-height:1;
+  flex-shrink:0;
+  transition:border-color .15s, background .15s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-left:6px;
+}
+.theme-btn:hover                            { background:rgba(255,255,255,.08); }
+html[data-theme="light"] .theme-btn         { border-color:rgba(10,0,21,.2); }
+html[data-theme="light"] .theme-btn:hover   { background:rgba(10,0,21,.06); }

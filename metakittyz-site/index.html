@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO -->
+<title>Metakittyz Quick Start Pack — Build AI Agents Live</title>
+<meta name="description" content="I'm taking the Harvard AI Intensive and teaching you everything I learn live. 18 episodes. 6 AI agents. 40 copy-paste prompts. Zero coding background needed. Free download.">
+<meta name="author" content="Erika Herrera / @metakittyz">
+
+<!-- Open Graph (Instagram, Facebook link previews) -->
+<meta property="og:title" content="Metakittyz Quick Start Pack — Build AI Agents Live">
+<meta property="og:description" content="Taking the Harvard AI Intensive and teaching you everything live. Free 2-page guide: 18 episodes, 6 agents, 40 prompts. Zero code needed.">
+<meta property="og:image" content="/erika-hero.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://metakittyz.netlify.app">
+
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Metakittyz Quick Start Pack">
+<meta name="twitter:description" content="Build AI agents live. Free download. @metakittyz">
+<meta name="twitter:image" content="/erika-hero.jpg">
+
+<!-- Favicon (inline SVG as data URI) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { background:#000; font-family:'Inter',sans-serif; -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+body { background:#000; display:flex; justify-content:center; min-height:100vh; }
+
+.page { width:100%; max-width:1200px; position:relative; background:#000; }
+
+/* orbs */
+.orbs { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.orb  { position:absolute; border-radius:50%; filter:blur(80px); }
+.o1   { width:600px; height:600px; background:#FF2D78; opacity:.18; top:-150px; left:-150px; }
+.o2   { width:500px; height:500px; background:#7B2FFF; opacity:.16; bottom:10%;  right:-100px; }
+.o3   { width:380px; height:380px; background:#00F5D4; opacity:.10; top:55%;    left:-80px; }
+.o4   { width:280px; height:280px; background:#FFE000; opacity:.06; top:40%;    right:5%; }
+.o5   { width:320px; height:320px; background:#FF6B35; opacity:.18; bottom:20%; left:20%; }
+
+.glass {
+  position:relative; z-index:2;
+  background:rgba(0,0,0,.98);
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  display:flex; flex-direction:column; align-items:center;
+  min-height:100vh;
+}
+
+/* rainbow */
+.rb {
+  width:100%; height:5px; flex-shrink:0;
+  background:linear-gradient(90deg,#FF2D78 0%,#FF6B35 18%,#FFE000 36%,#00F5D4 56%,#7B2FFF 76%,#FF2D78 100%);
+}
+
+/* hero */
+.hero { width:100%; position:relative; overflow:hidden; flex-shrink:0; }
+.hero img { width:100%; height:auto; display:block; max-height:90vh; object-fit:cover; object-position:center top; }
+.hero-fade { position:absolute; bottom:0; left:0; right:0; height:80px; background:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.9) 100%); pointer-events:none; }
+.hero-rb   { position:absolute; bottom:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4,#7B2FFF,#FF2D78); }
+
+/* main content */
+.main { width:100%; display:flex; flex-direction:column; align-items:center; padding:0 clamp(16px,5vw,80px); }
+
+/* intro */
+.intro { width:100%; margin-top:clamp(14px,2vw,28px); background:rgba(255,45,120,.09); border:1px solid rgba(255,45,120,.25); border-left:4px solid #FF2D78; border-radius:clamp(10px,1.5vw,16px); padding:clamp(12px,2vw,24px) clamp(14px,2.5vw,28px); }
+.intro-lbl { font-family:'Space Mono',monospace; font-size:clamp(8px,1vw,12px); color:#FF2D78; letter-spacing:.14em; text-transform:uppercase; margin-bottom:6px; }
+.intro-txt { font-size:clamp(12px,1.4vw,18px); color:#ccc; line-height:1.6; }
+.intro-txt strong { color:#fff; font-weight:700; }
+
+/* stats */
+.stats { display:flex; gap:clamp(7px,1.2vw,18px); width:100%; margin-top:clamp(12px,1.8vw,22px); }
+.sc { flex:1; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09); border-radius:clamp(9px,1.2vw,16px); padding:clamp(10px,1.8vw,22px) clamp(4px,1vw,12px); display:flex; flex-direction:column; align-items:center; gap:4px; }
+.sn { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(22px,3.5vw,52px); line-height:1; }
+.sl { font-size:clamp(8px,.9vw,13px); color:#777; text-align:center; font-weight:600; line-height:1.35; }
+
+/* ── PDF DOWNLOAD SECTION ── */
+.pdf-section { width:100%; margin-top:clamp(12px,1.8vw,22px); }
+
+.pdf-card-wrap {
+  width:100%;
+  background:linear-gradient(135deg,rgba(0,245,212,.13),rgba(123,47,255,.13));
+  border:2px solid rgba(0,245,212,.5);
+  border-radius:clamp(10px,1.4vw,18px);
+  padding:clamp(14px,2vw,28px) clamp(16px,2.2vw,32px);
+  display:flex; align-items:center; gap:clamp(12px,1.5vw,24px);
+  box-shadow:0 0 32px rgba(0,245,212,.2);
+}
+.pdf-icon {
+  width:clamp(44px,5.5vw,72px); height:clamp(44px,5.5vw,72px); flex-shrink:0;
+  background:rgba(0,245,212,.15); border:2px solid rgba(0,245,212,.4);
+  border-radius:clamp(8px,1vw,14px); display:flex; align-items:center; justify-content:center;
+  font-size:clamp(20px,2.8vw,36px);
+}
+.pdf-text { flex:1; }
+.pdf-title { font-family:'Orbitron',sans-serif; font-weight:700; font-size:clamp(14px,1.6vw,24px); color:#fff; line-height:1.3; margin-bottom:5px; }
+.pdf-meta  { font-family:'Space Mono',monospace; font-size:clamp(9px,1vw,14px); color:#00F5D4; letter-spacing:.08em; margin-bottom:4px; }
+.pdf-desc  { font-size:clamp(10px,1vw,14px); color:#666; line-height:1.4; }
+.pdf-btn-link {
+  background:linear-gradient(135deg,#FF2D78,#7B2FFF);
+  border-radius:100px;
+  padding:clamp(10px,1.2vw,18px) clamp(20px,2.5vw,36px);
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(11px,1.1vw,16px); color:#fff !important;
+  letter-spacing:.06em; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px; flex-shrink:0;
+  white-space:nowrap; cursor:pointer;
+  transition:opacity .15s, transform .15s;
+  box-shadow:0 0 20px rgba(255,45,120,.35);
+}
+.pdf-btn-link:hover { opacity:.88; transform:scale(1.03); box-shadow:0 0 32px rgba(255,45,120,.5); }
+.pdf-btn-link:active { transform:scale(.97); }
+.pdf-note { margin-top:8px; text-align:center; font-family:'Space Mono',monospace; font-size:clamp(8px,.8vw,11px); color:#333; letter-spacing:.06em; }
+
+/* section label */
+.slbl { width:100%; margin:clamp(14px,2vw,26px) 0 clamp(8px,1vw,14px); font-family:'Space Mono',monospace; font-size:clamp(8px,.9vw,12px); letter-spacing:.18em; color:#444; text-transform:uppercase; }
+
+/* two-col layout */
+.two-col { display:flex; gap:clamp(16px,2.5vw,40px); width:100%; align-items:flex-start; }
+
+@media (min-width:768px) {
+  .two-col { flex-direction:row; }
+  .col-mocks { flex:1; display:flex; flex-direction:column; gap:clamp(12px,1.5vw,22px); }
+  .col-right { flex:1; display:flex; flex-direction:column; gap:clamp(12px,1.5vw,20px); }
+}
+@media (max-width:767px) {
+  .two-col { flex-direction:column; }
+  .col-mocks { display:flex; flex-direction:row; gap:8px; }
+  .col-right { display:flex; flex-direction:column; gap:12px; margin-top:4px; }
+  .pdf-btn { display:none; }
+}
+
+/* page mocks */
+.pages-row { display:flex; gap:clamp(8px,1.2vw,18px); width:100%; }
+.pw { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; }
+.ptag { font-family:'Space Mono',monospace; font-size:clamp(7px,.8vw,11px); font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:clamp(2px,.4vw,5px) clamp(8px,1vw,14px); border-radius:100px; }
+.pmock { width:100%; border-radius:8px; overflow:hidden; border:1px solid; }
+.mi { background:#080808; padding:clamp(5px,.7vw,10px); display:flex; flex-direction:column; gap:3px; }
+.mh { width:100%; height:clamp(36px,5vw,72px); border-radius:4px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; position:relative; overflow:hidden; background:linear-gradient(135deg,rgba(123,47,255,.35),rgba(255,45,120,.3)); }
+.mh::after { content:''; position:absolute; bottom:clamp(4px,.6vw,8px); left:0; width:100%; height:1.5px; background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4,#7B2FFF,#FF2D78); }
+.mlt { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(7px,1vw,14px); color:#fff; }
+.mst { font-size:clamp(2.5px,.4vw,5px); color:#00F5D4; font-family:'Space Mono',monospace; letter-spacing:.06em; }
+.mqt { font-size:clamp(2.5px,.35vw,4.5px); color:#FFE000; font-weight:700; }
+.msr { width:100%; height:1.5px; background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4,#7B2FFF,#FF2D78); border-radius:1px; }
+.m2c { display:flex; gap:clamp(2px,.3vw,4px); }
+.mc  { flex:1; background:rgba(255,255,255,.03); border-radius:2px; padding:clamp(2px,.3vw,4px) clamp(2px,.35vw,5px); }
+.mch { font-size:clamp(2.5px,.4vw,5.5px); font-weight:700; margin-bottom:1px; }
+.mct { font-size:clamp(2.2px,.35vw,4.8px); color:#aaa; line-height:1.4; }
+.mdr { display:flex; align-items:center; gap:1.5px; margin-bottom:.5px; }
+.md  { width:clamp(2px,.3vw,4px); height:clamp(2px,.3vw,4px); border-radius:50%; flex-shrink:0; }
+.mdt { font-size:clamp(2.2px,.35vw,4.5px); color:#aaa; }
+.mcd { display:flex; align-items:center; gap:1.5px; background:rgba(255,255,255,.03); border-radius:1.5px; padding:clamp(1px,.2vw,2.5px) clamp(2px,.3vw,4px); border-left:1.5px solid; }
+.mn  { width:clamp(6px,.9vw,12px); height:clamp(6px,.9vw,12px); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:clamp(2.5px,.4vw,5.5px); font-weight:900; color:#000; flex-shrink:0; }
+.mct2 { font-size:clamp(2.5px,.4vw,5px); color:#ccc; }
+.mcta { background:rgba(255,45,120,.12); border:1px solid rgba(255,45,120,.2); border-radius:2px; padding:clamp(1.5px,.25vw,3px) clamp(2.5px,.4vw,5px); display:flex; justify-content:space-between; align-items:center; }
+.mcat { font-size:clamp(2.5px,.4vw,5px); color:#FF2D78; font-weight:700; }
+.mcas { font-size:clamp(2px,.3vw,4px); color:#555; }
+.mhy { background:rgba(255,45,120,.1); border:1px solid rgba(255,45,120,.2); border-radius:2px; padding:clamp(1.5px,.25vw,3px) clamp(2.5px,.4vw,5px); font-size:clamp(2.5px,.4vw,5px); font-weight:700; color:#fff; text-align:center; }
+.m2e { display:flex; gap:clamp(3px,.5vw,6px); }
+.mle { width:clamp(50px,7vw,100px); display:flex; flex-direction:column; gap:1.5px; }
+.mre { flex:1; display:flex; flex-direction:column; gap:2px; }
+.mpl { font-size:clamp(2.5px,.4vw,5px); font-weight:700; margin-top:1px; }
+.mep { display:flex; align-items:center; gap:1.5px; background:rgba(255,255,255,.03); border-radius:1.5px; padding:clamp(1px,.18vw,2px) 1.5px; }
+.meb { font-size:clamp(2.5px,.38vw,5px); font-weight:700; color:#000; border-radius:1.5px; padding:.5px clamp(2px,.3vw,4px); flex-shrink:0; }
+.met { font-size:clamp(2.5px,.38vw,4.8px); color:#bbb; }
+.mpr { background:#040404; border-radius:2px; border-top:1px solid #00FF41; padding:clamp(2px,.3vw,4px) clamp(3px,.4vw,5px); font-family:'Space Mono',monospace; font-size:clamp(1.8px,.28vw,3.5px); color:#00FF41; line-height:1.6; }
+.mgl { font-size:clamp(2.5px,.38vw,5px); font-weight:700; margin-top:1px; }
+.mgr { display:flex; align-items:center; gap:1.5px; margin-bottom:.5px; }
+.mgp { font-size:clamp(1.8px,.28vw,3.5px); font-weight:700; color:#000; border-radius:1.5px; padding:.5px clamp(2px,.3vw,4px); flex-shrink:0; }
+.mgd { font-size:clamp(1.8px,.28vw,3.5px); color:#999; }
+.mfc { background:rgba(123,47,255,.18); border:1px solid rgba(123,47,255,.3); border-radius:2px; padding:clamp(2px,.3vw,4px) clamp(2.5px,.4vw,5px); display:flex; justify-content:space-between; align-items:center; }
+.mft { font-size:clamp(2.5px,.4vw,5px); color:#fff; font-weight:700; }
+.mfh { font-size:clamp(2px,.3vw,4px); color:#00F5D4; }
+
+/* formula */
+.formula { width:100%; background:#060606; border-radius:clamp(10px,1.4vw,18px); border-top:3px solid #00FF41; padding:clamp(14px,2vw,28px) clamp(16px,2.2vw,32px); }
+.f-lbl  { font-family:'Space Mono',monospace; font-size:clamp(9px,1vw,14px); color:#00FF41; letter-spacing:.12em; text-transform:uppercase; margin-bottom:clamp(10px,1.2vw,18px); font-weight:700; }
+.f-line { font-family:'Space Mono',monospace; font-size:clamp(11px,1.2vw,17px); color:#00FF41; line-height:1.8; }
+.f-line span { color:rgba(0,255,65,.4); }
+
+/* rules */
+.rules { width:100%; display:flex; flex-direction:column; gap:clamp(6px,.8vw,12px); }
+.rule { display:flex; align-items:flex-start; gap:clamp(8px,1vw,16px); background:rgba(255,255,255,.03); border-radius:clamp(8px,1vw,14px); padding:clamp(10px,1.2vw,18px) clamp(12px,1.5vw,22px); border-left:3px solid; }
+.rule-num { width:clamp(24px,3vw,40px); height:clamp(24px,3vw,40px); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(10px,1.2vw,16px); color:#000; flex-shrink:0; }
+.rule-body { flex:1; }
+.rule-title { font-size:clamp(11px,1.1vw,16px); font-weight:700; color:#fff; margin-bottom:3px; }
+.rule-desc  { font-size:clamp(9px,.9vw,13px); color:#888; line-height:1.5; }
+
+/* big cta */
+.big-cta { display:flex; flex-direction:column; align-items:center; gap:clamp(10px,1.4vw,20px); margin-top:clamp(22px,3vw,48px); width:100%; }
+.cta-free { font-family:'Space Mono',monospace; font-size:clamp(9px,1vw,14px); letter-spacing:.16em; color:#444; text-transform:uppercase; }
+.cta-get  { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(48px,8vw,110px); line-height:.92; letter-spacing:-.01em; text-align:center; background:linear-gradient(90deg,#FF2D78 0%,#FFE000 38%,#00F5D4 68%,#7B2FFF 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 3.5s linear infinite; }
+.cta-qs   { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(30px,5vw,68px); line-height:1; color:#fff; text-align:center; letter-spacing:.01em; }
+@keyframes shimmer { 0%{ background-position:0% center; } 100%{ background-position:200% center; } }
+
+.dl-big {
+  background:linear-gradient(135deg,#FF2D78,#7B2FFF);
+  border:none; border-radius:100px;
+  padding:clamp(16px,2vw,26px) clamp(40px,5vw,80px);
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(14px,1.6vw,22px); color:#fff;
+  letter-spacing:.06em; cursor:pointer;
+  display:flex; align-items:center; gap:12px;
+  box-shadow:0 0 40px rgba(255,45,120,.35);
+  transition:transform .18s, box-shadow .18s;
+  text-decoration:none;
+}
+.dl-big:hover { transform:translateY(-3px); box-shadow:0 0 60px rgba(255,45,120,.45); }
+
+/* bottom */
+.bottom { display:flex; flex-direction:column; align-items:center; gap:clamp(10px,1.4vw,18px); margin-top:clamp(18px,2.5vw,36px); width:100%; padding-bottom:clamp(20px,3vw,48px); }
+.handle { font-family:'Orbitron',sans-serif; font-weight:700; font-size:clamp(17px,2vw,28px); color:#FF2D78; letter-spacing:.1em; }
+.tag-row { display:flex; gap:clamp(6px,.8vw,12px); flex-wrap:wrap; justify-content:center; }
+.tag { font-family:'Space Mono',monospace; font-size:clamp(9px,.9vw,14px); font-weight:700; padding:clamp(5px,.6vw,9px) clamp(12px,1.4vw,22px); border-radius:100px; letter-spacing:.04em; }
+.tp { background:rgba(255,45,120,.16); color:#FF2D78; border:1px solid rgba(255,45,120,.38); }
+.tt { background:rgba(0,245,212,.12); color:#00F5D4; border:1px solid rgba(0,245,212,.32); }
+.ty { background:rgba(255,224,0,.12);  color:#FFE000; border:1px solid rgba(255,224,0,.3);  }
+
+/* social links */
+.socials { display:flex; gap:clamp(10px,1.4vw,20px); flex-wrap:wrap; justify-content:center; margin-top:4px; }
+.social-link { font-family:'Space Mono',monospace; font-size:clamp(9px,.9vw,13px); color:#555; text-decoration:none; letter-spacing:.08em; transition:color .15s; }
+.social-link:hover { color:#FF2D78; }
+
+/* ══════════════════════════════════════════
+   LIVE SECTION — YouTube + Twitch + Discord
+   ══════════════════════════════════════════ */
+.live-section {
+  width:100%; margin-top:clamp(32px,4vw,64px);
+  display:flex; flex-direction:column; align-items:center; gap:0;
+}
+
+/* Section header */
+.section-header {
+  width:100%; display:flex; align-items:center; gap:16px;
+  margin-bottom:clamp(16px,2vw,28px);
+}
+.section-header-line {
+  flex:1; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent);
+}
+.section-title {
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:clamp(22px,3vw,44px); letter-spacing:.15em;
+  text-transform:uppercase; white-space:nowrap;
+}
+
+/* Live tabs */
+.live-tabs {
+  width:100%; display:flex; gap:0;
+  border-bottom:1px solid #1a1a1a;
+  margin-bottom:clamp(12px,1.5vw,20px);
+}
+.live-tab {
+  padding:clamp(10px,1.2vw,16px) clamp(16px,2vw,28px);
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(10px,.9vw,13px); letter-spacing:.06em;
+  color:#444; background:none; border:none;
+  border-bottom:3px solid transparent;
+  cursor:pointer; transition:all .18s;
+  display:flex; align-items:center; gap:8px;
+  text-transform:uppercase;
+}
+.live-tab:hover { color:#777; }
+.live-tab.yt.on  { color:#FF2D78; border-bottom-color:#FF2D78; }
+.live-tab.tw.on  { color:#7B2FFF; border-bottom-color:#7B2FFF; }
+.live-badge-sm {
+  font-family:'Space Mono',monospace; font-size:7px; font-weight:700;
+  padding:2px 5px; border-radius:100px; letter-spacing:.08em;
+  animation:lpulse 2s ease-in-out infinite;
+}
+@keyframes lpulse { 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
+
+/* Embed panels */
+.live-panel { display:none; width:100%; flex-direction:column; gap:clamp(10px,1.2vw,16px); }
+.live-panel.on { display:flex; }
+
+/* Status bar */
+.live-status {
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:9px 14px;
+  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06);
+  border-radius:9px;
+}
+.live-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; animation:lpulse 2s ease-in-out infinite; }
+.live-status-txt { font-family:'Space Mono',monospace; font-size:clamp(8px,.85vw,11px); color:#777; flex:1; }
+.live-status-txt strong { color:#ccc; }
+.live-open {
+  font-family:'Space Mono',monospace; font-size:clamp(8px,.8vw,10px); font-weight:700;
+  padding:5px 13px; border-radius:100px; text-decoration:none;
+  letter-spacing:.06em; transition:opacity .15s; white-space:nowrap;
+}
+.live-open:hover { opacity:.8; }
+.chat-tog {
+  font-family:'Space Mono',monospace; font-size:clamp(8px,.8vw,10px); font-weight:700;
+  padding:5px 13px; border-radius:100px; cursor:pointer;
+  border:1px solid; background:transparent; transition:all .15s;
+  letter-spacing:.06em; white-space:nowrap;
+}
+
+/* Embed frame */
+.live-row { display:flex; gap:clamp(10px,1.2vw,16px); align-items:stretch; }
+.live-embed-wrap {
+  flex:1; min-width:0;
+  aspect-ratio:16/9;
+  border-radius:10px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  background:#0a0a0a;
+}
+.live-embed-wrap iframe { width:100%; height:100%; border:none; display:block; }
+.live-chat-wrap {
+  width:clamp(240px,20vw,320px); flex-shrink:0;
+  border-radius:10px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.07);
+  background:#0a0a0a; display:none;
+}
+.live-chat-wrap iframe { width:100%; height:100%; border:none; display:block; min-height:340px; }
+@media(max-width:650px) {
+  .live-row { flex-direction:column; }
+  .live-chat-wrap { width:100%; min-height:260px; }
+}
+
+/* ═══════════════════
+   CHANNEL CARDS
+   ═══════════════════ */
+.channel-cards{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,24px);margin-bottom:clamp(16px,2.5vw,36px);}
+@media(max-width:600px){.channel-cards{grid-template-columns:1fr;}}
+.channel-card{display:flex;flex-direction:column;gap:18px;background:#0c0020;border:2px solid rgba(255,255,255,.1);border-radius:20px;padding:clamp(28px,4vw,56px);text-decoration:none;transition:transform .2s,border-color .2s,box-shadow .2s;}
+.channel-card:hover{transform:translateY(-3px);}
+.channel-yt{border-color:rgba(255,45,120,.25);box-shadow:0 0 32px rgba(255,45,120,.08);}
+.channel-yt:hover{border-color:rgba(255,45,120,.6);box-shadow:0 0 48px rgba(255,45,120,.2);}
+.channel-tw{border-color:rgba(123,47,255,.25);box-shadow:0 0 32px rgba(123,47,255,.08);}
+.channel-tw:hover{border-color:rgba(123,47,255,.6);box-shadow:0 0 48px rgba(123,47,255,.2);}
+.ch-header{width:100%;height:auto;display:block;border-radius:10px;}
+.ch-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(28px,4vw,52px);color:#fff;line-height:1;}
+.ch-desc{font-size:clamp(17px,1.8vw,22px);color:#aaa;line-height:1.75;}
+.ch-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.ch-tags span{font-family:'Space Mono',monospace;font-size:clamp(7px,.75vw,9px);color:#333;border:1px solid #1a1a1a;border-radius:100px;padding:3px 10px;letter-spacing:.06em;}
+.ch-cta{font-family:'Space Mono',monospace;font-size:clamp(18px,2.8vw,42px);font-weight:700;letter-spacing:.06em;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto;line-height:1.2;}
+.ch-cta-yt{color:#FF2D78;}
+.ch-cta-tw{color:#7B2FFF;}
+
+/* ═══════════════════
+   JOIN BUILD SERIES
+   ═══════════════════ */
+.join-section {
+  width:100%;
+  margin-top:clamp(32px,4vw,56px);
+  background:rgba(255,45,120,.06);
+  border:1px solid rgba(255,45,120,.18);
+  border-radius:clamp(12px,1.5vw,20px);
+  padding:clamp(24px,3vw,44px) clamp(20px,3vw,48px);
+  display:flex; align-items:center; justify-content:space-between;
+  gap:clamp(16px,2vw,32px); flex-wrap:wrap;
+}
+.join-text { flex:1; min-width:200px; }
+.join-eyebrow {
+  font-family:'Space Mono',monospace; font-size:clamp(8px,.9vw,11px);
+  color:#FF2D78; letter-spacing:.18em; text-transform:uppercase; margin-bottom:8px; font-weight:700;
+}
+.join-headline {
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:clamp(18px,2.5vw,36px); color:#fff; line-height:1.1; margin-bottom:10px;
+}
+.join-headline span {
+  background:linear-gradient(90deg,#FF2D78,#FFE000);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.join-desc { font-size:clamp(11px,1.1vw,15px); color:#888; line-height:1.6; }
+.join-desc strong { color:#ccc; }
+.join-btns { display:flex; flex-direction:column; gap:10px; align-items:flex-start; flex-shrink:0; }
+.join-btn {
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(11px,1.1vw,15px); letter-spacing:.06em;
+  padding:clamp(12px,1.4vw,18px) clamp(22px,2.8vw,40px);
+  border-radius:100px; text-decoration:none; color:#fff !important;
+  display:inline-flex; align-items:center; gap:10px;
+  transition:transform .18s, box-shadow .18s; white-space:nowrap;
+}
+.join-btn:hover { transform:translateY(-2px); }
+.join-btn.yt  { background:linear-gradient(135deg,#FF2D78,#FF6B35); box-shadow:0 0 24px rgba(255,45,120,.3); }
+.join-btn.yt:hover  { box-shadow:0 0 40px rgba(255,45,120,.5); }
+.join-btn.tw  { background:linear-gradient(135deg,#7B2FFF,#00F5D4); box-shadow:0 0 24px rgba(123,47,255,.3); }
+.join-btn.tw:hover  { box-shadow:0 0 40px rgba(123,47,255,.5); }
+.join-btn.dc  { background:linear-gradient(135deg,#5865F2,#7B2FFF); box-shadow:0 0 24px rgba(88,101,242,.3); }
+.join-btn.dc:hover  { box-shadow:0 0 40px rgba(88,101,242,.5); }
+
+/* ═══════════════════
+   DISCORD SECTION
+   ═══════════════════ */
+.discord-section {
+  width:100%; margin-top:clamp(20px,2.5vw,36px);
+  background:linear-gradient(135deg,rgba(88,101,242,.12),rgba(123,47,255,.12));
+  border:1px solid rgba(88,101,242,.3);
+  border-radius:clamp(12px,1.5vw,20px);
+  padding:clamp(20px,2.5vw,36px) clamp(20px,3vw,48px);
+  display:flex; align-items:center; gap:clamp(16px,2vw,32px); flex-wrap:wrap;
+}
+.discord-icon {
+  font-size:clamp(40px,5vw,72px); flex-shrink:0; line-height:1;
+}
+.discord-body { flex:1; min-width:180px; }
+.discord-title {
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:clamp(16px,2vw,28px); color:#fff; margin-bottom:6px;
+}
+.discord-title span { color:#5865F2; }
+.discord-desc { font-size:clamp(11px,1vw,15px); color:#777; line-height:1.6; }
+.discord-desc strong { color:#aaa; }
+.discord-perks {
+  display:flex; gap:clamp(8px,1vw,16px); flex-wrap:wrap; margin-top:10px;
+}
+.discord-perk {
+  font-family:'Space Mono',monospace; font-size:clamp(8px,.8vw,11px); font-weight:700;
+  padding:4px 12px; border-radius:100px; letter-spacing:.06em;
+  background:rgba(88,101,242,.15); border:1px solid rgba(88,101,242,.3); color:#aaa;
+}
+.discord-join {
+  background:linear-gradient(135deg,#5865F2,#7B2FFF);
+  color:#fff !important; text-decoration:none;
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(12px,1.2vw,17px); letter-spacing:.06em;
+  padding:clamp(13px,1.5vw,20px) clamp(24px,3vw,44px);
+  border-radius:100px; display:inline-flex; align-items:center; gap:10px;
+  box-shadow:0 0 28px rgba(88,101,242,.35); flex-shrink:0;
+  transition:transform .18s, box-shadow .18s; white-space:nowrap;
+}
+.discord-join:hover { transform:translateY(-2px); box-shadow:0 0 48px rgba(88,101,242,.55); }
+
+
+/* ══════════════════════════════
+   PRE-STREAM INTRO SECTION
+   ══════════════════════════════ */
+.intro-section {
+  width:100%;
+  display:flex; flex-direction:column; align-items:center;
+  background:#000;
+  position:relative;
+}
+.intro-section-header {
+  width:100%; display:flex; align-items:center; gap:16px;
+  padding:clamp(20px,2.5vw,36px) clamp(16px,5vw,80px) clamp(12px,1.5vw,20px);
+}
+.intro-header-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent); }
+.intro-header-title {
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:clamp(11px,1.2vw,16px); letter-spacing:.2em;
+  text-transform:uppercase; white-space:nowrap; color:#FF2D78;
+}
+.intro-frame-wrap {
+  width:100%; padding:0 clamp(16px,5vw,80px) clamp(16px,2vw,28px);
+  position:relative;
+}
+.intro-aspect {
+  width:100%; aspect-ratio:16/9;
+  border-radius:clamp(10px,1.2vw,18px); overflow:hidden;
+  border:1px solid rgba(255,45,120,.25);
+  box-shadow:0 0 48px rgba(255,45,120,.18), 0 0 96px rgba(123,47,255,.12);
+  position:relative; background:#000;
+}
+.intro-aspect iframe {
+  width:100%; height:100%; border:none; display:block;
+}
+.intro-cta {
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:12px;
+  padding:clamp(10px,1.2vw,16px) clamp(16px,5vw,80px) 0;
+}
+.intro-cta-txt {
+  font-family:'Space Mono',monospace; font-size:clamp(9px,.9vw,12px);
+  color:#555; letter-spacing:.1em;
+}
+.intro-cta-txt strong { color:#FF2D78; }
+.intro-fullscreen {
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(9px,.85vw,12px); letter-spacing:.08em;
+  color:#FF2D78; text-decoration:none;
+  padding:6px 16px; border-radius:100px;
+  border:1px solid rgba(255,45,120,.35);
+  background:rgba(255,45,120,.08);
+  transition:all .18s;
+}
+.intro-fullscreen:hover {
+  background:rgba(255,45,120,.18);
+  border-color:rgba(255,45,120,.6);
+}
+
+
+/* ══════════════════════════════════
+   BUILD SERIES THURSDAY VIDEO
+   ══════════════════════════════════ */
+.video-section {
+  width:100%;
+  display:flex; flex-direction:column; align-items:center;
+  margin-top:clamp(28px,3.5vw,52px);
+}
+.video-section-header {
+  width:100%; display:flex; align-items:center; gap:16px;
+  padding:0 clamp(16px,5vw,80px) clamp(12px,1.5vw,18px);
+}
+.video-header-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent); }
+.video-header-title {
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:clamp(11px,1.2vw,15px); letter-spacing:.2em;
+  text-transform:uppercase; white-space:nowrap; color:#FFE000;
+}
+
+.video-card {
+  width:calc(100% - clamp(32px,10vw,160px));
+  background:linear-gradient(135deg,rgba(255,224,0,.06),rgba(255,45,120,.06));
+  border:1px solid rgba(255,224,0,.2);
+  border-radius:clamp(14px,1.8vw,22px);
+  overflow:hidden;
+  box-shadow:0 0 48px rgba(255,224,0,.08), 0 0 96px rgba(255,45,120,.06);
+}
+
+/* top label strip */
+.video-label-strip {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:clamp(10px,1.2vw,16px) clamp(16px,2vw,28px);
+  background:rgba(0,0,0,.6);
+  border-bottom:1px solid rgba(255,224,0,.12);
+}
+.video-live-pill {
+  display:flex; align-items:center; gap:7px;
+  font-family:'Space Mono',monospace; font-weight:700;
+  font-size:clamp(9px,.9vw,12px); letter-spacing:.14em;
+  color:#FFE000; text-transform:uppercase;
+}
+.video-live-dot {
+  width:8px; height:8px; border-radius:50%; background:#FF2D78;
+  animation:vpulse 1.8s ease-in-out infinite;
+}
+@keyframes vpulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.85);} }
+.video-date-badge {
+  font-family:'Space Mono',monospace; font-size:clamp(9px,.85vw,12px);
+  color:#888; letter-spacing:.1em;
+}
+.video-date-badge strong { color:#FFE000; }
+
+/* video player */
+.video-player-wrap {
+  width:100%; aspect-ratio:9/16;
+  background:#000; position:relative;
+  max-height:min(80vh, 600px);
+  overflow:hidden;          /* clips the bottom bar off */
+  clip-path:inset(0 0 0 0); /* belt + suspenders clip */
+}
+@media (min-width:768px) {
+  /* On desktop: show as centered vertical video with side content */
+  .video-layout { display:flex; align-items:stretch; }
+  .video-player-wrap {
+    width:clamp(280px,35%,420px);
+    flex-shrink:0; aspect-ratio:9/16; max-height:none;
+  }
+  .video-side { flex:1; display:flex; flex-direction:column; justify-content:center; }
+}
+@media (max-width:767px) {
+  .video-layout { display:flex; flex-direction:column; }
+  .video-side { display:flex; flex-direction:column; }
+}
+
+.video-player-wrap video {
+  width:100%; height:100%;
+  object-fit:cover; display:block;
+}
+/* subtle gradient overlay at bottom of video */
+.video-overlay {
+  position:absolute; bottom:0; left:0; right:0; height:80px;
+  background:linear-gradient(to bottom,transparent,rgba(0,0,0,.6));
+  pointer-events:none;
+}
+
+/* side content */
+.video-side {
+  padding:clamp(16px,2vw,32px) clamp(18px,2.5vw,36px);
+  gap:clamp(12px,1.5vw,20px);
+  background:rgba(0,0,0,.4);
+}
+.video-eyebrow {
+  font-family:'Space Mono',monospace; font-size:clamp(8px,.85vw,11px);
+  color:#FF2D78; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+}
+.video-title {
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:clamp(18px,2.5vw,36px); color:#fff; line-height:1.1;
+}
+.video-title span {
+  background:linear-gradient(90deg,#FFE000,#FF6B35);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.video-desc {
+  font-size:clamp(12px,1.1vw,16px); color:#888; line-height:1.65;
+}
+.video-desc strong { color:#ccc; }
+
+.video-episodes {
+  display:flex; flex-direction:column; gap:6px;
+  background:rgba(0,0,0,.4); border-radius:10px;
+  padding:clamp(10px,1.2vw,16px) clamp(12px,1.5vw,18px);
+  border-left:3px solid #FFE000;
+}
+.video-ep-label {
+  font-family:'Space Mono',monospace; font-size:clamp(8px,.8vw,11px);
+  color:#FFE000; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+  margin-bottom:4px;
+}
+.video-ep-row {
+  display:flex; align-items:center; gap:10px;
+  font-size:clamp(10px,1vw,14px);
+}
+.video-ep-tag {
+  font-family:'Space Mono',monospace; font-weight:700;
+  font-size:clamp(8px,.8vw,11px);
+  padding:3px 9px; border-radius:100px; color:#000; flex-shrink:0;
+}
+.video-ep-txt { color:#bbb; }
+
+.video-cta-row { display:flex; gap:10px; flex-wrap:wrap; }
+.video-watch-btn {
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(11px,1.1vw,15px); letter-spacing:.05em;
+  padding:clamp(10px,1.2vw,16px) clamp(20px,2.5vw,36px);
+  border-radius:100px; text-decoration:none; color:#000 !important;
+  background:linear-gradient(135deg,#FFE000,#FF6B35);
+  display:inline-flex; align-items:center; gap:8px;
+  box-shadow:0 0 24px rgba(255,224,0,.3);
+  transition:transform .18s, box-shadow .18s;
+}
+.video-watch-btn:hover { transform:translateY(-2px); box-shadow:0 0 40px rgba(255,224,0,.5); }
+.video-remind-btn {
+  font-family:'Space Mono',monospace; font-weight:700;
+  font-size:clamp(10px,.95vw,13px); letter-spacing:.08em;
+  padding:clamp(10px,1.2vw,16px) clamp(16px,2vw,26px);
+  border-radius:100px; text-decoration:none; color:#FFE000;
+  border:1px solid rgba(255,224,0,.35);
+  background:rgba(255,224,0,.08);
+  transition:all .18s;
+}
+.video-remind-btn:hover { background:rgba(255,224,0,.15); border-color:rgba(255,224,0,.6); }
+
+
+/* ══════════════════════════════════
+   METAKITTYZ MUSIC PLAYER
+   ══════════════════════════════════ */
+.music-player-section {
+  width:100%;
+  margin-top:clamp(28px,3.5vw,52px);
+  display:flex; flex-direction:column; align-items:center;
+}
+.music-player-header {
+  width:100%; display:flex; align-items:center; gap:16px;
+  padding:0 clamp(16px,5vw,80px) clamp(10px,1.2vw,16px);
+}
+.music-header-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent); }
+.music-header-title {
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:clamp(11px,1.2vw,15px); letter-spacing:.2em;
+  text-transform:uppercase; white-space:nowrap; color:#00F5D4;
+}
+
+.music-player {
+  width:calc(100% - clamp(32px,10vw,160px));
+  background:linear-gradient(135deg,rgba(0,245,212,.05),rgba(123,47,255,.08));
+  border:1px solid rgba(0,245,212,.18);
+  border-radius:clamp(14px,1.8vw,22px);
+  overflow:hidden;
+  box-shadow:0 0 48px rgba(0,245,212,.08);
+}
+
+/* now playing bar */
+.mp-nowplaying {
+  display:flex; align-items:center; gap:clamp(12px,1.5vw,20px);
+  padding:clamp(14px,1.8vw,22px) clamp(16px,2vw,28px);
+  background:rgba(0,0,0,.6);
+  border-bottom:1px solid rgba(0,245,212,.1);
+  flex-wrap:wrap;
+}
+.mp-art {
+  width:clamp(52px,7vw,80px); height:clamp(52px,7vw,80px);
+  border-radius:clamp(8px,1vw,12px); flex-shrink:0; overflow:hidden;
+  border:1px solid rgba(0,245,212,.2);
+  background:#0a0a0a; position:relative;
+}
+.mp-art img { width:100%; height:100%; object-fit:cover; display:block; }
+.mp-art-fallback {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:clamp(20px,3vw,36px); background:#0a0a0a;
+}
+.mp-info { flex:1; min-width:120px; }
+.mp-track-name {
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(13px,1.4vw,20px); color:#fff;
+  margin-bottom:3px; line-height:1.2;
+}
+.mp-artist {
+  font-family:'Space Mono',monospace; font-size:clamp(9px,.9vw,12px);
+  color:#00F5D4; letter-spacing:.1em;
+}
+.mp-suno-link {
+  font-family:'Space Mono',monospace; font-size:clamp(8px,.8vw,10px);
+  color:#444; text-decoration:none; letter-spacing:.08em;
+  padding:4px 10px; border-radius:100px;
+  border:1px solid rgba(255,255,255,.07);
+  transition:all .15s; white-space:nowrap; flex-shrink:0;
+}
+.mp-suno-link:hover { color:#00F5D4; border-color:rgba(0,245,212,.3); }
+
+/* progress + controls */
+.mp-controls {
+  padding:clamp(12px,1.5vw,20px) clamp(16px,2vw,28px);
+  display:flex; flex-direction:column; gap:clamp(10px,1.2vw,16px);
+  background:rgba(0,0,0,.4);
+}
+.mp-progress-wrap { display:flex; align-items:center; gap:10px; }
+.mp-time { font-family:'Space Mono',monospace; font-size:10px; color:#555; width:36px; flex-shrink:0; }
+.mp-time.right { text-align:right; }
+.mp-bar {
+  flex:1; height:4px; background:rgba(255,255,255,.08);
+  border-radius:2px; cursor:pointer; position:relative;
+}
+.mp-bar-fill {
+  height:100%; width:0%; background:linear-gradient(90deg,#00F5D4,#7B2FFF);
+  border-radius:2px; transition:width .25s linear; pointer-events:none;
+}
+.mp-bar-thumb {
+  width:12px; height:12px; border-radius:50%;
+  background:#00F5D4; position:absolute;
+  top:50%; transform:translate(-50%,-50%);
+  left:0%; pointer-events:none;
+  box-shadow:0 0 8px rgba(0,245,212,.6);
+  transition:left .25s linear;
+}
+.mp-btns {
+  display:flex; align-items:center; justify-content:center; gap:clamp(12px,2vw,28px);
+}
+.mp-btn {
+  background:none; border:none; cursor:pointer; color:#777;
+  font-size:clamp(14px,2vw,22px); transition:all .15s; padding:4px;
+  display:flex; align-items:center; justify-content:center;
+}
+.mp-btn:hover { color:#fff; transform:scale(1.1); }
+.mp-btn.play-btn {
+  width:clamp(40px,5vw,56px); height:clamp(40px,5vw,56px);
+  border-radius:50%;
+  background:linear-gradient(135deg,#00F5D4,#7B2FFF);
+  color:#000; font-size:clamp(16px,2vw,22px);
+  box-shadow:0 0 20px rgba(0,245,212,.3);
+  transition:all .18s;
+}
+.mp-btn.play-btn:hover { transform:scale(1.08); box-shadow:0 0 32px rgba(0,245,212,.5); }
+.mp-vol-row {
+  display:flex; align-items:center; gap:10px;
+}
+.mp-vol-icon { font-size:14px; color:#555; flex-shrink:0; }
+.mp-vol-bar {
+  width:80px; height:3px; background:rgba(255,255,255,.08);
+  border-radius:2px; cursor:pointer; position:relative; flex-shrink:0;
+}
+.mp-vol-fill {
+  height:100%; width:80%; background:#00F5D4;
+  border-radius:2px; pointer-events:none;
+}
+
+/* playlist */
+.mp-playlist {
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.mp-playlist-label {
+  padding:clamp(8px,1vw,12px) clamp(16px,2vw,28px);
+  font-family:'Space Mono',monospace; font-size:clamp(8px,.8vw,10px);
+  color:#444; letter-spacing:.16em; text-transform:uppercase;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.mp-track {
+  display:flex; align-items:center; gap:clamp(10px,1.2vw,16px);
+  padding:clamp(8px,1vw,12px) clamp(16px,2vw,28px);
+  cursor:pointer; transition:background .15s;
+  border-bottom:1px solid rgba(255,255,255,.03);
+}
+.mp-track:last-child { border-bottom:none; }
+.mp-track:hover { background:rgba(255,255,255,.04); }
+.mp-track.active { background:rgba(0,245,212,.06); }
+.mp-track-num {
+  font-family:'Space Mono',monospace; font-size:clamp(9px,.9vw,12px);
+  color:#444; width:20px; text-align:center; flex-shrink:0;
+}
+.mp-track.active .mp-track-num { color:#00F5D4; }
+.mp-track-art {
+  width:clamp(32px,4vw,44px); height:clamp(32px,4vw,44px);
+  border-radius:6px; overflow:hidden; flex-shrink:0;
+  background:#0a0a0a; border:1px solid rgba(255,255,255,.06);
+}
+.mp-track-art img { width:100%; height:100%; object-fit:cover; display:block; }
+.mp-track-info { flex:1; min-width:0; }
+.mp-track-title {
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(10px,1vw,14px); color:#ccc;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.mp-track.active .mp-track-title { color:#fff; }
+.mp-track-meta { font-size:clamp(9px,.85vw,11px); color:#444; font-family:'Space Mono',monospace; }
+.mp-track-dur { font-family:'Space Mono',monospace; font-size:clamp(9px,.85vw,11px); color:#444; flex-shrink:0; }
+.mp-track.active .mp-track-dur { color:#00F5D4; }
+.mp-playing-wave {
+  display:flex; align-items:center; gap:2px; flex-shrink:0; height:16px;
+}
+.wave-bar {
+  width:3px; background:#00F5D4; border-radius:2px;
+  animation:wave 0.8s ease-in-out infinite;
+}
+.wave-bar:nth-child(2){ animation-delay:.15s; }
+.wave-bar:nth-child(3){ animation-delay:.3s; }
+@keyframes wave {
+  0%,100%{ height:4px; }
+  50%{ height:14px; }
+}
+
+
+.mp-track-ext {
+  font-size:11px; color:#333; text-decoration:none;
+  padding:2px 6px; border-radius:4px; flex-shrink:0;
+  transition:color .15s;
+}
+.mp-track-ext:hover { color:#00F5D4; }
+.mp-track-remove {
+  background:none; border:none; color:#333; cursor:pointer;
+  font-size:11px; padding:2px 6px; border-radius:4px;
+  transition:color .15s; flex-shrink:0;
+}
+.mp-track-remove:hover { color:#FF2D78; }
+
+
+
+
+
+.wi-title span {
+  background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+
+
+
+
+
+
+
+.wi-page-img img {
+  width:100%; height:auto; display:block;
+}
+
+/* ══ WHAT'S INSIDE ══ */
+.whats-inside {
+  width:100%;
+  padding:clamp(28px,4vw,56px) clamp(16px,5vw,80px);
+}
+.wi-title {
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:clamp(20px,2.8vw,36px);
+  text-align:center; margin-bottom:6px;
+  color:#fff; letter-spacing:.1em; text-transform:uppercase;
+}
+.wi-title span {
+  background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.wi-sub {
+  font-family:'Space Mono',monospace; font-size:clamp(10px,1vw,13px);
+  color:#555; letter-spacing:.1em; text-align:center;
+  margin-bottom:clamp(24px,3vw,44px);
+}
+/* Desktop: side by side. Mobile: stacked */
+.wi-pages {
+  display:grid;
+  grid-template-columns:1fr 1fr;   /* 2 cols on ALL screen sizes */
+  gap:clamp(8px,2vw,32px);
+  width:100%;
+}
+/* never stack — always side by side, even on mobile */
+.wi-page {
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.wi-page-label {
+  display:flex; align-items:center; gap:8px; width:100%;
+}
+.wi-page-line { flex:1; height:1px; background:rgba(255,255,255,.08); }
+.wi-page-tag {
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(8px,.85vw,11px); letter-spacing:.15em;
+  padding:3px 12px; border-radius:100px;
+  text-transform:uppercase; white-space:nowrap;
+}
+.wi-page-img {
+  width:100%; border-radius:clamp(8px,1vw,14px); overflow:hidden;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 4px 28px rgba(0,0,0,.55);
+  background:#000;               /* no tint — pure black behind image */
+  isolation:isolate;             /* block orbs from bleeding in */
+}
+.wi-page-img img {
+  width:100%; height:auto; display:block;
+  mix-blend-mode:normal;         /* ensure no blending with bg */
+  position:relative; z-index:1; /* sit above any pseudo-elements */
+}
+
+/* ══ SITE-WIDE STICKY NAV ══════════════════════════════════ */
+.site-nav{
+  position:sticky;top:0;z-index:1000;
+  background:rgba(0,0,0,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(255,45,120,.2);
+  padding:0 clamp(14px,3.5vw,48px);
+  display:flex;align-items:center;gap:10px;height:52px;flex-shrink:0;
+}
+.sn-brand{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.sn-logo{
+  width:28px;height:28px;border-radius:7px;
+  background:linear-gradient(135deg,#FF2D78,#7B2FFF);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:10px;color:#fff;flex-shrink:0;
+}
+.sn-name{
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(10px,1.2vw,13px);
+  letter-spacing:.08em;
+  background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  white-space:nowrap;
+}
+.sn-spacer{flex:1;}
+.sn-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;align-items:center;}
+.sn-tabs::-webkit-scrollbar{display:none;}
+.sn-tab{
+  font-family:'Space Mono',monospace;font-size:10px;
+  padding:5px 13px;border-radius:100px;
+  border:1px solid rgba(255,255,255,.08);color:#555;
+  text-decoration:none;letter-spacing:.05em;
+  white-space:nowrap;transition:all .15s;
+}
+.sn-tab:hover{color:#ccc;border-color:rgba(255,255,255,.25);}
+.sn-tab.on{background:rgba(255,45,120,.1);border-color:rgba(255,45,120,.4);color:#FF2D78;}
+.sn-tab-lab{border-color:rgba(255,224,0,.3);color:#FFE000;}
+.sn-tab-lab:hover{background:rgba(255,224,0,.1);border-color:#FFE000;color:#FFE000;}
+/* ── MOBILE FIXES ── */
+@media(max-width:768px){
+  body{padding-top:52px !important;}
+  .site-nav{position:fixed !important;left:0 !important;right:0 !important;top:0 !important;width:100% !important;}
+  .sn-name{display:none;}
+  .sn-tabs{gap:3px;}
+  .sn-tab{font-size:9px;padding:5px 9px;}
+}
+/* ── START HERE BANNER ── */
+.start-banner{display:none;}
+@media(max-width:768px){
+  .start-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(123,47,255,.12);border-bottom:1px solid rgba(123,47,255,.25);padding:10px clamp(14px,4vw,32px);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.06em;color:#888;}
+  .start-banner a{color:#7B2FFF;text-decoration:none;white-space:nowrap;padding:4px 12px;border:1px solid rgba(123,47,255,.4);border-radius:100px;}
+}
+/* ── MOBILE BOTTOM NAV ── */
+.mob-nav{position:fixed;bottom:0;left:0;right:0;z-index:3000;background:rgba(10,0,21,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,45,120,.2);display:none;align-items:stretch;height:60px;padding-bottom:env(safe-area-inset-bottom,0px);}
+.mob-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);}
+@media(max-width:768px){.mob-nav{display:flex;}body{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px)) !important;}}
+.mnav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;text-decoration:none;color:#3a3a3a;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:8px 2px;min-height:44px;}
+.mnav-item.on{color:#FF2D78;}
+.mnav-ic{font-size:19px;line-height:1.1;}
+.mnav-lb{font-family:'Space Mono',monospace;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;}
+</style>
+<body>
+
+<div class="orbs">
+  <div class="orb o1"></div><div class="orb o2"></div>
+  <div class="orb o3"></div><div class="orb o4"></div><div class="orb o5"></div>
+</div>
+
+<div class="page">
+<div class="glass">
+
+  <!-- ═══ SITE NAV ══════════════════════════════════════════ -->
+  <nav class="site-nav">
+    <a class="sn-brand" href="/">
+      <div class="sn-logo">MK</div>
+      <span class="sn-name">METAKITTYZ</span>
+    </a>
+    <div class="sn-spacer"></div>
+    <div class="sn-tabs">
+      <a class="sn-tab on" href="/">🏠 Home</a>
+      <a class="sn-tab" href="/guide.html">📖 Guide</a>
+      <a class="sn-tab" href="/community.html">🌐 Community</a>
+      <a class="sn-tab sn-tab-lab" href="/kitty-lab.html">🧪 Kitty Lab</a>
+      <a class="sn-tab" href="/about.html">⚡ About</a>
+      <a class="sn-tab" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:#7B2FFF;">📋 Playbook</a>
+      <a class="sn-tab" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
+    </div>
+    <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
+  </nav>
+
+  <div class="rb"></div>
+
+  <!-- START HERE BANNER (mobile only) -->
+  <div class="start-banner">
+    <span>👋 New here?</span>
+    <a href="/guide.html">Start with the Guide →</a>
+  </div>
+
+  <!-- HERO PHOTO -->
+  <div class="hero">
+    <img src="/erika-hero.jpg" alt="Erika Herrera — @metakittyz — Metakittyz Quick Start Pack"/>
+    <div class="hero-fade"></div>
+    <div class="hero-rb"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PRE-STREAM INTRO ANIMATION
+       ═══════════════════════════════════════ -->
+
+    <div class="live-section">
+
+      <!-- Section header -->
+      <div class="section-header" style="width:100%;">
+        <div class="section-header-line"></div>
+        <span class="section-title" style="color:#FF2D78;">📺 &nbsp;Watch Live</span>
+        <div class="section-header-line"></div>
+      </div>
+
+      <!-- CHANNEL CARDS -->
+      <div class="channel-cards">
+
+        <!-- YouTube -->
+        <a class="channel-card channel-yt" href="https://www.youtube.com/@metakittyz" target="_blank" rel="noopener">
+          <img src="/yt-channel-header.png" class="ch-header" alt="@Metakittyz on YouTube">
+          <div class="ch-desc">Full build series, AI agent tutorials, VODs and Shorts. Subscribe to get notified every time we go live and drop new content.</div>
+          <div class="ch-cta ch-cta-yt">Watch on YouTube →</div>
+        </a>
+
+        <!-- Twitch -->
+        <a class="channel-card channel-tw" href="https://www.twitch.tv/metakittyz" target="_blank" rel="noopener">
+          <img src="/tw-channel-header.png" class="ch-header" alt="@Metakittyz on Twitch">
+          <div class="ch-desc">Live AI builds with real-time chat. Ask questions, follow along, and build your own agentic system alongside me as we stream.</div>
+          <div class="ch-cta ch-cta-tw">Watch on Twitch →</div>
+        </a>
+
+      </div>
+
+    </div><!-- end live-section -->
+
+
+    <!-- ═══════════════════════════════════════
+         BUILD SERIES THURSDAY VIDEO
+         ═══════════════════════════════════════ -->
+
+    <div class="video-section">
+      <div class="video-section-header">
+        <div class="video-header-line"></div>
+        <span class="video-header-title">🎬 &nbsp;Build Series Breakdown</span>
+        <div class="video-header-line"></div>
+      </div>
+
+      <div class="video-card">
+
+        <!-- top strip -->
+        <div class="video-label-strip">
+          <div class="video-live-pill">
+            <div class="video-live-dot"></div>
+            Coming This Thursday
+          </div>
+          <div class="video-date-badge">
+            <strong>BUILD SERIES</strong> &nbsp;·&nbsp; EPISODE BREAKDOWN &nbsp;·&nbsp; @metakittyz
+          </div>
+        </div>
+
+        <!-- layout: video left, content right on desktop / stacked on mobile -->
+        <div class="video-layout">
+
+          <!-- VIDEO PLAYER -->
+          <div class="video-player-wrap">
+            <!-- Instagram embed: taller than container so bottom UI clips off -->
+            <iframe
+              src="https://www.instagram.com/reel/DZpwJ1JANyr/embed/"
+              style="width:100%;height:133%;border:none;display:block;background:#000;margin-bottom:-33%;"
+              scrolling="no"
+              allowtransparency="true"
+              allowfullscreen="true"
+              title="Metakittyz Build Series Breakdown — Instagram Reel"
+            ></iframe>
+            <div class="video-overlay"></div>
+          </div>
+
+          <!-- SIDE CONTENT -->
+          <div class="video-side">
+            <div class="video-eyebrow">🎬 &nbsp;Watch Before Thursday</div>
+            <div class="video-title">
+              The Full<br><span>Build Series</span><br>Breakdown
+            </div>
+            <p class="video-desc">
+              I'm walking you through <strong>every episode, every agent, every tool</strong>
+              we're building this Thursday live on YouTube and Twitch.
+              Watch this first so you know exactly what's coming
+              and can build right alongside me. <strong>Zero prerequisites. Just show up.</strong>
+            </p>
+
+            <div class="video-episodes">
+              <div class="video-ep-label">📋 What we cover</div>
+              <div class="video-ep-row">
+                <span class="video-ep-tag" style="background:#00F5D4;">PART 1</span>
+                <span class="video-ep-txt">Foundation — Dev setup + first AI agent</span>
+              </div>
+              <div class="video-ep-row">
+                <span class="video-ep-tag" style="background:#FF2D78;">PART 2</span>
+                <span class="video-ep-txt">Agent Team — All 6 agents built live</span>
+              </div>
+              <div class="video-ep-row">
+                <span class="video-ep-tag" style="background:#FFE000;color:#000;">PART 3</span>
+                <span class="video-ep-txt">Connect — MCP + PIPortal dashboard</span>
+              </div>
+              <div class="video-ep-row">
+                <span class="video-ep-tag" style="background:#7B2FFF;">PART 4</span>
+                <span class="video-ep-txt">Go Live — Deploy + 90-day finale</span>
+              </div>
+            </div>
+
+            <div class="video-cta-row">
+              <a class="video-watch-btn" href="https://youtube.com/@metakittyz?sub_confirmation=1" target="_blank" rel="noopener">
+                ▶ &nbsp;Subscribe for Thursday
+              </a>
+              <a class="video-remind-btn" href="https://discord.gg/txB9JCDf29" target="_blank" rel="noopener">
+                🔔 &nbsp;Discord Alerts
+              </a>
+            </div>
+
+          </div><!-- end side -->
+        </div><!-- end layout -->
+      </div><!-- end video-card -->
+    </div><!-- end video-section -->
+
+    <!-- ═══════════════════════════════════════
+         JOIN THE BUILD SERIES
+         ═══════════════════════════════════════ -->
+
+    <!-- INTRO -->
+    <div class="intro">
+      <div class="intro-lbl">🐱 &nbsp;From Erika</div>
+      <p class="intro-txt">I'm <strong>taking the Harvard AI Intensive</strong> and teaching you <strong>everything I learn the moment I learn it</strong> — live on YouTube and Twitch. No filter. No waiting. <strong>We build together.</strong></p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="sc"><div class="sn" style="color:#FF2D78;">18</div><div class="sl">Live<br>Episodes</div></div>
+      <div class="sc"><div class="sn" style="color:#00F5D4;">6</div><div class="sl">AI Agents<br>Built Live</div></div>
+      <div class="sc"><div class="sn" style="color:#FFE000;">40</div><div class="sl">Copy-Paste<br>Prompts</div></div>
+      <div class="sc"><div class="sn" style="color:#7B2FFF;">0</div><div class="sl">Code Skills<br>Needed</div></div>
+    </div>
+
+    <!-- PDF DOWNLOAD CARD -->
+    <div class="pdf-section">
+      <div class="pdf-card-wrap">
+        <div class="pdf-icon">📄</div>
+        <div class="pdf-text">
+          <div class="pdf-title">Metakittyz Quick Start PDF</div>
+          <div class="pdf-meta">2 pages &nbsp;·&nbsp; Free &nbsp;·&nbsp; @metakittyz</div>
+          <div class="pdf-desc">The complete beginner guide — 18 episodes, 40 prompts, full glossary. Start building AI agents today.</div>
+        </div>
+        <a class="pdf-btn-link" href="/Metakittyz_QuickStart_2Page.pdf" download="Metakittyz_QuickStart_2Page.pdf">📥 &nbsp;Download Free</a>
+      </div>
+      <div class="pdf-note">Click "Download Free" to save the PDF · Mobile: tap → Share → Save to Files</div>
+    </div>
+
+    <!-- WHAT'S INSIDE — real page images -->
+    <div class="whats-inside">
+      <div class="wi-title">What's <span>Inside</span></div>
+      <div class="wi-sub">Your free 2-page Quick Start PDF &nbsp;·&nbsp; @metakittyz</div>
+
+      <div class="wi-pages">
+
+        <!-- PAGE 1 -->
+        <div class="wi-page">
+          <div class="wi-page-label">
+            <div class="wi-page-line"></div>
+            <span class="wi-page-tag" style="background:rgba(255,45,120,.1);color:#FF2D78;border:1px solid rgba(255,45,120,.28);">Page 1 of 2</span>
+            <div class="wi-page-line"></div>
+          </div>
+          <div class="wi-page-img">
+            <img
+              src="/quickstart-page1.jpg"
+              alt="Metakittyz Quick Start Page 1"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <!-- PAGE 2 -->
+        <div class="wi-page">
+          <div class="wi-page-label">
+            <div class="wi-page-line"></div>
+            <span class="wi-page-tag" style="background:rgba(0,245,212,.08);color:#00F5D4;border:1px solid rgba(0,245,212,.25);">Page 2 of 2</span>
+            <div class="wi-page-line"></div>
+          </div>
+          <div class="wi-page-img">
+            <img
+              src="/quickstart-page2.jpg"
+              alt="Metakittyz Quick Start Page 2"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BIG CTA -->
+    <div class="big-cta">
+      <p class="cta-free">★ &nbsp;Free for the community &nbsp;★</p>
+      <div class="cta-get">GET YOUR</div>
+      <div class="cta-qs">QUICK START</div>
+      <a class="dl-big" href="/Metakittyz_QuickStart_2Page.pdf" download="Metakittyz_QuickStart_2Page.pdf">
+        📥 &nbsp;Download the Free PDF
+      </a>
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="bottom">
+      <div class="handle">@metakittyz</div>
+      <div class="tag-row">
+        <span class="tag tp">#MetakittyzBuild</span>
+        <span class="tag tt">#AIAgents</span>
+        <span class="tag ty">#BuildInPublic</span>
+      </div>
+      <div style="width:100%;display:flex;justify-content:center;margin-bottom:clamp(8px,1.2vw,16px);">
+      <a href="/watch.html" style="
+        font-family:Orbitron,sans-serif;font-weight:900;font-size:clamp(18px,2.2vw,32px);
+        color:#fff;text-decoration:none;letter-spacing:.06em;
+        background:linear-gradient(135deg,rgba(255,45,120,.25),rgba(123,47,255,.25));
+        border:3px solid rgba(255,45,120,.7);border-radius:100px;
+        padding:clamp(16px,2vw,28px) clamp(36px,5vw,80px);
+        display:inline-flex;align-items:center;gap:14px;
+        box-shadow:0 0 48px rgba(255,45,120,.35),0 0 80px rgba(123,47,255,.15);
+        transition:transform .18s,box-shadow .18s;">
+        📺 &nbsp;Watch Live — YouTube &amp; Twitch
+      </a>
+    </div>
+    <div class="socials">
+        <a class="social-link" href="https://youtube.com/@metakittyz" target="_blank" rel="noopener">YouTube</a>
+        <a class="social-link" href="https://twitch.tv/metakittyz" target="_blank" rel="noopener">Twitch</a>
+        <a class="social-link" href="https://instagram.com/metakittyz" target="_blank" rel="noopener">Instagram</a>
+        <a class="social-link" href="https://linkedin.com/in/erikaherreraxr" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <p style="font-family:'Space Mono',monospace;font-size:clamp(8px,.8vw,11px);color:#333;text-align:center;margin-top:4px;">
+        Real AI · Built Openly · Shared With Everyone · Product Imagination LLC
+      </p>
+    </div>
+
+
+
+    <!-- ═══════════════════════════════════════
+         METAKITTYZ MUSIC PLAYER
+         ═══════════════════════════════════════ -->
+
+    <div class="music-player-section">
+      <div class="music-player-header">
+        <div class="music-header-line"></div>
+        <span class="music-header-title">🎵 &nbsp;MetakittyZ Playlist</span>
+        <div class="music-header-line"></div>
+      </div>
+
+      <div class="music-player" id="mkPlayer">
+
+        <!-- SUNO EMBED IFRAME + VOLUME OVERLAY -->
+        <div style="width:100%;background:#000;border-bottom:1px solid rgba(0,245,212,.1);position:relative;">
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 18px 0;background:#000;">
+            <span style="font-size:10px;font-family:'Space Mono',monospace;color:#444;letter-spacing:.1em;">
+              🎵 &nbsp;<span style="color:#00F5D4;font-weight:700;">MetaKittyz Anthem</span> &nbsp;·&nbsp; Press ▶ to play
+            </span>
+          </div>
+          <iframe
+            id="mpEmbed"
+            src="https://suno.com/embed/4fc65836-b848-4939-a64a-996155204a9b"
+            style="width:100%;height:152px;border:none;display:block;"
+            allow="autoplay; encrypted-media"
+            title="MetaKittyz Music Player">
+          </iframe>
+          <!-- Volume control overlay — sits below iframe -->
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 18px;background:rgba(0,0,0,.5);border-top:1px solid rgba(0,245,212,.08);">
+            <span id="mpVolIcon" style="font-size:14px;cursor:pointer;color:#00F5D4;" onclick="toggleMute()">🔊</span>
+            <div style="flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;cursor:pointer;position:relative;"
+                 id="mpVolTrack" onclick="setVolumeClick(event)">
+              <div id="mpVolFill" style="height:100%;width:60%;background:linear-gradient(90deg,#00F5D4,#7B2FFF);border-radius:2px;pointer-events:none;"></div>
+              <div id="mpVolThumb" style="width:12px;height:12px;border-radius:50%;background:#00F5D4;position:absolute;top:50%;left:60%;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 8px rgba(0,245,212,.6);"></div>
+            </div>
+            <span style="font-family:'Space Mono',monospace;font-size:10px;color:#555;width:32px;text-align:right;" id="mpVolPct">60%</span>
+            <a id="mpSunoLink" href="https://suno.com/song/4fc65836-b848-4939-a64a-996155204a9b"
+               target="_blank" rel="noopener"
+               style="font-family:'Space Mono',monospace;font-size:9px;color:#444;text-decoration:none;padding:3px 8px;border-radius:100px;border:1px solid rgba(255,255,255,.07);white-space:nowrap;margin-left:4px;transition:color .15s;"
+               onmouseover="this.style.color='#00F5D4'" onmouseout="this.style.color='#444'">
+              Suno ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- PLAYLIST -->
+        <div class="mp-playlist">
+          <div class="mp-playlist-label" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <span>🎵 &nbsp;Playlist &nbsp;·&nbsp; <span id="mpCount">5 tracks</span> &nbsp;·&nbsp; @metakittyz</span>
+            <a href="https://suno.com/@metakittyz" target="_blank" rel="noopener"
+               style="font-family:'Space Mono',monospace;font-size:9px;color:#00F5D4;letter-spacing:.08em;text-decoration:none;">
+              View all on Suno ↗
+            </a>
+          </div>
+          <div id="mpPlaylist"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+    (function(){
+      var TRACKS = [
+        {id:"4fc65836-b848-4939-a64a-996155204a9b",title:"MetaKittyz Anthem",        subtitle:"by Erika \u00b7 @metakittyz",art:"https://cdn2.suno.ai/017086c8-a513-4efe-8332-399116aa30f3.jpeg",   url:"https://suno.com/song/4fc65836-b848-4939-a64a-996155204a9b"},
+        {id:"f0473661-5d48-44d5-bcb0-ca85d2b36571",title:"Perfect Prompt",            subtitle:"Midnight Groove Mix",          art:"https://cdn2.suno.ai/f0473661-5d48-44d5-bcb0-ca85d2b36571_bdd028ad.jpeg",url:"https://suno.com/song/f0473661-5d48-44d5-bcb0-ca85d2b36571"},
+        {id:"162f9c74-593c-4b98-8db4-916b795233a2",title:"Automated Reasoning",       subtitle:"by Erika \u00b7 @metakittyz",art:"https://cdn2.suno.ai/162f9c74-593c-4b98-8db4-916b795233a2_85a8b9e8.jpeg",url:"https://suno.com/song/162f9c74-593c-4b98-8db4-916b795233a2"},
+        {id:"ac1ec646-374b-4b46-8910-ff6eb918f3a3",title:"What's the Rule?",         subtitle:"by Erika \u00b7 @metakittyz",art:"https://cdn2.suno.ai/ac1ec646-374b-4b46-8910-ff6eb918f3a3_95069d81.jpeg",url:"https://suno.com/song/ac1ec646-374b-4b46-8910-ff6eb918f3a3"},
+        {id:"baf9a568-e5fc-4cc2-b270-929223b779e3",title:"Perfecto Prompt",           subtitle:"by Erika \u00b7 @metakittyz",art:"https://cdn2.suno.ai/baf9a568-e5fc-4cc2-b270-929223b779e3_9f75f9f9.jpeg",url:"https://suno.com/song/baf9a568-e5fc-4cc2-b270-929223b779e3"}
+      ];
+
+      var current = 0;
+      var vol = 0.6;  // default 60%
+      var muted = false;
+      var prevVol = 0.6;
+
+      // ── VOLUME via Web Audio API capture of iframe audio ──
+      var audioCtx = null;
+      var gainNode = null;
+
+      function initAudioCapture() {
+        try {
+          if(audioCtx) return;
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          gainNode = audioCtx.createGain();
+          gainNode.gain.value = vol;
+          gainNode.connect(audioCtx.destination);
+
+          // Capture the iframe's media element
+          var iframe = document.getElementById('mpEmbed');
+          // Wait for iframe to have an audio element, then capture it
+          var attempts = 0;
+          function tryCapture() {
+            attempts++;
+            if(attempts > 40) return;
+            try {
+              var iDoc = iframe.contentDocument || iframe.contentWindow.document;
+              var iAudio = iDoc.querySelector('audio');
+              if(iAudio) {
+                var src = audioCtx.createMediaElementSource(iAudio);
+                src.connect(gainNode);
+                iAudio.volume = 1; // let gain node control volume
+                return;
+              }
+            } catch(e) {}
+            setTimeout(tryCapture, 500);
+          }
+          iframe.onload = function(){ setTimeout(tryCapture, 800); };
+          setTimeout(tryCapture, 1200); // also try immediately
+        } catch(e) {
+          // Fallback: set iframe audio volume directly
+          setIframeVolume(vol);
+        }
+      }
+
+      function setIframeVolume(v) {
+        try {
+          var iframe = document.getElementById('mpEmbed');
+          var iDoc = iframe.contentDocument || iframe.contentWindow.document;
+          var iAudio = iDoc.querySelector('audio');
+          if(iAudio) iAudio.volume = v;
+        } catch(e) {}
+        if(gainNode) gainNode.gain.value = v;
+      }
+
+      function updateVolUI(v) {
+        var pct = Math.round(v * 100);
+        document.getElementById('mpVolFill').style.width  = pct + '%';
+        document.getElementById('mpVolThumb').style.left  = pct + '%';
+        document.getElementById('mpVolPct').textContent   = pct + '%';
+        document.getElementById('mpVolIcon').textContent  = v === 0 ? '🔇' : v < 0.4 ? '🔉' : '🔊';
+      }
+
+      window.setVolumeClick = function(e) {
+        var track = document.getElementById('mpVolTrack');
+        var r = track.getBoundingClientRect();
+        vol = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+        muted = (vol === 0);
+        if(vol > 0) prevVol = vol;
+        updateVolUI(vol);
+        setIframeVolume(vol);
+        if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      };
+
+      window.toggleMute = function() {
+        if(muted) { vol = prevVol; muted = false; }
+        else { prevVol = vol; vol = 0; muted = true; }
+        updateVolUI(vol);
+        setIframeVolume(vol);
+      };
+
+      // ── LOAD TRACK ──
+      function loadTrack(idx) {
+        current = idx;
+        var t = TRACKS[idx];
+        var iframe = document.getElementById('mpEmbed');
+        iframe.src = 'https://suno.com/embed/' + t.id;
+        document.getElementById('mpSunoLink').href = t.url;
+        // Re-apply volume after src change
+        iframe.onload = function() {
+          setTimeout(function(){ setIframeVolume(vol); }, 800);
+        };
+        renderPlaylist();
+      }
+
+      // ── PLAYLIST ──
+      function renderPlaylist() {
+        var el = document.getElementById('mpPlaylist');
+        el.innerHTML = '';
+        TRACKS.forEach(function(t, i) {
+          var isActive = (i === current);
+          var row = document.createElement('div');
+          row.className = 'mp-track' + (isActive ? ' active' : '');
+          row.innerHTML =
+            '<div class="mp-track-num">' +
+              (isActive
+                ? '<div class="mp-playing-wave"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>'
+                : (i + 1)) +
+            '</div>' +
+            '<div class="mp-track-art"><img src="' + t.art + '" alt="' + t.title + '" onerror="this.style.display='none'"/></div>' +
+            '<div class="mp-track-info">' +
+              '<div class="mp-track-title">' + t.title + '</div>' +
+              '<div class="mp-track-meta">' + t.subtitle + '</div>' +
+            '</div>' +
+            '<a href="' + t.url + '" target="_blank" rel="noopener" class="mp-track-ext" onclick="event.stopPropagation()" title="Open on Suno">↗</a>';
+          row.onclick = function() { loadTrack(i); };
+          el.appendChild(row);
+        });
+      }
+
+      // ── INIT ──
+      updateVolUI(vol);
+      renderPlaylist();
+
+      // Init audio capture on first user interaction (browser policy)
+      document.addEventListener('click', function initOnce() {
+        initAudioCapture();
+        document.removeEventListener('click', initOnce);
+      }, { once: true });
+
+      // Try capture on page load too (works if autoplay allowed)
+      window.addEventListener('load', function() {
+        setTimeout(initAudioCapture, 1500);
+      });
+
+    })();
+    </script>
+
+    <!-- ═══════════════════════════════════════
+         LIVE STREAM SECTION
+         ═══════════════════════════════════════ -->
+
+    <div class="intro-section">
+    <div class="intro-section-header">
+      <div class="intro-header-line"></div>
+      <span class="intro-header-title">🐱 &nbsp;MetakittyZ Build Series Intro</span>
+      <div class="intro-header-line"></div>
+    </div>
+    <div class="intro-frame-wrap">
+      <div class="intro-aspect">
+        <iframe
+          src="/intro.html"
+          title="MetakittyZ Pre-Stream Intro — 5-Layer Prompt Formula"
+          allowfullscreen
+          loading="lazy"
+          scrolling="no">
+        </iframe>
+      </div>
+    </div>
+    <div class="intro-cta">
+      <span class="intro-cta-txt">
+        <strong>KittyBot</strong> teaches you the 5-Layer Prompt Formula &nbsp;·&nbsp; 48 second animated intro &nbsp;·&nbsp; loops automatically
+      </span>
+      <a class="intro-fullscreen" href="/intro.html" target="_blank" rel="noopener">
+        ⛶ &nbsp;Open Fullscreen
+      </a>
+    </div>
+  </div>
+
+
+  <div class="main">
+
+    <div class="join-section">
+      <div class="join-text">
+        <div class="join-eyebrow">★ &nbsp;Join the Build Series</div>
+        <div class="join-headline">Build AI Agents<br><span>Live. Together.</span></div>
+        <p class="join-desc">
+          Watch every episode as I build, break, and rebuild a real
+          <strong>6-agent AI system</strong> live. No gatekeeping.
+          No waiting. Subscribe on YouTube, follow on Twitch,
+          and never miss a build.
+        </p>
+      </div>
+      <div class="join-btns">
+        <a class="join-btn yt" href="https://youtube.com/@metakittyz?sub_confirmation=1" target="_blank" rel="noopener">
+          ▶ &nbsp;Subscribe on YouTube
+        </a>
+        <a class="join-btn tw" href="https://twitch.tv/metakittyz" target="_blank" rel="noopener">
+          ⬡ &nbsp;Follow on Twitch
+        </a>
+        <a class="join-btn dc" href="https://discord.gg/txB9JCDf29" target="_blank" rel="noopener">
+          🎮 &nbsp;Join the Discord
+        </a>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         DISCORD COMMUNITY
+         ═══════════════════════════════════════ -->
+
+    <div class="discord-section">
+      <div class="discord-icon">🎮</div>
+      <div class="discord-body">
+        <div class="discord-title">Join the <span>MetakittyZ</span> Discord</div>
+        <p class="discord-desc">
+          The community hub for everyone building alongside me.
+          <strong>Get prompt feedback, share your builds, ask questions live,
+          and connect with other AI builders</strong> — all in one place.
+        </p>
+        <div class="discord-perks">
+          <span class="discord-perk">🤖 AI Build Help</span>
+          <span class="discord-perk">⚡ Prompt Reviews</span>
+          <span class="discord-perk">📢 Live Alerts</span>
+          <span class="discord-perk">🎯 Build Challenges</span>
+          <span class="discord-perk">🔗 MCP Resources</span>
+          <span class="discord-perk">🌐 #MetakittyzBuild</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0;">
+        <a class="discord-join" href="https://discord.gg/txB9JCDf29" target="_blank" rel="noopener">
+          🎮 &nbsp;Join Discord Free
+        </a>
+        <a href="/discord.html" style="font-family:'Space Mono',monospace;font-size:clamp(9px,.85vw,11px);color:#5865F2;text-decoration:none;text-align:center;letter-spacing:.08em;transition:opacity .15s;" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+          View channel guide →
+        </a>
+      </div>
+    </div>
+  </div><!-- end main -->
+  <div class="rb"></div>
+</div>
+</div>
+
+
+<script>
+// Live stream tab switcher
+function liveTab(name) {
+  ['yt','tw'].forEach(function(n) {
+    document.getElementById('lp-' + n).classList.remove('on');
+    document.getElementById('lt-' + n).classList.remove('on');
+  });
+  document.getElementById('lp-' + name).classList.add('on');
+  document.getElementById('lt-' + name).classList.add('on');
+}
+
+// Show/hide live chat panel
+function toggleLiveChat(name) {
+  var chat = document.getElementById(name + '-chat');
+  var btn  = document.getElementById(name + '-ctog');
+  var showing = chat.style.display === 'block';
+  chat.style.display = showing ? 'none' : 'block';
+  btn.textContent = showing ? '💬 Show Chat' : '✕ Hide Chat';
+}
+
+</script>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" aria-label="Site navigation">
+  <a class="mnav-item on" href="/"><span class="mnav-ic">🏠</span><span class="mnav-lb">Home</span></a>
+  <a class="mnav-item" href="/guide.html"><span class="mnav-ic">📖</span><span class="mnav-lb">Guide</span></a>
+  <a class="mnav-item" href="/playbook.html"><span class="mnav-ic">📋</span><span class="mnav-lb">Playbook</span></a>
+  <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
+  <a class="mnav-item" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
+</nav>
+
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
+</script>
+
+</body>
+</html>

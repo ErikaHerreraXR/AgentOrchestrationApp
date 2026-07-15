@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Portal — MetakittyZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+:root{--pk:#FF2D78;--tl:#00F5D4;--yl:#FFE000;--pu:#7B2FFF;--co:#FF6B35;--mx:#00FF41;--bg:#000;--glass:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#fff;--muted:#777;--dim:#333;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999;}
+.rb{height:2px;background:linear-gradient(90deg,var(--pk),var(--co),var(--yl),var(--tl),var(--pu),var(--pk));}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,45,120,.2);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.08em;background:linear-gradient(90deg,var(--pk),var(--yl),var(--tl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap;}
+.nav-link{font-family:'Space Mono',monospace;font-size:10px;padding:5px 12px;border-radius:100px;border:1px solid var(--border);color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:all .15s;}
+.nav-link:hover{border-color:var(--pk);color:var(--pk);background:rgba(255,45,120,.08);}
+.nav-home{font-family:'Space Mono',monospace;font-size:10px;padding:5px 14px;border-radius:100px;background:linear-gradient(135deg,var(--pk),var(--pu));color:#fff;}
+
+/* HERO */
+.hero{padding:56px 24px 48px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 90% 60% at 50% -10%,rgba(123,47,255,.15),transparent);}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;color:var(--pu);letter-spacing:.2em;margin-bottom:14px;}
+.hero-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(26px,5vw,52px);line-height:1.05;margin-bottom:14px;}
+.hero-title .g1{background:linear-gradient(90deg,var(--pu),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-title .g2{background:linear-gradient(90deg,var(--tl),var(--mx));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:15px;color:var(--muted);max-width:580px;margin:0 auto 32px;line-height:1.7;}
+.hero-pills{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-bottom:32px;}
+.pill{font-family:'Space Mono',monospace;font-size:10px;padding:5px 14px;border-radius:100px;border:1px solid;letter-spacing:.06em;}
+
+/* SECTIONS */
+.page{max-width:960px;margin:0 auto;padding:0 24px 80px;}
+
+.section-hdr{padding:40px 0 20px;display:flex;align-items:center;gap:16px;}
+.section-hdr-line{flex:1;height:1px;background:var(--border);}
+.section-hdr-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;white-space:nowrap;}
+
+/* RESOURCE CARDS */
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:12px;}
+.resource-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s,background .2s;position:relative;overflow:hidden;}
+.resource-card:hover{border-color:rgba(255,45,120,.3);background:rgba(255,45,120,.04);}
+.resource-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.rc-icon{font-size:28px;line-height:1;}
+.rc-cat{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;}
+.rc-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:14px;line-height:1.3;}
+.rc-desc{font-size:13px;color:var(--muted);line-height:1.6;flex:1;}
+.rc-link{font-family:'Space Mono',monospace;font-size:11px;padding:6px 14px;border-radius:100px;border:1px solid;display:inline-flex;align-items:center;gap:6px;width:fit-content;transition:all .15s;cursor:pointer;}
+.rc-link:hover{background:rgba(255,255,255,.06);}
+
+/* INSTALL STEPS */
+.install-steps{display:flex;flex-direction:column;gap:0;}
+.install-step{display:flex;gap:0;position:relative;}
+.install-step::before{content:'';position:absolute;left:20px;top:44px;bottom:-8px;width:1px;background:var(--border);}
+.install-step:last-child::before{display:none;}
+.is-left{width:44px;flex-shrink:0;padding-top:14px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.is-num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;flex-shrink:0;}
+.is-body{flex:1;padding:12px 0 24px 20px;}
+.is-title{font-weight:600;font-size:15px;margin-bottom:4px;}
+.is-desc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:8px;}
+.is-cmd{background:rgba(0,0,0,.7);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-family:'Space Mono',monospace;font-size:12px;color:var(--tl);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;}
+.is-cmd-copy{background:none;border:none;cursor:pointer;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);transition:color .15s;padding:0;}
+.is-cmd-copy:hover{color:var(--tl);}
+.is-link{font-family:'Space Mono',monospace;font-size:11px;color:var(--tl);}
+.is-link:hover{text-decoration:underline;}
+.is-tip{font-size:12px;color:#555;font-style:italic;}
+
+/* GLOSSARY */
+.glossary-search{width:100%;background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-family:'Space Mono',monospace;font-size:13px;color:var(--text);outline:none;margin-bottom:16px;transition:border-color .2s;}
+.glossary-search:focus{border-color:rgba(0,245,212,.4);}
+.glossary-search::placeholder{color:var(--dim);}
+.gloss-grid{display:flex;flex-direction:column;gap:6px;}
+.gloss-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--glass);border:1px solid var(--border);border-radius:10px;transition:all .15s;}
+.gloss-item:hover{border-color:rgba(0,245,212,.2);}
+.gloss-item.hidden{display:none;}
+.gloss-term{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;flex-shrink:0;min-width:120px;text-align:center;margin-top:1px;}
+.gloss-def{font-size:13px;color:#ccc;line-height:1.6;}
+.gloss-ep{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-top:3px;}
+
+/* COMMUNITY LINKS */
+.community-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+.community-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:22px;text-align:center;transition:all .2s;}
+.community-card:hover{transform:translateY(-2px);}
+.cc-icon{font-size:32px;margin-bottom:10px;}
+.cc-name{font-family:'Orbitron',sans-serif;font-weight:700;font-size:14px;margin-bottom:6px;}
+.cc-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px;}
+.cc-btn{display:inline-block;font-family:'Space Mono',monospace;font-size:11px;padding:7px 18px;border-radius:100px;border:1px solid;transition:all .15s;}
+.cc-btn:hover{background:rgba(255,255,255,.06);}
+
+/* HASHTAG BOX */
+.hashtag-box{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:14px;}
+.hashtag-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px;}
+.hashtag-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.hashtag-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.ht-pill{font-family:'Space Mono',monospace;font-size:12px;padding:5px 14px;border-radius:100px;cursor:pointer;transition:all .15s;}
+
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:8px;}
+.faq-item{background:var(--glass);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.faq-q{padding:16px 18px;font-weight:500;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.faq-chevron{color:var(--muted);font-size:16px;transition:transform .2s;flex-shrink:0;}
+.faq-item.open .faq-chevron{transform:rotate(180deg);}
+.faq-a{display:none;padding:0 18px 16px;font-size:13px;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);}
+.faq-item.open .faq-a{display:block;}
+
+/* PROGRESS TRACKER */
+.tracker-intro{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+.tracker-grid{display:flex;flex-direction:column;gap:6px;}
+.tracker-ep{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--glass);border:1px solid var(--border);border-radius:10px;transition:all .15s;}
+.tracker-ep:hover{border-color:rgba(255,45,120,.2);}
+.tracker-cb{width:20px;height:20px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;}
+.tracker-cb.done{background:var(--pk);border-color:var(--pk);}
+.tracker-ep-n{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;width:40px;flex-shrink:0;}
+.tracker-ep-t{font-size:13px;flex:1;}
+.tracker-ep-d{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);flex-shrink:0;}
+.tracker-bar-wrap{margin-bottom:16px;}
+.tracker-bar-label{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px;}
+.tracker-bar-bg{height:6px;background:var(--border);border-radius:3px;}
+.tracker-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--pk),var(--pu));transition:width .3s ease;}
+
+@media(max-width:600px){
+  .hero{padding:40px 16px 32px;}
+  .page{padding:0 16px 60px;}
+  .resource-grid{grid-template-columns:1fr;}
+  .community-grid{grid-template-columns:1fr 1fr;}
+}
+/* ── MOBILE FIXES ── */
+@media(max-width:768px){
+  body{padding-top:52px !important;}
+  .nav{position:fixed !important;left:0 !important;right:0 !important;top:0 !important;width:100% !important;flex-wrap:nowrap !important;}
+  .nav-links{flex-wrap:nowrap !important;overflow-x:auto !important;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-home{font-size:9px !important;padding:4px 10px !important;flex-shrink:0;}
+}
+/* ── MOBILE BOTTOM NAV ── */
+.mob-nav{position:fixed;bottom:0;left:0;right:0;z-index:3000;background:rgba(10,0,21,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,45,120,.2);display:none;align-items:stretch;height:60px;padding-bottom:env(safe-area-inset-bottom,0px);}
+.mob-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);}
+@media(max-width:768px){.mob-nav{display:flex;}body{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px)) !important;}}
+.mnav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;text-decoration:none;color:#3a3a3a;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:8px 2px;min-height:44px;}
+.mnav-item.on{color:#7B2FFF;}
+.mnav-ic{font-size:19px;line-height:1.1;}
+.mnav-lb{font-family:'Space Mono',monospace;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">METAKITTYZ / COMMUNITY PORTAL</div>
+  <div class="nav-links">
+    <a class="nav-link" href="#resources">Resources</a>
+    <a class="nav-link" href="#setup">Dev setup</a>
+    <a class="nav-link" href="#glossary">Glossary</a>
+    <a class="nav-link" href="#tracker">Tracker</a>
+    <a class="nav-link" href="#community">Community</a>
+    <a class="nav-link" href="#faq">FAQ</a>
+    <a class="nav-link" href="/guide.html" style="border-color:rgba(0,245,212,.3);color:var(--tl);">📖 Guide</a>
+    <a class="nav-link" href="/kitty-lab.html" style="border-color:rgba(255,224,0,.3);color:var(--yl);">🧪 Kitty Lab</a>
+    <a class="nav-link" href="/about.html" style="border-color:rgba(255,45,120,.3);color:var(--pk);">⚡ About</a>
+    <a class="nav-link" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:var(--pu);">📋 Playbook</a>
+    <a class="nav-link" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
+  </div>
+  <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
+  <a class="nav-home" href="/">← Home</a>
+</nav>
+
+<div class="rb"></div>
+
+<div class="hero">
+  <div class="hero-eyebrow">METAKITTYZ · COMMUNITY PORTAL · OPEN TO EVERYONE</div>
+  <h1 class="hero-title">
+    <span class="g1">Build.</span> Learn.<br>
+    <span class="g2">Ship together.</span>
+  </h1>
+  <p class="hero-sub">Every resource, every link, every tool you need to follow along with the Build Series — free, in one place. No experience required. Just curiosity.</p>
+  <div class="hero-pills">
+    <span class="pill" style="color:var(--pk);border-color:rgba(255,45,120,.3);">18 Episodes</span>
+    <span class="pill" style="color:var(--tl);border-color:rgba(0,245,212,.3);">40 Prompts</span>
+    <span class="pill" style="color:var(--yl);border-color:rgba(255,224,0,.3);">6 AI Agents</span>
+    <span class="pill" style="color:var(--pu);border-color:rgba(123,47,255,.3);">90-Day Map</span>
+    <span class="pill" style="color:var(--mx);border-color:rgba(0,255,65,.3);">Free forever</span>
+  </div>
+</div>
+
+<div class="rb"></div>
+
+<div class="page">
+
+<!-- RESOURCES -->
+<div id="resources">
+  <div class="section-hdr">
+    <div class="section-hdr-line"></div>
+    <div class="section-hdr-label" style="color:var(--pk);">LEARNING RESOURCES</div>
+    <div class="section-hdr-line"></div>
+  </div>
+
+  <div class="resource-grid">
+    <div class="resource-card" style="border-top:2px solid var(--pk);">
+      <div class="rc-icon">📖</div>
+      <div class="rc-cat" style="color:var(--pk);">COMPLETE GUIDE</div>
+      <div class="rc-title">Build Series Episode Guide</div>
+      <div class="rc-desc">All 18 episodes with full summaries, 6 learning objectives, 5 follow-along activities, and setup instructions. Written in plain English — no experience needed.</div>
+      <a class="rc-link" href="/guide.html" style="color:var(--pk);border-color:rgba(255,45,120,.3);">Open guide →</a>
+    </div>
+    <div class="resource-card" style="border-top:2px solid var(--tl);">
+      <div class="rc-icon">⚡</div>
+      <div class="rc-cat" style="color:var(--tl);">PROMPT VAULT</div>
+      <div class="rc-title">40 MVP Prompts — All Categories</div>
+      <div class="rc-desc">40 ready-to-paste prompts across 7 categories. Each includes the full prompt text, why it works, and which episode it connects to. Copy, paste, replace the brackets.</div>
+      <a class="rc-link" href="/guide.html" style="color:var(--tl);border-color:rgba(0,245,212,.3);" onclick="goGuidePrompts()">Open prompt vault →</a>
+    </div>
+    <div class="resource-card" style="border-top:2px solid var(--yl);">
+      <div class="rc-icon">🗺️</div>
+      <div class="rc-cat" style="color:var(--yl);">90-DAY MAP</div>
+      <div class="rc-title">Milestone Map — Day 1 to Day 90</div>
+      <div class="rc-desc">13 specific, measurable checkpoints from your first API call to the 90-day community finale. Know exactly what you are working toward at every stage.</div>
+      <a class="rc-link" href="/guide.html" style="color:var(--yl);border-color:rgba(255,224,0,.3);">Open milestone map →</a>
+    </div>
+    <div class="resource-card" style="border-top:2px solid var(--pu);">
+      <div class="rc-icon">📄</div>
+      <div class="rc-cat" style="color:var(--pu);">FREE PDF</div>
+      <div class="rc-title">Quick Start Pack — 2-Page PDF</div>
+      <div class="rc-desc">The 2-page printable guide covering the 5 things to know about prompts, the full build series overview, the prompt formula, and the glossary. Download and keep it open while watching.</div>
+      <a class="rc-link" href="/Metakittyz_QuickStart_2Page.pdf" download style="color:var(--pu);border-color:rgba(123,47,255,.3);">Download PDF →</a>
+    </div>
+    <div class="resource-card" style="border-top:2px solid var(--co);">
+      <div class="rc-icon">📺</div>
+      <div class="rc-cat" style="color:var(--co);">WATCH LIVE</div>
+      <div class="rc-title">YouTube — Build Live Every Thursday</div>
+      <div class="rc-desc">Every episode streams live on YouTube at 8–9pm PST every Thursday. Subscribe and turn notifications on so you never miss a build. Catch replays the same day.</div>
+      <a class="rc-link" href="https://youtube.com/@metakittyz" target="_blank" style="color:var(--co);border-color:rgba(255,107,53,.3);">Subscribe →</a>
+    </div>
+    <div class="resource-card" style="border-top:2px solid var(--mx);">
+      <div class="rc-icon">🎮</div>
+      <div class="rc-cat" style="color:var(--mx);">DISCORD</div>
+      <div class="rc-title">Join the Builder Community</div>
+      <div class="rc-desc">The Discord is where builders share progress, get prompt feedback, ask questions, and connect with others following along. Free to join, open to everyone.</div>
+      <a class="rc-link" href="https://discord.gg/txB9JCDf29" target="_blank" style="color:var(--mx);border-color:rgba(0,255,65,.3);">Join Discord →</a>
+    </div>
+  </div>
+</div>
+
+<!-- DEV SETUP STEPS -->
+<div id="setup">
+  <div class="section-hdr">
+    <div class="section-hdr-line"></div>
+    <div class="section-hdr-label" style="color:var(--tl);">STEP-BY-STEP DEV SETUP</div>
+    <div class="section-hdr-line"></div>
+  </div>
+
+  <p style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.7;">Complete these steps before Episode 1. Every tool is free. If you get stuck on any step, post in the Discord <span style="color:var(--tl);">#tech-help</span> channel and someone will help you.</p>
+
+  <div class="install-steps">
+    <div class="install-step">
+      <div class="is-left"><div class="is-num" style="background:rgba(255,45,120,.15);color:var(--pk);border:1px solid rgba(255,45,120,.3);">1</div></div>
+      <div class="is-body">
+        <div class="is-title">Install Node.js</div>
+        <div class="is-desc">Node.js is the engine that runs your agent code on your computer. Go to nodejs.org and download the version labelled <strong>LTS</strong> (long-term support). Run the installer and click through the default options.</div>
+        <div class="is-cmd"><span>node --version</span><button class="is-cmd-copy" onclick="copyCmd(this,'node --version')">copy</button></div>
+        <div class="is-tip">Type this in your Terminal after installing. You should see a version number like v20.x.x — that means it worked.</div>
+        <br><a class="is-link" href="https://nodejs.org" target="_blank">nodejs.org →</a>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="is-left"><div class="is-num" style="background:rgba(0,245,212,.1);color:var(--tl);border:1px solid rgba(0,245,212,.25);">2</div></div>
+      <div class="is-body">
+        <div class="is-title">Install VS Code</div>
+        <div class="is-desc">VS Code is a free code editor — like Microsoft Word, but for writing agent instructions and code. Download it from the link below, install it, and open it. You will see a welcome screen with a few options — you can ignore them for now.</div>
+        <a class="is-link" href="https://code.visualstudio.com" target="_blank">code.visualstudio.com →</a>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="is-left"><div class="is-num" style="background:rgba(255,224,0,.08);color:var(--yl);border:1px solid rgba(255,224,0,.2);">3</div></div>
+      <div class="is-body">
+        <div class="is-title">Install Git</div>
+        <div class="is-desc">Git saves different versions of your project so you can undo mistakes at any point. Think of it as unlimited undo for your entire project — not just the last change. Download from the link below and run the installer with default settings.</div>
+        <div class="is-cmd"><span>git --version</span><button class="is-cmd-copy" onclick="copyCmd(this,'git --version')">copy</button></div>
+        <div class="is-tip">Type this in your Terminal after installing. You should see "git version 2.x.x".</div>
+        <br><a class="is-link" href="https://git-scm.com/downloads" target="_blank">git-scm.com/downloads →</a>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="is-left"><div class="is-num" style="background:rgba(123,47,255,.12);color:var(--pu);border:1px solid rgba(123,47,255,.28);">4</div></div>
+      <div class="is-body">
+        <div class="is-title">Create a GitHub account</div>
+        <div class="is-desc">GitHub is where your project files live online — like Google Drive, but for code. Free for personal projects. Sign up with your email and choose a username. You will connect this to your project in Episode 1.</div>
+        <a class="is-link" href="https://github.com" target="_blank">github.com →</a>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="is-left"><div class="is-num" style="background:rgba(255,107,53,.1);color:var(--co);border:1px solid rgba(255,107,53,.25);">5</div></div>
+      <div class="is-body">
+        <div class="is-title">Get your Anthropic API key</div>
+        <div class="is-desc">This is the private key that lets your code talk to Claude. Go to console.anthropic.com, sign up for a free account, and navigate to the API Keys section. Click "Create Key" and copy the key somewhere safe — you will only see it once.</div>
+        <div class="is-cmd"><span>ANTHROPIC_API_KEY=sk-ant-...</span><button class="is-cmd-copy" onclick="copyCmd(this,'ANTHROPIC_API_KEY=sk-ant-...')">copy format</button></div>
+        <div class="is-tip">You will paste your real key here inside a file called .env in your project. Never share this key or post it online.</div>
+        <br><a class="is-link" href="https://console.anthropic.com" target="_blank">console.anthropic.com →</a>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="is-left"><div class="is-num" style="background:rgba(0,255,65,.07);color:var(--mx);border:1px solid rgba(0,255,65,.2);">6</div></div>
+      <div class="is-body">
+        <div class="is-title">Create your first project folder</div>
+        <div class="is-desc">Open VS Code. Click "Open Folder" and create a new empty folder called <strong>metakittyz-agent</strong> somewhere on your computer. Open that folder in VS Code. Then open the Terminal inside VS Code by pressing Ctrl+` (backtick) on Windows or Cmd+` on Mac.</div>
+        <div class="is-cmd"><span>npm init -y && npm install @anthropic-ai/sdk dotenv</span><button class="is-cmd-copy" onclick="copyCmd(this,'npm init -y && npm install @anthropic-ai/sdk dotenv')">copy</button></div>
+        <div class="is-tip">Paste this into your VS Code Terminal. It sets up your project and installs the Anthropic SDK in one command. You will see files appear in your folder.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<div id="glossary">
+  <div class="section-hdr">
+    <div class="section-hdr-line"></div>
+    <div class="section-hdr-label" style="color:var(--yl);">GLOSSARY — EVERY TERM YOU WILL HEAR</div>
+    <div class="section-hdr-line"></div>
+  </div>
+  <input class="glossary-search" type="text" placeholder="Search any term..." id="gloss-search" oninput="filterGloss(this.value)">
+  <div class="gloss-grid" id="gloss-grid"></div>
+</div>
+
+<!-- EPISODE TRACKER -->
+<div id="tracker">
+  <div class="section-hdr">
+    <div class="section-hdr-line"></div>
+    <div class="section-hdr-label" style="color:var(--pu);">YOUR EPISODE TRACKER</div>
+    <div class="section-hdr-line"></div>
+  </div>
+  <p class="tracker-intro">Check off each episode as you complete it. Your progress is saved in your browser — it will still be here next time you visit. Click an episode title to open the full guide for that episode.</p>
+  <div class="tracker-bar-wrap">
+    <div class="tracker-bar-label"><span>Progress</span><span id="tracker-pct">0 of 18 episodes</span></div>
+    <div class="tracker-bar-bg"><div class="tracker-bar-fill" id="tracker-fill" style="width:0%"></div></div>
+  </div>
+  <div class="tracker-grid" id="tracker-grid"></div>
+</div>
+
+<!-- HASHTAGS + COMMUNITY -->
+<div id="community">
+  <div class="section-hdr">
+    <div class="section-hdr-line"></div>
+    <div class="section-hdr-label" style="color:var(--mx);">JOIN THE COMMUNITY</div>
+    <div class="section-hdr-line"></div>
+  </div>
+
+  <div class="hashtag-box" style="margin-bottom:20px;">
+    <div class="hashtag-title">Official hashtags</div>
+    <div class="hashtag-desc">Use these when you post about your build. Erika monitors all of them and features strong posts in the weekly community spotlight.</div>
+    <div class="hashtag-pills">
+      <span class="ht-pill" style="background:rgba(255,45,120,.12);color:var(--pk);border:1px solid rgba(255,45,120,.3);">#MetakittyzBuild</span>
+      <span class="ht-pill" style="background:rgba(0,245,212,.08);color:var(--tl);border:1px solid rgba(0,245,212,.25);">#MetakittyzBuild90</span>
+      <span class="ht-pill" style="background:rgba(255,224,0,.08);color:var(--yl);border:1px solid rgba(255,224,0,.2);">#BuildWithErika</span>
+      <span class="ht-pill" style="background:rgba(123,47,255,.12);color:var(--pu);border:1px solid rgba(123,47,255,.3);">#AIAgentBuilder</span>
+      <span class="ht-pill" style="background:rgba(0,255,65,.07);color:var(--mx);border:1px solid rgba(0,255,65,.2);">#LearningInPublic</span>
+      <span class="ht-pill" style="background:rgba(255,107,53,.1);color:var(--co);border:1px solid rgba(255,107,53,.25);">#HarvardAI2026</span>
+    </div>
+  </div>
+
+  <div class="community-grid">
+    <div class="community-card" style="border:1px solid rgba(255,45,120,.2);">
+      <div class="cc-icon">▶</div>
+      <div class="cc-name" style="color:var(--pk);">YouTube</div>
+      <div class="cc-desc">Live every Thursday 8–9pm PST. Subscribe and turn on notifications. Replays go up same day.</div>
+      <a class="cc-btn" href="https://youtube.com/@metakittyz" target="_blank" style="color:var(--pk);border-color:rgba(255,45,120,.3);">Subscribe</a>
+    </div>
+    <div class="community-card" style="border:1px solid rgba(123,47,255,.2);">
+      <div class="cc-icon">⬡</div>
+      <div class="cc-name" style="color:var(--pu);">Twitch</div>
+      <div class="cc-desc">Watch and chat live during every build session. Follow to get alerts when the stream goes live.</div>
+      <a class="cc-btn" href="https://twitch.tv/metakittyz" target="_blank" style="color:var(--pu);border-color:rgba(123,47,255,.3);">Follow</a>
+    </div>
+    <div class="community-card" style="border:1px solid rgba(0,255,65,.15);">
+      <div class="cc-icon">🎮</div>
+      <div class="cc-name" style="color:var(--mx);">Discord</div>
+      <div class="cc-desc">The main community hub. Get help, share builds, find collaborators, join the weekly challenges.</div>
+      <a class="cc-btn" href="https://discord.gg/txB9JCDf29" target="_blank" style="color:var(--mx);border-color:rgba(0,255,65,.2);">Join free</a>
+    </div>
+    <div class="community-card" style="border:1px solid rgba(255,45,120,.2);">
+      <div class="cc-icon">📸</div>
+      <div class="cc-name" style="color:var(--pk);">Instagram</div>
+      <div class="cc-desc">Behind-the-scenes of the build, progress posts, and community spotlights at @metakittyz.</div>
+      <a class="cc-btn" href="https://instagram.com/metakittyz" target="_blank" style="color:var(--pk);border-color:rgba(255,45,120,.3);">Follow</a>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;background:var(--glass);border:1px solid rgba(123,47,255,.3);border-radius:16px;padding:24px;">
+    <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px;">Discord channels for builders</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;gap:12px;font-size:13px;"><span style="color:var(--pk);font-family:'Space Mono',monospace;min-width:160px;">#welcome</span><span style="color:var(--muted);">Introduce yourself and say which episode you are on</span></div>
+      <div style="display:flex;gap:12px;font-size:13px;"><span style="color:var(--tl);font-family:'Space Mono',monospace;min-width:160px;">#build-along</span><span style="color:var(--muted);">Share screenshots of your code and agent outputs</span></div>
+      <div style="display:flex;gap:12px;font-size:13px;"><span style="color:var(--yl);font-family:'Space Mono',monospace;min-width:160px;">#prompt-lab</span><span style="color:var(--muted);">Share and get feedback on your prompts</span></div>
+      <div style="display:flex;gap:12px;font-size:13px;"><span style="color:var(--pu);font-family:'Space Mono',monospace;min-width:160px;">#tech-help</span><span style="color:var(--muted);">Stuck on setup or an error? Post here and get help fast</span></div>
+      <div style="display:flex;gap:12px;font-size:13px;"><span style="color:var(--co);font-family:'Space Mono',monospace;min-width:160px;">#goals</span><span style="color:var(--muted);">Post your 30-day and 90-day goals — accountability helps</span></div>
+      <div style="display:flex;gap:12px;font-size:13px;"><span style="color:var(--mx);font-family:'Space Mono',monospace;min-width:160px;">#live-chat</span><span style="color:var(--muted);">Chat during the live stream — Erika reads it on stream</span></div>
+      <div style="display:flex;gap:12px;font-size:13px;"><span style="color:var(--pk);font-family:'Space Mono',monospace;min-width:160px;">#resources</span><span style="color:var(--muted);">Links to every tool, library, and article mentioned on stream</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div id="faq">
+  <div class="section-hdr">
+    <div class="section-hdr-line"></div>
+    <div class="section-hdr-label" style="color:var(--pk);">FREQUENTLY ASKED QUESTIONS</div>
+    <div class="section-hdr-line"></div>
+  </div>
+  <div class="faq-list" id="faq-list"></div>
+</div>
+
+</div><!-- end page -->
+
+<div class="rb"></div>
+<div style="text-align:center;padding:32px;font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);border-top:1px solid var(--border);">
+  METAKITTYZ BUILD SERIES · <a href="https://youtube.com/@metakittyz" target="_blank" style="color:var(--pk);">YouTube</a> · <a href="https://discord.gg/txB9JCDf29" target="_blank" style="color:var(--pu);">Discord</a> · @metakittyz · #MetakittyzBuild
+</div>
+
+<script>
+var GLOSSARY=[
+  {term:'API',def:'Application Programming Interface. A way for two programs to talk to each other. When your agent sends a message to Claude, it uses an API. Think of it as a drive-through window — you place an order and get a response back.',ep:'EP 01'},
+  {term:'API key',def:'A long private string of letters and numbers that proves you are allowed to use a service. Treat it like a password — never share it or post it publicly. Stored in your .env file.',ep:'EP 01'},
+  {term:'Terminal',def:'A text window where you type commands to your computer instead of clicking. On Mac it is called Terminal. On Windows it is Command Prompt or PowerShell. You use this to install tools and run your agent.',ep:'EP 01'},
+  {term:'npm',def:'Node Package Manager. Installs code libraries you need. Typing "npm install" in your Terminal downloads everything your project needs automatically.',ep:'EP 01'},
+  {term:'.env file',def:'A hidden file in your project where you store secret values like your API key. Your code reads from here instead of having the key visible in your code.',ep:'EP 01'},
+  {term:'TypeScript',def:'The programming language used in this series. It is JavaScript (the language of the web) with extra safety checks that catch mistakes before they break things.',ep:'EP 01'},
+  {term:'Agent',def:'An AI that takes actions, not just answers questions. It can search the web, write content, analyse data, and decide what to do next — all automatically.',ep:'EP 02'},
+  {term:'System prompt',def:'The instructions you give an agent that define its role, personality, and rules. Every agent in the series has one. The quality of the system prompt determines the quality of the output.',ep:'EP 02'},
+  {term:'ReAct loop',def:'Reason → Act → Observe → Repeat. The thinking pattern every agent uses. It reasons about what to do, acts, checks the result, and then decides again. This loop is what makes an agent different from a simple chat.',ep:'EP 02'},
+  {term:'Prompt',def:'The input you give an AI. A well-written prompt is the difference between a generic response and a perfect one. The entire series is built around mastering this.',ep:'EP 01–06'},
+  {term:'Token',def:'The unit of text an AI reads and writes. Roughly 1 token = 0.75 words. APIs charge by token, so understanding tokens helps you control monthly costs.',ep:'EP 01'},
+  {term:'Context window',def:'The maximum amount of text an AI can read and consider at once. Think of it as the AI\'s working memory. Once the conversation exceeds this limit, earlier parts are forgotten.',ep:'EP 03'},
+  {term:'Memory (in-context)',def:'The conversation history the agent holds in its current session. It forgets everything when you close the program unless you save it externally.',ep:'EP 03'},
+  {term:'Memory (external)',def:'Information saved to a file or database that persists between sessions. Your agent reads it at startup and writes to it at the end of every run.',ep:'EP 03'},
+  {term:'Memory (semantic)',def:'A system that lets your agent search stored information by meaning, not just keywords. Useful for finding relevant past memories without exact matching.',ep:'EP 03'},
+  {term:'Memory (procedural)',def:'Instructions the agent stores about how to perform a specific task — like a recipe it can reuse.',ep:'EP 03'},
+  {term:'Tool',def:'A function your agent can call to do something in the real world — search the web, save a file, send a message. Tools are what make agents genuinely useful.',ep:'EP 04'},
+  {term:'Tool use (Anthropic API)',def:'The official Anthropic feature that lets Claude decide when to call a tool, call it, and use the result. You define the tool in TypeScript and Claude handles the rest.',ep:'EP 04'},
+  {term:'MCP',def:'Model Context Protocol. A standard way to connect your agent to external apps like calendars, databases, and social media. Works like a universal plug adapter for AI tools.',ep:'EP 11'},
+  {term:'Orchestrator',def:'An agent that manages and delegates to other agents. StrategyMind is the orchestrator of the Metakittyz team — it decides what the other 5 agents should do.',ep:'EP 05'},
+  {term:'StrategyMind',def:'The orchestrator agent of the Metakittyz team. It plans the 90-day content strategy and assigns tasks to all other agents.',ep:'EP 05'},
+  {term:'CreativeForge',def:'The content writing agent. It receives briefs from StrategyMind and produces captions, hooks, carousels, and video scripts in your voice.',ep:'EP 06'},
+  {term:'AudienceRadar',def:'The analytics agent. It reads engagement data, identifies patterns, and produces weekly performance reports for StrategyMind.',ep:'EP 07'},
+  {term:'GrowthEngine',def:'The growth research agent. It searches the web for trending topics, hashtags, and collaboration opportunities and produces a weekly growth brief.',ep:'EP 08'},
+  {term:'CommunityPulse',def:'The engagement agent. It drafts comment replies, DM templates, and community posts in a warm, human voice.',ep:'EP 09'},
+  {term:'GuardianQA',def:'The compliance and quality agent. It reviews every piece of content against 10 rules, scores it out of 100, and either approves or rejects it.',ep:'EP 10'},
+  {term:'Pipeline',def:'The sequence of agents that work together. Data flows from one agent to the next — StrategyMind → CreativeForge → GuardianQA — until a piece of content is ready to post.',ep:'EP 12'},
+  {term:'PIPortal',def:'The web dashboard built in Episode 13. It shows you what every agent is doing, what they have produced, and what needs your approval — all in one visual interface.',ep:'EP 13'},
+  {term:'Human-in-the-loop',def:'The approval system built in Episode 14. Nothing posts without your sign-off. Every content draft waits in a queue for your review within a 60-minute window.',ep:'EP 14'},
+  {term:'Hallucination',def:'When an AI confidently states something that is completely made up. GuardianQA is built to catch factual claims that cannot be verified before they get published.',ep:'EP 10'},
+  {term:'FTC disclosure',def:'A legal requirement to disclose sponsored content, affiliate links, or gifted products. GuardianQA checks every post for missing disclosures before approval.',ep:'EP 10'},
+  {term:'Rate limit',def:'A cap on how many API requests you can make in a given time period. If you hit it, your agent pauses until the limit resets. Relevant in Episode 12 when all agents run at once.',ep:'EP 12'},
+  {term:'Guardrail',def:'A rule built into a system prompt or code that prevents the agent from doing something harmful, off-brand, or incorrect. GuardianQA is a guardrail for the whole team.',ep:'EP 10'},
+  {term:'Stress test',def:'Deliberately giving an agent difficult, ambiguous, or rule-breaking inputs to see how it handles them. Every Part 2 agent gets a live stress test on stream.',ep:'EP 05–10'},
+  {term:'Vector store',def:'A database that stores text as numerical values (vectors) so you can search by meaning rather than exact words. Used for semantic memory in Episode 3.',ep:'EP 03'},
+  {term:'Cron job / Scheduler',def:'A system that runs your agent code automatically at set times — like 9am, 1pm, and 6pm every day — without you having to press anything. Set up in Episode 15.',ep:'EP 15'},
+  {term:'Deployment',def:'Moving your agent from running on your laptop to running on a cloud server that stays on 24 hours a day. Episode 15 covers the full deployment process.',ep:'EP 15'},
+  {term:'Cloud hosting',def:'A server someone else manages that runs your code continuously. Railway.app and Render.com are the free platforms used in this series.',ep:'EP 15'},
+  {term:'Race condition',def:'When two agents try to do something at the same time and one overwrites the other\'s work. A real risk in Episode 12 when all 6 agents run simultaneously for the first time.',ep:'EP 12'},
+  {term:'Phase 2',def:'The second stage of the 90-day plan starting around Episode 17. Includes video scripts, cross-platform posting, and the brand voice model — built on top of the existing agent team.',ep:'EP 17'},
+];
+
+var EPISODES=[
+  {n:'EP 01',title:'Dev environment setup and first API call',dur:'45 min',part:1},
+  {n:'EP 02',title:'First AI agent — Hello World and the ReAct loop',dur:'60 min',part:1},
+  {n:'EP 03',title:'Adding memory — 4 memory types and persistence testing',dur:'55 min',part:1},
+  {n:'EP 04',title:'Connecting web search as the first real tool',dur:'50 min',part:1},
+  {n:'EP 05',title:'StrategyMind — the orchestrator agent',dur:'55 min',part:2},
+  {n:'EP 06',title:'CreativeForge — the content production agent',dur:'55 min',part:2},
+  {n:'EP 07',title:'AudienceRadar — the analytics and insight agent',dur:'55 min',part:2},
+  {n:'EP 08',title:'GrowthEngine — the growth and amplification agent',dur:'55 min',part:2},
+  {n:'EP 09',title:'CommunityPulse — the engagement and community agent',dur:'55 min',part:2},
+  {n:'EP 10',title:'GuardianQA — the compliance and quality gatekeeper',dur:'50 min',part:2},
+  {n:'EP 11',title:'MCP integrations — connecting agents to real apps',dur:'60 min',part:3},
+  {n:'EP 12',title:'Full pipeline test — the episode where it works or breaks',dur:'65 min',part:3},
+  {n:'EP 13',title:'PIPortal dashboard — your agent command center',dur:'60 min',part:3},
+  {n:'EP 14',title:'Human-in-the-loop — the 60-minute approval workflow',dur:'55 min',part:3},
+  {n:'EP 15',title:'Production deployment — your first live post',dur:'60 min',part:4},
+  {n:'EP 16',title:'30-day data review — what the real numbers say',dur:'55 min',part:4},
+  {n:'EP 17',title:'Phase 2 agent unlocks — scaling the system',dur:'65 min',part:4},
+  {n:'EP 18',title:'The 90-day finale — community challenge launch',dur:'70 min',part:4},
+];
+
+var FAQS=[
+  {q:'Do I need to know how to code to follow along?',a:'No. The series is designed from the ground up for people with no coding experience. Erika writes every line of code live on stream and explains every line as she goes. You copy, paste, and learn by doing. By Episode 4 you will understand more about how code works than most people who have never tried.'},
+  {q:'How much does this cost?',a:'The stream, this portal, the guide, and the Discord are all free. The only cost is your Anthropic API usage — Claude charges by the token (roughly 0.75 words). A typical beginner running agents during the series spends $2–$8 per month at most. Anthropic also gives free trial credits when you sign up.'},
+  {q:'What if I miss a live stream?',a:'Every episode goes up as a replay on YouTube within hours of the live stream ending. You can also watch on your own schedule — the series is designed so each episode builds on the last, but you can pause and come back anytime.'},
+  {q:'What is the #MetakittyzBuild community challenge?',a:'A 90-day public accountability challenge. You build alongside the series, post about your progress weekly using #MetakittyzBuild, and share your results at the 90-day mark. Builders who complete the challenge and post their results get featured live on stream by Erika.'},
+  {q:'What operating system do I need?',a:'The series works on Mac, Windows, and Linux. All tools — Node.js, VS Code, Git — run on all three. If you hit a platform-specific issue, post in the #tech-help Discord channel and someone in the community will help you within hours.'},
+  {q:'Do I need an Instagram account to follow along?',a:'No — the agent system is designed around Instagram but the underlying code and concepts apply to any platform. You can follow along and adapt the system to whatever platform you use. Having an Instagram account just makes the live examples more directly applicable to your situation.'},
+  {q:'How long does each episode take including the follow-along activities?',a:'Each episode is 45–70 minutes of stream time. The follow-along activities add roughly 20–40 minutes if you do them while watching. Expect 60–90 minutes total per episode if you are building alongside Erika from the start.'},
+  {q:'What if I get stuck on a technical step?',a:'Three options: 1. Post in the #tech-help Discord channel — the community is active and helpful. 2. Copy the exact error message and paste it into Claude with the prompt: "Explain this error in plain English and show me the fix." 3. Re-watch the relevant section of the episode — Erika usually explains the common mistakes as she makes them herself.'},
+  {q:'Is this the same as the Harvard AI Intensive?',a:'No. Erika is enrolled in the Harvard AI Intensive 2026 as a student. The Build Series is her personal project where she teaches everything she learns from the course in real time, using her own Instagram growth goal as the practical case study. The series is not affiliated with Harvard.'},
+  {q:'Will the agents actually post to Instagram automatically?',a:'The agents write and approve content, but nothing posts without your explicit approval. The human-in-the-loop system built in Episode 14 means every draft sits in a queue for your review. You approve, edit, or reject before anything goes live. The agents do the creative work; you make the final call.'},
+];
+
+function buildGlossary(){
+  var g=document.getElementById('gloss-grid');
+  var colors=['#FF2D78','#00F5D4','#FFE000','#7B2FFF','#FF6B35','#00FF41'];
+  GLOSSARY.forEach(function(item,i){
+    var c=colors[i%colors.length];
+    var row=document.createElement('div');
+    row.className='gloss-item';
+    row.setAttribute('data-term',item.term.toLowerCase());
+    row.innerHTML='<span class="gloss-term" style="background:'+c+'18;color:'+c+';border:1px solid '+c+'33;">'+item.term+'</span>'+
+      '<div><div class="gloss-def">'+item.def+'</div><div class="gloss-ep">Introduced in '+item.ep+'</div></div>';
+    g.appendChild(row);
+  });
+}
+
+function filterGloss(val){
+  var v=val.toLowerCase();
+  document.querySelectorAll('.gloss-item').forEach(function(el){
+    var match=el.getAttribute('data-term').includes(v)||el.querySelector('.gloss-def').textContent.toLowerCase().includes(v);
+    el.classList.toggle('hidden',!match);
+  });
+}
+
+function buildTracker(){
+  var g=document.getElementById('tracker-grid');
+  var colors=['#FF2D78','#FF2D78','#FF2D78','#FF2D78','#00F5D4','#00F5D4','#00F5D4','#00F5D4','#00F5D4','#00F5D4','#FFE000','#FFE000','#FFE000','#FFE000','#FF6B35','#FF6B35','#FF6B35','#FF6B35'];
+  var saved=JSON.parse(localStorage.getItem('mk_ep_done')||'[]');
+  EPISODES.forEach(function(ep,i){
+    var done=saved.indexOf(i)>-1;
+    var c=colors[i]||'#FF2D78';
+    var row=document.createElement('div');
+    row.className='tracker-ep';
+    row.innerHTML='<div class="tracker-cb'+(done?' done':'')+'" data-i="'+i+'" onclick="toggleEp(this)">'+
+      (done?'<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><polyline points="2,6 5,9 10,3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>':'')+
+      '</div>'+
+      '<span class="tracker-ep-n" style="color:'+c+';">'+ep.n+'</span>'+
+      '<a class="tracker-ep-t" href="/guide.html" style="cursor:pointer;">'+ep.title+'</a>'+
+      '<span class="tracker-ep-d">'+ep.dur+'</span>';
+    g.appendChild(row);
+  });
+  updateBar();
+}
+
+function toggleEp(cb){
+  var i=parseInt(cb.getAttribute('data-i'));
+  var saved=JSON.parse(localStorage.getItem('mk_ep_done')||'[]');
+  var idx=saved.indexOf(i);
+  if(idx>-1){saved.splice(idx,1);cb.classList.remove('done');cb.innerHTML='';}
+  else{saved.push(i);cb.classList.add('done');cb.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><polyline points="2,6 5,9 10,3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>';}
+  localStorage.setItem('mk_ep_done',JSON.stringify(saved));
+  updateBar();
+}
+
+function updateBar(){
+  var saved=JSON.parse(localStorage.getItem('mk_ep_done')||'[]');
+  var pct=Math.round(saved.length/18*100);
+  document.getElementById('tracker-fill').style.width=pct+'%';
+  document.getElementById('tracker-pct').textContent=saved.length+' of 18 episodes';
+}
+
+function buildFAQ(){
+  var g=document.getElementById('faq-list');
+  FAQS.forEach(function(faq){
+    var item=document.createElement('div');
+    item.className='faq-item';
+    item.innerHTML='<div class="faq-q" onclick="this.parentNode.classList.toggle(\'open\')">'+
+      '<span>'+faq.q+'</span>'+
+      '<svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><polyline points="3,6 8,11 13,6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'+
+    '</div><div class="faq-a">'+faq.a+'</div>';
+    g.appendChild(item);
+  });
+}
+
+function copyCmd(btn,text){
+  navigator.clipboard&&navigator.clipboard.writeText(text).then(function(){
+    btn.textContent='copied!';
+    setTimeout(function(){btn.textContent='copy';},2000);
+  });
+}
+
+function goGuidePrompts(){
+  sessionStorage.setItem('guide_tab','prompts');
+}
+
+buildGlossary();
+buildTracker();
+buildFAQ();
+</script>
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" aria-label="Site navigation">
+  <a class="mnav-item" href="/"><span class="mnav-ic">🏠</span><span class="mnav-lb">Home</span></a>
+  <a class="mnav-item" href="/guide.html"><span class="mnav-ic">📖</span><span class="mnav-lb">Guide</span></a>
+  <a class="mnav-item" href="/playbook.html"><span class="mnav-ic">📋</span><span class="mnav-lb">Playbook</span></a>
+  <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
+  <a class="mnav-item" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
+</nav>
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
+</script>
+</body>
+</html>

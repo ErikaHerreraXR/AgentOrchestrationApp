@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Series Guide — MetakittyZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+:root{
+  --pk:#FF2D78;--tl:#00F5D4;--yl:#FFE000;--pu:#7B2FFF;--co:#FF6B35;--mx:#00FF41;
+  --bg:#000;--glass:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --text:#fff;--muted:#888;--dim:#444;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;}
+
+/* scanline overlay */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999;}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,45,120,.2);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:.08em;background:linear-gradient(90deg,var(--pk),var(--yl),var(--tl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap;}
+.nav-link{font-family:'Space Mono',monospace;font-size:10px;padding:5px 12px;border-radius:100px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s;text-decoration:none;letter-spacing:.06em;}
+.nav-link:hover,.nav-link.on{border-color:var(--pk);color:var(--pk);background:rgba(255,45,120,.08);}
+.nav-home{font-family:'Space Mono',monospace;font-size:10px;padding:5px 14px;border-radius:100px;background:linear-gradient(135deg,var(--pk),var(--pu));color:#fff;text-decoration:none;letter-spacing:.06em;}
+
+/* ── HERO ── */
+.hero{padding:60px 24px 48px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,45,120,.12),transparent);}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;color:var(--tl);letter-spacing:.2em;margin-bottom:16px;}
+.hero-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(28px,5vw,56px);line-height:1.05;margin-bottom:16px;}
+.hero-title .grad{background:linear-gradient(90deg,var(--pk),var(--yl),var(--tl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto 32px;line-height:1.7;}
+.hero-stats{display:flex;justify-content:center;gap:clamp(16px,4vw,48px);flex-wrap:wrap;margin-bottom:8px;}
+.hstat{text-align:center;}
+.hstat-n{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(24px,4vw,40px);background:linear-gradient(135deg,var(--pk),var(--pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hstat-l{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em;}
+.rb{height:2px;background:linear-gradient(90deg,var(--pk),var(--co),var(--yl),var(--tl),var(--pu),var(--pk));}
+
+/* ── TABS ── */
+.tab-wrap{position:sticky;top:57px;z-index:90;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;}
+.tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-family:'Space Mono',monospace;font-size:11px;padding:14px 18px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;letter-spacing:.06em;transition:all .15s;}
+.tab:hover{color:var(--text);}
+.tab.on{color:var(--pk);border-bottom-color:var(--pk);}
+
+/* ── CONTENT ── */
+.content{max-width:900px;margin:0 auto;padding:40px 24px 80px;}
+.section{display:none;}.section.on{display:block;}
+
+/* ── PART HEADER ── */
+.part-hdr{margin-bottom:32px;}
+.part-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:10px;padding:5px 14px;border-radius:100px;border:1px solid;letter-spacing:.1em;margin-bottom:12px;}
+.part-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(20px,3vw,32px);margin-bottom:8px;}
+.part-sub{font-size:14px;color:var(--muted);line-height:1.7;}
+
+/* ── EPISODE CARDS ── */
+.ep-list{display:flex;flex-direction:column;gap:12px;}
+.ep-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color .2s;}
+.ep-card:hover{border-color:rgba(255,45,120,.3);}
+.ep-card.open{border-color:rgba(255,45,120,.4);}
+.ep-head{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none;}
+.ep-badge{font-family:'Orbitron',sans-serif;font-weight:700;font-size:10px;padding:4px 10px;border-radius:100px;flex-shrink:0;letter-spacing:.08em;}
+.ep-info{flex:1;min-width:0;}
+.ep-title{font-weight:600;font-size:14px;line-height:1.3;}
+.ep-dur{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;}
+.ep-chevron{color:var(--muted);font-size:18px;flex-shrink:0;transition:transform .25s;}
+.ep-card.open .ep-chevron{transform:rotate(180deg);}
+.ep-body{display:none;border-top:1px solid var(--border);}
+.ep-card.open .ep-body{display:block;}
+
+.ep-sec{padding:20px;border-bottom:1px solid var(--border);}
+.ep-sec:last-child{border-bottom:none;}
+.ep-sec-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:12px;}
+.ep-summary{font-size:14px;color:#ccc;line-height:1.75;}
+
+.obj-list,.act-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.obj-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#ccc;line-height:1.55;}
+.obj-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;}
+.act-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#ccc;line-height:1.55;}
+.act-n{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;margin-top:1px;}
+
+.setup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;}
+.setup-item{background:rgba(0,245,212,.06);border:1px solid rgba(0,245,212,.15);border-radius:10px;padding:12px 14px;}
+.setup-name{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--tl);margin-bottom:4px;}
+.setup-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px;}
+.setup-link{font-family:'Space Mono',monospace;font-size:11px;color:var(--tl);text-decoration:none;}
+.setup-link:hover{text-decoration:underline;}
+
+/* ── TERMS ── */
+.terms-grid{display:flex;flex-direction:column;gap:8px;}
+.term-row{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--glass);border:1px solid var(--border);border-radius:10px;}
+.term-tag{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;flex-shrink:0;min-width:100px;text-align:center;margin-top:2px;}
+.term-def{font-size:13px;color:#ccc;line-height:1.6;}
+
+/* ── PROMPTS ── */
+.prompt-cat-hdr{margin:32px 0 12px;}
+.prompt-cat-hdr:first-child{margin-top:0;}
+.pcat-badge{font-family:'Space Mono',monospace;font-size:10px;padding:3px 12px;border-radius:100px;border:1px solid;letter-spacing:.08em;display:inline-block;margin-bottom:8px;}
+.pcat-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:16px;}
+.prompt-list{display:flex;flex-direction:column;gap:8px;}
+.prompt-card{background:var(--glass);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s;}
+.prompt-card:hover{border-color:rgba(255,224,0,.25);}
+.prompt-head{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;}
+.pnum{font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;padding:3px 8px;border-radius:6px;flex-shrink:0;}
+.ptitle{flex:1;font-size:13px;font-weight:600;}
+.pep{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);flex-shrink:0;}
+.prompt-body{display:none;border-top:1px solid var(--border);padding:16px;}
+.prompt-card.open .prompt-body{display:block;}
+.prompt-code{background:rgba(0,0,0,.6);border:1px solid rgba(255,224,0,.15);border-radius:10px;padding:14px;font-family:'Space Mono',monospace;font-size:12px;line-height:1.8;color:#f0f0f0;white-space:pre-wrap;word-break:break-word;margin-bottom:12px;position:relative;}
+.copy-btn{position:absolute;top:10px;right:10px;background:rgba(255,224,0,.1);border:1px solid rgba(255,224,0,.3);border-radius:6px;padding:4px 10px;font-family:'Space Mono',monospace;font-size:10px;color:var(--yl);cursor:pointer;transition:all .15s;}
+.copy-btn:hover{background:rgba(255,224,0,.2);}
+.why-box{background:rgba(0,245,212,.05);border-left:2px solid var(--tl);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:8px;}
+.why-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--tl);letter-spacing:.1em;margin-bottom:4px;}
+.why-txt{font-size:13px;color:#ccc;line-height:1.6;}
+.ep-ref{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);}
+
+/* ── MILESTONE ── */
+.mile-list{display:flex;flex-direction:column;gap:0;}
+.mile-row{display:flex;gap:0;position:relative;}
+.mile-row::before{content:'';position:absolute;left:44px;top:36px;bottom:-12px;width:1px;background:var(--border);}
+.mile-row:last-child::before{display:none;}
+.mile-left{flex-shrink:0;width:88px;padding:12px 0;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.mile-day{font-family:'Orbitron',sans-serif;font-weight:700;font-size:10px;padding:4px 8px;border-radius:100px;letter-spacing:.06em;text-align:center;white-space:nowrap;}
+.mile-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.mile-body{flex:1;padding:12px 0 20px 16px;}
+.mile-title{font-weight:600;font-size:14px;margin-bottom:3px;}
+.mile-desc{font-size:13px;color:var(--muted);line-height:1.55;}
+
+/* ── AGENT TABLE ── */
+.agent-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:32px;}
+.agent-tbl th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;}
+.agent-tbl td{padding:12px;border-bottom:1px solid var(--border);color:#ccc;vertical-align:top;line-height:1.5;}
+.agent-tbl tr:last-child td{border-bottom:none;}
+.agent-tbl td:first-child{font-family:'Space Mono',monospace;font-weight:700;font-size:11px;white-space:nowrap;}
+.agent-tbl tr:hover td{background:var(--glass);}
+
+/* ── COMPLIANCE ── */
+.comp-list{display:flex;flex-direction:column;gap:8px;margin-bottom:32px;}
+.comp-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--glass);border:1px solid var(--border);border-radius:10px;}
+.comp-n{font-family:'Orbitron',sans-serif;font-weight:900;font-size:12px;color:var(--yl);flex-shrink:0;width:20px;}
+.comp-text{font-size:13px;color:#ccc;line-height:1.55;}
+
+/* ── CHALLENGE ── */
+.challenge{background:linear-gradient(135deg,rgba(123,47,255,.1),rgba(255,45,120,.08));border:1px solid rgba(123,47,255,.3);border-radius:16px;padding:24px;}
+.challenge-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;margin-bottom:8px;}
+.challenge-desc{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:20px;}
+.challenge-steps{display:flex;flex-direction:column;gap:10px;}
+.ch-step{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#ccc;line-height:1.55;}
+.ch-n{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:2px 10px;border-radius:100px;background:rgba(123,47,255,.2);border:1px solid rgba(123,47,255,.4);color:var(--pu);flex-shrink:0;margin-top:1px;}
+
+/* ── INFO BANNER ── */
+.info-banner{background:rgba(0,245,212,.06);border:1px solid rgba(0,245,212,.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--tl);line-height:1.6;margin-bottom:24px;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:32px;font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);border-top:1px solid var(--border);}
+.footer a{color:var(--pk);text-decoration:none;}
+
+@media(max-width:600px){
+  .hero{padding:40px 16px 32px;}
+  .content{padding:24px 16px 60px;}
+  .ep-head{padding:14px 14px;}
+  .ep-sec{padding:16px;}
+}
+/* ── MOBILE FIXES ── */
+@media(max-width:768px){
+  body{padding-top:52px !important;}
+  .nav{position:fixed !important;left:0 !important;right:0 !important;top:0 !important;width:100% !important;flex-wrap:nowrap !important;}
+  .nav-links{display:none !important;}
+  .nav-home{display:none !important;}
+  .tab-wrap{top:52px !important;}
+  .tabs .tab{padding:12px 16px !important;font-size:12px !important;}
+}
+/* ── MOBILE BOTTOM NAV ── */
+.mob-nav{position:fixed;bottom:0;left:0;right:0;z-index:3000;background:rgba(10,0,21,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,45,120,.2);display:none;align-items:stretch;height:60px;padding-bottom:env(safe-area-inset-bottom,0px);}
+.mob-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);}
+@media(max-width:768px){.mob-nav{display:flex;}body{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px)) !important;}}
+.mnav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;text-decoration:none;color:#3a3a3a;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:8px 2px;min-height:44px;}
+.mnav-item.on{color:#FF2D78;}
+.mnav-ic{font-size:19px;line-height:1.1;}
+.mnav-lb{font-family:'Space Mono',monospace;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">METAKITTYZ / BUILD GUIDE</div>
+  <div class="nav-links">
+    <span class="nav-link on" onclick="showTab('setup',this)">Setup</span>
+    <span class="nav-link" onclick="showTab('p1',this)">Part 1</span>
+    <span class="nav-link" onclick="showTab('p2',this)">Part 2</span>
+    <span class="nav-link" onclick="showTab('p3',this)">Part 3</span>
+    <span class="nav-link" onclick="showTab('p4',this)">Part 4</span>
+    <span class="nav-link" onclick="showTab('prompts',this)">40 Prompts</span>
+    <span class="nav-link" onclick="showTab('map',this)">90-Day Map</span>
+    <span class="nav-link" onclick="showTab('ref',this)">Reference</span>
+    <a class="nav-link" href="/community.html" style="border-color:rgba(123,47,255,.3);color:var(--pu);">🌐 Community</a>
+    <a class="nav-link" href="/kitty-lab.html" style="border-color:rgba(255,224,0,.3);color:var(--yl);">🧪 Kitty Lab</a>
+    <a class="nav-link" href="/about.html" style="border-color:rgba(255,45,120,.3);color:var(--pk);">⚡ About</a>
+    <a class="nav-link" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:var(--pu);">📋 Playbook</a>
+    <a class="nav-link" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
+  </div>
+  <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
+  <a class="nav-home" href="/">← Home</a>
+</nav>
+
+<div class="rb"></div>
+
+<div class="hero">
+  <div class="hero-eyebrow">BUILD AI AGENTS LIVE · @METAKITTYZ · HARVARD AI INTENSIVE 2026</div>
+  <h1 class="hero-title">The Complete<br><span class="grad">Build Series Guide</span></h1>
+  <p class="hero-sub">Everything you need to follow along — even with zero development experience. Every episode, every prompt, every step explained in plain English.</p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n">4</div><div class="hstat-l">Parts</div></div>
+    <div class="hstat"><div class="hstat-n">18</div><div class="hstat-l">Episodes</div></div>
+    <div class="hstat"><div class="hstat-n">40</div><div class="hstat-l">MVP Prompts</div></div>
+    <div class="hstat"><div class="hstat-n">7</div><div class="hstat-l">Categories</div></div>
+  </div>
+</div>
+
+<div class="rb"></div>
+
+<div class="tab-wrap">
+  <div class="tabs">
+    <div class="tab on" onclick="showTab('setup',this)">Start here</div>
+    <div class="tab" onclick="showTab('p1',this)">Part 1 — Foundation</div>
+    <div class="tab" onclick="showTab('p2',this)">Part 2 — Agent Team</div>
+    <div class="tab" onclick="showTab('p3',this)">Part 3 — Connect</div>
+    <div class="tab" onclick="showTab('p4',this)">Part 4 — Go Live</div>
+    <div class="tab" onclick="showTab('prompts',this)">Prompt Vault</div>
+    <div class="tab" onclick="showTab('map',this)">90-Day Map</div>
+    <div class="tab" onclick="showTab('ref',this)">Quick Reference</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ══ SETUP ══ -->
+<div id="tab-setup" class="section on">
+  <div class="info-banner">Start here before Episode 1. Everything on this page is free to install. No coding experience needed — just follow each step in order and check them off as you go.</div>
+
+  <div class="part-hdr">
+    <div class="part-badge" style="color:var(--tl);border-color:rgba(0,245,212,.3);">STEP 0 — BEFORE YOU WATCH</div>
+    <div class="part-title">Set up your dev environment</div>
+    <div class="part-sub">Your computer needs 5 free tools before you can build your first agent. Install them in the order shown. The whole process takes about 20–30 minutes.</div>
+  </div>
+
+  <div class="setup-grid" style="margin-bottom:32px;">
+    <div class="setup-item">
+      <div class="setup-name">1. Node.js</div>
+      <div class="setup-desc">The engine that runs your agent code. Download the LTS (long-term support) version — it is the most stable. After installing, open your Terminal and type <code style="color:var(--yl);">node --version</code> to confirm it worked.</div>
+      <a class="setup-link" href="https://nodejs.org" target="_blank">nodejs.org →</a>
+    </div>
+    <div class="setup-item">
+      <div class="setup-name">2. VS Code</div>
+      <div class="setup-desc">A free code editor — like Word, but for writing agent instructions. Used by millions worldwide. After installing, open it and you will see a welcome screen.</div>
+      <a class="setup-link" href="https://code.visualstudio.com" target="_blank">code.visualstudio.com →</a>
+    </div>
+    <div class="setup-item">
+      <div class="setup-name">3. Git</div>
+      <div class="setup-desc">Saves different versions of your project so you can undo mistakes at any point. Think of it as unlimited undo for your entire project. After installing, type <code style="color:var(--yl);">git --version</code> in your Terminal.</div>
+      <a class="setup-link" href="https://git-scm.com/downloads" target="_blank">git-scm.com →</a>
+    </div>
+    <div class="setup-item">
+      <div class="setup-name">4. GitHub account</div>
+      <div class="setup-desc">Where your project files live online so you can access them from anywhere. Free for personal projects. Sign up with your email and choose a username.</div>
+      <a class="setup-link" href="https://github.com" target="_blank">github.com →</a>
+    </div>
+    <div class="setup-item">
+      <div class="setup-name">5. Anthropic account</div>
+      <div class="setup-desc">You need an API key — a private password that lets your code talk to Claude. Free trial credits are included when you sign up. Go to the Console tab after signing in.</div>
+      <a class="setup-link" href="https://console.anthropic.com" target="_blank">console.anthropic.com →</a>
+    </div>
+    <div class="setup-item">
+      <div class="setup-name">Claude or ChatGPT</div>
+      <div class="setup-desc">You will use AI to help write and debug your code throughout the series. A free account on either is enough. Keep a tab open while watching.</div>
+      <a class="setup-link" href="https://claude.ai" target="_blank">claude.ai →</a>
+    </div>
+  </div>
+
+  <div class="part-badge" style="color:var(--yl);border-color:rgba(255,224,0,.3);display:inline-flex;margin-bottom:16px;">KEY TERMS — KNOW THESE BEFORE EPISODE 1</div>
+  <div class="terms-grid">
+    <div class="term-row"><span class="term-tag" style="background:rgba(123,47,255,.15);color:var(--pu);border:1px solid rgba(123,47,255,.3);">API</span><span class="term-def">Application Programming Interface. A way for two programs to talk to each other. When your agent sends a message to Claude, it uses an API. Think of it as a drive-through window — you place an order, the kitchen prepares it, and you get a response back.</span></div>
+    <div class="term-row"><span class="term-tag" style="background:rgba(0,245,212,.1);color:var(--tl);border:1px solid rgba(0,245,212,.25);">API key</span><span class="term-def">A long string of letters and numbers that proves you are allowed to use a service. Treat it like a password — never share it, never paste it into a public file, and never post it online.</span></div>
+    <div class="term-row"><span class="term-tag" style="background:rgba(255,45,120,.1);color:var(--pk);border:1px solid rgba(255,45,120,.25);">Terminal</span><span class="term-def">A black box where you type commands to your computer instead of clicking buttons. On Mac it is called Terminal. On Windows it is Command Prompt or PowerShell. You will use this to install things and run your agent.</span></div>
+    <div class="term-row"><span class="term-tag" style="background:rgba(255,224,0,.08);color:var(--yl);border:1px solid rgba(255,224,0,.2);">npm</span><span class="term-def">Node Package Manager. A tool that comes with Node.js and lets you install code libraries with one command. Typing "npm install" in your Terminal downloads everything your project needs automatically.</span></div>
+    <div class="term-row"><span class="term-tag" style="background:rgba(255,107,53,.1);color:var(--co);border:1px solid rgba(255,107,53,.25);">.env file</span><span class="term-def">A hidden file in your project where you store secret information like your API key. Your code reads from this file instead of having the key written directly in your code — which keeps it safe if you share your code.</span></div>
+    <div class="term-row"><span class="term-tag" style="background:rgba(123,47,255,.15);color:var(--pu);border:1px solid rgba(123,47,255,.3);">TypeScript</span><span class="term-def">The coding language used in this series. It is JavaScript (the language of the web) with extra safety features that catch mistakes before they cause problems. No prior experience needed — Erika teaches it from scratch.</span></div>
+    <div class="term-row"><span class="term-tag" style="background:rgba(0,255,65,.08);color:var(--mx);border:1px solid rgba(0,255,65,.2);">Agent</span><span class="term-def">An AI that can take actions, not just answer questions. It can search the web, write posts, check results, and decide what to do next — all automatically. The goal of this series is to build a team of 6 of them.</span></div>
+    <div class="term-row"><span class="term-tag" style="background:rgba(0,245,212,.1);color:var(--tl);border:1px solid rgba(0,245,212,.25);">Prompt</span><span class="term-def">The instructions you give to an AI. A well-written prompt is the difference between a generic response and a perfect one. The entire series is built around mastering this skill — without any code required.</span></div>
+    <div class="term-row"><span class="term-tag" style="background:rgba(255,224,0,.08);color:var(--yl);border:1px solid rgba(255,224,0,.2);">Token</span><span class="term-def">The unit of text an AI reads and writes. Roughly 1 token = 0.75 words. APIs charge by token, so understanding tokens helps you estimate and control your monthly costs.</span></div>
+    <div class="term-row"><span class="term-tag" style="background:rgba(255,45,120,.1);color:var(--pk);border:1px solid rgba(255,45,120,.25);">MCP</span><span class="term-def">Model Context Protocol. A standard way to connect your agent to external tools like calendars, databases, or social media. Think of it as a universal plug adapter that lets your AI work with any app. Covered in Part 3.</span></div>
+  </div>
+</div>
+
+<!-- ══ PARTS 1-4 + PROMPTS + MAP + REF rendered by JS ══ -->
+<div id="tab-p1" class="section"></div>
+<div id="tab-p2" class="section"></div>
+<div id="tab-p3" class="section"></div>
+<div id="tab-p4" class="section"></div>
+<div id="tab-prompts" class="section"></div>
+<div id="tab-map" class="section"></div>
+<div id="tab-ref" class="section"></div>
+
+</div><!-- end content -->
+
+<div class="rb"></div>
+<div class="footer">
+  METAKITTYZ BUILD SERIES &nbsp;·&nbsp; <a href="https://youtube.com/@metakittyz" target="_blank">YouTube</a> &nbsp;·&nbsp;
+  <a href="https://twitch.tv/metakittyz" target="_blank">Twitch</a> &nbsp;·&nbsp;
+  <a href="https://discord.gg/txB9JCDf29" target="_blank">Discord</a> &nbsp;·&nbsp;
+  @metakittyz &nbsp;·&nbsp; #MetakittyzBuild
+</div>
+
+<script>
+var C={pk:'#FF2D78',tl:'#00F5D4',yl:'#FFE000',pu:'#7B2FFF',co:'#FF6B35',mx:'#00FF41'};
+var PARTS=[
+{id:'p1',color:C.pk,bg:'rgba(255,45,120,.12)',label:'PART 1 OF 4',title:'The Foundation Builds',sub:'Episodes 01–04 · ~3.5 hours total · Go from zero installed tools to a working AI agent that searches the web in real time. No experience needed — every step happens live on stream.',eps:[
+{n:'EP 01',title:'Dev environment setup and your first API call',dur:'45 min',
+sum:'Before you can build an agent, your computer needs to speak the right language. In this episode you will install every tool needed for the entire series — Node.js, VS Code, Git, and the Anthropic SDK. You will create your first project folder, store your API key safely in a .env file, and write the smallest possible TypeScript program that talks to Claude and gets a real response. By the end of this episode you will have typed your first message to an AI through code — not a chat box.',
+obj:['Understand what Node.js is and why agents need it to run','Install VS Code and navigate it without feeling lost','Create a project folder and understand what each file inside it does','Store your API key safely so it never appears directly in your code','Write a 10-line TypeScript program that sends a message to Claude','Read and understand the response your program receives back'],
+acts:['Download and install Node.js from nodejs.org — then verify it works by opening your Terminal and typing: node --version','Open VS Code, create a new folder called "metakittyz-agent", and open that folder inside VS Code','Create a file called .env in your project folder and add one line: ANTHROPIC_API_KEY=paste-your-key-here','Copy the starter code shown on stream, run "npm install" then "npm run start" in your Terminal, and watch it work','Write a comment on every line of code explaining in your own words what that line does'],
+setup:['nodejs.org — download LTS','code.visualstudio.com','console.anthropic.com — get your API key']},
+{n:'EP 02',title:'First AI agent — Hello World and the ReAct loop',dur:'60 min',
+sum:'A basic API call answers one question and stops. A real agent thinks in a loop — it decides what to do, takes an action, checks the result, and then decides again. This loop is called ReAct: Reason → Act → Observe → Repeat. In this episode you will transform your simple API call into a proper agent. You will give it a system prompt (its personality and rules), teach it to loop until a task is finished, and watch it solve a multi-step problem live on stream.',
+obj:['Explain the difference between an API call and an agent in plain English','Understand the ReAct loop: Reason, Act, Observe, Repeat','Write a system prompt that gives your agent a role and clear rules','Build a loop in TypeScript that keeps running until the agent says it is done','Read your agent\'s "thinking" output in the Terminal and understand what each step means','Recognise when an agent is stuck in a loop and know how to stop it safely'],
+acts:['Write your own system prompt — give your agent a name, a role, and exactly 3 rules it must always follow','Add a while-loop to your Episode 1 code that keeps running until the agent outputs the word DONE','Run the agent with a multi-step task: "Plan 5 Instagram post ideas and list them one by one"','Print each step of the agent\'s reasoning to your Terminal so you can see its thinking in real time','On purpose, break the loop — then fix it. This teaches you the most important debugging skill in the series.'],
+setup:[]},
+{n:'EP 03',title:'Adding memory — 4 memory types and persistence testing',dur:'55 min',
+sum:'Without memory, every conversation starts from scratch — like meeting someone who forgets you the moment you close the chat. Real agents need to remember things across conversations, within a conversation, and across different times you run the program. In this episode you will build all four types of memory: in-context (the conversation so far), external (saved to a file), semantic (meaning-based search), and procedural (how to do a task). Then you will stress-test your memory by closing and reopening the agent and checking what it still knows.',
+obj:['Name and explain all four types of AI memory in plain English','Add conversation history to your agent so it remembers earlier messages in the same session','Save memory to a JSON file so it survives when you close the program','Understand what a vector store is and why it is useful for searching saved memories','Test your memory system by running the agent across two completely separate sessions','Know which memory type to use for which type of task'],
+acts:['Add a "messages" array to your agent that grows by one item with each turn of conversation','At the end of every run, save the conversation to a file called "memory.json" using the fs.writeFile command','At the start of every new run, read that file and load the previous conversation back into memory','Tell your agent your name and favourite colour — then close the program, reopen it, and ask if it remembers you','Write a plain-English explanation of which memory type you would use to remember a customer\'s purchase history, and why'],
+setup:[]},
+{n:'EP 04',title:'Connecting web search — your first real tool',dur:'50 min',
+sum:'An agent with no tools can only use what is already inside the AI model — knowledge that is frozen at a training cutoff date. Tools are what make agents genuinely useful in the real world. In this episode you will connect a live web search tool to your agent using the Anthropic tool-use API. Your agent will learn to decide when it needs to search, call the search automatically, read the results, and include real-time information in its answer. This is the first moment your agent knows something the AI was never trained on.',
+obj:['Understand what a "tool" means in the context of AI agents','Define a tool in TypeScript so Claude knows it exists and when to use it','Write a function that performs a web search and returns the results','Connect the tool to your agent\'s ReAct loop so it runs automatically','Watch the agent decide on its own when to search versus when to answer from its training','Handle the case where a search returns no useful results gracefully'],
+acts:['Copy the tool definition template from stream and write a search tool that accepts a text query as input','Use the Anthropic tool-use API to register your search tool — follow the live code exactly','Ask your agent "What happened in AI news today?" and watch it call the search tool automatically','Ask a question you already know the answer to — observe whether the agent searches or answers from memory','Save every tool call to a file called "tool-log.txt" so you can see a record of every search your agent ran'],
+setup:['serper.dev or tavily.com — free tier API key for web search']}
+]},
+{id:'p2',color:C.tl,bg:'rgba(0,245,212,.1)',label:'PART 2 OF 4',title:'The Metakittyz Agent Team',sub:'Episodes 05–10 · ~5.5 hours total · Six specialist agents built from scratch — each with a unique role, a system prompt you write live, a stress test, and a live deployment checkpoint.',eps:[
+{n:'EP 05',title:'StrategyMind — the orchestrator agent',dur:'55 min',
+sum:'StrategyMind is the CEO of your agent team. It does not write content or track numbers — it decides what everyone else should do and in what order. In this episode you will build StrategyMind from scratch, write its system prompt to make it think in 90-day campaigns, and teach it to delegate tasks to other agents. You will stress-test it by giving it an impossible deadline and watching how it prioritises.',
+obj:['Understand what an orchestrator agent is and why every team needs one','Write a system prompt that makes an agent think strategically rather than reactively','Teach the agent to break a 90-day goal into specific weekly tasks','Build a simple delegation system where StrategyMind assigns work to other agents','Test the agent with a real goal: grow Instagram from 0 to 1 million followers in 90 days','Add a guardrail that stops StrategyMind from assigning tasks it has not validated first'],
+acts:['Write StrategyMind\'s system prompt — give it a strategic mindset, a 90-day focus, and 3 rules it must never break','Run StrategyMind with the goal: "Plan week 1 of the 0-to-1M campaign" and review every line of output','Add a delegation function — give it a list of 5 other agent names it can assign tasks to','Change the deadline from 90 days to 30 days and compare the new plan to the original','Add a compliance check: if StrategyMind assigns any task that mentions buying followers, it must flag it immediately'],
+setup:[]},
+{n:'EP 06',title:'CreativeForge — the content production agent',dur:'55 min',
+sum:'CreativeForge is the writer, caption crafter, and content idea machine of your team. It takes a strategy brief from StrategyMind and turns it into ready-to-post captions, hooks, and content formats. In this episode you will build CreativeForge with a strong creative voice that sounds like you — not like a generic AI. You will write a style guide inside the system prompt and test it against real Instagram post scenarios.',
+obj:['Build a content agent with a defined voice and personal style','Write a style guide inside a system prompt that makes output sound genuinely human','Generate captions in 5 formats: educational, personal story, bold opinion, list, and question','Add a rule that bans em-dashes and corporate buzzwords from all output','Test CreativeForge with 3 different brief types and honestly rate the output quality','Connect CreativeForge so it receives writing briefs directly from StrategyMind'],
+acts:['Write CreativeForge\'s system prompt — include tone, banned words, max post length, and 2 example captions it should always sound like','Run CreativeForge with: "Write 3 hook-first captions for an AI agent tutorial" and rate each on a 10-point scale','Add the rule: never use the words leverage, synergy, or empower — then re-run and check','Ask for the same caption in 3 different tones: casual, bold, and educational — compare the results','Build a review step where you must approve or reject each caption before it could theoretically be posted'],
+setup:[]},
+{n:'EP 07',title:'AudienceRadar — the analytics and insight agent',dur:'55 min',
+sum:'AudienceRadar watches the numbers so you do not have to. It reads engagement data, identifies what content is working, spots audience patterns, and tells StrategyMind what to do differently next week. In this episode you will build AudienceRadar using sample engagement data, teach it to find trends, and have it write a weekly performance report that any non-technical person can read and act on immediately.',
+obj:['Build an analytics agent that reads and interprets real engagement data','Feed the agent CSV-style data and teach it to identify meaningful patterns','Write a system prompt that forces the agent to explain numbers in plain English','Create a weekly report format with top posts, bottom posts, and one clear action item','Add a threshold rule: if engagement drops below 2%, AudienceRadar must flag it as urgent','Connect AudienceRadar so it delivers weekly summaries directly to StrategyMind'],
+acts:['Create a sample data file with 7 days of post performance: likes, comments, shares, and reach for each day','Write AudienceRadar\'s system prompt — give it an analytical mindset and a strict plain-English output rule','Run AudienceRadar on your sample data and check if its insights match what you can see by eye','Ask it to identify the single best-performing post and give a specific reason why it performed well','Add a weekly summary function that labels the best day, worst day, and a one-sentence recommendation'],
+setup:[]},
+{n:'EP 08',title:'GrowthEngine — the growth and amplification agent',dur:'55 min',
+sum:'GrowthEngine actively looks for ways to grow — not just track what is already happening. It finds hashtags, trending topics, collaboration opportunities, and audience expansion strategies using live web search. In this episode you will build GrowthEngine with search enabled, teach it to research your niche in real time, and have it produce a weekly growth brief that StrategyMind can act on immediately.',
+obj:['Build an agent that proactively searches for growth opportunities every week','Connect web search so GrowthEngine can research trending content in real time','Write a system prompt that makes it think like a growth marketer, not a reporter','Generate a weekly brief: top hashtags, trending topics, and potential collaborators','Add a filter that removes any hashtag with over 50 million posts as too competitive to enter','Connect GrowthEngine so its research feeds into AudienceRadar and StrategyMind'],
+acts:['Write GrowthEngine\'s system prompt — give it a growth-first mindset and a clear discoverability focus','Run a live search for trending AI content hashtags and review every result it returns','Ask GrowthEngine to find 3 creators in your niche with under 100k followers who could collaborate','Add the 50-million-post filter and test it with a hashtag you know is massively competitive','Save the weekly growth brief to a file called "growth-brief-week1.txt" with a consistent format'],
+setup:[]},
+{n:'EP 09',title:'CommunityPulse — the engagement and community agent',dur:'55 min',
+sum:'CommunityPulse is the member of the team that actually talks to people. It drafts comment replies, DM templates, and community updates in a warm human voice. In this episode you will build CommunityPulse, teach it to handle negative comments without escalating situations, and give it templates for the 5 most common community scenarios every creator faces.',
+obj:['Build a community engagement agent with a warm and genuinely human tone','Write reply templates for 5 scenarios: thank-you, question, criticism, spam, and super-fan','Add a hard rule that always escalates hate speech to a human — the agent never handles it alone','Teach the agent to match the energy level of the comment it is responding to','Test CommunityPulse with 10 different comment types from different follower personalities','Connect CommunityPulse so all drafts pass through GuardianQA before being approved'],
+acts:['Write CommunityPulse\'s system prompt — give it a warm personality, a no-escalation rule for negativity, and a human-first approach','Create a list of 10 sample comments: mix of super positive, neutral questions, mild criticism, and spam','Run each comment through CommunityPulse and rate every reply on warmth, accuracy, and appropriateness','Add the hate speech escalation rule — then test it with an aggressive sample comment and check the output','Build an output format that shows the original comment, the draft reply, and a 1-10 confidence score'],
+setup:[]},
+{n:'EP 10',title:'GuardianQA — the compliance and quality gatekeeper',dur:'50 min',
+sum:'GuardianQA is the most important agent on the team. Nothing goes live without its approval. It checks every piece of content for compliance violations, factual errors, tone issues, and brand inconsistencies — then scores it out of 100 with an explanation for every point deducted. In this episode you will build GuardianQA with 10 compliance rules in its system prompt and test it by deliberately submitting content that breaks the rules.',
+obj:['Build a compliance and quality assurance agent with real scoring logic','Write 10 compliance rules covering FTC disclosure, tone, accuracy, and brand safety','Implement a 100-point scoring system where every deduction is explained in plain English','Test the agent by submitting content that violates 3 different rules at the same time','Add a hard block: content scoring below 60 is automatically rejected, no exceptions','Connect GuardianQA as the mandatory final step before any content is approved for posting'],
+acts:['Write GuardianQA\'s system prompt with all 10 compliance rules listed clearly and specifically','Submit a caption that breaks 2 rules on purpose — verify GuardianQA catches both and explains them','Submit a well-written caption and confirm it scores 90 or above','Add the 60-point rejection threshold and test the automatic block with a deliberately bad piece of content','Build a rejection log format that saves every failed submission with the rule it broke and the timestamp'],
+setup:[]}
+]},
+{id:'p3',color:C.yl,bg:'rgba(255,224,0,.08)',label:'PART 3 OF 4',title:'Connecting Everything',sub:'Episodes 11–14 · ~4 hours total · MCP integrations, the full pipeline test (the episode where it all works or breaks live), the PIPortal dashboard, and the human approval workflow.',eps:[
+{n:'EP 11',title:'MCP integrations — connecting agents to real apps',dur:'60 min',
+sum:'MCP (Model Context Protocol) is the standard that lets your agents interact with real applications — not just generate text. In this episode you will connect your agent team to external tools using MCP: a calendar for scheduling posts and a database for saving drafts. You will learn how MCP works, why it is the future of agent integrations, and how to add new MCP connections without rebuilding your existing agents.',
+obj:['Understand what MCP is and why it matters for production agent systems','Install and configure your first MCP server using the official SDK','Connect a calendar tool so agents can schedule posts with real dates and times','Connect a file or database tool so agents can save drafts and retrieve them by ID','Test an end-to-end flow: StrategyMind plans, CreativeForge writes, MCP saves to calendar','Add error handling so the agent retries automatically if an MCP connection fails'],
+acts:['Install the MCP SDK by running in your Terminal: npm install @modelcontextprotocol/sdk','Copy the MCP server template from stream and configure it with your calendar credentials','Run a test where StrategyMind schedules 3 posts — confirm they appear in your connected calendar','Save a CreativeForge draft to a Notion-style database using MCP and retrieve it by its ID','Describe in your own words what MCP does, as if explaining it to a friend who has never heard of it'],
+setup:['modelcontextprotocol.io — read the quickstart','notion.com — free account if using Notion as database']},
+{n:'EP 12',title:'Full pipeline test — the episode where it works or breaks',dur:'65 min',
+sum:'This is the most honest episode in the series. All 6 agents run together as a team for the first time with no scripted outcome. StrategyMind sends a real brief, CreativeForge writes, AudienceRadar checks data, GrowthEngine researches, CommunityPulse drafts replies, and GuardianQA approves or rejects. Whatever happens — success or failure — is part of the lesson.',
+obj:['Run all 6 agents in sequence for the very first time','Map which agents communicate with each other and in what order','Diagnose a pipeline failure and trace it back to its exact source','Fix a live bug without stopping the stream — debugging under real pressure','Understand what a "race condition" is and why timing matters in multi-agent systems','Document the complete pipeline as a diagram you can reference for the rest of the series'],
+acts:['Draw your pipeline on paper before running it — label every agent and draw arrows showing data flow','Run the full pipeline with one simple task: write and approve one Instagram caption about AI','When something breaks, write down the exact error message before attempting any fix','Fix the first bug you encounter and explain out loud what caused it and why your fix works','After the pipeline runs successfully, screenshot your Terminal output as your proof of completion'],
+setup:[]},
+{n:'EP 13',title:'PIPortal dashboard — your agent command center',dur:'60 min',
+sum:'Watching agents run in a Terminal works for setup. For daily use you need a visual dashboard. In this episode you will build PIPortal — a simple React web dashboard that shows you what each agent is doing, what it has produced, and what needs your review. No design experience needed — the layout is provided and you fill in the logic.',
+obj:['Understand what React is and why it is used for building dashboards like this','Create a basic React project and run it in your browser for the first time','Display live agent status on the dashboard — idle, running, or waiting for approval','Show the latest output from each agent as a visible card on screen','Add approve and reject buttons for content flagged by GuardianQA','Connect the dashboard to your agent files so it reads and displays real data'],
+acts:['Create a React project by running in your Terminal: npx create-react-app piportal','Copy the dashboard layout from stream, run it, and see PIPortal open in your browser for the first time','Add a status card for each of the 6 agents showing their name, role, and last run time','Build a content approval card: draft text, GuardianQA score, approve button, reject button','Connect the approve button to a function that saves approved content to a file called "approved-queue.json"'],
+setup:['reactjs.org — read Getting Started if new to React','expo.dev — optional, for a mobile dashboard']},
+{n:'EP 14',title:'Human-in-the-loop — the 60-minute approval workflow',dur:'55 min',
+sum:'Fully autonomous AI posting is risky. The human-in-the-loop system is what makes your agent team safe — nothing goes live without your explicit approval. In this episode you will build a structured approval workflow: every content draft waits in a queue, you review it within 60 minutes, and either approve, edit, or reject it. The agents wait patiently. This episode also covers what happens when you miss the 60-minute window.',
+obj:['Build a content approval queue that holds every draft until it is reviewed by a human','Set a 60-minute review window with automatic escalation if the window is missed','Give yourself the ability to edit a draft before approving it for posting','Log every approval and rejection with a timestamp and a written reason','Understand why human oversight matters even when the AI is performing very well','Test the escalation system by deliberately not approving something within the time window'],
+acts:['Build the approval queue as a JSON file — each entry has: draft text, GuardianQA score, timestamp, and status','Add a function that checks the age of each queued item and flags anything older than 60 minutes','Edit a draft directly in PIPortal and save the edited version to the approved queue','Reject one item and write a one-sentence reason — this is how you train your agents over time','Run the full approval system for 30 minutes and make at least 3 real approval decisions'],
+setup:[]}
+]},
+{id:'p4',color:C.co,bg:'rgba(255,107,53,.08)',label:'PART 4 OF 4',title:'Going Live and Growing',sub:'Episodes 15–18 · ~4 hours total · Production deployment, 30-day real data review, Phase 2 agent unlocks, and the 90-day finale with the community challenge launch.',eps:[
+{n:'EP 15',title:'Production deployment — your first live post',dur:'60 min',
+sum:'You have built everything. Now you deploy it to a real server that runs 24 hours a day. In this episode you will move your agent system from your laptop to cloud hosting, set up automated daily runs, connect your live social accounts, and watch your agent team produce and submit real content for the first time. The first live post through the approval workflow is the milestone that ends Part 1 of your 90-day journey.',
+obj:['Understand the difference between running code on your laptop versus on a cloud server','Deploy your project to a free cloud hosting platform that runs continuously','Set up automated daily agent runs using a time-based scheduler','Connect your Instagram and social accounts through safe, authorised API access','Send your first real agent-assisted post through the human approval workflow','Set up monitoring so you receive an alert if the system stops running unexpectedly'],
+acts:['Create a free account on Railway.app or Render.com and follow their deployment guide for Node.js projects','Push your code to GitHub and connect your GitHub repository to your chosen hosting platform','Set a daily schedule: agents run at 9am, 1pm, and 6pm every day — confirm it triggers correctly','Approve and post the first piece of content your live system produces — screenshot it for the community','Set up a free uptime monitor at uptimerobot.com so you know immediately if your server goes offline'],
+setup:['railway.app or render.com — free tier hosting','uptimerobot.com — free uptime monitoring']},
+{n:'EP 16',title:'30-day data review — what the real numbers say',dur:'55 min',
+sum:'After 30 days of live operation, AudienceRadar has real data to analyse. In this episode you will run a full 30-day performance review: what content worked, what failed, which agent produced the best output, and what you would change about the system. This is the most honest episode — no made-up numbers, no cherry-picked wins. Real data, live on stream.',
+obj:['Pull 30 days of real Instagram performance data into AudienceRadar for analysis','Identify the top 3 and bottom 3 performing posts and explain specifically why','Calculate your cost per post: total API spend divided by number of posts produced','Identify at least one agent that underperformed and write a specific system prompt edit to fix it','Write a plain-English 30-day performance report a non-technical person could act on','Share the report with the community for public feedback using #MetakittyzBuild'],
+acts:['Export 30 days of Instagram data and feed it into AudienceRadar as your input','Ask AudienceRadar: "Which agent produced the content that performed best, and why?"','Open your Anthropic usage dashboard and calculate the exact total API cost for the month','Edit the system prompt of the lowest-performing agent based specifically on what the data showed','Post your 30-day summary publicly on Instagram or Discord with #MetakittyzBuild'],
+setup:[]},
+{n:'EP 17',title:'Phase 2 agent unlocks — scaling the system',dur:'65 min',
+sum:'Phase 2 is where the system grows. You will unlock three new capabilities: video script generation for Reels and Shorts, cross-platform posting to Instagram and TikTok and YouTube, and a personal brand voice model built from your own best content. This episode is the most advanced in the series — but it is built entirely on what you already know.',
+obj:['Understand what Phase 2 means in the context of the 90-day growth plan','Add a video script output format to CreativeForge for 60-second vertical videos','Connect a second platform — TikTok or YouTube Shorts — to your posting pipeline','Build a personal brand voice profile from your 30 days of published content','Test the cross-platform system with one piece of content adapted for 3 platforms','Explain how the Phase 2 system works to someone else in under 5 minutes'],
+acts:['Add a "video_script" output type to CreativeForge and test it with a 60-second Reels script brief','Feed your 10 best captions to Claude and ask it to identify 5 specific patterns that define your voice','Adapt one approved caption for Instagram, TikTok, and a YouTube community post — 3 different formats','Run all 3 formats through GuardianQA and compare the compliance scores','Write a Phase 2 brief for StrategyMind: "Run the full cross-platform campaign for week 5"'],
+setup:[]},
+{n:'EP 18',title:'The 90-day finale — community challenge launch',dur:'70 min',
+sum:'The final episode. You will run a complete live demo of the entire system — StrategyMind plans, CreativeForge writes, all agents run in sequence, GuardianQA approves, and content posts live during the stream. Then Erika launches the community challenge: every builder in #MetakittyzBuild shares their 90-day results. The builders with the strongest systems get featured live.',
+obj:['Run the complete agent system end-to-end without any assistance or scripted outcomes','Reflect honestly on what has changed in your understanding of AI since Episode 1','Write a personal 90-day summary: what you built, what surprised you, and what is next','Submit your entry to the community challenge and celebrate completing the series','Give specific feedback to at least 3 other builders in the Discord community','Set your next 90-day goal and share it publicly in the goals channel'],
+acts:['Run the full pipeline live during the stream — no pausing, no resets, no safety net','Write your 90-day summary as an Instagram caption and post it with #MetakittyzBuild90','Screenshot your best post, your GuardianQA score history, and your follower count growth chart','Reply to 3 other builders in Discord with one piece of specific, actionable feedback each','Set your next 90-day goal and share it in the #goals channel — then go build it'],
+setup:[]}
+]}
+];
+
+var PROMPT_CATS=[
+{label:'Category 1',c:C.pu,title:'Agent foundations — Prompts 1–5',prompts:[
+{n:1,title:'System prompt architect',ep:'EP 01–02',text:'You are an expert AI agent architect. I am building a [ROLE] agent for [PURPOSE]. The agent will be used by [WHO] to [MAIN TASK]. Write a complete system prompt for this agent that includes: a clear role definition, 5 rules it must always follow, 3 things it must never do, and one example of a perfect response. Make the language plain and direct — no corporate jargon.',why:'System prompts define everything. A weak system prompt creates a weak agent. This structure forces you to think through identity, constraints, and examples before writing a single line of code.',ep_ref:'Core skill introduced in EP 02.'},
+{n:2,title:'First API call checker',ep:'EP 01',text:'I just wrote my first API call to Claude. Here is the code:\n\n[PASTE YOUR CODE]\n\nCheck it for these specific problems: Is the API key loaded from a .env file and not written directly in the code? Is the model name spelled correctly? Is the messages array formatted with both a role and a content field? Is there a try/catch block to handle errors? List every problem you find and show me the corrected version with a comment explaining each change.',why:'New developers make the same 4 mistakes on their first API call. This prompt catches all of them before they cause confusion or wasted time.',ep_ref:'Use during EP 01 while setting up your first project.'},
+{n:3,title:'ReAct loop explainer',ep:'EP 02',text:'Explain the ReAct loop to me as if I have never written code before. Use a real-world analogy to explain Reason, Act, and Observe. Then show me the smallest possible TypeScript code example of a ReAct loop that runs exactly 3 times and prints what it is doing at each step. Do not use any external libraries — just plain TypeScript that I can run immediately.',why:'Understanding the ReAct loop conceptually before seeing the code makes the code make sense on first read. Analogy first, syntax second — always.',ep_ref:'Core concept introduced in EP 02.'},
+{n:4,title:'Memory type advisor',ep:'EP 03',text:'I am building an AI agent and need to decide which type of memory to use. Here is my use case:\n\n[DESCRIBE WHAT THE AGENT NEEDS TO REMEMBER]\n\nExplain which of these four memory types fits best: in-context memory, external file memory, semantic vector memory, or procedural memory. Tell me why you chose it, what the tradeoffs are versus the others, and show me a simple code sketch of how to implement it.',why:'Choosing the wrong memory type wastes hours of setup time and creates subtle bugs. This prompt forces a deliberate decision with a clear rationale before any code is written.',ep_ref:'Memory types taught in EP 03.'},
+{n:5,title:'Tool definition builder',ep:'EP 04',text:'I want to add a [TOOL NAME] tool to my Claude agent. The tool should [DESCRIBE WHAT IT DOES IN ONE SENTENCE]. Write the complete tool definition object in TypeScript that I can pass to the Anthropic API. Include the name, description, and input_schema with all required fields. Then write the handler function that runs when Claude calls this tool. Add a comment on every single line explaining exactly what it does.',why:'Tool definitions have a strict format. One incorrect key and the tool silently fails with no error message. This prompt generates correct, commented boilerplate every time.',ep_ref:'Tool use introduced in EP 04.'}
+]},
+{label:'Category 2',c:C.tl,title:'Content creation — Prompts 6–12',prompts:[
+{n:6,title:'Hook-first caption builder',ep:'EP 06',text:'You are CreativeForge, a content creation agent for @metakittyz. Write 3 Instagram captions about [TOPIC]. Each caption must start with a hook that creates curiosity or emotion in the first 7 words. Format each as: HOOK (make it bold), body (2–3 sentences of substance), call to action (one clear next step). Max 150 words per caption. Never use em-dashes, the word "leverage", or any corporate language. Write like a smart human talking to a friend, not a brand talking to an audience.',why:'The first 7 words determine whether someone stops scrolling. Hook first, explanation second is the most consistently effective format for AI and tech content.',ep_ref:'CreativeForge built in EP 06.'},
+{n:7,title:'Five-format content batch',ep:'EP 06',text:'I have one core idea: [YOUR IDEA]. Transform it into 5 completely different Instagram captions:\n1. Educational — teach one concrete thing clearly\n2. Personal story — make it feel emotional and real\n3. Controversial opinion — make a bold, defensible claim\n4. List — break it into 5 bullet points\n5. Question — end with something the audience must answer\n\nEach caption under 120 words. Same topic, completely different energy for each one.',why:'One idea turned into 5 posts is 5x the content output for the same research time. Training your agent to produce all 5 formats gives you weeks of variety from a single brief.',ep_ref:'Used in EP 06 to build CreativeForge\'s output range.'},
+{n:8,title:'60-second video script',ep:'EP 17',text:'Write a 60-second vertical video script for [PLATFORM: TikTok, Reels, or Shorts] about [TOPIC]. Structure it exactly like this:\n0–3 seconds: visual hook — describe what appears on screen\n3–10 seconds: the problem or question — make the viewer care\n10–45 seconds: the explanation — plain English, no jargon\n45–60 seconds: call to action — one clear next step\n\nInclude the spoken words and a visual direction note for each section. Keep language at a 7th-grade reading level.',why:'Vertical video scripts with timing marks make production 10x faster. The 7th-grade reading level rule keeps the content accessible to the widest possible audience.',ep_ref:'Video scripts added in Phase 2, EP 17.'},
+{n:9,title:'Caption voice matcher',ep:'EP 06',text:'Here are 5 of my best-performing Instagram captions:\n\n[PASTE 5 CAPTIONS]\n\nAnalyse the voice, tone, sentence length, use of humour, and emotional style across all 5 of them. Write out 5 specific style rules you identified — be precise, not vague. Then write a brand new caption about [NEW TOPIC] that follows all 5 rules and sounds exactly like the examples. Do not tell me it sounds like me — just write it.',why:'Feeding your own writing to an AI and asking it to identify patterns creates a reusable voice profile. This is the foundation of the brand voice model built in EP 17.',ep_ref:'Voice matching introduced in EP 06 and scaled in EP 17.'},
+{n:10,title:'Cross-platform adapter',ep:'EP 17',text:'Here is an approved Instagram caption:\n\n[PASTE CAPTION]\n\nRewrite it for 3 platforms:\n1. TikTok — conversational, trend-aware, under 150 characters for on-screen text\n2. YouTube community post — warmer, longer, asks a genuine question at the end\n3. LinkedIn — professional but not boring, under 200 words, no hashtag spam\n\nKeep the core message identical but make the format and tone native to each platform.',why:'Most creators write platform-specific content from scratch every time. Adapting one approved piece for 3 platforms triples output with a single prompt.',ep_ref:'Cross-platform system built in EP 17.'},
+{n:11,title:'7-day content calendar',ep:'EP 05–06',text:'I need a 7-day Instagram content calendar for a creator in the [NICHE] space. My audience is [DESCRIBE THEM]. I post [HOW MANY TIMES] per day. For each day provide: the content theme, the post format (carousel, reel, static, or story), a one-sentence brief for CreativeForge to write from, and the best posting time for a [TIMEZONE] audience. Format it as a clean table.',why:'A structured calendar brief gives StrategyMind a repeatable planning format and CreativeForge a clear writing brief for every single slot.',ep_ref:'Calendar planning introduced in EP 05.'},
+{n:12,title:'Hook library builder',ep:'EP 06',text:'Generate 20 Instagram caption hooks for content about [NICHE].\n— 5 hooks that open with a specific number\n— 5 hooks that lead with a bold opinion\n— 5 hooks that open with a genuine question\n— 5 hooks that start with a personal story opener\n\nFor each hook, rate it 1–10 for curiosity potential and write one sentence explaining exactly why it works. Bold the top 5 overall and tell me which type of post each one works best for.',why:'A reusable hook library means CreativeForge never starts from blank. Building it once gives months of starting points without any additional research.',ep_ref:'Hooks are the foundation of CreativeForge — built in EP 06.'}
+]},
+{label:'Category 3',c:C.yl,title:'Strategy and growth — Prompts 13–18',prompts:[
+{n:13,title:'90-day campaign planner',ep:'EP 05',text:'You are StrategyMind, a strategic AI orchestrator. My goal is to grow my Instagram from [CURRENT] to [TARGET] followers in 90 days. My niche is [NICHE]. I post [FREQUENCY] times per day. Break the 90 days into 3 phases of 30 days each. For every phase write: the main focus, the content strategy, the primary growth tactic, and 3 specific weekly tasks. Make it realistic — base growth estimates on typical organic rates for this niche, not best-case scenarios.',why:'90-day plans feel overwhelming as one block. Breaking into 3 phases of 30 days creates momentum, natural review points, and realistic targets.',ep_ref:'StrategyMind built in EP 05.'},
+{n:14,title:'Hashtag research brief',ep:'EP 08',text:'I create content about [TOPIC] on Instagram. Research hashtags using these rules:\n— Only include hashtags with 10,000 to 2,000,000 total posts\n— Mix broad, niche, and community hashtags in equal proportion\n— Group them into 3 sets of 15 that I can rotate weekly to avoid repetition\n— For each hashtag, label the difficulty: easy, medium, or hard to appear in top posts\n— Flag and remove any hashtag with over 50 million posts — I will skip those entirely',why:'The 50-million-post filter is GrowthEngine\'s core rule from EP 08. Above that threshold, new posts are buried within seconds of being published.',ep_ref:'GrowthEngine built in EP 08.'},
+{n:15,title:'Collaboration opportunity finder',ep:'EP 08',text:'I am a creator in the [NICHE] space with [FOLLOWER COUNT] followers on Instagram. Find me 5 realistic collaboration partners. They should have between [LOWER BOUND] and [UPPER BOUND] followers. Their content should overlap with mine but not be identical. For each potential partner, suggest: the best collaboration format (joint reel, Instagram Live, story takeover, or challenge), a one-sentence pitch I could actually send them, and what value both sides get from the collaboration.',why:'Collaborations consistently accelerate growth faster than solo posting. Matching by follower count ensures the audience exchange is roughly balanced for both creators.',ep_ref:'GrowthEngine collaboration feature built in EP 08.'},
+{n:16,title:'Trend hijacker',ep:'EP 08',text:'The current trending topic in my niche is: [TRENDING TOPIC]\nI create content about: [YOUR NICHE]\n\nWrite 3 content angles that connect my niche to this trend authentically — not in a forced or awkward way. For each angle, write the hook sentence and suggest the best content format. If a connection does not make genuine sense, say so directly and suggest a different trending topic that would fit my niche better instead.',why:'Trend hijacking only works when the connection is genuine. The explicit instruction to say "this doesn\'t work" stops the agent from publishing awkward, off-brand content.',ep_ref:'GrowthEngine trend research built in EP 08.'},
+{n:17,title:'Weekly performance brief',ep:'EP 07',text:'Here is my Instagram performance data for this week:\n\n[PASTE YOUR ENGAGEMENT DATA]\n\nAnalyse it and produce a weekly brief for StrategyMind that includes: the single best-performing post and a specific reason it worked, the single worst post and one concrete change to make, the overall engagement rate compared to last week as a percentage, one specific content recommendation for next week, and a one-sentence summary I could share publicly with my community.',why:'AudienceRadar\'s output format is designed to be immediately actionable — every section answers a question StrategyMind needs to make this week\'s decisions.',ep_ref:'AudienceRadar built in EP 07.'},
+{n:18,title:'Growth lever identifier',ep:'EP 07–08',text:'I have been posting for [NUMBER] weeks on Instagram in the [NICHE] space. My follower growth has been: [DESCRIBE — slow, steady, or stalled]. My content mix for the past month: [BRIEFLY DESCRIBE WHAT YOU\'VE BEEN POSTING]. Identify the single highest-leverage change I could make right now to accelerate growth. Give me one specific action, the reasoning behind your choice, and one metric I can check in 2 weeks to know if it is working.',why:'One clear lever is more actionable than ten suggestions. Forcing a single answer creates clarity and makes it easy to attribute any change in results directly to the decision.',ep_ref:'Strategy and analytics combined across EP 07 and EP 08.'}
+]},
+{label:'Category 4',c:C.pk,title:'Agent building and debugging — Prompts 19–24',prompts:[
+{n:19,title:'System prompt debugger',ep:'EP 02–05',text:'My AI agent is not behaving as expected.\n\nCurrent system prompt:\n[PASTE SYSTEM PROMPT]\n\nExample of wrong output:\n[PASTE THE BAD OUTPUT]\n\nWhat I expected instead:\n[DESCRIBE WHAT SHOULD HAVE HAPPENED]\n\nDiagnose the problem. Is it a role issue, a rule issue, a format issue, or a tone issue? Rewrite only the specific part of the system prompt that is causing the problem. Explain in one sentence why your change fixes it.',why:'Vague debugging prompts produce vague answers. Providing the system prompt, the bad output, and the expected output gives the AI everything it needs to diagnose precisely and quickly.',ep_ref:'Debugging introduced in EP 02 and used throughout Part 2.'},
+{n:20,title:'Tool definition validator',ep:'EP 04',text:'Here is a tool definition I wrote for my Claude agent:\n\n[PASTE TOOL DEFINITION]\n\nCheck it against the Anthropic tool-use API specification. Look for: correct top-level keys (name, description, input_schema), correct JSON Schema format inside input_schema, any missing required fields, any description so vague that Claude would not know when to use the tool. Return a corrected version with a comment on every change explaining what was wrong and why.',why:'Tool definitions that are almost correct still fail silently. Validation before testing saves hours of confusing debugging where the tool simply never gets called.',ep_ref:'Tool use introduced in EP 04.'},
+{n:21,title:'Infinite loop detective',ep:'EP 02',text:'My AI agent is stuck in a loop and will not stop.\n\nMy agent run function code:\n[PASTE CODE]\n\nWhat the Terminal output looks like when it loops:\n[PASTE TERMINAL OUTPUT]\n\nIdentify why the loop is not terminating. Add a maximum iteration counter that stops the loop after [NUMBER] iterations and prints a clear error message. Also add a check that detects if the agent is repeating the exact same action twice in a row and exits early with an explanation.',why:'Infinite loops are the most common beginner agent bug. Adding both a max-iteration counter and a repetition detector catches over 95% of all loop cases.',ep_ref:'ReAct loop and loop debugging taught in EP 02.'},
+{n:22,title:'Pipeline flow diagram',ep:'EP 12',text:'I have a multi-agent pipeline with these agents:\n\n[LIST YOUR AGENTS AND WHAT EACH ONE DOES]\n\nDescribe the data flow between agents as a numbered sequence. For each step: which agent sends data, what data it sends, which agent receives it, and what happens if the receiving agent fails or returns an error. Then identify the single point of failure that would break the entire pipeline and suggest one specific fallback strategy for it.',why:'Visualising data flow before the EP 12 integration test prevents the most common pipeline failure: an agent waiting for input that was never sent.',ep_ref:'Full pipeline built and tested live in EP 12.'},
+{n:23,title:'Agent stress tester',ep:'EP 05–10',text:'I just built a [AGENT NAME] agent. Here is its system prompt:\n\n[PASTE SYSTEM PROMPT]\n\nGenerate 10 stress test inputs designed to break this agent. Include inputs that are: ambiguous, contain contradictory instructions, ask it to violate one of its rules, are written in a different language, are one word long, are 500 words long, contain profanity, ask for something completely outside its role, repeat the same question twice in a row, and ask for something that seems reasonable but subtly breaks a rule. For each test, predict what a well-built version of this agent should do.',why:'Stress testing reveals edge cases before they occur in a live production system. Every agent in Part 2 of the series gets a live stress test on stream.',ep_ref:'Stress testing introduced in EP 05 and applied to every Part 2 agent.'},
+{n:24,title:'TypeScript error explainer',ep:'EP 01–04',text:'I am getting this TypeScript error:\n\n[PASTE EXACT ERROR MESSAGE]\n\nI am a beginner developer. Explain this error in plain English — no technical jargon. Tell me exactly which line is causing it, why TypeScript considers it an error, and give me the corrected version of the code. Then tell me one thing I can do differently going forward to avoid making this same mistake again.',why:'Error messages are written for experienced developers. Translating them to plain English removes the fear barrier that stops beginners from making progress.',ep_ref:'Used throughout Part 1 whenever an error appears live on stream.'}
+]},
+{label:'Category 5',c:'#378ADD',title:'Thought leadership — Prompts 25–28',prompts:[
+{n:25,title:'Opinion post builder',ep:'EP 06',text:'I have this opinion about AI and content creation:\n\n[STATE YOUR OPINION CLEARLY]\n\nWrite a thought leadership Instagram caption that: states the opinion directly in the first sentence, backs it up with one concrete real-world example, acknowledges the strongest counterargument honestly, then explains why you disagree with it. Under 200 words. End with a question that genuinely invites disagreement — I want comments, not just likes. Confident tone, not arrogant.',why:'Thought leadership that only states opinions gets passive likes. Acknowledging the counterargument before disagreeing demonstrates depth and drives the kind of comments that build community.',ep_ref:'CreativeForge opinion format introduced in EP 06.'},
+{n:26,title:'Learning-in-public post',ep:'EP 06',text:'I just finished [WHAT YOU BUILT OR LEARNED] as part of the Metakittyz Build Series. Write an Instagram caption that shares: what I built in one specific sentence, what was genuinely harder than I expected, one thing that surprised me that I did not anticipate, and what I am trying next. Make it personal and honest — not a highlight reel. No corporate language. Include #MetakittyzBuild at the end.',why:'Learning in public builds trust faster than showing only finished, polished results. Sharing the difficulty makes your audience believe they could do it too.',ep_ref:'Community building runs throughout all 18 episodes.'},
+{n:27,title:'Expert summary carousel',ep:'EP 06',text:'I just learned about [TOPIC] while building my AI agent system. Write a 5-slide Instagram carousel that explains this topic to someone with zero technical background.\n\nSlide 1: the problem or question — make them feel it\nSlides 2–4: one key insight per slide — concrete, not abstract\nSlide 5: the practical takeaway and one next step\n\nMax 30 words per slide. Plain English. No diagrams needed — just clear text.',why:'Carousels increase time-on-post because each swipe is a micro-commitment. The 30-word limit forces genuine clarity — if you cannot explain it in 30 words, you do not understand it well enough yet.',ep_ref:'Carousel format developed in EP 06.'},
+{n:28,title:'Series retrospective',ep:'EP 16–18',text:'I have been building AI agents publicly for [NUMBER] weeks. Here is a summary:\n\nWhat I built: [LIST]\nWhat worked: [LIST SPECIFIC WINS]\nWhat failed: [LIST HONEST SETBACKS]\n\nWrite a retrospective caption that shares all three with equal honesty. Do not exaggerate the wins or downplay the failures — real builders share both. Include one specific lesson learned and one thing you would do differently if starting over today.',why:'Retrospectives are the highest-engagement format for builders because they are rare. Most creators only share wins. Sharing failures honestly is what builds a genuinely loyal audience.',ep_ref:'30-day retrospective modelled in EP 16. 90-day version in EP 18.'}
+]},
+{label:'Category 6',c:C.mx,title:'Compliance and safety — Prompts 29–32',prompts:[
+{n:29,title:'GuardianQA full review',ep:'EP 10',text:'You are GuardianQA, a content compliance agent. Review this caption against these 10 rules:\n1. No undisclosed sponsored content\n2. No unverified health claims\n3. No competitor name-calling\n4. No engagement bait\n5. No fabricated statistics\n6. No hate speech or discrimination\n7. No guarantees of financial results\n8. No impersonation of other creators\n9. Tone must match brand guidelines\n10. All factual claims must be verifiable\n\nCaption to review:\n[PASTE CONTENT]\n\nScore out of 100. Deduct 10 points for each violation. Explain every single deduction in plain English.',why:'A 100-point scoring system makes compliance tangible and auditable. Requiring an explanation for every deduction means the writer knows exactly how to fix the problem.',ep_ref:'GuardianQA built in EP 10.'},
+{n:30,title:'FTC disclosure checker',ep:'EP 10',text:'Here is a piece of content I am about to post:\n\n[PASTE CONTENT]\n\nDoes this content require an FTC disclosure? If yes: what type of relationship needs disclosing (paid partnership, gifted product, affiliate link, or personal financial stake), what exact disclosure language should I add, and where should the disclosure appear — beginning, end, or as a hashtag? If no disclosure is needed: explain specifically why not. Keep the explanation plain and brief.',why:'FTC violations result in real fines. Most creators do not realise affiliate links require disclosure. This prompt runs automatically on every post before it enters the approval queue.',ep_ref:'Compliance rules established in EP 10, enforced throughout Part 4.'},
+{n:31,title:'Brand safety filter',ep:'EP 10',text:'Review this caption for brand safety:\n\n[PASTE CONTENT]\n\nCheck for: language that could be interpreted as taking a political side, mention of sensitive topics (health, money, relationships, or religion), any statement that could be taken out of context to embarrass the creator, and any claim that would be difficult to verify if challenged. Rate the overall risk level: low, medium, or high. For medium and high risk, write a specific rewrite that reduces the risk without losing the original message.',why:'Brand safety is not just an ethics issue — it is about protecting the creator\'s long-term reputation. A clear risk rating makes the approval decision straightforward.',ep_ref:'Brand safety review is part of GuardianQA — built in EP 10.'},
+{n:32,title:'Content correction requestor',ep:'EP 10',text:'GuardianQA rejected this content:\n[PASTE REJECTED CONTENT]\n\nThe rejection reason was:\n[PASTE THE REJECTION REASON]\n\nRewrite the content to fix the specific violation while keeping the hook, the core message, the approximate length, and the tone as close to the original as possible. After rewriting, list the exact changes you made and confirm that the rewrite no longer violates the rule that caused the rejection.',why:'Corrections that over-correct destroy the original voice. Constraining the rewrite to fix only the specific violation preserves quality while maintaining compliance.',ep_ref:'Correction workflow built in EP 10, used daily from EP 15 onwards.'}
+]},
+{label:'Category 7',c:'#888',title:'Quick-hit starters — Prompts 33–40',prompts:[
+{n:33,title:'One-line brief expander',ep:'All episodes',text:'Expand this one-line content idea into a full CreativeForge brief:\n\n[ONE LINE IDEA]\n\nThe brief should include: the target emotion I want the audience to feel, the content format (reel, carousel, or static), the hook style (question, opinion, number, or personal story), the key message in one sentence, and 3 specific things to avoid in the final caption.',why:'One-line ideas are easy to generate and nearly impossible to act on without structure. This brief format gives CreativeForge everything it needs without a planning session.',ep_ref:'Use from EP 06 onwards whenever a content idea needs to be actioned quickly.'},
+{n:34,title:'Lazy caption fixer',ep:'EP 06',text:'This caption is weak and I know it:\n\n[PASTE WEAK CAPTION]\n\nTell me specifically what is weak about it — is it the hook, the body, the call to action, or the overall voice? Then rewrite only the weak part. Do not rewrite the whole caption. I want to understand what to fix, not just receive a replacement I did not write.',why:'Rewriting the whole caption teaches nothing. Fixing only the weak part forces the creator to understand the problem and apply that learning to future content.',ep_ref:'CreativeForge quality improvement taught throughout EP 06.'},
+{n:35,title:'DM template builder',ep:'EP 09',text:'I need a DM template for this scenario:\n[SCENARIO — e.g. welcoming a new follower, responding to a collab request, thanking a super fan]\n\nThe DM should feel personal, not automated. Under 100 words. Include one personalisation placeholder like [NAME] or [THEIR CONTENT NICHE]. End with a genuine question that invites a reply. Write 3 versions with slightly different tones: warm, professional, and playful.',why:'Three tone variations give CommunityPulse flexibility for different follower personalities. Personalisation placeholders are what make automated replies feel genuinely human.',ep_ref:'CommunityPulse DM templates built in EP 09.'},
+{n:36,title:'Comment reply drafter',ep:'EP 09',text:'Here is a comment on my post:\n\n[PASTE COMMENT]\n\nWrite a reply that: references what they said specifically rather than generically, adds one piece of genuine value or insight, ends with a question that continues the conversation naturally, and reads like a real human wrote it. Under 50 words. Do not start with "Great comment!", "Love this!", or any similar filler opener.',why:'The no-filler-opener rule is the single most important instruction for CommunityPulse. Generic openers immediately signal that a reply is automated and destroy the sense of genuine connection.',ep_ref:'CommunityPulse reply templates built in EP 09.'},
+{n:37,title:'Bio refresher',ep:'EP 06',text:'Here is my current Instagram bio:\n[PASTE BIO]\n\nHere is what I actually do and who I help:\n[DESCRIBE YOUR WORK AND YOUR AUDIENCE]\n\nRewrite my bio in under 150 characters. It must include: what I specifically do, who I specifically help, and one concrete reason to follow me right now. No emojis unless they replace actual words. No vague phrases like "helping people live their best life." Be specific.',why:'Specific bios convert profile visitors to followers. Vague bios do not. The 150-character limit matches what Instagram displays without a "more" tap.',ep_ref:'Profile optimisation part of the EP 05 strategy planning session.'},
+{n:38,title:'Trend-to-post converter',ep:'EP 08',text:'The trending audio or format right now is:\n[NAME OF TREND AND DESCRIBE HOW IT WORKS]\n\nI create content about:\n[YOUR NICHE]\n\nWrite a 15-second Reel script that uses this trend format but applies it authentically to my niche. Include: the on-screen text, the spoken words (if any), and a description of what visual should appear on screen at each moment. If this trend genuinely does not fit my niche, say so directly and suggest one that would.',why:'Trend templates fail when the creator forces a bad match. The explicit instruction to reject poor fits stops GrowthEngine from publishing awkward, off-brand content.',ep_ref:'Trend hijacking built into GrowthEngine in EP 08.'},
+{n:39,title:'Repurpose machine',ep:'EP 17',text:'Here is a piece of content that performed well:\n\n[PASTE HIGH-PERFORMING POST]\n\nRepurpose it into 4 formats:\n1. Twitter/X thread — 5 tweets, each standing alone\n2. YouTube Shorts script — 30 seconds, hook in first 3 seconds\n3. LinkedIn article opener — first 150 words only\n4. Podcast talking point — 3 bullet points I can expand on for 2 minutes each\n\nKeep the core insight identical. Adapt the format and tone for each platform\'s audience.',why:'High-performing content already has a proven insight. Repurposing it multiplies reach without any additional research. This is core Phase 2 thinking from EP 17.',ep_ref:'Cross-platform repurposing system built in EP 17.'},
+{n:40,title:'Episode prep guide',ep:'All episodes',text:'I am about to watch Episode [NUMBER] of the Metakittyz Build Series. The episode covers:\n[EPISODE TOPIC IN ONE SENTENCE]\n\nBefore I press play, tell me:\n1. Three things I should have ready — tools open, files prepared, accounts logged in\n2. Two things I should already understand from previous episodes to follow along\n3. One specific thing I should write down or screenshot during the episode to refer back to later',why:'Preparation makes live-learning dramatically more effective. Knowing what to have ready and what to capture means you do not lose progress when the stream ends.',ep_ref:'Use before every single episode.'}
+]}
+];
+
+var MILESTONES=[
+{day:'Day 1',c:C.pk,title:'Environment set up — first API call working',desc:'Your computer talks to Claude through code. You have a project folder, a safe API key, and terminal proof.'},
+{day:'Day 7',c:C.pk,title:'First ReAct agent complete with memory',desc:'Your agent loops, reasons, and remembers across turns. It can run a multi-step task without losing context.'},
+{day:'Day 14',c:C.pk,title:'Agent has live web search connected',desc:'Your agent can search the internet in real time and use current information in its answers.'},
+{day:'Day 21',c:C.tl,title:'StrategyMind and CreativeForge built and tested',desc:'Two specialist agents are live. StrategyMind plans 90-day campaigns. CreativeForge writes in your voice.'},
+{day:'Day 28',c:C.tl,title:'All 6 agents built and stress-tested individually',desc:'AudienceRadar, GrowthEngine, CommunityPulse, and GuardianQA join the team. Each passes its stress test.'},
+{day:'Day 35',c:C.tl,title:'Full 6-agent pipeline runs end-to-end',desc:'All agents run in sequence for the first time. It works, breaks, or both — either way it is a lesson.'},
+{day:'Day 42',c:C.yl,title:'MCP integrations live — agents connected to real apps',desc:'Agents can save drafts to a database and schedule posts to a real calendar through MCP.'},
+{day:'Day 49',c:C.yl,title:'PIPortal dashboard running in your browser',desc:'A visual command center shows live agent status, content drafts, and approval queues in real time.'},
+{day:'Day 56',c:C.yl,title:'Human approval workflow active and tested',desc:'Nothing posts without your sign-off. The 60-minute review window is live and escalation is tested.'},
+{day:'Day 63',c:C.co,title:'System deployed to the cloud — running 24/7',desc:'Your agent team runs without your laptop being open. First live posts enter the approval queue.'},
+{day:'Day 72',c:C.co,title:'30-day performance data reviewed',desc:'Real data analysed by AudienceRadar. You know exactly what is working and what to change.'},
+{day:'Day 80',c:C.co,title:'Phase 2 agents unlocked — cross-platform running',desc:'Video scripts, TikTok adaptation, and brand voice model are live. Content reaches multiple platforms.'},
+{day:'Day 90',c:C.mx,title:'90-day finale — community challenge launched',desc:'Full system demo on stream. Community challenge opens. You share your results with #MetakittyzBuild90.'}
+];
+
+var AGENTS=[
+{name:'StrategyMind',role:'Plans the content strategy and delegates tasks to the rest of the team',tool:'Task delegation, calendar scheduling',output:'90-day plans, weekly briefs, task assignments'},
+{name:'CreativeForge',role:'Turns strategy briefs into captions, hooks, carousels, and video scripts',tool:'Language generation, voice matching',output:'Captions, hooks, scripts, carousel slides'},
+{name:'AudienceRadar',role:'Reads engagement data and identifies what is working and what needs to change',tool:'Data analysis, trend identification',output:'Weekly performance reports, engagement scores'},
+{name:'GrowthEngine',role:'Researches hashtags, trending topics, and collaboration opportunities in real time',tool:'Web search, hashtag research',output:'Weekly growth briefs, hashtag sets, collab targets'},
+{name:'CommunityPulse',role:'Drafts comment replies, DM templates, and community updates in a human voice',tool:'Reply generation, tone matching',output:'Comment replies, DM drafts, community posts'},
+{name:'GuardianQA',role:'Reviews every piece of content before it can be approved — scores it out of 100',tool:'Rule checking, 100-point scoring',output:'Compliance score, approval, rejection note, or correction brief'}
+];
+
+var COMPLIANCE=[
+'Never publish sponsored content without a clear FTC disclosure at the start of the post.',
+'Never make health claims that have not been verified by a qualified professional.',
+'Never guarantee specific financial results from any advice or method described.',
+'Never use competitor names in a way that is misleading or defamatory.',
+'Never post engagement bait — asking people to follow under threat or under false promise.',
+'Never publish statistics that cannot be traced to a real, verifiable source.',
+'Never impersonate another creator, brand, or public figure in any way.',
+'Always match the tone of every post to the established brand voice guidelines.',
+'Always escalate hate speech or harassment to a human reviewer — agents never respond to it directly.',
+'Always require human approval before any content goes live — no agent approves its own output unilaterally.'
+];
+
+var CHALLENGE=[
+'Complete every episode and save a Terminal screenshot or dashboard screenshot as proof of each milestone.',
+'Build at least one custom agent beyond the 6 in the series and share what it does in the Discord #builds channel.',
+'Post about your progress at least once per week using #MetakittyzBuild — no polish required, just honesty.',
+'Review and give specific, written feedback to at least 3 other builders in the community.',
+'Share your public 90-day results: follower count, agent performance stats, and one honest lesson from the journey.'
+];
+
+function showTab(id,el){
+  document.querySelectorAll('.tab,.nav-link').forEach(function(t){t.classList.remove('on');});
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('on');});
+  if(el)el.classList.add('on');
+  document.querySelectorAll('[onclick*="\''+id+'\'"]').forEach(function(x){x.classList.add('on');});
+  var sec=document.getElementById('tab-'+id);
+  if(sec){sec.classList.add('on');window.scrollTo({top:0,behavior:'smooth'});}
+}
+
+function partColor(part){
+  return [C.pk,C.tl,C.yl,C.co][part-1]||C.pk;
+}
+
+function buildParts(){
+  PARTS.forEach(function(part){
+    var container=document.getElementById('tab-'+part.id);
+    if(!container)return;
+    var c=part.color;
+    var html='<div class="part-hdr">'+
+      '<div class="part-badge" style="color:'+c+';border-color:'+c+'44;">'+part.label+'</div>'+
+      '<div class="part-title">'+part.title+'</div>'+
+      '<div class="part-sub">'+part.sub+'</div></div>'+
+      '<div class="ep-list">';
+    part.eps.forEach(function(ep){
+      var objHtml=ep.obj.map(function(o){
+        return '<li><span class="obj-dot" style="background:'+c+'22;"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><polyline points="2,5 4,7.5 8,3" stroke="'+c+'" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></span>'+o+'</li>';
+      }).join('');
+      var actHtml=ep.acts.map(function(a,i){
+        return '<li><span class="act-n" style="background:'+c+'22;color:'+c+';">'+(i+1)+'</span>'+a+'</li>';
+      }).join('');
+      var setupHtml=ep.setup&&ep.setup.length?
+        '<div class="ep-sec"><div class="ep-sec-lbl">HAVE READY BEFORE THIS EPISODE</div>'+
+        ep.setup.map(function(s){return '<div style="font-size:13px;color:'+c+';margin-bottom:4px;">→ '+s+'</div>';}).join('')+'</div>':'';
+      html+='<div class="ep-card"><div class="ep-head" onclick="this.parentNode.classList.toggle(\'open\')">'+
+        '<span class="ep-badge" style="background:'+c+'22;color:'+c+';">'+ep.n+'</span>'+
+        '<div class="ep-info"><div class="ep-title">'+ep.title+'</div><div class="ep-dur">'+ep.dur+' · YouTube & Twitch</div></div>'+
+        '<svg class="ep-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><polyline points="4,7 9,12 14,7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'+
+        '</div><div class="ep-body">'+
+        '<div class="ep-sec"><div class="ep-sec-lbl">WHAT THIS EPISODE IS ABOUT</div><p class="ep-summary">'+ep.sum+'</p></div>'+
+        '<div class="ep-sec"><div class="ep-sec-lbl">WHAT YOU WILL LEARN</div><ul class="obj-list">'+objHtml+'</ul></div>'+
+        '<div class="ep-sec"><div class="ep-sec-lbl">FOLLOW-ALONG ACTIVITIES</div><ul class="act-list">'+actHtml+'</ul></div>'+
+        setupHtml+'</div></div>';
+    });
+    html+='</div>';
+    container.innerHTML=html;
+  });
+}
+
+function buildPrompts(){
+  var container=document.getElementById('tab-prompts');
+  if(!container)return;
+  var banner='<div class="info-banner">Every prompt is ready to paste into Claude or ChatGPT. Replace the bracketed placeholders — like [YOUR NICHE] — with your own details before submitting.</div>';
+  var html=banner;
+  PROMPT_CATS.forEach(function(cat){
+    html+='<div class="prompt-cat-hdr">'+
+      '<div class="pcat-badge" style="color:'+cat.c+';border-color:'+cat.c+'44;">'+cat.label+'</div>'+
+      '<div class="pcat-title">'+cat.title+'</div></div>'+
+      '<div class="prompt-list">';
+    cat.prompts.forEach(function(p){
+      html+='<div class="prompt-card">'+
+        '<div class="prompt-head" onclick="this.parentNode.classList.toggle(\'open\')">'+
+          '<span class="pnum" style="background:'+cat.c+'22;color:'+cat.c+';">#'+p.n+'</span>'+
+          '<span class="ptitle">'+p.title+'</span>'+
+          '<span class="pep">'+p.ep+'</span>'+
+          '<svg class="ep-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><polyline points="3,6 8,11 13,6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'+
+        '</div>'+
+        '<div class="prompt-body">'+
+          '<div class="ep-sec-lbl" style="margin-bottom:8px;">FULL PROMPT — COPY AND PASTE</div>'+
+          '<div class="prompt-code" id="pc'+p.n+'">'+p.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'<button class="copy-btn" onclick="copyPrompt('+p.n+')">Copy</button></div>'+
+          '<div class="why-box"><div class="why-lbl">WHY IT WORKS</div><div class="why-txt">'+p.why+'</div></div>'+
+          '<div class="ep-ref" style="margin-top:8px;">'+p.ep_ref+'</div>'+
+        '</div></div>';
+    });
+    html+='</div>';
+  });
+  container.innerHTML=html;
+}
+
+function copyPrompt(n){
+  var el=document.getElementById('pc'+n);
+  var btn=el.querySelector('.copy-btn');
+  var text=el.childNodes[0].textContent||el.childNodes[0].nodeValue||'';
+  navigator.clipboard&&navigator.clipboard.writeText(text.trim()).then(function(){
+    btn.textContent='Copied!';setTimeout(function(){btn.textContent='Copy';},2000);
+  });
+}
+
+function buildMap(){
+  var c=document.getElementById('tab-map');
+  if(!c)return;
+  var html='<div class="part-hdr"><div class="part-badge" style="color:'+C.tl+';border-color:'+C.tl+'44;">90-DAY MILESTONE MAP</div><div class="part-title">Your journey from zero to live</div><div class="part-sub">13 checkpoints over 90 days. Each one is a specific, measurable outcome — not a vague goal.</div></div><div class="mile-list">';
+  MILESTONES.forEach(function(m){
+    html+='<div class="mile-row">'+
+      '<div class="mile-left">'+
+        '<span class="mile-day" style="background:'+m.c+'22;color:'+m.c+';">'+m.day+'</span>'+
+        '<div class="mile-dot" style="background:'+m.c+';margin-top:8px;"></div>'+
+      '</div>'+
+      '<div class="mile-body"><div class="mile-title">'+m.title+'</div><div class="mile-desc">'+m.desc+'</div></div>'+
+    '</div>';
+  });
+  html+='</div>';
+  c.innerHTML=html;
+}
+
+function buildRef(){
+  var c=document.getElementById('tab-ref');
+  if(!c)return;
+  var agentRows=AGENTS.map(function(a){
+    return '<tr><td style="color:var(--pk);">'+a.name+'</td><td>'+a.role+'</td><td style="font-family:var(--font-mono,monospace);font-size:12px;color:var(--tl);">'+a.tool+'</td><td>'+a.output+'</td></tr>';
+  }).join('');
+  var compRows=COMPLIANCE.map(function(r,i){
+    return '<div class="comp-item"><span class="comp-n">'+(i+1)+'</span><span class="comp-text">'+r+'</span></div>';
+  }).join('');
+  var chalSteps=CHALLENGE.map(function(s,i){
+    return '<div class="ch-step"><span class="ch-n">'+(i+1)+'</span><span>'+s+'</span></div>';
+  }).join('');
+  c.innerHTML=
+    '<div class="part-hdr"><div class="part-badge" style="color:var(--tl);border-color:rgba(0,245,212,.3);">QUICK REFERENCE</div><div class="part-title">Agent system, compliance, and community challenge</div></div>'+
+    '<div class="ep-sec-lbl" style="margin-bottom:14px;">THE 6-AGENT SYSTEM</div>'+
+    '<div style="overflow-x:auto;margin-bottom:40px;"><table class="agent-tbl"><thead><tr><th>Agent</th><th>Role</th><th>Main tool</th><th>Output</th></tr></thead><tbody>'+agentRows+'</tbody></table></div>'+
+    '<div class="ep-sec-lbl" style="margin-bottom:14px;">10 COMPLIANCE RULES — GUARDIANQA ENFORCES ALL OF THESE</div>'+
+    '<div class="comp-list" style="margin-bottom:40px;">'+compRows+'</div>'+
+    '<div class="ep-sec-lbl" style="margin-bottom:14px;">THE 90-DAY COMMUNITY CHALLENGE</div>'+
+    '<div class="challenge">'+
+      '<div class="challenge-title">Join the community challenge</div>'+
+      '<p class="challenge-desc">Build alongside every episode. Share your progress weekly. At the 90-day mark Erika will feature the strongest builders live on stream. Join the Discord and use #MetakittyzBuild to show your work.</p>'+
+      '<div class="challenge-steps">'+chalSteps+'</div>'+
+    '</div>';
+}
+
+buildParts();
+buildPrompts();
+buildMap();
+buildRef();
+</script>
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" aria-label="Site navigation">
+  <a class="mnav-item" href="/"><span class="mnav-ic">🏠</span><span class="mnav-lb">Home</span></a>
+  <a class="mnav-item on" href="/guide.html"><span class="mnav-ic">📖</span><span class="mnav-lb">Guide</span></a>
+  <a class="mnav-item" href="/playbook.html"><span class="mnav-ic">📋</span><span class="mnav-lb">Playbook</span></a>
+  <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
+  <a class="mnav-item" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
+</nav>
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
+</script>
+</body>
+</html>

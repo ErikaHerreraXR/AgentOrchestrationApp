@@ -1,0 +1,14 @@
+/guide           /guide.html           200
+/portal          /community.html       200
+/intro        /intro.html                         200
+/discord     /discord.html                          200
+/community   /discord.html                          200
+/server      /discord.html                          200
+/join        https://discord.gg/txB9JCDf29         302
+/watch       /index.html                            200
+/live        /index.html                            200
+/youtube     https://youtube.com/@metakittyz       302
+/twitch      https://twitch.tv/metakittyz          302
+/quickstart  /Metakittyz_QuickStart_2Page.pdf      200
+/admin       /admin.html                            200
+/*           /index.html                            200

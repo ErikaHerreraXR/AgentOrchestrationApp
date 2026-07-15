@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MetakittyZ Discord — Community Hub</title>
+<meta name="description" content="Join the MetakittyZ Discord — where AI builders, creators, and curious humans come to learn, build, and grow together.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { background:#000; font-family:'Inter',sans-serif; scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+body { background:#000; min-height:100vh; }
+
+/* ── ORBS ── */
+.orbs { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.orb  { position:absolute; border-radius:50%; filter:blur(90px); }
+.o1 { width:600px; height:600px; background:#5865F2; opacity:.3; top:-200px; left:-150px; }
+.o2 { width:400px; height:400px; background:#FF2D78; opacity:.25; bottom:10%; right:-100px; }
+.o3 { width:300px; height:300px; background:#00F5D4; opacity:.15; top:50%; left:10%; }
+
+/* ── NAV ── */
+.topnav {
+  position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 clamp(16px,3vw,48px); height:56px;
+  background:rgba(0,0,0,.9); backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(88,101,242,.2);
+}
+.nav-logo { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(13px,1.8vw,18px); background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-decoration:none; letter-spacing:.05em; }
+.nav-links { display:flex; gap:clamp(8px,1.5vw,20px); align-items:center; }
+.nav-link { font-family:'Space Mono',monospace; font-size:clamp(9px,.85vw,11px); color:#555; text-decoration:none; letter-spacing:.1em; text-transform:uppercase; transition:color .15s; }
+.nav-link:hover { color:#FF2D78; }
+.nav-join { font-family:'Orbitron',sans-serif; font-weight:700; font-size:clamp(9px,.85vw,11px); background:linear-gradient(135deg,#5865F2,#7B2FFF); color:#fff !important; text-decoration:none; padding:7px 16px; border-radius:100px; letter-spacing:.04em; transition:opacity .15s; }
+.nav-join:hover { opacity:.85; }
+
+/* ── RAINBOW ── */
+.rb { height:4px; width:100%; background:linear-gradient(90deg,#FF2D78 0%,#FF6B35 18%,#FFE000 36%,#00F5D4 56%,#7B2FFF 76%,#FF2D78 100%); }
+
+/* ── HERO ── */
+.hero {
+  position:relative; z-index:2;
+  display:flex; flex-direction:column; align-items:center;
+  padding:clamp(48px,7vw,96px) clamp(16px,5vw,64px) clamp(32px,5vw,64px);
+  text-align:center; gap:clamp(14px,2vw,24px);
+}
+.hero-eyebrow { font-family:'Space Mono',monospace; font-size:clamp(9px,1vw,13px); color:#5865F2; letter-spacing:.2em; text-transform:uppercase; font-weight:700; }
+.hero-title { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(36px,6vw,88px); line-height:.92; }
+.hero-title .mk { background:linear-gradient(135deg,#fff 0%,#FFB3D9 50%,#FF2D78 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.hero-title .dc { color:#5865F2; }
+.hero-sub { font-family:'Orbitron',sans-serif; font-weight:700; font-size:clamp(14px,2vw,28px); color:#fff; letter-spacing:.04em; }
+.hero-desc { font-size:clamp(13px,1.3vw,18px); color:#888; max-width:640px; line-height:1.7; }
+.hero-desc strong { color:#ccc; }
+.hero-join {
+  background:linear-gradient(135deg,#5865F2,#7B2FFF);
+  color:#fff; text-decoration:none;
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(13px,1.5vw,20px); letter-spacing:.06em;
+  padding:clamp(14px,1.8vw,22px) clamp(36px,4.5vw,64px);
+  border-radius:100px; display:inline-flex; align-items:center; gap:12px;
+  box-shadow:0 0 40px rgba(88,101,242,.4);
+  transition:transform .18s, box-shadow .18s; margin-top:4px;
+}
+.hero-join:hover { transform:translateY(-3px); box-shadow:0 0 64px rgba(88,101,242,.6); }
+.hero-stats { display:flex; gap:clamp(24px,3vw,48px); justify-content:center; flex-wrap:wrap; padding:clamp(16px,2vw,28px) clamp(24px,3vw,48px); background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07); border-radius:16px; }
+.h-stat { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.h-num  { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(24px,3.5vw,48px); line-height:1; }
+.h-lbl  { font-size:clamp(9px,.9vw,13px); color:#555; font-weight:600; }
+
+/* ── ERIKA NOTE ── */
+.erika-note {
+  position:relative; z-index:2;
+  margin:0 clamp(16px,5vw,80px) clamp(24px,3vw,40px);
+  background:linear-gradient(135deg,rgba(255,45,120,.08),rgba(88,101,242,.08));
+  border:1px solid rgba(255,45,120,.2); border-left:4px solid #FF2D78;
+  border-radius:16px; padding:clamp(20px,2.5vw,36px) clamp(20px,3vw,40px);
+  display:flex; gap:clamp(14px,2vw,28px); align-items:flex-start; flex-wrap:wrap;
+}
+.erika-avatar { font-size:clamp(40px,5vw,64px); flex-shrink:0; line-height:1; }
+.erika-body { flex:1; min-width:220px; }
+.erika-from { font-family:'Space Mono',monospace; font-size:clamp(8px,.85vw,11px); color:#FF2D78; letter-spacing:.14em; text-transform:uppercase; font-weight:700; margin-bottom:10px; }
+.erika-body p { font-size:clamp(13px,1.2vw,17px); color:#ccc; line-height:1.75; margin-bottom:8px; }
+.erika-body p:last-child { margin-bottom:0; }
+.erika-body strong { color:#fff; }
+.erika-body em { color:#FFE000; font-style:normal; font-weight:700; }
+.erika-sig { font-family:'Orbitron',sans-serif; font-size:clamp(11px,1.1vw,15px); color:#FF2D78; font-weight:700; margin-top:12px; }
+
+/* ── CHANNELS SECTION ── */
+.channels-section {
+  position:relative; z-index:2;
+  padding:0 clamp(16px,5vw,80px) clamp(40px,5vw,80px);
+}
+.channels-header { display:flex; align-items:center; gap:16px; margin-bottom:clamp(24px,3vw,40px); }
+.ch-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent); }
+.ch-title { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(11px,1.2vw,15px); letter-spacing:.2em; text-transform:uppercase; color:#5865F2; white-space:nowrap; }
+
+/* Channel cards grid */
+.channels-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,480px),1fr)); gap:clamp(16px,2vw,24px); }
+
+.channel-card {
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:clamp(12px,1.5vw,18px);
+  overflow:hidden;
+  transition:transform .2s, box-shadow .2s, border-color .2s;
+}
+.channel-card:hover { transform:translateY(-4px); }
+
+.ch-header {
+  padding:clamp(16px,2vw,24px) clamp(16px,2vw,24px) clamp(12px,1.5vw,18px);
+  display:flex; align-items:center; gap:14px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.ch-icon {
+  width:clamp(44px,5vw,60px); height:clamp(44px,5vw,60px);
+  border-radius:clamp(10px,1.2vw,14px);
+  display:flex; align-items:center; justify-content:center;
+  font-size:clamp(20px,2.5vw,28px); flex-shrink:0;
+}
+.ch-name-wrap { flex:1; }
+.ch-hashtag { font-family:'Space Mono',monospace; font-size:clamp(8px,.8vw,11px); font-weight:700; letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+.ch-name { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(14px,1.6vw,22px); color:#fff; }
+.ch-body { padding:clamp(14px,1.8vw,22px) clamp(16px,2vw,24px) clamp(16px,2vw,22px); }
+.ch-purpose { font-family:'Space Mono',monospace; font-size:clamp(8px,.8vw,11px); font-weight:700; letter-spacing:.12em; text-transform:uppercase; margin-bottom:clamp(10px,1.2vw,14px); }
+.ch-erika-msg {
+  font-size:clamp(12px,1.1vw,16px); color:#ccc; line-height:1.7;
+  padding:clamp(10px,1.2vw,16px) clamp(12px,1.5vw,18px);
+  background:rgba(255,255,255,.02);
+  border-radius:8px; border-left:3px solid;
+  margin-bottom:clamp(12px,1.5vw,18px);
+}
+.ch-erika-msg strong { color:#fff; }
+.ch-erika-msg em { font-style:normal; font-weight:700; }
+.ch-rules { display:flex; flex-direction:column; gap:6px; }
+.ch-rule {
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:clamp(11px,1vw,14px); color:#888; line-height:1.5;
+}
+.ch-rule-icon { flex-shrink:0; font-size:14px; margin-top:1px; }
+.ch-rule strong { color:#ccc; }
+
+/* ── RULES BANNER ── */
+.rules-banner {
+  position:relative; z-index:2;
+  margin:0 clamp(16px,5vw,80px) clamp(24px,3vw,40px);
+  background:linear-gradient(135deg,rgba(88,101,242,.1),rgba(123,47,255,.1));
+  border:1px solid rgba(88,101,242,.25); border-radius:16px;
+  padding:clamp(20px,2.5vw,36px) clamp(20px,3vw,40px);
+}
+.rules-title { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(14px,1.6vw,22px); color:#fff; margin-bottom:4px; }
+.rules-sub { font-family:'Space Mono',monospace; font-size:clamp(8px,.85vw,11px); color:#5865F2; letter-spacing:.1em; text-transform:uppercase; margin-bottom:clamp(16px,2vw,24px); }
+.rules-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr)); gap:clamp(10px,1.2vw,16px); }
+.rule-item { display:flex; align-items:flex-start; gap:12px; padding:clamp(10px,1.2vw,14px) clamp(12px,1.5vw,16px); background:rgba(255,255,255,.03); border-radius:10px; }
+.rule-num { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(18px,2.2vw,28px); line-height:1; flex-shrink:0; }
+.rule-text-wrap { flex:1; }
+.rule-heading { font-size:clamp(11px,1.1vw,15px); font-weight:700; color:#fff; margin-bottom:3px; }
+.rule-desc { font-size:clamp(10px,.95vw,13px); color:#666; line-height:1.5; }
+
+/* ── BOTTOM JOIN ── */
+.bottom-join {
+  position:relative; z-index:2;
+  display:flex; flex-direction:column; align-items:center; gap:clamp(14px,2vw,22px);
+  padding:clamp(48px,6vw,80px) clamp(16px,5vw,64px);
+  text-align:center;
+}
+.bj-title { font-family:'Orbitron',sans-serif; font-weight:900; font-size:clamp(28px,4.5vw,64px); line-height:.95; color:#fff; }
+.bj-title span { background:linear-gradient(90deg,#5865F2,#FF2D78,#FFE000); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; background-size:200% auto; animation:shimmer 3.5s linear infinite; }
+@keyframes shimmer { 0%{ background-position:0% center; } 100%{ background-position:200% center; } }
+.bj-desc { font-size:clamp(12px,1.2vw,17px); color:#666; max-width:500px; line-height:1.7; }
+.bj-btn {
+  background:linear-gradient(135deg,#5865F2,#7B2FFF);
+  color:#fff; text-decoration:none;
+  font-family:'Orbitron',sans-serif; font-weight:700;
+  font-size:clamp(13px,1.5vw,20px); letter-spacing:.06em;
+  padding:clamp(14px,1.8vw,22px) clamp(40px,5vw,72px);
+  border-radius:100px; display:inline-flex; align-items:center; gap:12px;
+  box-shadow:0 0 40px rgba(88,101,242,.4);
+  transition:transform .18s, box-shadow .18s;
+}
+.bj-btn:hover { transform:translateY(-3px); box-shadow:0 0 64px rgba(88,101,242,.6); }
+.bj-handle { font-family:'Orbitron',sans-serif; font-weight:700; font-size:clamp(13px,1.5vw,20px); color:#FF2D78; letter-spacing:.1em; }
+.bj-tags { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+.bj-tag { font-family:'Space Mono',monospace; font-size:clamp(8px,.85vw,11px); font-weight:700; padding:5px 14px; border-radius:100px; letter-spacing:.06em; }
+
+/* ── FOOTER ── */
+.foot { padding:12px clamp(16px,3vw,48px); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; background:rgba(0,0,0,.9); border-top:1px solid #111; position:relative; z-index:2; }
+.foot-txt { font-family:'Space Mono',monospace; font-size:10px; color:#333; letter-spacing:.06em; }
+.foot-links { display:flex; gap:16px; }
+.foot-link { font-family:'Space Mono',monospace; font-size:10px; color:#444; text-decoration:none; transition:color .15s; }
+.foot-link:hover { color:#5865F2; }
+</style>
+</head>
+<body>
+
+<div class="orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+
+<div class="rb"></div>
+
+<!-- NAV -->
+<nav class="topnav">
+  <a class="nav-logo" href="/index.html">METAKITTYZ</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/index.html">Home</a>
+    <a class="nav-link" href="/index.html#live">Watch Live</a>
+    <a class="nav-join" href="https://discord.gg/txB9JCDf29" target="_blank" rel="noopener">🎮 Join Discord</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">🎮 &nbsp;Community Hub &nbsp;·&nbsp; MetakittyZ Discord</div>
+  <div class="hero-title">
+    <div class="mk">METAKITTYZ</div>
+    <div class="dc">DISCORD</div>
+  </div>
+  <div class="hero-sub">Where AI Builders Come to Life</div>
+  <p class="hero-desc">
+    You found your people. This is the place where <strong>curious humans become AI builders</strong> —
+    where every question is welcome, every build gets celebrated, and nobody has to figure this out alone.
+  </p>
+  <div class="hero-stats">
+    <div class="h-stat"><div class="h-num" style="color:#5865F2;">7</div><div class="h-lbl">Channels</div></div>
+    <div class="h-stat"><div class="h-num" style="color:#FF2D78;">18</div><div class="h-lbl">Live Episodes</div></div>
+    <div class="h-stat"><div class="h-num" style="color:#FFE000;">40</div><div class="h-lbl">Prompts</div></div>
+    <div class="h-stat"><div class="h-num" style="color:#00F5D4;">0</div><div class="h-lbl">Prerequisites</div></div>
+  </div>
+  <a class="hero-join" href="https://discord.gg/txB9JCDf29" target="_blank" rel="noopener">
+    🎮 &nbsp;Join the Server Free
+  </a>
+</div>
+
+<!-- ERIKA'S NOTE -->
+<div class="erika-note">
+  <div class="erika-avatar">🐱</div>
+  <div class="erika-body">
+    <div class="erika-from">✦ &nbsp;A note from Erika</div>
+    <p>
+      <strong>Hey — I'm so glad you're here.</strong> For real. Like, I built this server
+      because I kept thinking about all the people watching the stream going
+      <em>"this looks cool but I don't know where to start"</em> — and I wanted
+      to create a space where that feeling disappears the second you walk in.
+    </p>
+    <p>
+      You are <strong>not behind</strong>. You are <strong>not too late</strong>.
+      You are <strong>not too non-technical</strong>. I promise you — if you showed up
+      here curious, that's the only qualification that matters.
+      I'm learning this live too. We are building this together.
+    </p>
+    <p>
+      This is your community now. Introduce yourself. Share your builds.
+      Ask the "dumb" questions (they're never dumb). Cheer each other on.
+      <em>That's what we do here.</em> 🚀
+    </p>
+    <div class="erika-sig">— Erika &nbsp;@metakittyz &nbsp;💜</div>
+  </div>
+</div>
+
+<!-- CHANNELS SECTION -->
+<div class="channels-section">
+  <div class="channels-header">
+    <div class="ch-line"></div>
+    <div class="ch-title">Your Channels</div>
+    <div class="ch-line"></div>
+  </div>
+
+  <div class="channels-grid">
+
+    <!-- #welcome -->
+    <div class="channel-card" style="border-color:rgba(255,45,120,.2);box-shadow:0 4px 32px rgba(255,45,120,.08);">
+      <div class="ch-header">
+        <div class="ch-icon" style="background:rgba(255,45,120,.12);border:1px solid rgba(255,45,120,.2);">👋</div>
+        <div class="ch-name-wrap">
+          <div class="ch-hashtag" style="color:#FF2D78;"># welcome</div>
+          <div class="ch-name">Welcome</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <div class="ch-purpose" style="color:#FF2D78;">Your first stop · Intro + community rules</div>
+        <div class="ch-erika-msg" style="border-color:#FF2D78;">
+          <strong>HEY. YOU MADE IT.</strong> 🎉<br><br>
+          Seriously — welcome to the MetakittyZ Build Series community. You just walked into a room full of
+          people who are <em>exactly like you</em> — creative, curious, ambitious, and ready to build
+          something real with AI. Whether you've been watching from day one or you literally just found
+          the channel 10 minutes ago — you belong here.<br><br>
+          Read the rules below (they're short, I promise — I hate long rules),
+          then head to <strong>#introductions</strong> and tell us who you are.
+          I personally read every single one. 👀
+        </div>
+        <div class="ch-rules">
+          <div class="ch-rule"><span class="ch-rule-icon">💜</span><div><strong>Be kind, always.</strong> We're all learning. Zero tolerance for putting people down.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🙋</span><div><strong>No question is dumb.</strong> Ask everything. That's literally why we're here.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🚫</span><div><strong>No spam or self-promo</strong> without asking first. Genuinely connect first.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">✨</span><div><strong>Celebrate each other.</strong> Someone shares a build? Hype them up. That energy is everything.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🛡</span><div><strong>Keep it on topic.</strong> AI, building, creating, growing — that's our lane.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #announcements -->
+    <div class="channel-card" style="border-color:rgba(255,224,0,.2);box-shadow:0 4px 32px rgba(255,224,0,.06);">
+      <div class="ch-header">
+        <div class="ch-icon" style="background:rgba(255,224,0,.1);border:1px solid rgba(255,224,0,.2);">📢</div>
+        <div class="ch-name-wrap">
+          <div class="ch-hashtag" style="color:#FFE000;"># announcements</div>
+          <div class="ch-name">Announcements</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <div class="ch-purpose" style="color:#FFE000;">New episodes · Go-live alerts · Big news</div>
+        <div class="ch-erika-msg" style="border-color:#FFE000;">
+          <strong>This is your "don't miss a thing" channel.</strong> 🔔<br><br>
+          I drop announcements here when a new episode drops, when I'm about to go live,
+          when there's something big happening, or when I have a resource that's too good not to share immediately.
+          <em>Turn on notifications for this one</em> — I don't spam, I promise.
+          When I post here, it matters.<br><br>
+          New episode? I'll tell you here. Going live in 10 minutes? Here first.
+          Something cool happened in the build? You'll know before anyone else. 🚀
+        </div>
+        <div class="ch-rules">
+          <div class="ch-rule"><span class="ch-rule-icon">🔔</span><div><strong>Turn on notifications</strong> for this channel so you never miss a live session.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">📍</span><div><strong>Read-only channel</strong> — react with emojis to show love when a new ep drops!</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">💬</span><div><strong>Discussion goes in #live-chat</strong> or #build-along during streams.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #build-along -->
+    <div class="channel-card" style="border-color:rgba(0,245,212,.2);box-shadow:0 4px 32px rgba(0,245,212,.06);">
+      <div class="ch-header">
+        <div class="ch-icon" style="background:rgba(0,245,212,.1);border:1px solid rgba(0,245,212,.2);">🤖</div>
+        <div class="ch-name-wrap">
+          <div class="ch-hashtag" style="color:#00F5D4;"># build-along</div>
+          <div class="ch-name">Build Along</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <div class="ch-purpose" style="color:#00F5D4;">Share your AI builds · Get feedback · Celebrate wins</div>
+        <div class="ch-erika-msg" style="border-color:#00F5D4;">
+          <strong>This is MY FAVOURITE CHANNEL in this entire server.</strong> 🤖✨<br><br>
+          This is where YOU show YOUR work. Built something? Post it here.
+          Got your first agent running? Screenshot and post it here. Made something weird and
+          you don't know if it worked? <em>Especially</em> post it here.<br><br>
+          I genuinely get excited every time someone posts a build. I read them all.
+          I comment on them. This channel is proof that <strong>you are building real things</strong>
+          and that is something to be unbelievably proud of.
+          Don't wait until it's perfect. Perfect doesn't ship. <em>Post the messy first draft.</em> 🚀
+        </div>
+        <div class="ch-rules">
+          <div class="ch-rule"><span class="ch-rule-icon">📸</span><div><strong>Screenshots, videos, descriptions</strong> — any format works. Just share it.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🎉</span><div><strong>Celebrate every win</strong> — no build is too small. First API call counts. First agent counts.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">💬</span><div><strong>Give feedback kindly.</strong> Build people up. Suggestions are welcome, criticism is constructive only.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🏷</span><div><strong>Tag the episode</strong> you were following if you can — helps others find it!</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #prompt-lab -->
+    <div class="channel-card" style="border-color:rgba(0,255,65,.2);box-shadow:0 4px 32px rgba(0,255,65,.06);">
+      <div class="ch-header">
+        <div class="ch-icon" style="background:rgba(0,255,65,.08);border:1px solid rgba(0,255,65,.2);">⚡</div>
+        <div class="ch-name-wrap">
+          <div class="ch-hashtag" style="color:#00FF41;"># prompt-lab</div>
+          <div class="ch-name">Prompt Lab</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <div class="ch-purpose" style="color:#00FF41;">Share prompts · Get feedback · Iterate together</div>
+        <div class="ch-erika-msg" style="border-color:#00FF41;">
+          <strong>Welcome to the lab. This is where prompts get made and broken.</strong> 🔬<br><br>
+          Share a prompt you wrote. Ask why it's not working.
+          Post the before AND after when you iterate — those transformations are gold.
+          Request a review. Offer to review someone else's.<br><br>
+          Here's my honest take: <em>writing great prompts is a skill</em> —
+          and like every skill, it gets better with practice and feedback.
+          <strong>The fastest way to level up is to share your work and let the community help.</strong>
+          Nobody here is judging. We're all figuring it out together.
+          Your "bad" prompt today is someone else's breakthrough tomorrow. Post it. 💚
+        </div>
+        <div class="ch-rules">
+          <div class="ch-rule"><span class="ch-rule-icon">📝</span><div><strong>Share the full prompt</strong> — role, context, task, format, constraints. All 5 layers.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🔄</span><div><strong>Share the output too</strong> — helps everyone understand what you're going for.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">💡</span><div><strong>Iterate publicly.</strong> Version 1 → Version 2 → Version 3. Show the process.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">✅</span><div><strong>Be specific with feedback.</strong> "The hook is weak" beats "this is bad."</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #live-chat -->
+    <div class="channel-card" style="border-color:rgba(255,107,53,.2);box-shadow:0 4px 32px rgba(255,107,53,.06);">
+      <div class="ch-header">
+        <div class="ch-icon" style="background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.2);">🔴</div>
+        <div class="ch-name-wrap">
+          <div class="ch-hashtag" style="color:#FF6B35;"># live-chat</div>
+          <div class="ch-name">Live Chat</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <div class="ch-purpose" style="color:#FF6B35;">Chat during streams · Real-time reactions · Ask Erika live</div>
+        <div class="ch-erika-msg" style="border-color:#FF6B35;">
+          <strong>This is where the MAGIC happens during a live stream.</strong> 🔴✨<br><br>
+          When I'm live — this channel goes absolutely OFF and I love it.
+          Ask questions in real time. React to what's happening.
+          Call me out when I make a mistake (it happens, a lot, lol).
+          Suggest what to build next. <em>Tell me when something breaks</em> before I notice.
+          That energy in chat is literally what makes building live so much better
+          than building alone.<br><br>
+          <strong>I read chat while I stream.</strong> So if you're here — say something.
+          I see you. 👀
+        </div>
+        <div class="ch-rules">
+          <div class="ch-rule"><span class="ch-rule-icon">🔴</span><div><strong>Most active during live streams</strong> — follow @metakittyz to know when we go live.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">❓</span><div><strong>Ask questions in real time</strong> — I check Discord chat alongside Twitch/YouTube chat.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🎉</span><div><strong>Hype is encouraged.</strong> This is a live show. Energy matters. Bring yours.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">📝</span><div><strong>Post your notes here too</strong> — sharing what you're learning as we go helps everyone.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #introductions -->
+    <div class="channel-card" style="border-color:rgba(123,47,255,.25);box-shadow:0 4px 32px rgba(123,47,255,.08);">
+      <div class="ch-header">
+        <div class="ch-icon" style="background:rgba(123,47,255,.12);border:1px solid rgba(123,47,255,.2);">🌟</div>
+        <div class="ch-name-wrap">
+          <div class="ch-hashtag" style="color:#7B2FFF;"># introductions</div>
+          <div class="ch-name">Introductions</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <div class="ch-purpose" style="color:#7B2FFF;">New members · Who you are · Why you're here</div>
+        <div class="ch-erika-msg" style="border-color:#7B2FFF;">
+          <strong>Don't be shy. I mean it.</strong> 💜<br><br>
+          Everyone in this server started somewhere. Most of us started with exactly zero
+          knowledge of AI agents and a whole lot of "I wonder if I could build that."
+          <em>That curiosity? That's your superpower.</em> It got you here.<br><br>
+          Introduce yourself. Tell us your name, where you're from, what you do,
+          and what you want to build. <strong>Dream big in here.</strong>
+          Nobody is going to laugh. We're going to say "let's go" and mean it.<br><br>
+          I read every intro. Every. Single. One. So yes — I will see yours. 👀💜
+        </div>
+        <div class="ch-rules">
+          <div class="ch-rule"><span class="ch-rule-icon">👤</span><div><strong>Your name or handle</strong> — whatever you go by works perfectly.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🌍</span><div><strong>Where you're from</strong> — we're a global crew and that's incredible.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🎯</span><div><strong>What you want to build</strong> — no idea is too big or too early.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🔥</span><div><strong>What episode or moment</strong> brought you here — curious minds want to know!</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #resources -->
+    <div class="channel-card" style="border-color:rgba(88,101,242,.25);box-shadow:0 4px 32px rgba(88,101,242,.08); grid-column:1/-1;">
+      <div class="ch-header">
+        <div class="ch-icon" style="background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.2);">📚</div>
+        <div class="ch-name-wrap">
+          <div class="ch-hashtag" style="color:#5865F2;"># resources</div>
+          <div class="ch-name">Resources</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <div class="ch-purpose" style="color:#5865F2;">Links · Tools · Quick Start · Everything you need to build</div>
+        <div class="ch-erika-msg" style="border-color:#5865F2;">
+          <strong>This is your AI builder toolkit. Bookmark this channel.</strong> 📚<br><br>
+          I drop everything here — tools I'm using in the build, links from each episode,
+          the quick-start PDF, prompt templates, free resources, and anything else
+          I find that makes building faster, smarter, or more fun.
+          <em>No paywalls. No affiliate links hidden in fine print.</em>
+          Just the actual stuff I use, shared straight with you.<br><br>
+          If you find something amazing and want to share it here — <strong>please do.</strong>
+          The best resources in this channel will come from <em>this community</em>, not just me.
+          Share what's working for you. That's how we all level up together. 🚀
+        </div>
+        <div class="ch-rules" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;">
+          <div class="ch-rule"><span class="ch-rule-icon">📄</span><div><strong>Quick Start PDF</strong> — always pinned at the top. 2 pages, 40 prompts, full glossary.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🛠</span><div><strong>Tools list</strong> — Claude, Anthropic SDK, MCP servers, PIPortal, and everything used in the build.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">📺</span><div><strong>Episode links</strong> — every YouTube and Twitch episode linked with timestamps.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">⚡</span><div><strong>Prompt templates</strong> — the 40 copy-paste prompts from the series, organized by use case.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">🔗</span><div><strong>MCP resources</strong> — how to connect AI agents to real apps. Updated as we build.</div></div>
+          <div class="ch-rule"><span class="ch-rule-icon">📖</span><div><strong>Reading list</strong> — the best AI resources I've found while taking Harvard AI Intensive 2026.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end channels-grid -->
+</div><!-- end channels-section -->
+
+<!-- COMMUNITY RULES BANNER -->
+<div class="rules-banner">
+  <div class="rules-title">The MetakittyZ Community Rules</div>
+  <div class="rules-sub">Short, simple, non-negotiable — and written by Erika</div>
+  <div class="rules-grid">
+    <div class="rule-item">
+      <div class="rule-num" style="color:#FF2D78;">01</div>
+      <div class="rule-text-wrap">
+        <div class="rule-heading">Be a human being</div>
+        <div class="rule-desc">Treat everyone with kindness and respect. We are all learning. No exceptions.</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num" style="color:#FFE000;">02</div>
+      <div class="rule-text-wrap">
+        <div class="rule-heading">Ask everything</div>
+        <div class="rule-desc">No question is too basic. If you're wondering it, someone else is too. Ask it.</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num" style="color:#00F5D4;">03</div>
+      <div class="rule-text-wrap">
+        <div class="rule-heading">Share your work</div>
+        <div class="rule-desc">Don't wait until it's perfect. Share the messy, the broken, the just-started. We celebrate all of it.</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num" style="color:#7B2FFF;">04</div>
+      <div class="rule-text-wrap">
+        <div class="rule-heading">Lift each other up</div>
+        <div class="rule-desc">When someone shares a win — big or small — we celebrate it. That energy is contagious.</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num" style="color:#5865F2;">05</div>
+      <div class="rule-text-wrap">
+        <div class="rule-heading">No gatekeeping</div>
+        <div class="rule-desc">Share what you know. If you figured something out — tell us. Knowledge multiplies when it's shared.</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num" style="color:#FF6B35;">06</div>
+      <div class="rule-text-wrap">
+        <div class="rule-heading">Have fun</div>
+        <div class="rule-desc">We are building AI agents on the internet together. This is genuinely wild and exciting. Act like it. 🚀</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM JOIN CTA -->
+<div class="bottom-join">
+  <div class="bj-title">Ready to<br><span>Build Together?</span></div>
+  <p class="bj-desc">
+    The community is live. The channels are ready. The only thing missing is you.
+    Come introduce yourself — we're waiting. 💜
+  </p>
+  <a class="bj-btn" href="https://discord.gg/txB9JCDf29" target="_blank" rel="noopener">
+    🎮 &nbsp;Join MetakittyZ Discord
+  </a>
+  <div class="bj-handle">@metakittyz</div>
+  <div class="bj-tags">
+    <span class="bj-tag" style="background:rgba(255,45,120,.12);color:#FF2D78;border:1px solid rgba(255,45,120,.25);">#MetakittyzBuild</span>
+    <span class="bj-tag" style="background:rgba(0,245,212,.08);color:#00F5D4;border:1px solid rgba(0,245,212,.2);">#AIAgents</span>
+    <span class="bj-tag" style="background:rgba(255,224,0,.08);color:#FFE000;border:1px solid rgba(255,224,0,.18);">#BuildInPublic</span>
+    <span class="bj-tag" style="background:rgba(88,101,242,.12);color:#5865F2;border:1px solid rgba(88,101,242,.25);">#LearningInPublic</span>
+  </div>
+</div>
+
+<div class="rb"></div>
+
+<footer class="foot">
+  <span class="foot-txt">METAKITTYZ &nbsp;·&nbsp; @metakittyz &nbsp;·&nbsp; Product Imagination LLC &nbsp;·&nbsp; Harvard AI Intensive 2026</span>
+  <div class="foot-links">
+    <a class="foot-link" href="/index.html">Home</a>
+    <a class="foot-link" href="https://youtube.com/@metakittyz" target="_blank" rel="noopener">YouTube</a>
+    <a class="foot-link" href="https://twitch.tv/metakittyz" target="_blank" rel="noopener">Twitch</a>
+    <a class="foot-link" href="https://discord.gg/txB9JCDf29" target="_blank" rel="noopener">Discord</a>
+  </div>
+</footer>
+
+</body>
+</html>

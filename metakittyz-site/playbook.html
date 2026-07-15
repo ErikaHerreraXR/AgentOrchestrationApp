@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Agentic Build Playbook — METAKITTYZ</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+/* ── RESET & BASE ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --pk:#FF2D78;--tl:#00F5D4;--yl:#FFE000;--pu:#7B2FFF;
+  --gr:#00FF41;--or:#FF6B35;--bg:#0A0015;
+  --card:#12002a;--border:rgba(255,255,255,.07);
+  --muted:#555;--text:#e0e0e0;
+}
+html{background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+
+/* ── RAINBOW BAR ── */
+@keyframes rbshift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.rb{height:3px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);background-size:200%;animation:rbshift 4s linear infinite;}
+
+/* ── SITE NAV ── */
+.site-nav{position:sticky;top:0;z-index:100;background:rgba(10,0,21,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 clamp(12px,3vw,32px);height:52px;gap:12px;}
+.sn-brand{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.sn-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--pk),var(--pu));display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:10px;color:#fff;}
+.sn-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;color:#fff;letter-spacing:.1em;}
+.sn-spacer{flex:1;}
+.sn-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;align-items:center;}
+.sn-tabs::-webkit-scrollbar{display:none;}
+.sn-tab{font-family:'Space Mono',monospace;font-size:10px;padding:5px 13px;border-radius:100px;border:1px solid rgba(255,255,255,.08);color:var(--muted);white-space:nowrap;transition:all .15s;letter-spacing:.05em;}
+.sn-tab:hover{color:#ccc;border-color:rgba(255,255,255,.25);}
+.sn-tab.on{background:rgba(123,47,255,.15);border-color:rgba(123,47,255,.5);color:var(--pu);}
+.sn-tab-lab{border-color:rgba(255,224,0,.3);color:var(--yl);}
+.sn-tab-lab:hover{background:rgba(255,224,0,.08);border-color:var(--yl);color:var(--yl);}
+
+/* ── HERO ── */
+.pb-hero{padding:clamp(40px,6vw,80px) clamp(16px,5vw,60px) clamp(30px,4vw,50px);max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;}
+.pb-hero-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--pu);text-transform:uppercase;margin-bottom:12px;}
+.pb-hero-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(28px,5vw,58px);line-height:1;color:#fff;margin-bottom:16px;}
+.pb-hero-title .t1{color:var(--pk);}
+.pb-hero-title .t2{color:var(--tl);}
+.pb-hero-title .t3{color:var(--yl);}
+.pb-hero-sub{font-size:clamp(13px,1.4vw,16px);color:#888;line-height:1.75;max-width:560px;margin-bottom:28px;}
+.pb-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+.pb-chip{font-family:'Space Mono',monospace;font-size:9px;padding:4px 12px;border-radius:100px;border:1px solid rgba(255,255,255,.12);color:#666;letter-spacing:.08em;}
+.pb-chip.pk{border-color:var(--pk);color:var(--pk);}
+.pb-chip.tl{border-color:var(--tl);color:var(--tl);}
+.pb-chip.yl{border-color:var(--yl);color:var(--yl);}
+.pb-chip.pu{border-color:var(--pu);color:var(--pu);}
+.pb-hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-pdf{font-family:'Space Mono',monospace;font-size:10px;padding:10px 20px;border-radius:8px;background:var(--pu);color:#fff;border:none;cursor:pointer;letter-spacing:.08em;transition:all .2s;text-decoration:none;display:inline-block;}
+.btn-pdf:hover{background:#6020e0;transform:translateY(-1px);}
+/* ── EMAIL CAPTURE MODAL ── */
+.pdf-overlay{position:fixed;inset:0;background:rgba(10,0,21,.85);backdrop-filter:blur(8px);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.pdf-overlay.open{opacity:1;pointer-events:all;}
+.pdf-modal{background:#0f0025;border:1px solid rgba(123,47,255,.4);border-radius:16px;padding:36px 32px;max-width:440px;width:90%;position:relative;box-shadow:0 0 60px rgba(123,47,255,.2);}
+.pdf-modal-rb{height:3px;background:linear-gradient(90deg,var(--pk),var(--or),var(--yl),var(--tl),var(--pu));border-radius:3px;margin-bottom:24px;}
+.pdf-modal-icon{font-size:36px;margin-bottom:12px;}
+.pdf-modal-eyebrow{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--pu);text-transform:uppercase;margin-bottom:8px;}
+.pdf-modal-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;color:#fff;margin-bottom:8px;line-height:1.2;}
+.pdf-modal-sub{font-size:12px;color:#666;line-height:1.7;margin-bottom:22px;}
+.pdf-modal-input{width:100%;background:#06001a;border:1px solid rgba(123,47,255,.3);border-radius:8px;padding:12px 14px;font-family:'Space Mono',monospace;font-size:11px;color:#fff;outline:none;transition:border-color .2s;margin-bottom:10px;}
+.pdf-modal-input:focus{border-color:var(--pu);}
+.pdf-modal-input::placeholder{color:#333;}
+.pdf-modal-submit{width:100%;padding:12px;border-radius:8px;background:var(--pu);color:#fff;border:none;cursor:pointer;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;transition:all .2s;}
+.pdf-modal-submit:hover{background:#6020e0;}
+.pdf-modal-note{font-family:'Space Mono',monospace;font-size:8px;color:#333;text-align:center;margin-top:10px;letter-spacing:.06em;}
+.pdf-modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:#333;cursor:pointer;font-size:16px;transition:color .15s;}
+.pdf-modal-close:hover{color:#fff;}
+.pdf-modal-success{display:none;text-align:center;padding:8px 0;}
+.pdf-success-icon{font-size:40px;margin-bottom:12px;}
+.pdf-success-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;color:var(--gr);margin-bottom:8px;}
+.pdf-success-sub{font-size:12px;color:#666;line-height:1.75;margin-bottom:20px;}
+.pdf-success-btn{display:inline-block;padding:11px 24px;border-radius:8px;background:var(--gr);color:#000;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;cursor:pointer;border:none;transition:all .2s;}
+.pdf-success-btn:hover{background:#00cc35;}
+.btn-outline{font-family:'Space Mono',monospace;font-size:10px;padding:10px 20px;border-radius:8px;background:transparent;color:var(--tl);border:1px solid var(--tl);cursor:pointer;letter-spacing:.08em;transition:all .2s;text-decoration:none;display:inline-block;}
+.btn-outline:hover{background:rgba(0,245,212,.08);}
+.pb-hero-badge{flex-shrink:0;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 28px;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.pb-hero-badge-icon{font-size:40px;}
+.pb-hero-badge-v{font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;color:var(--pu);letter-spacing:.1em;}
+.pb-hero-badge-pages{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;}
+@media(max-width:680px){.pb-hero{grid-template-columns:1fr;}.pb-hero-badge{display:none;}}
+
+/* ── PIPELINE FLOW ── */
+.pipeline-hero{max-width:1100px;margin:0 auto clamp(20px,3vw,40px);padding:0 clamp(16px,5vw,60px);}
+.pipeline-hero-inner{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;display:flex;align-items:center;flex-wrap:wrap;gap:8px;}
+.pip-lbl{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.12em;margin-right:8px;flex-shrink:0;}
+.pip-node{padding:6px 14px;border-radius:6px;border:1.5px solid;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;white-space:nowrap;cursor:pointer;transition:all .2s;}
+.pip-node.matrix{border-color:var(--pk);color:var(--pk);}
+.pip-node.nova{border-color:var(--yl);color:#c8a000;}
+.pip-node.spark{border-color:var(--or);color:var(--or);}
+.pip-node.pulse{border-color:var(--tl);color:var(--tl);}
+.pip-node.aria{border-color:var(--pu);color:var(--pu);}
+.pip-node.guardian{border-color:var(--gr);color:var(--gr);}
+.pip-node:hover{background:rgba(255,255,255,.05);}
+.pip-arrow{color:#333;font-size:12px;flex-shrink:0;}
+
+/* ── SECTION NAV ── */
+.pb-snav-wrap{position:sticky;top:52px;z-index:90;background:rgba(10,0,21,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+.pb-snav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding:0 clamp(16px,5vw,60px);max-width:1100px;margin:0 auto;}
+.pb-snav::-webkit-scrollbar{display:none;}
+.pb-stab{font-family:'Space Mono',monospace;font-size:9px;padding:10px 14px;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.06em;background:none;border-top:none;border-left:none;border-right:none;}
+.pb-stab:hover{color:#ccc;}
+.pb-stab.on{color:var(--pu);border-bottom-color:var(--pu);}
+
+/* ── SECTION CONTENT ── */
+.pb-body{max-width:1100px;margin:0 auto;padding:0 clamp(16px,5vw,60px) 80px;}
+.pb-sec{display:none;padding-top:40px;}
+.pb-sec.active{display:block;}
+.sec-eyebrow{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--pu);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.sec-eyebrow::before{content:'';width:24px;height:1px;background:var(--pu);}
+.sec-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(20px,3vw,32px);color:#fff;margin-bottom:8px;line-height:1.15;}
+.sec-sub{font-size:14px;color:#777;line-height:1.8;max-width:700px;margin-bottom:32px;}
+.rb-divider{height:3px;background:linear-gradient(90deg,var(--pk),var(--or),var(--yl),var(--tl),var(--pu));border-radius:2px;margin:32px 0;}
+
+/* ── CARDS ── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin:20px 0;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.card-icon{font-size:24px;margin-bottom:10px;}
+.card-title{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#fff;letter-spacing:.06em;margin-bottom:6px;}
+.card-desc{font-size:12.5px;color:#777;line-height:1.7;}
+.card.pk{border-color:rgba(255,45,120,.3);}
+.card.tl{border-color:rgba(0,245,212,.25);}
+.card.yl{border-color:rgba(255,224,0,.25);}
+.card.pu{border-color:rgba(123,47,255,.3);}
+.card.gr{border-color:rgba(0,255,65,.2);}
+.card.or{border-color:rgba(255,107,53,.3);}
+
+/* ── TABLES ── */
+.ptable{width:100%;border-collapse:collapse;font-size:12px;margin:16px 0;}
+.ptable th{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,.03);border:1px solid var(--border);padding:8px 12px;text-align:left;}
+.ptable td{padding:9px 12px;border:1px solid rgba(255,255,255,.05);color:#bbb;vertical-align:top;line-height:1.6;}
+.ptable tr:hover td{background:rgba(255,255,255,.02);}
+.tag{font-family:'Space Mono',monospace;font-size:8px;padding:2px 8px;border-radius:100px;border:1px solid;display:inline-block;}
+.tag-pk{border-color:var(--pk);color:var(--pk);}
+.tag-tl{border-color:var(--tl);color:var(--tl);}
+.tag-yl{border-color:var(--yl);color:#c8a000;}
+.tag-gr{border-color:var(--gr);color:var(--gr);}
+.tag-pu{border-color:var(--pu);color:var(--pu);}
+.tag-or{border-color:var(--or);color:var(--or);}
+.tag-x{border-color:#333;color:#666;}
+
+/* ── STEPS ── */
+.steps{display:flex;flex-direction:column;gap:12px;margin:20px 0;}
+.step{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:start;}
+.step-num{width:32px;height:32px;border-radius:8px;background:rgba(123,47,255,.15);border:1px solid rgba(123,47,255,.3);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;color:var(--pu);flex-shrink:0;}
+.step-title{font-weight:700;font-size:13px;color:#fff;margin-bottom:4px;}
+.step-desc{font-size:12px;color:#777;line-height:1.7;margin-bottom:8px;}
+.step-cmd{background:#08001a;color:var(--tl);border:1px solid rgba(0,245,212,.15);border-radius:6px;padding:10px 14px;font-family:'Space Mono',monospace;font-size:11px;margin:6px 0;line-height:1.7;white-space:pre-wrap;overflow-x:auto;}
+.step-success{font-size:11px;color:var(--gr);padding:6px 10px;background:rgba(0,255,65,.05);border-radius:5px;border-left:2px solid var(--gr);margin-top:6px;}
+.step-warn{font-size:11px;color:var(--yl);padding:6px 10px;background:rgba(255,224,0,.05);border-radius:5px;border-left:2px solid var(--yl);margin-top:5px;}
+.time-badge{font-family:'Space Mono',monospace;font-size:8px;padding:3px 10px;border-radius:100px;background:rgba(0,245,212,.08);border:1px solid rgba(0,245,212,.2);color:var(--tl);white-space:nowrap;flex-shrink:0;}
+
+/* ── AGENT CARDS ── */
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin:20px 0;}
+.agent-card{background:var(--card);border-radius:12px;padding:20px;border:1.5px solid;}
+.agent-card.matrix{border-color:rgba(255,45,120,.35);}
+.agent-card.nova{border-color:rgba(255,224,0,.3);}
+.agent-card.spark{border-color:rgba(255,107,53,.35);}
+.agent-card.pulse{border-color:rgba(0,245,212,.3);}
+.agent-card.aria{border-color:rgba(123,47,255,.4);}
+.agent-card.guardian{border-color:rgba(0,255,65,.3);}
+.agent-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.agent-icon{font-size:24px;}
+.agent-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;}
+.agent-role{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.08em;margin-top:2px;}
+.agent-model-tag{font-family:'Space Mono',monospace;font-size:8px;padding:2px 8px;border-radius:100px;margin-top:4px;display:inline-block;}
+.model-claude{background:rgba(255,45,120,.1);border:1px solid rgba(255,45,120,.3);color:var(--pk);}
+.model-gpt{background:rgba(0,245,212,.08);border:1px solid rgba(0,245,212,.2);color:var(--tl);}
+.agent-constraints{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.agent-constraints li{font-size:11px;color:#888;display:flex;gap:8px;line-height:1.55;align-items:flex-start;}
+.agent-constraints li::before{content:"→";flex-shrink:0;margin-top:1px;}
+.li-pk::before{color:var(--pk) !important;}
+.li-yl::before{color:var(--yl) !important;}
+.li-or::before{color:var(--or) !important;}
+.li-tl::before{color:var(--tl) !important;}
+.li-pu::before{color:var(--pu) !important;}
+.li-gr::before{color:var(--gr) !important;}
+
+/* ── PROMPT BLOCKS ── */
+.prompt-block{background:#06001a;border:1px solid rgba(123,47,255,.3);border-left:3px solid var(--pu);border-radius:8px;padding:16px 18px;margin:12px 0;}
+.prompt-label{font-family:'Space Mono',monospace;font-size:8px;color:var(--pu);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;}
+.prompt-text{font-family:'Space Mono',monospace;font-size:11px;color:#ccc;line-height:1.8;white-space:pre-wrap;}
+.copy-btn{font-family:'Space Mono',monospace;font-size:8px;padding:4px 12px;border-radius:6px;background:rgba(123,47,255,.15);border:1px solid rgba(123,47,255,.3);color:var(--pu);cursor:pointer;float:right;transition:all .15s;margin-bottom:8px;}
+.copy-btn:hover{background:rgba(123,47,255,.25);}
+
+/* ── INFO / WARN BOXES ── */
+.info-box{background:rgba(0,245,212,.05);border:1px solid rgba(0,245,212,.2);border-left:4px solid var(--tl);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:12px;color:#aaa;line-height:1.8;}
+.warn-box{background:rgba(255,224,0,.04);border:1px solid rgba(255,224,0,.2);border-left:4px solid var(--yl);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:12px;color:#aaa;line-height:1.8;}
+.danger-box{background:rgba(255,45,120,.05);border:1px solid rgba(255,45,120,.25);border-left:4px solid var(--pk);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:12px;color:#aaa;line-height:1.8;}
+
+/* ── VAR TOKENS ── */
+.var{display:inline-block;background:rgba(255,224,0,.08);border:1px solid rgba(255,224,0,.3);color:var(--yl);font-family:'Space Mono',monospace;font-size:10px;padding:0 5px;border-radius:3px;}
+
+/* ── REPORT CARD ── */
+.report-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin:16px 0;}
+.rc-header{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--pu);margin-bottom:16px;}
+.rc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.rc-metric{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.rc-metric-val{font-family:'Orbitron',sans-serif;font-weight:900;font-size:20px;color:#fff;margin-bottom:2px;}
+.rc-metric-lbl{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.08em;}
+.rc-score{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;}
+.score-pass{color:var(--gr);}
+.score-warn{color:var(--yl);}
+.score-fail{color:var(--pk);}
+
+/* ── GATE DIAL ── */
+.gate-band{display:flex;border-radius:8px;overflow:hidden;height:36px;margin:16px 0;}
+.gate-band-seg{display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;flex:1;}
+.gs-block{background:rgba(255,45,120,.2);color:var(--pk);border:1px solid rgba(255,45,120,.3);}
+.gs-warn{background:rgba(255,224,0,.12);color:var(--yl);border:1px solid rgba(255,224,0,.3);}
+.gs-pass{background:rgba(0,255,65,.1);color:var(--gr);border:1px solid rgba(0,255,65,.25);}
+
+/* ── FAILURE CARD ── */
+.failure-card{background:rgba(255,45,120,.04);border:1.5px solid rgba(255,45,120,.3);border-radius:10px;padding:16px 18px;margin:10px 0;}
+.failure-card h4{font-family:'Space Mono',monospace;font-size:10px;color:var(--pk);letter-spacing:.08em;margin-bottom:6px;}
+.failure-card p{font-size:12px;color:#888;line-height:1.7;}
+.failure-card.warn{background:rgba(255,224,0,.04);border-color:rgba(255,224,0,.3);}
+.failure-card.warn h4{color:var(--yl);}
+
+/* ── GLOSSARY ── */
+.gloss{display:flex;flex-direction:column;gap:1px;}
+.gloss-item{display:grid;grid-template-columns:180px 1fr;gap:16px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.gloss-term{font-family:'Space Mono',monospace;font-size:10px;color:var(--pu);font-weight:700;}
+.gloss-def{font-size:12px;color:#888;line-height:1.65;}
+
+/* ── TMPL BANNER ── */
+.tmpl-banner{background:rgba(255,224,0,.04);border:1px solid rgba(255,224,0,.2);border-left:4px solid var(--yl);border-radius:8px;padding:16px 20px;margin-bottom:24px;}
+.tmpl-banner h3{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--yl);margin-bottom:8px;}
+.tmpl-banner p{font-size:12px;color:#888;line-height:1.75;}
+
+/* ── SECTION HEADER ── */
+h3.sub{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#ccc;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+code{background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.2);border-radius:3px;font-family:'Space Mono',monospace;font-size:10px;padding:0 5px;color:var(--pu);}
+
+/* ── FOOTER ── */
+.site-footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);font-family:'Space Mono',monospace;font-size:9px;color:#333;letter-spacing:.1em;margin-top:60px;}
+.site-footer span{color:var(--pk);}
+/* ── MOBILE FIXES ── */
+@media(max-width:768px){
+  body{padding-top:52px !important;}
+  .site-nav{position:fixed !important;left:0 !important;right:0 !important;top:0 !important;width:100% !important;}
+  .pb-snav-wrap{top:52px !important;}
+  .sn-name{display:none;}
+  .sn-tabs{gap:3px;}
+  .sn-tab{font-size:9px;padding:5px 9px;}
+  .pb-stab{font-size:8px;padding:10px 10px;}
+  .pb-hero{grid-template-columns:1fr;}
+  .pb-hero-badge{display:none;}
+}
+/* ── MOBILE BOTTOM NAV ── */
+.mob-nav{position:fixed;bottom:0;left:0;right:0;z-index:3000;background:rgba(10,0,21,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,45,120,.2);display:none;align-items:stretch;height:60px;padding-bottom:env(safe-area-inset-bottom,0px);}
+.mob-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);}
+@media(max-width:768px){.mob-nav{display:flex;}body{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px)) !important;}}
+.mnav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;text-decoration:none;color:#3a3a3a;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:8px 2px;min-height:44px;}
+.mnav-item.on{color:#7B2FFF;}
+.mnav-ic{font-size:19px;line-height:1.1;}
+.mnav-lb{font-family:'Space Mono',monospace;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<!-- SITE NAV -->
+<nav class="site-nav">
+  <a class="sn-brand" href="/">
+    <div class="sn-logo">MK</div>
+    <span class="sn-name">METAKITTYZ</span>
+  </a>
+  <div class="sn-spacer"></div>
+  <div class="sn-tabs">
+    <a class="sn-tab" href="/">🏠 Home</a>
+    <a class="sn-tab" href="/guide.html">📖 Guide</a>
+    <a class="sn-tab" href="/community.html">🌐 Community</a>
+    <a class="sn-tab sn-tab-lab" href="/kitty-lab.html">🧪 Kitty Lab</a>
+    <a class="sn-tab" href="/about.html">⚡ About</a>
+    <a class="sn-tab on" href="/playbook.html">📋 Playbook</a>
+    <a class="sn-tab" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
+  </div>
+    <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
+</nav>
+<div class="rb"></div>
+
+<!-- HERO -->
+<div class="pb-hero">
+  <div>
+    <div class="pb-hero-eyebrow">World-Class AI Agentic Build System · Template Framework v1.0</div>
+    <div class="pb-hero-title">AI AGENTIC<br><span class="t1">WEB APP</span> <span class="t2">BUILD</span> <span class="t3">PLAYBOOK</span></div>
+    <p class="pb-hero-sub">A complete end-to-end framework for building an AI-powered creator brand using a 6-agent pipeline. Any creator. Any brand. Any goal. Uses <strong style="color:#fff;">Metakittyz</strong> as the working example — swap <span class="var">[VARIABLES]</span> for your brand.</p>
+    <div class="pb-chips">
+      <span class="pb-chip pk">Example: METAKITTYZ</span>
+      <span class="pb-chip tl">Goal: 1M Followers in 90 Days</span>
+      <span class="pb-chip yl">6-Agent AI Pipeline</span>
+      <span class="pb-chip pu">Beginner-Friendly</span>
+      <span class="pb-chip">No Prior Coding Required</span>
+    </div>
+    <div class="pb-hero-btns">
+      <button class="btn-pdf" onclick="openPdfModal()">⬇ Download PDF</button>
+      <a class="btn-outline" href="#" onclick="showSec('s07');return false;">▶ Start Building</a>
+    </div>
+  </div>
+  <div class="pb-hero-badge">
+    <div class="pb-hero-badge-icon">📋</div>
+    <div class="pb-hero-badge-v">VERSION 1.0</div>
+    <div class="pb-hero-badge-pages">12 SECTIONS</div>
+    <div class="pb-hero-badge-pages">32 PAGES · 2026</div>
+  </div>
+</div>
+
+<!-- PIPELINE FLOW -->
+<div class="pipeline-hero">
+  <div class="pipeline-hero-inner">
+    <span class="pip-lbl">PIPELINE →</span>
+    <span class="pip-node matrix" onclick="showSec('s05')">🎯 MATRIX</span>
+    <span class="pip-arrow">→</span>
+    <span class="pip-node nova" onclick="showSec('s05')">📊 NOVA</span>
+    <span class="pip-arrow">→</span>
+    <span class="pip-node spark" onclick="showSec('s05')">⚡ SPARK</span>
+    <span class="pip-arrow">→</span>
+    <span class="pip-node pulse" onclick="showSec('s05')">🎬 PULSE</span>
+    <span class="pip-arrow">→</span>
+    <span class="pip-node aria" onclick="showSec('s05')">📡 ARIA</span>
+    <span class="pip-arrow">→</span>
+    <span class="pip-node guardian" onclick="showSec('s05')">🛡 GUARDIAN</span>
+    <span class="pip-arrow">→</span>
+    <span style="font-family:'Space Mono',monospace;font-size:9px;color:#555;">OUTPUT</span>
+  </div>
+</div>
+
+<!-- SECTION NAV -->
+<div class="pb-snav-wrap">
+  <div class="pb-snav">
+    <button class="pb-stab on" onclick="showSec('s00')">§00 Template</button>
+    <button class="pb-stab" onclick="showSec('s01')">§01 Mission</button>
+    <button class="pb-stab" onclick="showSec('s02')">§02 Hardware</button>
+    <button class="pb-stab" onclick="showSec('s03')">§03 Cloud</button>
+    <button class="pb-stab" onclick="showSec('s04')">§04 Tech Stack</button>
+    <button class="pb-stab" onclick="showSec('s05')">§05 6-Agents</button>
+    <button class="pb-stab" onclick="showSec('s06')">§06 Prompts</button>
+    <button class="pb-stab" onclick="showSec('s07')">§07 Build Steps</button>
+    <button class="pb-stab" onclick="showSec('s08')">§08 Security</button>
+    <button class="pb-stab" onclick="showSec('s09')">§09 QA Gate</button>
+    <button class="pb-stab" onclick="showSec('s10')">§10 Report Card</button>
+    <button class="pb-stab" onclick="showSec('s11')">§11 Failures</button>
+    <button class="pb-stab" onclick="showSec('s12')">§12 Glossary</button>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="pb-body">
+
+<!-- ════════════════════════════════════════
+     §00 · HOW TO USE THIS AS A TEMPLATE
+     ════════════════════════════════════════ -->
+<div class="pb-sec active" id="s00">
+  <div class="sec-eyebrow">§00</div>
+  <div class="sec-title">How to Use This as a Template</div>
+  <p class="sec-sub">This playbook is built as a general framework. Metakittyz is the working example. Every time you see a <span class="var">[VARIABLE]</span> token, replace it with your own brand's equivalent.</p>
+
+  <div class="tmpl-banner">
+    <h3>⚡ Template Instructions</h3>
+    <p>Do a global find-and-replace on all 10 variables below. Once swapped, this playbook becomes yours — it describes your brand, your goal, your pipeline. All system prompts, configs, and cost tables auto-update to your context.</p>
+  </div>
+
+  <table class="ptable">
+    <thead><tr><th>Variable Token</th><th>Metakittyz Value</th><th>Your Value</th><th>Used In</th></tr></thead>
+    <tbody>
+      <tr><td><span class="var">[BRAND_NAME]</span></td><td>METAKITTYZ</td><td>________________</td><td>All sections</td></tr>
+      <tr><td><span class="var">[BRAND_DOMAIN]</span></td><td>metakittyz.com</td><td>________________</td><td>§03, §08</td></tr>
+      <tr><td><span class="var">[BRAND_EMAIL]</span></td><td>erika@productimagination.com</td><td>________________</td><td>§03, §08</td></tr>
+      <tr><td><span class="var">[GITHUB_USER]</span></td><td>metakittyz</td><td>________________</td><td>§03, §07</td></tr>
+      <tr><td><span class="var">[GOAL]</span></td><td>1M Followers in 90 Days</td><td>________________</td><td>§01, §06</td></tr>
+      <tr><td><span class="var">[PLATFORM]</span></td><td>Twitch / YouTube</td><td>________________</td><td>§01, §05</td></tr>
+      <tr><td><span class="var">[NICHE]</span></td><td>AI Creator & Educator</td><td>________________</td><td>§01, §06</td></tr>
+      <tr><td><span class="var">[AUDIENCE]</span></td><td>Aspiring AI Builders</td><td>________________</td><td>§06</td></tr>
+      <tr><td><span class="var">[PRIMARY_COLOR]</span></td><td>#FF2D78</td><td>________________</td><td>§03 CSS</td></tr>
+      <tr><td><span class="var">[CONTENT_TYPE]</span></td><td>Live Stream + Short-Form Video</td><td>________________</td><td>§05, §06</td></tr>
+    </tbody>
+  </table>
+
+  <div class="rb-divider"></div>
+  <h3 class="sub">How to Read This Playbook</h3>
+  <div class="card-grid">
+    <div class="card pu"><div class="card-icon">🔢</div><div class="card-title">Sequential Order</div><div class="card-desc">Sections 00–07 are build order. Complete each before moving to the next. Don't skip hardware (§02) before cloud (§03).</div></div>
+    <div class="card tl"><div class="card-icon">⏱</div><div class="card-title">Time Estimates</div><div class="card-desc">Every step has a <span style="color:var(--tl)">⏱ badge</span>. Estimates assume a first-time builder following instructions carefully.</div></div>
+    <div class="card pk"><div class="card-icon">🚨</div><div class="card-title">Failure Flags</div><div class="card-desc">If a step fails 3× in a row, it gets a 3-Strike flag. See §11 for the escalation protocol and how to recover.</div></div>
+    <div class="card yl"><div class="card-icon">📋</div><div class="card-title">Report Cards</div><div class="card-desc">After each phase, fill in the Session Report Card (§10). This is your live progress tracker and accountability system.</div></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §01 · MISSION CONTROL
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s01">
+  <div class="sec-eyebrow">§01</div>
+  <div class="sec-title">Mission Control — Define the Goal</div>
+  <p class="sec-sub">Before writing a single line of code, lock in your mission. Everything the AI pipeline does is optimized around this goal. Vague goals produce vague output.</p>
+
+  <div class="info-box">📌 <strong style="color:var(--tl)">Metakittyz Mission:</strong> Grow @metakittyz to 1 million followers across Twitch + YouTube in 90 days by building an AI agentic content system live on stream — proving that AI teams can execute a real creator growth campaign from zero.</div>
+
+  <h3 class="sub">90-Day Milestone Map</h3>
+  <table class="ptable">
+    <thead><tr><th>Phase</th><th>Days</th><th>Followers Target</th><th>Key Deliverable</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tag-pk">PHASE 0</span></td><td>1–7</td><td>0 → 1K</td><td>Site live · Pipeline running · First stream</td><td><span class="tag tag-x">SETUP</span></td></tr>
+      <tr><td><span class="tag tag-yl">PHASE 1</span></td><td>8–30</td><td>1K → 50K</td><td>Daily content · Clip factory · Community active</td><td><span class="tag tag-x">PENDING</span></td></tr>
+      <tr><td><span class="tag tag-or">PHASE 2</span></td><td>31–60</td><td>50K → 300K</td><td>Viral series · Collabs · Course launch</td><td><span class="tag tag-x">PENDING</span></td></tr>
+      <tr><td><span class="tag tag-tl">PHASE 3</span></td><td>61–90</td><td>300K → 1M</td><td>Press push · Algorithm lock-in · Milestone stream</td><td><span class="tag tag-x">PENDING</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Success KPIs</h3>
+  <div class="card-grid">
+    <div class="card pk"><div class="card-title">Follower Velocity</div><div class="card-desc">Minimum: +11,111 followers/day average to hit 1M in 90 days. Track daily — if 3 consecutive days miss target, escalate MATRIX.</div></div>
+    <div class="card tl"><div class="card-title">SPARK Viral Score</div><div class="card-desc">Every piece of content must score ≥ 28/40 on SPARK's viral scale before PULSE produces it. Below 28 = rework.</div></div>
+    <div class="card yl"><div class="card-title">GUARDIAN QA Score</div><div class="card-desc">All output must score ≥ 70/100. 40–69 = warn + revise. Below 40 = block + restart that agent's task.</div></div>
+    <div class="card pu"><div class="card-title">Stream Consistency</div><div class="card-desc">Minimum 5 streams/week. Each stream must produce ≥ 3 clips for short-form. ARIA schedules, PULSE produces clips.</div></div>
+  </div>
+
+  <div class="warn-box">⚡ <strong style="color:var(--yl)">Replace for your brand:</strong> Swap <span class="var">[GOAL]</span>, <span class="var">[PLATFORM]</span>, and the follower numbers with your own targets. The KPI structure works for any growth goal — followers, revenue, signups, downloads.</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §02 · HARDWARE & ENVIRONMENT
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s02">
+  <div class="sec-eyebrow">§02</div>
+  <div class="sec-title">Hardware & Environment Setup</div>
+  <p class="sec-sub">What you need before you write one line of code. Minimum specs for streaming + AI pipeline. Better specs = faster iteration.</p>
+
+  <h3 class="sub">Recommended Hardware</h3>
+  <table class="ptable">
+    <thead><tr><th>Component</th><th>Minimum</th><th>Recommended (Metakittyz)</th><th>Why It Matters</th></tr></thead>
+    <tbody>
+      <tr><td>CPU</td><td>Intel i7 / AMD Ryzen 7</td><td>Intel i9 / Ryzen 9</td><td>Encoding stream + running AI calls simultaneously</td></tr>
+      <tr><td>RAM</td><td>16 GB</td><td>32–64 GB</td><td>Multiple browser tabs + OBS + API calls = memory hungry</td></tr>
+      <tr><td>GPU</td><td>NVIDIA GTX 1080</td><td>NVIDIA RTX 3080+</td><td>NVENC stream encoding; AI image tasks</td></tr>
+      <tr><td>Storage</td><td>512 GB SSD</td><td>1 TB NVMe SSD</td><td>Stream recordings + clips fill up fast</td></tr>
+      <tr><td>Upload Speed</td><td>10 Mbps</td><td>25+ Mbps</td><td>1080p60 stream requires ~8 Mbps stable minimum</td></tr>
+      <tr><td>Microphone</td><td>USB Condenser</td><td>XLR (Shure SM7B + Focusrite)</td><td>Audio quality = audience retention</td></tr>
+      <tr><td>Camera</td><td>1080p Webcam</td><td>Sony ZV-E10 / Sony A7C</td><td>Face-cam boosts trust + conversion</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Software to Install</h3>
+  <div class="card-grid">
+    <div class="card"><div class="card-icon">🎙</div><div class="card-title">OBS Studio</div><div class="card-desc">Free. Stream encoder. Download from obsproject.com. Used for simultaneous Twitch + YouTube via Restream.io.</div></div>
+    <div class="card"><div class="card-icon">🔄</div><div class="card-title">Restream.io</div><div class="card-desc">Multistream to Twitch + YouTube simultaneously. Free tier works. Pro ($49/mo) adds analytics and overlays.</div></div>
+    <div class="card"><div class="card-icon">💻</div><div class="card-title">VS Code</div><div class="card-desc">Free code editor. Install extensions: ESLint, Prettier, GitLens. This is your main dev environment.</div></div>
+    <div class="card"><div class="card-icon">🐙</div><div class="card-title">Git + GitHub Desktop</div><div class="card-desc">Version control. GitHub Desktop is the beginner-friendly GUI. All code lives here before going to Netlify.</div></div>
+    <div class="card"><div class="card-icon">🟢</div><div class="card-title">Node.js (LTS)</div><div class="card-desc">Required to run Netlify Functions locally. Download nodejs.org — choose the LTS (Long-Term Support) version.</div></div>
+    <div class="card"><div class="card-icon">📦</div><div class="card-title">Netlify CLI</div><div class="card-desc">Run <code>npm install -g netlify-cli</code> after Node.js is installed. Required for local function testing.</div></div>
+  </div>
+
+  <h3 class="sub">Accounts to Create</h3>
+  <table class="ptable">
+    <thead><tr><th>Service</th><th>Plan</th><th>Cost</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>GitHub</td><td>Free</td><td>$0</td><td>Code hosting + version control</td></tr>
+      <tr><td>Netlify</td><td>Starter → Pro</td><td>$0 → $19/mo</td><td>Hosting + serverless functions</td></tr>
+      <tr><td>Anthropic (Claude)</td><td>Pay-as-you-go</td><td>~$20–80/mo</td><td>claude-opus-4-8 API — primary AI engine</td></tr>
+      <tr><td>OpenAI</td><td>Pay-as-you-go</td><td>~$10–30/mo</td><td>GPT-4o — fallback AI engine</td></tr>
+      <tr><td>Twitch</td><td>Free → Affiliate</td><td>$0</td><td>Live streaming platform</td></tr>
+      <tr><td>YouTube</td><td>Free</td><td>$0</td><td>VOD archive + Shorts distribution</td></tr>
+      <tr><td>Restream.io</td><td>Free → Pro</td><td>$0 → $49/mo</td><td>Multistream router</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════════
+     §03 · CLOUD ARCHITECTURE
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s03">
+  <div class="sec-eyebrow">§03</div>
+  <div class="sec-title">Cloud Architecture — GitHub to Netlify</div>
+  <p class="sec-sub">The entire site runs on a JAMstack pipeline: static HTML/CSS/JS on GitHub, deployed instantly to Netlify via CI/CD, with serverless functions handling all AI API calls.</p>
+
+  <div class="info-box">📌 <strong style="color:var(--tl)">Metakittyz Stack:</strong> GitHub repo <code>metakittyz/agentorchestrationapp</code> → Netlify auto-deploy → <code>metakittyz.com</code> — push to main = live in under 60 seconds.</div>
+
+  <h3 class="sub">Repository Structure</h3>
+  <div class="step-cmd">your-repo/
+├── index.html          ← Home page
+├── guide.html          ← Guide page
+├── community.html      ← Community hub
+├── kitty-lab.html      ← Live build lab
+├── about.html          ← About / products
+├── playbook.html       ← This playbook page
+├── netlify.toml        ← Netlify config
+├── _redirects          ← URL redirect rules
+└── netlify/
+    └── functions/
+        ├── anthropic.js   ← Claude API handler
+        ├── openai.js      ← GPT-4o fallback
+        └── guardian.js    ← QA scoring agent</div>
+
+  <h3 class="sub">Netlify Functions — API Architecture</h3>
+  <div class="card-grid">
+    <div class="card pk">
+      <div class="card-title">POST /api/anthropic</div>
+      <div class="card-desc">Primary AI endpoint. Calls claude-opus-4-8. Includes 3-retry logic with 2s → 4s → 8s exponential backoff. Returns JSON with agent response + token usage.</div>
+    </div>
+    <div class="card tl">
+      <div class="card-title">POST /api/openai</div>
+      <div class="card-desc">Fallback AI endpoint. Activates automatically if Anthropic endpoint fails after 3 retries. Uses gpt-4o. Same request/response shape as primary.</div>
+    </div>
+    <div class="card gr">
+      <div class="card-title">POST /api/guardian</div>
+      <div class="card-desc">QA scoring endpoint. Accepts any agent output and returns a Guardian score 0–100. Score ≥70 = APPROVED. 40–69 = WARN. &lt;40 = BLOCK.</div>
+    </div>
+  </div>
+
+  <h3 class="sub">netlify.toml Configuration</h3>
+  <div class="step-cmd">[build]
+  functions = "netlify/functions"
+  publish = "."
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "https://[BRAND_DOMAIN]"
+    Access-Control-Allow-Methods = "POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
+
+[context.production.environment]
+  NODE_VERSION = "18"</div>
+
+  <h3 class="sub">Environment Variables (Set in Netlify Dashboard)</h3>
+  <table class="ptable">
+    <thead><tr><th>Variable Name</th><th>Value</th><th>Required By</th></tr></thead>
+    <tbody>
+      <tr><td><code>ANTHROPIC_API_KEY</code></td><td>sk-ant-api03-...</td><td>anthropic.js</td></tr>
+      <tr><td><code>OPENAI_API_KEY</code></td><td>sk-proj-...</td><td>openai.js</td></tr>
+      <tr><td><code>GUARDIAN_SECRET</code></td><td>any-random-string</td><td>guardian.js</td></tr>
+    </tbody>
+  </table>
+  <div class="danger-box">🔑 <strong style="color:var(--pk)">NEVER</strong> put API keys directly in HTML files or commit them to GitHub. Always use Netlify environment variables. Keys in code = leaked keys.</div>
+
+  <h3 class="sub">API Cascade Logic (Client-Side)</h3>
+  <div class="step-cmd">async function callAI(prompt) {
+  // Step 1: Try Anthropic (3 retries)
+  for (let i = 0; i < 3; i++) {
+    try {
+      const res = await fetch('/api/anthropic', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ prompt })
+      });
+      if (res.ok) return await res.json();
+    } catch(e) {
+      await sleep([2000, 4000, 8000][i]); // exponential backoff
+    }
+  }
+  // Step 2: Fallback to OpenAI
+  const res = await fetch('/api/openai', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ prompt })
+  });
+  return await res.json();
+}</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §04 · TECH STACK & COST
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s04">
+  <div class="sec-eyebrow">§04</div>
+  <div class="sec-title">Tech Stack & Monthly Cost Breakdown</div>
+  <p class="sec-sub">Every tool in the stack, what it does, and what it costs. Built to scale from $0/month to $200/month as you grow.</p>
+
+  <h3 class="sub">Complete Tech Stack</h3>
+  <table class="ptable">
+    <thead><tr><th>Layer</th><th>Tool</th><th>What It Does</th><th>Why This One</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tag-pu">Frontend</span></td><td>HTML / CSS / JS</td><td>All site pages — no framework</td><td>Zero build step, instant Netlify deploy, no dependency rot</td></tr>
+      <tr><td><span class="tag tag-pu">Backend</span></td><td>Netlify Functions</td><td>Serverless Node.js API endpoints</td><td>No server to manage; scales to zero when idle</td></tr>
+      <tr><td><span class="tag tag-pk">AI Primary</span></td><td>claude-opus-4-8</td><td>5 of 6 agents run here</td><td>Best reasoning + instruction-following for complex agent tasks</td></tr>
+      <tr><td><span class="tag tag-tl">AI Fallback</span></td><td>gpt-4o (OpenAI)</td><td>Fallback when Claude is unavailable</td><td>Different infrastructure = true redundancy</td></tr>
+      <tr><td><span class="tag tag-tl">Hosting</span></td><td>Netlify</td><td>CDN + deploy + functions</td><td>Free tier is generous; $0 to start</td></tr>
+      <tr><td><span class="tag tag-gr">Version Control</span></td><td>GitHub</td><td>Code storage + CI/CD trigger</td><td>Industry standard; Netlify integrates natively</td></tr>
+      <tr><td><span class="tag tag-or">Streaming</span></td><td>OBS + Restream</td><td>Encode + multicast to Twitch/YouTube</td><td>Free + best-in-class encoder</td></tr>
+      <tr><td><span class="tag tag-x">Analytics</span></td><td>Netlify Analytics</td><td>Page views + API usage</td><td>Privacy-first; no cookie banner needed</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">Monthly Cost Breakdown</h3>
+  <table class="ptable">
+    <thead><tr><th>Service</th><th>Tier</th><th>Phase 0 (Days 1–7)</th><th>Phase 1–2 (Days 8–60)</th><th>Phase 3 (Days 61–90)</th></tr></thead>
+    <tbody>
+      <tr><td>Netlify</td><td>Starter → Pro</td><td>$0</td><td>$0–19/mo</td><td>$19/mo</td></tr>
+      <tr><td>Anthropic API</td><td>Pay-as-you-go</td><td>~$5</td><td>~$30–60/mo</td><td>~$80/mo</td></tr>
+      <tr><td>OpenAI API</td><td>Pay-as-you-go</td><td>~$2</td><td>~$10–20/mo</td><td>~$30/mo</td></tr>
+      <tr><td>Restream.io</td><td>Pro</td><td>$0 (free)</td><td>$49/mo</td><td>$49/mo</td></tr>
+      <tr><td>Domain</td><td>Annual</td><td>~$12/yr (~$1/mo)</td><td>$1/mo</td><td>$1/mo</td></tr>
+      <tr><td><strong>TOTAL</strong></td><td></td><td><strong>~$8</strong></td><td><strong>~$90–149/mo</strong></td><td><strong>~$179/mo</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">💡 <strong style="color:var(--tl)">Cost Tip:</strong> Keep a $50 monthly cap on Anthropic during Phase 0. Set a billing alert in the Anthropic dashboard. Once you're generating revenue (stream donations, course sales), scale up the API budget to increase agent output volume.</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §05 · THE 6-AGENT SYSTEM
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s05">
+  <div class="sec-eyebrow">§05</div>
+  <div class="sec-title">The 6-Agent AI System</div>
+  <p class="sec-sub">Six specialized AI agents. Each has one job, strict constraints, and cannot skip the pipeline order. MATRIX starts every request. GUARDIAN ends every request. No exceptions.</p>
+
+  <div class="info-box">🔒 <strong style="color:var(--tl)">Pipeline Rule:</strong> MATRIX → NOVA → SPARK → PULSE → ARIA → GUARDIAN. Always in this order. No agent can be skipped. No agent can pass output directly to a non-adjacent agent in the chain.</div>
+
+  <div class="agents-grid">
+    <!-- MATRIX -->
+    <div class="agent-card matrix">
+      <div class="agent-top">
+        <div class="agent-icon">🎯</div>
+        <div>
+          <div class="agent-name" style="color:var(--pk)">MATRIX</div>
+          <div class="agent-role">POSITION 1 OF 6 · STRATEGY DIRECTOR</div>
+          <span class="agent-model-tag model-claude">claude-opus-4-8</span>
+        </div>
+      </div>
+      <ul class="agent-constraints">
+        <li class="li-pk">FIRST agent in every pipeline run — no exceptions</li>
+        <li class="li-pk">Analyzes goal, audience, platform algorithm signals</li>
+        <li class="li-pk">Outputs a strategy brief: topic, angle, hook hypothesis</li>
+        <li class="li-pk">Cannot produce final content — strategy only</li>
+        <li class="li-pk">If MATRIX output is rejected by GUARDIAN: full restart</li>
+        <li class="li-pk">Max output: 400 words. No fluff, no padding.</li>
+      </ul>
+    </div>
+
+    <!-- NOVA -->
+    <div class="agent-card nova">
+      <div class="agent-top">
+        <div class="agent-icon">📊</div>
+        <div>
+          <div class="agent-name" style="color:var(--yl)">NOVA</div>
+          <div class="agent-role">POSITION 2 OF 6 · RESEARCH ANALYST</div>
+          <span class="agent-model-tag model-claude">claude-opus-4-8</span>
+        </div>
+      </div>
+      <ul class="agent-constraints">
+        <li class="li-yl">Receives MATRIX strategy brief as input only</li>
+        <li class="li-yl">Researches trends, data points, competitor analysis</li>
+        <li class="li-yl">Outputs a research dossier: 5–8 verified facts/stats</li>
+        <li class="li-yl">Cannot make creative decisions — data only</li>
+        <li class="li-yl">All claims must include source category (e.g., "industry study")</li>
+        <li class="li-yl">Max output: 600 words. Bullet-point format preferred.</li>
+      </ul>
+    </div>
+
+    <!-- SPARK -->
+    <div class="agent-card spark">
+      <div class="agent-top">
+        <div class="agent-icon">⚡</div>
+        <div>
+          <div class="agent-name" style="color:var(--or)">SPARK</div>
+          <div class="agent-role">POSITION 3 OF 6 · VIRAL CONTENT STRATEGIST</div>
+          <span class="agent-model-tag model-claude">claude-opus-4-8</span>
+        </div>
+      </div>
+      <ul class="agent-constraints">
+        <li class="li-or">Receives NOVA research dossier as input</li>
+        <li class="li-or">Generates hook, title, script outline, thumbnail concept</li>
+        <li class="li-or">Scores own output on 40-point viral scale (minimum pass: 28/40)</li>
+        <li class="li-or">If score &lt; 28: regenerates up to 2 more times, then flags</li>
+        <li class="li-or">Viral scale: Hook(10) + Retention(10) + Shareability(10) + CTA(10)</li>
+        <li class="li-or">Cannot produce final media — creative brief only</li>
+      </ul>
+    </div>
+
+    <!-- PULSE -->
+    <div class="agent-card pulse">
+      <div class="agent-top">
+        <div class="agent-icon">🎬</div>
+        <div>
+          <div class="agent-name" style="color:var(--tl)">PULSE</div>
+          <div class="agent-role">POSITION 4 OF 6 · CONTENT PRODUCER</div>
+          <span class="agent-model-tag model-claude">claude-opus-4-8</span>
+        </div>
+      </div>
+      <ul class="agent-constraints">
+        <li class="li-tl">Receives SPARK creative brief as input</li>
+        <li class="li-tl">Writes full script: intro hook, body, outro CTA</li>
+        <li class="li-tl">Produces short-form clip titles and descriptions</li>
+        <li class="li-tl">Generates stream segment timestamps</li>
+        <li class="li-tl">Cannot publish — production only, hands off to ARIA</li>
+        <li class="li-tl">Max script length: 1500 words (≈ 8–10 min video)</li>
+      </ul>
+    </div>
+
+    <!-- ARIA -->
+    <div class="agent-card aria">
+      <div class="agent-top">
+        <div class="agent-icon">📡</div>
+        <div>
+          <div class="agent-name" style="color:var(--pu)">ARIA</div>
+          <div class="agent-role">POSITION 5 OF 6 · DISTRIBUTION MANAGER</div>
+          <span class="agent-model-tag model-claude">claude-opus-4-8</span>
+        </div>
+      </div>
+      <ul class="agent-constraints">
+        <li class="li-pu">Receives PULSE script + metadata as input</li>
+        <li class="li-pu">Generates platform-specific posts: Twitter/X, TikTok, Instagram, Discord</li>
+        <li class="li-pu">Creates stream schedule and cross-promotion calendar</li>
+        <li class="li-pu">Adapts tone per platform — cannot use identical copy across platforms</li>
+        <li class="li-pu">Cannot publish directly — outputs copy for human review</li>
+        <li class="li-pu">Flags any content that may violate platform TOS before GUARDIAN</li>
+      </ul>
+    </div>
+
+    <!-- GUARDIAN -->
+    <div class="agent-card guardian">
+      <div class="agent-top">
+        <div class="agent-icon">🛡</div>
+        <div>
+          <div class="agent-name" style="color:var(--gr)">GUARDIAN</div>
+          <div class="agent-role">POSITION 6 OF 6 · QA GATEKEEPER</div>
+          <span class="agent-model-tag model-gpt">gpt-4o (independent)</span>
+        </div>
+      </div>
+      <ul class="agent-constraints">
+        <li class="li-gr">LAST agent in every pipeline run — cannot be skipped</li>
+        <li class="li-gr">Uses gpt-4o (intentionally different model — prevents bias)</li>
+        <li class="li-gr">Scores all ARIA output 0–100 across 5 dimensions</li>
+        <li class="li-gr">Score ≥ 70: APPROVED ✅ · 40–69: WARN ⚠️ · &lt;40: BLOCK ❌</li>
+        <li class="li-gr">BLOCK = content cannot be published, returns to MATRIX</li>
+        <li class="li-gr">Logs every score + reason in the session report card</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rb-divider"></div>
+  <div class="warn-box">⚡ <strong style="color:var(--yl)">Critical Rule:</strong> GUARDIAN uses a <strong>different AI model</strong> (gpt-4o) than the rest of the pipeline (claude-opus-4-8). This is intentional — an independent model reviewing output catches blind spots that the primary model might share. Never change GUARDIAN to the same model as the other agents.</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §06 · SYSTEM PROMPT LIBRARY
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s06">
+  <div class="sec-eyebrow">§06</div>
+  <div class="sec-title">Full System Prompt Library</div>
+  <p class="sec-sub">Copy-paste ready system prompts for all 6 agents. Replace <span class="var">[VARIABLES]</span> with your brand values. These are the exact prompts that drive the pipeline.</p>
+
+  <div class="tmpl-banner">
+    <h3>📋 How to Use These Prompts</h3>
+    <p>Each prompt below is a system prompt — paste it into the Netlify Function for that agent as the <code>system</code> parameter. Replace all <span class="var">[VARIABLE]</span> tokens before deploying.</p>
+  </div>
+
+  <!-- MATRIX Prompt -->
+  <h3 class="sub">MATRIX — Strategy Director</h3>
+  <div class="prompt-block">
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    <div class="prompt-label">AGENT: MATRIX · POSITION 1 · SYSTEM PROMPT</div>
+    <div class="prompt-text">You are MATRIX, the Strategy Director for [BRAND_NAME]'s AI content pipeline.
+
+MISSION: [GOAL] via [PLATFORM] in 90 days.
+NICHE: [NICHE]
+AUDIENCE: [AUDIENCE]
+BRAND: [BRAND_NAME] at [BRAND_DOMAIN]
+
+YOUR ROLE:
+- Analyze the user's content request or today's strategy need
+- Identify the single strongest topic angle for maximum algorithmic reach
+- Define the target audience segment for this specific piece of content
+- State the emotional hook hypothesis (why will this make someone stop scrolling?)
+- Output a strategy brief that NOVA will use for research
+
+OUTPUT FORMAT (strict):
+TOPIC: [single topic, max 15 words]
+ANGLE: [unique perspective or controversy, max 20 words]
+TARGET SEGMENT: [specific sub-audience, max 15 words]
+HOOK HYPOTHESIS: [emotional trigger + reason, max 30 words]
+RESEARCH NEEDED: [3-5 specific questions for NOVA to investigate]
+PLATFORM PRIORITY: [which platform to optimize for first and why]
+
+CONSTRAINTS:
+- Max 400 words total output
+- No fluff, no preamble, no "Great question!"
+- Strategy only — you do not write scripts or content
+- If the request is unclear, ask ONE clarifying question before proceeding
+- You are POSITION 1. Pass output to NOVA only.</div>
+  </div>
+
+  <!-- NOVA Prompt -->
+  <h3 class="sub">NOVA — Research Analyst</h3>
+  <div class="prompt-block">
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    <div class="prompt-label">AGENT: NOVA · POSITION 2 · SYSTEM PROMPT</div>
+    <div class="prompt-text">You are NOVA, the Research Analyst for [BRAND_NAME]'s AI content pipeline.
+
+YOUR INPUT: The strategy brief from MATRIX.
+
+YOUR ROLE:
+- Research the topic, hook, and research questions from MATRIX's brief
+- Find 5–8 verified, specific data points, statistics, or examples
+- Identify what top-performing content in this niche has in common
+- Find one contrarian angle or counter-intuitive fact that adds value
+- Output a research dossier for SPARK
+
+OUTPUT FORMAT (strict):
+KEY FACTS: [numbered list of 5–8 specific stats/facts with source category]
+TOP PERFORMER PATTERNS: [3 patterns seen in viral content on this topic]
+CONTRARIAN ANGLE: [one surprising or counter-intuitive fact]
+QUOTABLE MOMENTS: [2–3 short, punchy statements usable as hooks]
+CONTEXT NOTES: [any platform-specific nuances SPARK should know]
+
+CONSTRAINTS:
+- Max 600 words total output
+- Facts must be plausible and category-sourced (e.g., "per industry research")
+- Do not fabricate specific statistics or attribute false quotes to real people
+- Data only — no creative decisions, no scripts
+- You are POSITION 2. Pass output to SPARK only.</div>
+  </div>
+
+  <!-- SPARK Prompt -->
+  <h3 class="sub">SPARK — Viral Content Strategist</h3>
+  <div class="prompt-block">
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    <div class="prompt-label">AGENT: SPARK · POSITION 3 · SYSTEM PROMPT</div>
+    <div class="prompt-text">You are SPARK, the Viral Content Strategist for [BRAND_NAME].
+
+YOUR INPUT: Research dossier from NOVA.
+
+VIRAL SCORING SCALE (40 points):
+- Hook Strength (0–10): Will this stop a thumb in 0–3 seconds?
+- Retention Architecture (0–10): Does structure keep viewers watching to the end?
+- Shareability Factor (0–10): Will people send this to a friend?
+- CTA Effectiveness (0–10): Does the call-to-action feel natural, not forced?
+
+YOUR ROLE:
+- Generate 3 title options (short-form + long-form variants)
+- Write the hook (first 15 seconds of script)
+- Create a content structure outline (intro / 3 main points / outro)
+- Describe the thumbnail concept
+- Score your own output on the 40-point viral scale
+- If score < 28: regenerate and try again (max 2 additional attempts)
+
+OUTPUT FORMAT:
+TITLES: [3 options — punchy, platform-specific]
+HOOK (15 sec): [exact words for opening]
+STRUCTURE: [intro, point 1, point 2, point 3, outro — one line each]
+THUMBNAIL: [visual concept description]
+VIRAL SCORE: [X/40] — Hook:[x/10] Retention:[x/10] Share:[x/10] CTA:[x/10]
+SCORE REASONING: [2-sentence justification]
+
+CONSTRAINTS:
+- If score < 28, flag output and attempt regeneration
+- After 2 failed attempts, pass to PULSE with NEEDS REVISION flag
+- No final scripts — creative brief only
+- You are POSITION 3. Pass to PULSE only.</div>
+  </div>
+
+  <!-- PULSE Prompt -->
+  <h3 class="sub">PULSE — Content Producer</h3>
+  <div class="prompt-block">
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    <div class="prompt-label">AGENT: PULSE · POSITION 4 · SYSTEM PROMPT</div>
+    <div class="prompt-text">You are PULSE, the Content Producer for [BRAND_NAME].
+
+CREATOR VOICE: [NICHE] creator, [AUDIENCE]-focused, direct and energetic.
+PLATFORM: [PLATFORM]
+CONTENT TYPE: [CONTENT_TYPE]
+
+YOUR INPUT: Creative brief from SPARK.
+
+YOUR ROLE:
+- Write the complete content script using SPARK's hook and structure
+- Produce 3 short-form clip titles and descriptions (60-second clip versions)
+- Generate stream segment timestamps (if live content)
+- Write the video description with keywords and links
+- Write the pinned comment template
+
+OUTPUT FORMAT:
+FULL SCRIPT: [complete script, max 1500 words]
+CLIP 1: [title + 60-second segment + short description]
+CLIP 2: [title + 60-second segment + short description]
+CLIP 3: [title + 60-second segment + short description]
+STREAM TIMESTAMPS: [00:00 intro, 05:00 main segment, etc.]
+VIDEO DESCRIPTION: [YouTube/Twitch description with keywords]
+PINNED COMMENT: [engagement prompt for comments]
+
+CONSTRAINTS:
+- Max 1500 words for full script
+- Write for spoken delivery — contractions, casual phrasing
+- Each clip must work standalone without full video context
+- Never write content that demeans, harasses, or misrepresents
+- You are POSITION 4. Pass all output to ARIA only.</div>
+  </div>
+
+  <!-- ARIA Prompt -->
+  <h3 class="sub">ARIA — Distribution Manager</h3>
+  <div class="prompt-block">
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    <div class="prompt-label">AGENT: ARIA · POSITION 5 · SYSTEM PROMPT</div>
+    <div class="prompt-text">You are ARIA, the Distribution Manager for [BRAND_NAME].
+
+BRAND HANDLE: @[BRAND_NAME] across all platforms
+EMAIL: [BRAND_EMAIL]
+SITE: [BRAND_DOMAIN]
+
+YOUR INPUT: Full script and metadata from PULSE.
+
+YOUR ROLE:
+- Write platform-specific posts for Twitter/X, TikTok, Instagram, Discord
+- Create the 7-day content calendar for cross-promotion
+- Write email newsletter teaser
+- Flag any content that may violate platform Terms of Service
+- Output all copy for human review before GUARDIAN QA
+
+PLATFORM TONE GUIDE:
+- Twitter/X: punchy, 280 chars, hook + 1 stat + link
+- TikTok: casual, energetic, first-person, heavy emoji
+- Instagram: visual-first, lifestyle tone, story sequence
+- Discord: community-first, behind-the-scenes vibe
+
+OUTPUT FORMAT:
+TWITTER/X POST: [280 chars max, with hashtags]
+TIKTOK CAPTION: [150 chars, casual, emoji-heavy]
+INSTAGRAM CAPTION: [visual description + caption + CTA]
+DISCORD MESSAGE: [community update, friendly tone]
+7-DAY CALENDAR: [Mon–Sun: content action per day]
+EMAIL TEASER: [3-sentence teaser for newsletter]
+TOS FLAGS: [any potential violations — "NONE" if clean]
+
+CONSTRAINTS:
+- Never copy-paste identical text across platforms
+- Discord copy must feel personal, not promotional
+- TOS FLAGS section is mandatory — never skip it
+- You are POSITION 5. Pass all output to GUARDIAN only.</div>
+  </div>
+
+  <!-- GUARDIAN Prompt -->
+  <h3 class="sub">GUARDIAN — QA Gatekeeper</h3>
+  <div class="prompt-block">
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    <div class="prompt-label">AGENT: GUARDIAN · POSITION 6 · SYSTEM PROMPT (gpt-4o)</div>
+    <div class="prompt-text">You are GUARDIAN, the Quality Assurance Gatekeeper for [BRAND_NAME]'s AI content pipeline.
+
+YOUR ROLE: Independently review all output from ARIA and score it 0–100.
+You use GPT-4o specifically because you must provide an independent perspective from the Claude-based agents that produced this content. You are the last checkpoint before any content can be published or distributed.
+
+SCORING DIMENSIONS (100 points total):
+1. Brand Alignment (0–20): Does content match [BRAND_NAME]'s voice, values, and positioning?
+2. Accuracy & Integrity (0–20): Are all claims plausible? No fabricated stats or false attribution?
+3. Platform Compliance (0–20): Does content follow the TOS of all target platforms?
+4. Audience Fit (0–20): Will [AUDIENCE] find this valuable, engaging, and relevant?
+5. Pipeline Completeness (0–20): Were all required pipeline sections completed correctly?
+
+VERDICT THRESHOLDS:
+- Score ≥ 70: APPROVED ✅ — content may proceed to publication
+- Score 40–69: WARN ⚠️ — content needs revision; specify exactly what to fix
+- Score < 40: BLOCK ❌ — return to MATRIX; full pipeline restart required
+
+OUTPUT FORMAT:
+SCORE: [X/100]
+VERDICT: [APPROVED / WARN / BLOCK]
+DIMENSION SCORES: [list all 5 with score and one-line reason]
+ISSUES: [numbered list of specific problems, if any]
+RECOMMENDATION: [exact next action — publish / revise X / restart pipeline]
+LOGGED: [timestamp placeholder for report card]
+
+CONSTRAINTS:
+- You cannot be skipped, overridden, or bypassed
+- A BLOCK verdict means zero content is published until pipeline restarts from MATRIX
+- Log every score in the session report card
+- You are POSITION 6. You are the final checkpoint.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §07 · STEP-BY-STEP BUILD
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s07">
+  <div class="sec-eyebrow">§07</div>
+  <div class="sec-title">Step-by-Step Build Instructions</div>
+  <p class="sec-sub">From zero to live in order. Each step has a time estimate and a success checkpoint. Do not skip ahead.</p>
+
+  <div class="warn-box">⏱ <strong style="color:var(--yl)">Total estimated time for Phase 0:</strong> 8–12 hours over 2–3 days. Spread this across sessions — don't try to do it all in one sitting.</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div>
+        <div class="step-title">Create GitHub Account & Repository</div>
+        <div class="step-desc">Go to github.com → Sign up (or log in) → Click "New repository" → Name it <code>your-brand-name</code> → Set to Public → Initialize with README → Click "Create repository".</div>
+        <div class="step-success">✓ You can see your repo at github.com/[GITHUB_USER]/[repo-name]</div>
+      </div>
+      <div class="time-badge">⏱ 15 min</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">02</div>
+      <div>
+        <div class="step-title">Install GitHub Desktop & Clone Repo</div>
+        <div class="step-desc">Download GitHub Desktop from desktop.github.com → Sign in → Click "Clone a repository" → Find your new repo → Choose a local folder (e.g., Documents/my-brand/) → Click Clone.</div>
+        <div class="step-success">✓ You see your repo files in the chosen local folder</div>
+      </div>
+      <div class="time-badge">⏱ 20 min</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">03</div>
+      <div>
+        <div class="step-title">Create Your Site Files</div>
+        <div class="step-desc">In VS Code, open your cloned folder. Create: <code>index.html</code>, <code>guide.html</code>, <code>about.html</code>, <code>netlify.toml</code>. Paste the starter HTML from §03 into each file. Save all files.</div>
+        <div class="step-cmd">your-repo/
+├── index.html
+├── about.html
+├── guide.html
+└── netlify.toml</div>
+        <div class="step-success">✓ Files visible in GitHub Desktop's "Changes" tab</div>
+      </div>
+      <div class="time-badge">⏱ 45 min</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">04</div>
+      <div>
+        <div class="step-title">Commit & Push to GitHub</div>
+        <div class="step-desc">In GitHub Desktop: Write a commit message ("initial site files") → Click "Commit to main" → Click "Push origin". This sends your code to GitHub.</div>
+        <div class="step-success">✓ Files visible at github.com/[GITHUB_USER]/[repo-name]</div>
+      </div>
+      <div class="time-badge">⏱ 5 min</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">05</div>
+      <div>
+        <div class="step-title">Connect Netlify to GitHub</div>
+        <div class="step-desc">Go to netlify.com → Sign up (use "Continue with GitHub") → Click "Add new site" → "Import an existing project" → "Deploy with GitHub" → Select your repo → Leave all settings as default → Click "Deploy site".</div>
+        <div class="step-success">✓ Netlify gives you a live URL like random-name-123.netlify.app</div>
+      </div>
+      <div class="time-badge">⏱ 20 min</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">06</div>
+      <div>
+        <div class="step-title">Set Up Environment Variables</div>
+        <div class="step-desc">In Netlify dashboard → Site settings → Environment variables → Add variable → Name: <code>ANTHROPIC_API_KEY</code>, Value: your key from console.anthropic.com → Repeat for <code>OPENAI_API_KEY</code>. Save changes.</div>
+        <div class="danger-box">🔑 Get your Anthropic API key from console.anthropic.com/settings/keys. Never paste keys directly into code files.</div>
+        <div class="step-success">✓ Both keys show as masked values in Netlify dashboard</div>
+      </div>
+      <div class="time-badge">⏱ 20 min</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">07</div>
+      <div>
+        <div class="step-title">Create Netlify Functions Folder</div>
+        <div class="step-desc">In VS Code, create folder: <code>netlify/functions/</code>. Create 3 files inside: <code>anthropic.js</code>, <code>openai.js</code>, <code>guardian.js</code>. Paste the function code from §03 into each. Commit and push.</div>
+        <div class="step-success">✓ After push, Netlify auto-deploys and functions appear under Site → Functions</div>
+      </div>
+      <div class="time-badge">⏱ 60 min</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">08</div>
+      <div>
+        <div class="step-title">Test the AI Pipeline</div>
+        <div class="step-desc">Open your live Netlify site → Open browser Dev Tools (F12) → Console tab → Paste and run the test command below. You should get a response from MATRIX within 10 seconds.</div>
+        <div class="step-cmd">fetch('/api/anthropic', {
+  method: 'POST',
+  headers: {'Content-Type':'application/json'},
+  body: JSON.stringify({prompt:'Run MATRIX: suggest a content angle for today.'})
+}).then(r=>r.json()).then(console.log)</div>
+        <div class="step-success">✓ Console shows JSON with a MATRIX strategy response</div>
+        <div class="step-warn">⚠ If you get a 401 or 500 error, check your ANTHROPIC_API_KEY in Netlify environment variables</div>
+      </div>
+      <div class="time-badge">⏱ 30 min</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">09</div>
+      <div>
+        <div class="step-title">Connect Custom Domain</div>
+        <div class="step-desc">In Netlify → Domain management → Add custom domain → Enter [BRAND_DOMAIN] → Follow DNS instructions (point your domain's nameservers to Netlify's) → Wait 24–48 hours for DNS propagation. HTTPS is automatic.</div>
+        <div class="step-success">✓ Your site is live at https://[BRAND_DOMAIN] with padlock (HTTPS)</div>
+      </div>
+      <div class="time-badge">⏱ 30 min + 24h DNS</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">10</div>
+      <div>
+        <div class="step-title">Set Up OBS + Restream</div>
+        <div class="step-desc">Create accounts at restream.io → Connect Twitch and YouTube channels → In OBS: Settings → Stream → Service: Custom RTMP → Enter Restream RTMP URL and stream key → Add scenes: Starting Soon, Main, BRB, Ending. Test stream at 720p60 first.</div>
+        <div class="step-success">✓ OBS shows "Live" and stream appears on both Twitch and YouTube simultaneously</div>
+      </div>
+      <div class="time-badge">⏱ 90 min</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">11</div>
+      <div>
+        <div class="step-title">First Stream — Go Live</div>
+        <div class="step-desc">Your first stream goal: show the audience the pipeline running in real-time. Walk through MATRIX → GUARDIAN live. Use the content the pipeline produces as your stream content. Minimum stream: 1 hour.</div>
+        <div class="step-success">✓ Stream ends with at least 3 clips identified for short-form content</div>
+      </div>
+      <div class="time-badge">⏱ 1–2 hours</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §08 · SAFETY & SECURITY
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s08">
+  <div class="sec-eyebrow">§08</div>
+  <div class="sec-title">Safety & Security Setup</div>
+  <p class="sec-sub">Data security is non-negotiable. Every API call, every piece of user data, every environment variable — here's how to keep it locked.</p>
+
+  <h3 class="sub">Security Checklist</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num" style="background:rgba(255,45,120,.15);border-color:rgba(255,45,120,.3);color:var(--pk);">S1</div>
+      <div>
+        <div class="step-title">API Keys — Never in Code</div>
+        <div class="step-desc">All API keys live in Netlify environment variables only. Never in HTML, JS files, or committed to GitHub. If you accidentally commit a key, rotate it immediately at console.anthropic.com.</div>
+        <div class="step-success">✓ Run: git grep "sk-ant" — output should be empty</div>
+      </div>
+      <div class="time-badge">CRITICAL</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num" style="background:rgba(255,45,120,.15);border-color:rgba(255,45,120,.3);color:var(--pk);">S2</div>
+      <div>
+        <div class="step-title">CORS — Lock API to Your Domain</div>
+        <div class="step-desc">Your Netlify functions should only accept requests from your domain. The <code>Access-Control-Allow-Origin</code> header in netlify.toml (§03) handles this. Anyone else hitting your API endpoint will be rejected.</div>
+        <div class="step-success">✓ Test: from a different domain, your /api/anthropic returns a CORS error</div>
+      </div>
+      <div class="time-badge">HIGH</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num" style="background:rgba(255,224,0,.12);border-color:rgba(255,224,0,.3);color:var(--yl);">S3</div>
+      <div>
+        <div class="step-title">Rate Limiting</div>
+        <div class="step-desc">Add a basic rate limit to your Netlify functions: max 10 requests per IP per minute. This prevents abuse and runaway API costs. Use a simple in-memory Map for tracking (works fine for low traffic).</div>
+        <div class="step-warn">⚠ Without rate limiting, a single malicious actor could drain your entire AI API budget in minutes</div>
+      </div>
+      <div class="time-badge">HIGH</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num" style="background:rgba(255,224,0,.12);border-color:rgba(255,224,0,.3);color:var(--yl);">S4</div>
+      <div>
+        <div class="step-title">Billing Alerts</div>
+        <div class="step-desc">Set spending limits in Anthropic dashboard (console.anthropic.com → Billing) and OpenAI dashboard. Start at $50/month cap. Set email alert at 80% of cap. Increase only when revenue supports it.</div>
+        <div class="step-success">✓ Email alert fires a test notification when you manually trigger it</div>
+      </div>
+      <div class="time-badge">MEDIUM</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num" style="background:rgba(0,255,65,.08);border-color:rgba(0,255,65,.2);color:var(--gr);">S5</div>
+      <div>
+        <div class="step-title">Email Collection — Compliance</div>
+        <div class="step-desc">If you collect emails (like the Learn More form on about.html), you need: a privacy policy page, explicit consent checkbox, and an unsubscribe mechanism. Use a service like Mailchimp or ConvertKit — don't store emails in your own database without proper security.</div>
+        <div class="step-success">✓ Privacy policy linked in site footer, consent checkbox on forms</div>
+      </div>
+      <div class="time-badge">REQUIRED</div>
+    </div>
+
+    <div class="step">
+      <div class="step-num" style="background:rgba(0,255,65,.08);border-color:rgba(0,255,65,.2);color:var(--gr);">S6</div>
+      <div>
+        <div class="step-title">Content Moderation Guardrails</div>
+        <div class="step-desc">GUARDIAN (§09) is your primary content filter. Additionally, instruct all agents to refuse: hateful content, misinformation, PII (personal info), competitor defamation, and TOS-violating platform content. ARIA flags TOS issues before GUARDIAN reviews.</div>
+        <div class="step-success">✓ Test: send MATRIX a harmful topic. It should decline and explain why.</div>
+      </div>
+      <div class="time-badge">REQUIRED</div>
+    </div>
+  </div>
+
+  <div class="rb-divider"></div>
+  <div class="info-box">🔒 <strong style="color:var(--tl)">HTTPS is Automatic on Netlify.</strong> All Netlify sites get free Let's Encrypt SSL certificates. No configuration needed. Your site is always served over HTTPS.</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §09 · GUARDIAN QA GATE
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s09">
+  <div class="sec-eyebrow">§09</div>
+  <div class="sec-title">GUARDIAN QA Gate</div>
+  <p class="sec-sub">GUARDIAN is not optional. It is the final checkpoint for every piece of content the pipeline produces. Here's exactly how the scoring system works.</p>
+
+  <h3 class="sub">Scoring Scale</h3>
+  <div class="gate-band">
+    <div class="gate-band-seg gs-block">BLOCK ❌<br>0–39</div>
+    <div class="gate-band-seg gs-warn">WARN ⚠️<br>40–69</div>
+    <div class="gate-band-seg gs-pass">APPROVED ✅<br>70–100</div>
+  </div>
+
+  <h3 class="sub">The 5 Scoring Dimensions (20 points each)</h3>
+  <table class="ptable">
+    <thead><tr><th>Dimension</th><th>What GUARDIAN Checks</th><th>Common Failure Reasons</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Brand Alignment</strong> /20</td><td>Voice, tone, values match [BRAND_NAME]</td><td>Off-brand slang, wrong tone, wrong audience focus</td></tr>
+      <tr><td><strong>Accuracy & Integrity</strong> /20</td><td>No fabricated stats, no false claims</td><td>Made-up numbers, misattributed quotes</td></tr>
+      <tr><td><strong>Platform Compliance</strong> /20</td><td>Content follows TOS of all target platforms</td><td>Spam-like posting frequency, policy violations</td></tr>
+      <tr><td><strong>Audience Fit</strong> /20</td><td>Valuable and relevant to [AUDIENCE]</td><td>Too generic, too advanced, or wrong niche</td></tr>
+      <tr><td><strong>Pipeline Completeness</strong> /20</td><td>All 5 prior agents completed their sections</td><td>Missing timestamps, no clip versions, no email teaser</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">GUARDIAN Decision Tree</h3>
+  <div class="card-grid">
+    <div class="card gr">
+      <div class="card-icon">✅</div>
+      <div class="card-title">APPROVED (70–100)</div>
+      <div class="card-desc">Content is cleared for publishing. Human does final review (optional) then posts. Log score in report card.</div>
+    </div>
+    <div class="card yl">
+      <div class="card-icon">⚠️</div>
+      <div class="card-title">WARN (40–69)</div>
+      <div class="card-desc">Return to the specific failing agent (not MATRIX). Fix the issue. Re-run from that agent forward. One revision attempt before escalating.</div>
+    </div>
+    <div class="card pk">
+      <div class="card-icon">❌</div>
+      <div class="card-title">BLOCK (&lt;40)</div>
+      <div class="card-desc">Full pipeline restart. Return to MATRIX with GUARDIAN's feedback. Document the failure in the session report card. Counts as a 3-Strike event.</div>
+    </div>
+  </div>
+
+  <div class="danger-box">🛡 <strong style="color:var(--pk)">GUARDIAN Cannot Be Bypassed.</strong> If a BLOCK verdict is received, no content from that pipeline run may be published — not even "just the Twitter post." The entire run is invalid until GUARDIAN approves a new run.</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §10 · REPORT CARD
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s10">
+  <div class="sec-eyebrow">§10</div>
+  <div class="sec-title">Report Card & Session Logging</div>
+  <p class="sec-sub">Fill out a report card after every stream session. This is your accountability system — it tells you exactly where the pipeline is performing and where it's breaking.</p>
+
+  <h3 class="sub">Session Report Card Template</h3>
+  <div class="report-card">
+    <div class="rc-header">SESSION REPORT CARD · [BRAND_NAME] · PHASE [X] · SESSION [#]</div>
+    <div class="rc-grid">
+      <div class="rc-metric"><div class="rc-metric-val">__</div><div class="rc-metric-lbl">PIPELINE RUNS TODAY</div></div>
+      <div class="rc-metric"><div class="rc-metric-val rc-score score-pass">__/100</div><div class="rc-metric-lbl">AVG GUARDIAN SCORE</div></div>
+      <div class="rc-metric"><div class="rc-metric-val">__/40</div><div class="rc-metric-lbl">AVG SPARK VIRAL SCORE</div></div>
+      <div class="rc-metric"><div class="rc-metric-val">__</div><div class="rc-metric-lbl">PIECES APPROVED ✅</div></div>
+      <div class="rc-metric"><div class="rc-metric-val">__</div><div class="rc-metric-lbl">WARNS ISSUED ⚠️</div></div>
+      <div class="rc-metric"><div class="rc-metric-val">__</div><div class="rc-metric-lbl">BLOCKS ISSUED ❌</div></div>
+      <div class="rc-metric"><div class="rc-metric-val">__</div><div class="rc-metric-lbl">FOLLOWERS TODAY</div></div>
+      <div class="rc-metric"><div class="rc-metric-val">__</div><div class="rc-metric-lbl">TOTAL FOLLOWERS</div></div>
+    </div>
+  </div>
+
+  <h3 class="sub">Phase Report Card</h3>
+  <table class="ptable">
+    <thead><tr><th>Metric</th><th>Target</th><th>Actual</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Total Pipeline Runs</td><td>___</td><td>___</td><td><span class="tag tag-x">TRACK</span></td><td></td></tr>
+      <tr><td>Avg GUARDIAN Score</td><td>≥75</td><td>___</td><td><span class="tag tag-x">TRACK</span></td><td></td></tr>
+      <tr><td>Avg SPARK Score</td><td>≥30/40</td><td>___</td><td><span class="tag tag-x">TRACK</span></td><td></td></tr>
+      <tr><td>Content Published</td><td>___</td><td>___</td><td><span class="tag tag-x">TRACK</span></td><td></td></tr>
+      <tr><td>Follower Growth</td><td>See §01</td><td>___</td><td><span class="tag tag-x">TRACK</span></td><td></td></tr>
+      <tr><td>Pipeline Failures (3-Strike)</td><td>0</td><td>___</td><td><span class="tag tag-x">TRACK</span></td><td></td></tr>
+      <tr><td>Streams Completed</td><td>≥5/week</td><td>___</td><td><span class="tag tag-x">TRACK</span></td><td></td></tr>
+      <tr><td>Known Issues</td><td>—</td><td>___</td><td><span class="tag tag-x">LOG</span></td><td></td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">📊 <strong style="color:var(--tl)">Pro Tip:</strong> Keep a running Google Sheet with one row per session. Copy the report card template above into each row. After 30 days you'll have a data-driven view of exactly which agent is your bottleneck and which content type performs best.</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §11 · FAILURE PROTOCOLS
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s11">
+  <div class="sec-eyebrow">§11</div>
+  <div class="sec-title">Failure Protocols & 3-Strike Rule</div>
+  <p class="sec-sub">Failures happen. How you respond determines whether they become learning moments or pipeline shutdowns. Every failure is documented, categorized, and escalated.</p>
+
+  <h3 class="sub">The 3-Strike Rule</h3>
+  <div class="info-box">📋 <strong style="color:var(--tl)">Definition:</strong> A "strike" is when any single agent fails to produce acceptable output (rejected by GUARDIAN or fails its own quality check) on the same task type, 3 consecutive times. Three strikes = mandatory escalation. The task is flagged, documented, and the pipeline pauses on that task type until the root cause is resolved.</div>
+
+  <h3 class="sub">Failure Categories</h3>
+  <div class="card-grid">
+    <div class="card pk">
+      <div class="card-icon">🔴</div>
+      <div class="card-title">CRITICAL — Pipeline Down</div>
+      <div class="card-desc">API endpoint returning 500 errors. GUARDIAN permanently blocking all output. Site offline. Immediate action required — do not stream until resolved.</div>
+    </div>
+    <div class="card yl">
+      <div class="card-icon">🟡</div>
+      <div class="card-title">WARNING — Degraded Output</div>
+      <div class="card-desc">GUARDIAN scores consistently between 40–60. SPARK scores below 28 on multiple runs. Content is technically approved but underperforming. Investigate system prompt quality.</div>
+    </div>
+    <div class="card tl">
+      <div class="card-icon">🔵</div>
+      <div class="card-title">MINOR — Isolated Issue</div>
+      <div class="card-desc">Single pipeline run failed. One piece of content blocked. One agent produced off-brand output. Log it, regenerate, move on. No escalation needed unless it becomes a pattern.</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Documented Failure Log Format</h3>
+  <div class="failure-card">
+    <h4>🚨 FAILURE LOG TEMPLATE</h4>
+    <p>
+      <strong style="color:#fff;">Date/Time:</strong> [YYYY-MM-DD HH:MM]<br>
+      <strong style="color:#fff;">Agent:</strong> [Which agent failed — e.g., SPARK]<br>
+      <strong style="color:#fff;">Task Type:</strong> [What was it trying to do]<br>
+      <strong style="color:#fff;">Failure Type:</strong> [API Error / QA Block / Score Fail / TOS Flag]<br>
+      <strong style="color:#fff;">Strike Count:</strong> [1 / 2 / 3]<br>
+      <strong style="color:#fff;">GUARDIAN Score (if applicable):</strong> [X/100]<br>
+      <strong style="color:#fff;">Root Cause:</strong> [Known / Investigating / Unknown]<br>
+      <strong style="color:#fff;">Resolution:</strong> [Action taken]<br>
+      <strong style="color:#fff;">Status:</strong> [RESOLVED / ONGOING / ESCALATED]
+    </p>
+  </div>
+
+  <h3 class="sub">Escalation Protocol</h3>
+  <table class="ptable">
+    <thead><tr><th>Strike Count</th><th>Action</th><th>Who Handles</th><th>Timeline</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag tag-yl">Strike 1</span></td><td>Log failure. Retry with adjusted prompt.</td><td>You (human)</td><td>Immediate</td></tr>
+      <tr><td><span class="tag tag-or">Strike 2</span></td><td>Review and revise agent system prompt. Test with 3 sample tasks.</td><td>You + Claude Code</td><td>Within 2 hours</td></tr>
+      <tr><td><span class="tag tag-pk">Strike 3</span></td><td>Pause pipeline. Full agent audit. Document root cause. Redesign agent task scope if needed.</td><td>Full review session</td><td>Dedicated session</td></tr>
+    </tbody>
+  </table>
+
+  <div class="failure-card warn">
+    <h4>⚠️ API RATE LIMIT PROTOCOL</h4>
+    <p>If you receive a 429 (rate limit) error from Anthropic or OpenAI: wait 60 seconds → retry once → if still failing, switch to fallback model → log the incident → check billing dashboard for unusual usage spikes.</p>
+  </div>
+
+  <div class="failure-card warn">
+    <h4>⚠️ GUARDIAN PERMANENT BLOCK PROTOCOL</h4>
+    <p>If GUARDIAN has blocked 3 consecutive pipeline runs on the same topic: pause content production on that topic → review MATRIX's strategy brief → adjust the angle → start a fresh pipeline run with a clearly different approach → if still blocking, consult the platform TOS directly.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     §12 · GLOSSARY
+     ════════════════════════════════════════ -->
+<div class="pb-sec" id="s12">
+  <div class="sec-eyebrow">§12</div>
+  <div class="sec-title">Glossary</div>
+  <p class="sec-sub">Plain-English definitions for every technical term used in this playbook. Bookmark this section for quick reference.</p>
+
+  <div class="gloss">
+    <div class="gloss-item"><div class="gloss-term">Agent</div><div class="gloss-def">An AI model given a specific role, system prompt, and set of rules. Agents don't act on their own — they respond to inputs and produce outputs within their defined scope.</div></div>
+    <div class="gloss-item"><div class="gloss-term">API</div><div class="gloss-def">Application Programming Interface. A way for your website to talk to an external service (like Claude or GPT-4o). You send a request, they send back a response.</div></div>
+    <div class="gloss-item"><div class="gloss-term">API Key</div><div class="gloss-def">A secret password that proves to an API that you're authorized to use it. Treat like a credit card number — never share or commit to public code.</div></div>
+    <div class="gloss-item"><div class="gloss-term">Backoff (Exponential)</div><div class="gloss-def">A retry strategy where each failed attempt waits longer than the last: 2s, then 4s, then 8s. Prevents hammering an overloaded server.</div></div>
+    <div class="gloss-item"><div class="gloss-term">CI/CD</div><div class="gloss-def">Continuous Integration / Continuous Deployment. When you push code to GitHub, Netlify automatically builds and deploys it. Push to main = live in &lt;60 seconds.</div></div>
+    <div class="gloss-item"><div class="gloss-term">CORS</div><div class="gloss-def">Cross-Origin Resource Sharing. A browser security rule that controls which websites can make API requests to your server. You configure it in netlify.toml.</div></div>
+    <div class="gloss-item"><div class="gloss-term">Environment Variable</div><div class="gloss-def">A secret value stored outside your code (in Netlify's dashboard). Your code reads it at runtime without it ever appearing in your codebase.</div></div>
+    <div class="gloss-item"><div class="gloss-term">JAMstack</div><div class="gloss-def">JavaScript + APIs + Markup. A modern web architecture where the frontend is static HTML/CSS/JS, and dynamic features are handled by APIs. Fast, secure, cheap to host.</div></div>
+    <div class="gloss-item"><div class="gloss-term">Netlify Function</div><div class="gloss-def">A serverless Node.js function that runs on-demand. Your AI API calls happen inside these — they're secure, scalable, and don't require a server to manage.</div></div>
+    <div class="gloss-item"><div class="gloss-term">Pipeline</div><div class="gloss-def">The sequential flow of work between agents: MATRIX → NOVA → SPARK → PULSE → ARIA → GUARDIAN. Output from each agent becomes input for the next.</div></div>
+    <div class="gloss-item"><div class="gloss-term">Rate Limit</div><div class="gloss-def">A cap on how many API requests you can make in a given time window. Anthropic and OpenAI both impose rate limits. You can also set your own on your API endpoint.</div></div>
+    <div class="gloss-item"><div class="gloss-term">Serverless</div><div class="gloss-def">Code that runs in the cloud without you managing a server. Netlify Functions are serverless — they spin up when needed and cost $0 when idle.</div></div>
+    <div class="gloss-item"><div class="gloss-term">SPARK Score</div><div class="gloss-def">SPARK's 40-point viral potential rating for content: Hook(10) + Retention(10) + Shareability(10) + CTA(10). Minimum passing score: 28/40.</div></div>
+    <div class="gloss-item"><div class="gloss-term">System Prompt</div><div class="gloss-def">The "personality and rules" you give to an AI agent before it processes your request. The most important part of building a reliable agent pipeline.</div></div>
+    <div class="gloss-item"><div class="gloss-term">3-Strike Rule</div><div class="gloss-def">If the same agent fails on the same task type 3 consecutive times, the pipeline pauses and that failure is formally documented and escalated for root-cause analysis.</div></div>
+    <div class="gloss-item"><div class="gloss-term">TOS</div><div class="gloss-def">Terms of Service. Every platform (Twitch, YouTube, TikTok, etc.) has rules about what content is allowed. ARIA flags TOS risks; GUARDIAN enforces compliance.</div></div>
+    <div class="gloss-item"><div class="gloss-term">Variable Token</div><div class="gloss-def">A placeholder like <span class="var">[BRAND_NAME]</span> that you replace with your own value to customize this playbook for your brand. There are 10 template variables in total.</div></div>
+    <div class="gloss-item"><div class="gloss-term">Viral Score</div><div class="gloss-def">See SPARK Score. A quantified measure of how likely content is to spread organically based on hook strength, retention design, shareability, and CTA quality.</div></div>
+  </div>
+
+  <div class="rb-divider"></div>
+  <div class="info-box" style="text-align:center;padding:28px;">
+    <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;color:#fff;margin-bottom:8px;">You're ready to build.</div>
+    <div style="font-size:13px;color:#777;margin-bottom:20px;">Start at §07 Build Steps. Come back here when you need a refresher.</div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn-pdf" onclick="openPdfModal()">⬇ Download PDF</button>
+      <a class="btn-outline" href="#" onclick="showSec('s07');return false;">▶ Go to Build Steps</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- /pb-body -->
+
+<footer class="site-footer">
+  <span>METAKITTYZ</span> · AI AGENTIC BUILD PLAYBOOK v1.0 · TEMPLATE FRAMEWORK<br>
+  MATRIX → NOVA → SPARK → PULSE → ARIA → GUARDIAN<br>
+  Built Live on Stream · erika@productimagination.com
+</footer>
+
+<!-- PDF EMAIL CAPTURE MODAL -->
+<div class="pdf-overlay" id="pdfOverlay" onclick="closePdfModal(event)">
+  <div class="pdf-modal" onclick="event.stopPropagation()">
+    <button class="pdf-modal-close" onclick="closePdfModal()">✕</button>
+    <div class="pdf-modal-rb"></div>
+    <div class="pdf-modal-icon">📋</div>
+    <div class="pdf-modal-eyebrow">Free Download · 32 Pages</div>
+    <div class="pdf-modal-title">AI Agentic Build Playbook v1.0</div>
+    <p class="pdf-modal-sub">Enter your email and we'll send the download link directly to your inbox — plus updates when new versions drop.</p>
+    <div id="pdfForm">
+      <input class="pdf-modal-input" type="email" id="pdfEmailInput" placeholder="your@email.com" autocomplete="email">
+      <button class="pdf-modal-submit" onclick="submitPdfCapture()">Get the Playbook →</button>
+      <div class="pdf-modal-note">No spam · No pressure · Unsubscribe anytime</div>
+    </div>
+    <div class="pdf-modal-success" id="pdfSuccess">
+      <div class="pdf-success-icon">✅</div>
+      <div class="pdf-success-title">You're in!</div>
+      <p class="pdf-success-sub">Check your inbox — your download link is on the way from erika@productimagination.com.<br><br>Your PDF is also downloading now.</p>
+      <button class="pdf-success-btn" onclick="closePdfModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showSec(id) {
+  document.querySelectorAll('.pb-sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.pb-stab').forEach(t => t.classList.remove('on'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['s00','s01','s02','s03','s04','s05','s06','s07','s08','s09','s10','s11','s12'].indexOf(id);
+  document.querySelectorAll('.pb-stab')[idx].classList.add('on');
+  window.scrollTo({top: document.querySelector('.pb-snav-wrap').offsetTop - 60, behavior:'smooth'});
+}
+
+function copyPrompt(btn) {
+  const text = btn.closest('.prompt-block').querySelector('.prompt-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'COPIED!';
+    setTimeout(() => btn.textContent = 'COPY', 2000);
+  });
+}
+
+function openPdfModal() {
+  document.getElementById('pdfEmailInput').value = '';
+  document.getElementById('pdfEmailInput').style.borderColor = '';
+  document.getElementById('pdfForm').style.display = 'block';
+  document.getElementById('pdfSuccess').style.display = 'none';
+  document.getElementById('pdfOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('pdfEmailInput').focus(), 100);
+}
+
+function closePdfModal(e) {
+  if (e && e.target !== document.getElementById('pdfOverlay')) return;
+  document.getElementById('pdfOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function submitPdfCapture() {
+  var input = document.getElementById('pdfEmailInput');
+  var val = input.value.trim();
+  if (!val || !val.includes('@') || !val.includes('.')) {
+    input.style.borderColor = 'rgba(255,45,120,.7)';
+    input.focus();
+    return;
+  }
+  // Trigger the PDF download immediately — don't wait on network
+  var link = document.createElement('a');
+  link.href = '/Metakittyz-AI-Build-Playbook-v1.0.pdf';
+  link.download = 'Metakittyz-AI-Build-Playbook-v1.0.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  // Show success state
+  document.getElementById('pdfForm').style.display = 'none';
+  document.getElementById('pdfSuccess').style.display = 'block';
+  // Fire-and-forget: store email in backend
+  fetch('/.netlify/functions/collect-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: val,
+      product: 'AI Build Playbook PDF',
+      source: 'playbook'
+    })
+  }).catch(function() {}); // silent fail — user already has their PDF
+}
+</script>
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" aria-label="Site navigation">
+  <a class="mnav-item" href="/"><span class="mnav-ic">🏠</span><span class="mnav-lb">Home</span></a>
+  <a class="mnav-item" href="/guide.html"><span class="mnav-ic">📖</span><span class="mnav-lb">Guide</span></a>
+  <a class="mnav-item on" href="/playbook.html"><span class="mnav-ic">📋</span><span class="mnav-lb">Playbook</span></a>
+  <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
+  <a class="mnav-item" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
+</nav>
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
+</script>
+</body>
+</html>

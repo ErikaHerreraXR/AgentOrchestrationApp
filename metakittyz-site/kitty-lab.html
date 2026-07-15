@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kitty Lab — AI Prompt Practice | Metakittyz</title>
+<meta name="description" content="Practice AI prompting in the Metakittyz Kitty Lab. Real prompt templates, live AI testing, and a full guide to writing prompts that actually work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&family=Bubblegum+Sans&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧪</text></svg>">
+<link rel="stylesheet" href="/theme.css">
+<script>(function(){var t=localStorage.getItem('mk-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+:root{
+  --pk:#FF2D78;--tl:#00F5D4;--yl:#FFE000;--pu:#7B2FFF;
+  --co:#FF6B35;--sp:#FFB3D9;--mx:#00FF41;--bg:#0A0015;
+  --glass:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --text:#fff;--muted:#777;--dim:#333;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;background:var(--bg);}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.025) 3px,rgba(0,0,0,.025) 4px);pointer-events:none;z-index:9999;}
+a{color:inherit;text-decoration:none;}
+
+/* AMBIENT ORBS */
+.orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);}
+.o1{width:500px;height:500px;background:#FF2D78;opacity:.1;top:-100px;left:-100px;}
+.o2{width:450px;height:450px;background:#7B2FFF;opacity:.12;bottom:5%;right:-80px;}
+.o3{width:350px;height:350px;background:#00F5D4;opacity:.08;top:50%;left:-60px;}
+.o4{width:250px;height:250px;background:#FFE000;opacity:.05;top:35%;right:10%;}
+
+/* RAINBOW */
+.rb{height:3px;background:linear-gradient(90deg,var(--pk),var(--co),var(--yl),var(--tl),var(--pu),var(--pk));flex-shrink:0;}
+
+/* NAV */
+.nav{
+  position:sticky;top:0;z-index:500;
+  background:rgba(10,0,21,.96);backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(255,45,120,.2);
+  padding:0 clamp(14px,3.5vw,48px);
+  display:flex;align-items:center;gap:10px;height:52px;
+}
+.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.nav-logo{
+  width:28px;height:28px;border-radius:7px;
+  background:linear-gradient(135deg,#FF2D78,#7B2FFF);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:10px;color:#fff;
+}
+.nav-name{
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:12px;letter-spacing:.08em;
+  background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  white-space:nowrap;
+}
+.nav-spacer{flex:1;}
+.nav-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nav-link{
+  font-family:'Space Mono',monospace;font-size:10px;
+  padding:5px 12px;border-radius:100px;
+  border:1px solid rgba(255,255,255,.08);color:#555;
+  text-decoration:none;letter-spacing:.05em;white-space:nowrap;transition:all .15s;
+}
+.nav-link:hover{color:#ccc;border-color:rgba(255,255,255,.2);}
+.nav-link.on{background:rgba(255,224,0,.1);border-color:rgba(255,224,0,.4);color:#FFE000;}
+.nav-home{
+  font-family:'Space Mono',monospace;font-size:10px;
+  padding:5px 14px;border-radius:100px;
+  background:linear-gradient(135deg,#FF2D78,#7B2FFF);color:#fff;
+  text-decoration:none;flex-shrink:0;white-space:nowrap;
+}
+
+/* HERO */
+.hero{
+  position:relative;z-index:1;
+  padding:clamp(48px,6vw,80px) clamp(20px,5vw,80px) clamp(32px,4vw,56px);
+  text-align:center;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,224,0,.08),transparent),
+              radial-gradient(ellipse 60% 40% at 50% 100%,rgba(123,47,255,.12),transparent);
+}
+.hero-eyebrow{
+  font-family:'Space Mono',monospace;font-size:11px;color:var(--yl);
+  letter-spacing:.22em;margin-bottom:16px;position:relative;z-index:1;
+}
+.hero-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(32px,6vw,72px);line-height:1.05;margin-bottom:16px;position:relative;z-index:1;
+}
+.hero-title .grad{
+  background:linear-gradient(90deg,#FFE000,#FF6B35,#FF2D78);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{
+  font-family:'Space Mono',monospace;font-size:clamp(11px,1.3vw,15px);
+  color:var(--muted);max-width:620px;margin:0 auto 32px;line-height:1.8;
+  position:relative;z-index:1;
+}
+.hero-sub strong{color:var(--tl);}
+.hero-pills{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:8px;
+  margin-bottom:16px;position:relative;z-index:1;
+}
+.pill{
+  font-family:'Space Mono',monospace;font-size:10px;
+  padding:4px 14px;border-radius:100px;border:1px solid;letter-spacing:.06em;
+}
+
+/* MAIN LAYOUT */
+.main{max-width:1100px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 80px;position:relative;z-index:1;}
+
+/* SECTION HEADER */
+.s-hdr{display:flex;align-items:center;gap:16px;padding:40px 0 20px;}
+.s-line{flex:1;height:1px;background:var(--border);}
+.s-lbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;white-space:nowrap;}
+
+/* PROMPT CATEGORIES */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:24px;}
+.cat-btn{
+  background:var(--glass);border:1px solid var(--border);border-radius:12px;
+  padding:12px 10px;text-align:center;cursor:pointer;transition:all .2s;
+}
+.cat-btn:hover,.cat-btn.on{border-color:var(--pk);background:rgba(255,45,120,.06);}
+.cat-btn.on .cat-icon{transform:scale(1.2);}
+.cat-icon{font-size:24px;display:block;margin-bottom:6px;transition:transform .2s;}
+.cat-name{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--muted);}
+.cat-btn.on .cat-name{color:var(--pk);}
+
+/* PROMPT CARDS */
+.prompt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:28px;}
+.prompt-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:16px;
+  padding:18px;display:flex;flex-direction:column;gap:10px;
+  transition:border-color .2s,background .2s;position:relative;overflow:hidden;
+}
+.prompt-card:hover{border-color:rgba(255,45,120,.3);background:rgba(255,45,120,.03);}
+.prompt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.pc-head{display:flex;align-items:flex-start;gap:10px;}
+.pc-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.pc-meta{flex:1;}
+.pc-cat{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;margin-bottom:4px;}
+.pc-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;line-height:1.3;}
+.pc-agent{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'Space Mono',monospace;font-size:9px;
+  padding:3px 10px;border-radius:100px;border:1px solid;letter-spacing:.06em;width:fit-content;
+}
+.pc-body{font-size:12px;color:var(--muted);line-height:1.7;flex:1;font-family:'Space Mono',monospace;}
+.pc-body code{
+  display:block;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;padding:12px;color:var(--mx);font-size:11px;line-height:1.7;
+  white-space:pre-wrap;word-break:break-word;margin-top:6px;
+}
+.pc-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.pc-copy{
+  font-family:'Space Mono',monospace;font-size:10px;
+  padding:6px 14px;border-radius:100px;
+  border:1px solid rgba(255,45,120,.3);color:var(--pk);
+  background:transparent;cursor:pointer;letter-spacing:.06em;
+  transition:all .15s;
+}
+.pc-copy:hover{background:rgba(255,45,120,.1);}
+.pc-try{
+  font-family:'Space Mono',monospace;font-size:10px;
+  padding:6px 14px;border-radius:100px;
+  background:linear-gradient(135deg,var(--pk),var(--pu));color:#fff;
+  border:none;cursor:pointer;letter-spacing:.06em;transition:opacity .15s;
+}
+.pc-try:hover{opacity:.85;}
+
+/* LAB SANDBOX */
+.lab-box{
+  background:#040010;border:2px solid rgba(255,224,0,.25);border-radius:20px;
+  padding:clamp(20px,3vw,36px);margin-bottom:28px;
+  box-shadow:0 0 40px rgba(255,224,0,.08);
+}
+.lab-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Space Mono',monospace;font-size:10px;
+  padding:5px 14px;border-radius:100px;
+  border:1px solid rgba(255,224,0,.3);color:var(--yl);
+  letter-spacing:.1em;margin-bottom:16px;
+}
+.lab-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(18px,2.5vw,28px);margin-bottom:8px;
+}
+.lab-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.lab-controls{display:flex;flex-direction:column;gap:12px;}
+.lbl{
+  font-family:'Space Mono',monospace;font-size:10px;
+  color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;
+  display:block;
+}
+.lab-select{
+  width:100%;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,224,0,.2);border-radius:10px;
+  color:#fff;font-family:'Space Mono',monospace;font-size:12px;
+  padding:10px 14px;transition:border-color .15s;
+}
+.lab-select:focus{outline:none;border-color:var(--yl);}
+.lab-textarea{
+  width:100%;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;color:var(--mx);font-family:'Space Mono',monospace;
+  font-size:12px;padding:14px;resize:vertical;min-height:140px;line-height:1.8;
+  transition:border-color .15s;
+}
+.lab-textarea:focus{outline:none;border-color:var(--yl);}
+.lab-textarea::placeholder{color:#333;}
+.lab-row{display:flex;gap:10px;flex-wrap:wrap;}
+.lab-btn{
+  flex:1;min-width:140px;
+  background:linear-gradient(135deg,var(--yl),var(--co));color:#000;
+  border:none;border-radius:100px;padding:12px 24px;
+  font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:.06em;cursor:pointer;transition:opacity .15s,transform .15s;
+}
+.lab-btn:hover{opacity:.88;transform:translateY(-1px);}
+.lab-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.lab-btn-sec{
+  flex:1;min-width:120px;
+  background:transparent;border:1px solid rgba(255,255,255,.12);color:#666;
+  border-radius:100px;padding:12px 24px;
+  font-family:'Space Mono',monospace;font-size:10px;
+  letter-spacing:.06em;cursor:pointer;transition:all .15s;
+}
+.lab-btn-sec:hover{border-color:rgba(255,255,255,.3);color:#ccc;}
+
+/* OUTPUT */
+.lab-output{
+  margin-top:16px;background:rgba(0,255,65,.04);
+  border:1px solid rgba(0,255,65,.15);border-radius:12px;
+  padding:16px;min-height:120px;display:none;
+}
+.lab-output.show{display:block;}
+.output-hdr{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
+}
+.output-lbl{
+  font-family:'Space Mono',monospace;font-size:10px;
+  color:var(--mx);letter-spacing:.1em;
+}
+.output-copy{
+  font-family:'Space Mono',monospace;font-size:9px;
+  padding:4px 10px;border-radius:100px;border:1px solid rgba(0,255,65,.3);
+  color:var(--mx);background:transparent;cursor:pointer;
+}
+.output-copy:hover{background:rgba(0,255,65,.1);}
+.output-text{
+  font-family:'Space Mono',monospace;font-size:12px;
+  color:#ccc;line-height:1.8;white-space:pre-wrap;word-break:break-word;
+}
+.output-thinking{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Space Mono',monospace;font-size:12px;color:var(--yl);
+}
+.thinking-dots span{animation:blink 1.4s infinite;display:inline-block;}
+.thinking-dots span:nth-child(2){animation-delay:.2s;}
+.thinking-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{opacity:0;}40%{opacity:1;}}
+
+/* PROMPT TIPS */
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+.tip-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:14px;
+  padding:18px;display:flex;flex-direction:column;gap:8px;
+}
+.tip-num{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;color:#000;
+  flex-shrink:0;
+}
+.tip-title{font-weight:700;font-size:13px;line-height:1.3;}
+.tip-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+.tip-ex{
+  background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);
+  border-radius:8px;padding:10px 12px;
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--tl);line-height:1.6;
+}
+
+/* REPORT CARD */
+.report-card{
+  background:#030010;border:1px solid rgba(255,45,120,.2);border-radius:20px;
+  padding:clamp(20px,3vw,32px);
+}
+.rc-header{
+  display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap;
+}
+.rc-score{
+  width:80px;height:80px;border-radius:50%;
+  background:conic-gradient(#00FF41 var(--pct,0%),rgba(255,255,255,.05) 0);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;
+}
+.rc-score::before{
+  content:'';position:absolute;inset:8px;border-radius:50%;background:#030010;
+}
+.rc-grade{
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:24px;
+  position:relative;z-index:1;
+}
+.rc-info h3{font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;margin-bottom:4px;}
+.rc-info p{font-size:12px;color:var(--muted);}
+.rc-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+.rc-metric{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:10px;padding:12px;
+}
+.rm-lbl{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;margin-bottom:4px;}
+.rm-val{font-family:'Orbitron',sans-serif;font-weight:700;font-size:18px;}
+.rm-bar{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:6px;overflow:hidden;}
+.rm-fill{height:100%;border-radius:2px;transition:width 1.2s ease;}
+
+/* FOOTER */
+.footer{
+  border-top:1px solid var(--border);padding:clamp(24px,3vw,40px) clamp(20px,4vw,60px);
+  display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;
+}
+.footer-brand{
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;
+  background:linear-gradient(90deg,#FF2D78,#FFE000,#00F5D4);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+.footer-link{
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);
+  text-decoration:none;letter-spacing:.06em;transition:color .15s;
+}
+.footer-link:hover{color:var(--pk);}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);
+  background:#111;border:1px solid rgba(0,255,65,.4);border-radius:100px;
+  padding:10px 22px;font-family:'Space Mono',monospace;font-size:11px;
+  color:var(--mx);opacity:0;transition:all .25s;z-index:9998;
+  pointer-events:none;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .lab-row{flex-direction:column;}
+  .lab-btn,.lab-btn-sec{min-width:unset;}
+}
+/* ── MOBILE FIXES ── */
+@media(max-width:768px){
+  body{padding-top:52px !important;}
+  .nav{position:fixed !important;left:0 !important;right:0 !important;top:0 !important;width:100% !important;}
+  .nav-links{overflow-x:auto !important;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-shrink:1;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-name{display:none !important;}
+}
+/* ── MOBILE BOTTOM NAV ── */
+.mob-nav{position:fixed;bottom:0;left:0;right:0;z-index:3000;background:rgba(10,0,21,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,45,120,.2);display:none;align-items:stretch;height:60px;padding-bottom:env(safe-area-inset-bottom,0px);}
+.mob-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);}
+@media(max-width:768px){.mob-nav{display:flex;}body{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px)) !important;}}
+.mnav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;text-decoration:none;color:#3a3a3a;transition:color .15s;-webkit-tap-highlight-color:transparent;padding:8px 2px;min-height:44px;}
+.mnav-item.on{color:#FFE000;}
+.mnav-ic{font-size:19px;line-height:1.1;}
+.mnav-lb{font-family:'Space Mono',monospace;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<div class="orbs">
+  <div class="orb o1"></div><div class="orb o2"></div>
+  <div class="orb o3"></div><div class="orb o4"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-brand" href="/">
+    <div class="nav-logo">MK</div>
+    <span class="nav-name">METAKITTYZ</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-links">
+    <a class="nav-link" href="/">🏠 Home</a>
+    <a class="nav-link" href="/guide.html">📖 Guide</a>
+    <a class="nav-link" href="/community.html">🌐 Community</a>
+    <a class="nav-link on" href="/kitty-lab.html">🧪 Kitty Lab</a>
+    <a class="nav-link" href="/about.html">⚡ About</a>
+    <a class="nav-link" href="/playbook.html" style="border-color:rgba(123,47,255,.3);color:#7B2FFF;">📋 Playbook</a>
+    <a class="nav-link" href="/learn-more.html" style="border-color:rgba(255,107,53,.3);color:#FF6B35;">🛍 Products</a>
+  </div>
+  <button id="themeBtn" class="theme-btn" onclick="mkTheme()" aria-label="Toggle theme">☀️</button>
+  <a class="nav-home" href="/">← Home</a>
+</nav>
+<div class="rb"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">✦ METAKITTYZ · AI PROMPTING PRACTICE SPACE ✦</div>
+  <h1 class="hero-title">
+    <span class="grad">Kitty Lab</span><br>
+    <span style="font-size:.5em;color:#ccc;letter-spacing:.05em;">WHERE PROMPTS GET WILD</span>
+  </h1>
+  <p class="hero-sub">
+    Your personal AI prompting sandbox. Pick a template, remix it, and hit <strong>run</strong>.<br>
+    Every prompt here is battle-tested and built for the Metakittyz 10-agent system.
+  </p>
+  <div class="hero-pills">
+    <span class="pill" style="color:var(--yl);border-color:rgba(255,224,0,.35);">🧪 Live AI Sandbox</span>
+    <span class="pill" style="color:var(--mx);border-color:rgba(0,255,65,.3);">50+ Prompt Templates</span>
+    <span class="pill" style="color:var(--tl);border-color:rgba(0,245,212,.3);">10-Agent System</span>
+    <span class="pill" style="color:var(--pk);border-color:rgba(255,45,120,.3);">Zero Code Needed</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ═══ LIVE LAB SANDBOX ════════════════════════════════ -->
+  <div class="lab-box">
+    <div class="lab-badge">🧪 LIVE PROMPT LAB</div>
+    <h2 class="lab-title">Test Any Prompt — Right Here</h2>
+    <p class="lab-sub">
+      Pick an agent, load a template prompt or write your own, and run it live.<br>
+      The AI will respond in real time so you can see exactly how the prompt performs.
+    </p>
+    <div class="lab-controls">
+      <div>
+        <label class="lbl" for="agentPick">01 — PICK YOUR AGENT</label>
+        <select class="lab-select" id="agentPick" onchange="loadTemplate()">
+          <option value="matrix">⚡ MATRIX — Master Orchestrator</option>
+          <option value="nova">🌟 NOVA — Content Strategist</option>
+          <option value="spark">🔥 SPARK — Viral Optimizer</option>
+          <option value="pulse">📊 PULSE — Analytics Engine</option>
+          <option value="aria">💬 ARIA — Engagement Director</option>
+          <option value="guardian">🛡️ GUARDIAN — QA & Compliance</option>
+        </select>
+      </div>
+      <div>
+        <label class="lbl" for="labPrompt">02 — YOUR PROMPT (edit it, make it yours)</label>
+        <textarea class="lab-textarea" id="labPrompt" placeholder="Your prompt appears here when you select a template, or write your own..."></textarea>
+      </div>
+      <div>
+        <label class="lbl" for="labTask">03 — YOUR TASK / TOPIC (optional context)</label>
+        <input type="text" class="lab-select" id="labTask" placeholder='e.g. "Create a reel about Harvard AI course week 2 highlights"'>
+      </div>
+      <div class="lab-row">
+        <button class="lab-btn" onclick="runLab()" id="labRunBtn">⚡ RUN PROMPT</button>
+        <button class="lab-btn-sec" onclick="clearLab()">🗑 Clear</button>
+        <button class="lab-btn-sec" onclick="copyLabPrompt()">📋 Copy Prompt</button>
+      </div>
+      <div class="lab-output" id="labOutput">
+        <div class="output-hdr">
+          <span class="output-lbl" id="outputLbl">▸ AI RESPONSE</span>
+          <button class="output-copy" onclick="copyOutput()">📋 Copy</button>
+        </div>
+        <div class="output-text" id="outputText"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PROMPT TEMPLATE LIBRARY ═══════════════════════ -->
+  <div class="s-hdr">
+    <div class="s-line"></div>
+    <div class="s-lbl" style="color:var(--pk);">✦ PROMPT TEMPLATE LIBRARY</div>
+    <div class="s-line"></div>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="cat-grid" id="catGrid"></div>
+
+  <!-- Prompt Cards -->
+  <div class="prompt-grid" id="promptGrid"></div>
+
+  <!-- ═══ THE 5 LAWS OF GREAT PROMPTS ══════════════════ -->
+  <div class="s-hdr">
+    <div class="s-line"></div>
+    <div class="s-lbl" style="color:var(--tl);">02 — THE 5 LAWS OF GREAT PROMPTS</div>
+    <div class="s-line"></div>
+  </div>
+  <div class="tips-grid" id="tipsGrid"></div>
+
+  <!-- ═══ SESSION REPORT CARD ═══════════════════════════ -->
+  <div class="s-hdr">
+    <div class="s-line"></div>
+    <div class="s-lbl" style="color:var(--yl);">03 — YOUR SESSION REPORT CARD</div>
+    <div class="s-line"></div>
+  </div>
+  <div class="report-card">
+    <div class="rc-header">
+      <div class="rc-score" style="--pct:0%">
+        <span class="rc-grade" id="rcGrade" style="color:var(--muted)">—</span>
+      </div>
+      <div class="rc-info">
+        <h3>Lab Session</h3>
+        <p id="rcSub">Run your first prompt to generate your report card.</p>
+      </div>
+    </div>
+    <div class="rc-metrics">
+      <div class="rc-metric">
+        <div class="rm-lbl">PROMPTS RUN</div>
+        <div class="rm-val" id="rcRuns" style="color:var(--tl)">0</div>
+        <div class="rm-bar"><div class="rm-fill" id="rcRunsFill" style="width:0%;background:var(--tl)"></div></div>
+      </div>
+      <div class="rc-metric">
+        <div class="rm-lbl">TEMPLATES TRIED</div>
+        <div class="rm-val" id="rcTemplates" style="color:var(--yl)">0</div>
+        <div class="rm-bar"><div class="rm-fill" id="rcTplFill" style="width:0%;background:var(--yl)"></div></div>
+      </div>
+      <div class="rc-metric">
+        <div class="rm-lbl">AGENTS ACTIVATED</div>
+        <div class="rm-val" id="rcAgents" style="color:var(--pk)">0</div>
+        <div class="rm-bar"><div class="rm-fill" id="rcAgFill" style="width:0%;background:var(--pk)"></div></div>
+      </div>
+      <div class="rc-metric">
+        <div class="rm-lbl">COPIES MADE</div>
+        <div class="rm-val" id="rcCopies" style="color:var(--mx)">0</div>
+        <div class="rm-bar"><div class="rm-fill" id="rcCpFill" style="width:0%;background:var(--mx)"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="rb" style="width:100%;margin-bottom:4px;"></div>
+  <div class="footer-brand">METAKITTYZ LLC ✦ EST. 2026</div>
+  <div class="footer-links">
+    <a class="footer-link" href="/">Home</a>
+    <a class="footer-link" href="/guide.html">Build Guide</a>
+    <a class="footer-link" href="/community.html">Community</a>
+    <a class="footer-link" href="https://instagram.com/metakittyz" target="_blank">Instagram</a>
+    <a class="footer-link" href="https://youtube.com/@metakittyz" target="_blank">YouTube</a>
+    <a class="footer-link" href="https://twitch.tv/metakittyz" target="_blank">Twitch</a>
+  </div>
+  <p style="font-family:'Space Mono',monospace;font-size:10px;color:#222;letter-spacing:.06em;">
+    EXPLORE ALL REALMS · AI · XR · WILD MIND · TROPICAL PARADISE SEXY BRAIN VIBEZ ✦
+  </p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* ── SESSION STATS ─────────────────────────────────────────── */
+var stats = { runs:0, templates:0, agents:new Set(), copies:0 };
+
+/* ── AGENT SYSTEM PROMPTS ──────────────────────────────────── */
+var AGENT_PROMPTS = {
+  matrix:  'You are MATRIX, the Master Orchestrator of the Metakittyz AI system. You coordinate all 5 specialist agents and serve as Erika\'s strategic command layer. You speak with confident authority and always deliver an actionable plan. Mission: 1M Instagram followers for @metakittyz in 90 days.',
+  nova:    'You are NOVA, the Content Strategist for @metakittyz. You specialize in viral Instagram content — graphic reels, hooks, captions, and Reels strategy. Every piece you create is optimized for reach and follows the Metakittyz voice: "sexy brainiac, tropical wild mind, talk nerdy to me." You never create talking-head content — only graphic-first formats.',
+  spark:   'You are SPARK, the Viral Optimizer for @metakittyz. Your job is to score content on a 40-point viral scale and give precise rewrite notes. You score: Hook strength (10pts), Concept uniqueness (10pts), Share motivation (10pts), Retention triggers (10pts). Minimum passing score: 28/40.',
+  pulse:   'You are PULSE, the Analytics Engine for @metakittyz. You interpret raw social media data — follower counts, reach, impressions, engagement rate, save rate, skip rate — and translate them into clear, actionable intelligence. You always give a verdict and a recommendation.',
+  aria:    'You are ARIA, the Engagement Director for @metakittyz. You write comment replies and DM responses that sound authentically like Erika — warm, nerdy-funny, never corporate. Every reply you write passes a "Would a real human send this?" test. Short, punchy, personality-first.',
+  guardian:'You are GUARDIAN, the QA & Compliance Agent for @metakittyz. You run the 12-point compliance checklist on every piece of content before it goes live. You APPROVE or REJECT with specific fixes. You enforce: no misleading claims, FTC compliance, brand voice consistency, format compliance (graphic-first only), and Instagram algorithm safety.'
+};
+
+/* ── TEMPLATES ─────────────────────────────────────────────── */
+var TEMPLATES = {
+  matrix:  'ACTIVATE — Full orchestration for today. I need: (1) the single best content piece I can create in the next 2 hours, (2) its viral score prediction, (3) the complete hashtag set, and (4) my top 3 priority actions for the next 60 minutes. Context: Day __DAY__ of 90. Current followers: ~334.',
+  nova:    'Create a complete graphic reel content brief for @metakittyz about [TOPIC]. Include: HOOK (first 3 seconds), VISUAL CONCEPT (exactly what appears on screen), SCRIPT/TEXT OVERLAY (word for word), CAPTION (300 chars, hook first), and HASHTAG SET (mix of sizes). Make it feel like "sexy brainiac meets tropical wild mind." Format ready to hand to a designer.',
+  spark:   'Score this content concept on the 40-point viral scale and give me a rewrite if it doesn\'t pass:\n\n[PASTE YOUR CONTENT HERE]\n\nScoring:\n- Hook strength (10): \n- Concept uniqueness (10): \n- Share motivation (10): \n- Retention triggers (10): \nTOTAL: /40\n\nVerdict: PASS / FAIL\nRewrite (if needed):',
+  pulse:   'Analyze this Instagram performance data and give me a clear verdict:\n\nPost 1: [views, follows, engagement rate, save rate, skip rate]\nPost 2: [views, follows, engagement rate, save rate, skip rate]\n\nTell me: (1) what is actually working, (2) what to stop doing immediately, (3) the one change that will have the biggest impact, and (4) the realistic daily follower target for the next 7 days.',
+  aria:    'Write 5 Instagram comment replies for @metakittyz. These should sound like Erika — warm, genuinely curious, a bit nerdy-playful, never corporate.\n\nComments to reply to:\n1. [PASTE COMMENT]\n2. [PASTE COMMENT]\n3. [PASTE COMMENT]\n4. [PASTE COMMENT]\n5. [PASTE COMMENT]\n\nEach reply: 1-2 sentences max. Zero emoji spam. Must pass the "would a real human send this?" test.',
+  guardian:'COMPLIANCE CHECK — Run the 12-point checklist on this content:\n\n[PASTE CONTENT]\n\nChecklist:\n1. No misleading follower claims\n2. No guaranteed results\n3. FTC disclosure present (if sponsored)\n4. Graphic-first format (no talking-head)\n5. Metakittyz brand voice consistent\n6. No competitor name-dropping\n7. No health/financial claims\n8. CTA is platform-compliant\n9. Text readable at mobile size\n10. Subtitles/captions included\n11. NOVA hook score ≥7/10\n12. SPARK viral score ≥28/40\n\nVerdict: APPROVED ✅ / REJECTED ❌\nFixes required:'
+};
+
+/* ── CATEGORIES & PROMPTS DATA ─────────────────────────────── */
+var CATS = [
+  {id:'all',    icon:'✦',  name:'ALL PROMPTS'},
+  {id:'content',icon:'✍️', name:'CONTENT'},
+  {id:'growth', icon:'📈', name:'GROWTH'},
+  {id:'engage', icon:'💬', name:'ENGAGEMENT'},
+  {id:'intel',  icon:'🔭', name:'INTELLIGENCE'},
+  {id:'comply', icon:'🛡️', name:'COMPLIANCE'},
+];
+
+var PROMPTS = [
+  {cat:'content', icon:'🌟', agent:'NOVA', agentColor:'#FF2D78',
+   title:'Viral Reel Brief', agentBadge:'rgba(255,45,120,.15)',
+   desc:'Generate a complete ready-to-produce reel brief with hook, visuals, script, caption, and hashtags.',
+   code:'Create a complete graphic reel content brief for @metakittyz about [YOUR TOPIC].\n\nHOOK (first 3 sec): \nVISUAL CONCEPT: \nTEXT OVERLAY: \nCAPTION (300 chars): \nHASHTAG SET (30 tags):'},
+  {cat:'content', icon:'🔥', agent:'SPARK', agentColor:'#FF6B35',
+   title:'40-Point Viral Score', agentBadge:'rgba(255,107,53,.12)',
+   desc:'Score any content concept on the proven 40-point viral scale. Pass = 28+.',
+   code:'Score this on the 40-pt viral scale:\n\n[YOUR CONTENT]\n\nHook strength (10): \nConcept uniqueness (10): \nShare motivation (10): \nRetention triggers (10): \nTOTAL: /40\n\nVerdict + Rewrite:'},
+  {cat:'content', icon:'🎨', agent:'NOVA', agentColor:'#FF2D78',
+   title:'Carousel Breakdown', agentBadge:'rgba(255,45,120,.15)',
+   desc:'Generate a 7-slide educational carousel with Metakittyz voice and brand colors.',
+   code:'Create a 7-slide Instagram carousel for @metakittyz on: [TOPIC]\n\nSlide 1 (HOOK): \nSlide 2–6 (VALUE): \nSlide 7 (CTA + follow ask): \n\nVoice: sexy brainiac, no corporate speak.'},
+  {cat:'growth', icon:'📊', agent:'PULSE', agentColor:'#00FF94',
+   title:'Performance Autopsy', agentBadge:'rgba(0,255,148,.1)',
+   desc:'Drop in your raw Instagram stats and get a complete performance diagnosis.',
+   code:'Analyze this Instagram data:\n\nPost: [describe post]\nViews: \nFollows gained: \nEngagement rate: \nSave rate: \nSkip rate: \n\nVerdict: what worked, what failed, what to change NOW.'},
+  {cat:'growth', icon:'⚡', agent:'MATRIX', agentColor:'#7B61FF',
+   title:'Daily Orchestration', agentBadge:'rgba(123,97,255,.15)',
+   desc:'Full command-center briefing: best content piece + viral score + hashtags + top 3 priorities.',
+   code:'ACTIVATE — Full orchestration for Day [N]/90.\n\nDeliver:\n1. Best content piece for today (brief)\n2. Viral score prediction\n3. Complete hashtag set\n4. Top 3 priority actions — next 60 minutes.'},
+  {cat:'engage', icon:'💬', agent:'ARIA', agentColor:'#00F5FF',
+   title:'Comment Replies × 5', agentBadge:'rgba(0,245,255,.1)',
+   desc:'Generate 5 on-brand comment replies that sound like Erika, not a bot.',
+   code:'Write 5 Instagram comment replies for @metakittyz.\n\nVoice: warm, nerdy-playful, never corporate.\nRule: 1-2 sentences max. Must pass the "real human?" test.\n\nComments:\n1. \n2. \n3. \n4. \n5. '},
+  {cat:'engage', icon:'❤️', agent:'ARIA', agentColor:'#00F5FF',
+   title:'DM Welcome Script', agentBadge:'rgba(0,245,255,.1)',
+   desc:'Create an authentic DM template for welcoming new followers.',
+   code:'Write a DM welcome script for new @metakittyz followers.\n\nTone: feels like a text from a friend, not a brand.\nLength: 2-3 sentences max.\nInclude: 1 question to start a real conversation.\nNever: mention follower count goals or brand pitches.'},
+  {cat:'intel', icon:'📈', agent:'PULSE', agentColor:'#00FF94',
+   title:'Weekly KPI Report', agentBadge:'rgba(0,255,148,.1)',
+   desc:'Get a structured weekly performance report with pace analysis and course corrections.',
+   code:'Weekly Metakittyz performance report — Week [N] of 13.\n\nData:\nFollowers start of week: \nFollowers end of week: \nBest performing post: \nWorst performing post: \nTotal reach: \n\nDeliver: pace analysis + what changed + top 2 adjustments.'},
+  {cat:'comply', icon:'🛡️', agent:'GUARDIAN', agentColor:'#FF375F',
+   title:'Full Compliance Check', agentBadge:'rgba(255,55,95,.12)',
+   desc:'Run the complete 12-point GUARDIAN checklist on any piece of content.',
+   code:'GUARDIAN COMPLIANCE CHECK:\n\n[PASTE CONTENT]\n\n12-Point checklist:\n✓/✗ 1. No misleading follower claims\n✓/✗ 2. No guaranteed results\n✓/✗ 3. FTC disclosure (if sponsored)\n✓/✗ 4. Graphic-first format\n✓/✗ 5. Brand voice consistent\n✓/✗ 6. No competitor issues\n✓/✗ 7. No health/financial claims\n✓/✗ 8. CTA compliant\n✓/✗ 9. Text readable mobile\n✓/✗ 10. Subtitles included\n✓/✗ 11. Hook score ≥7/10\n✓/✗ 12. Viral score ≥28/40\n\nVERDICT: APPROVED ✅ / REJECTED ❌'},
+  {cat:'comply', icon:'⚡', agent:'GUARDIAN', agentColor:'#FF375F',
+   title:'Brand Voice Check', agentBadge:'rgba(255,55,95,.12)',
+   desc:'Verify a piece of content stays true to the Metakittyz brand personality.',
+   code:'Brand voice audit for this @metakittyz content:\n\n[PASTE CONTENT]\n\nCheck against:\n- Sexy Brainiac (smart + accessible)\n- Metaverse Native (XR/virtual reference)\n- Tropical Wild Mind (personality shows)\n- Matrix Crafter (builds/creates)\n\nVERDICT: ON BRAND / OFF BRAND + rewrite notes.'},
+];
+
+/* ── TIPS DATA ─────────────────────────────────────────────── */
+var TIPS = [
+  {num:1, color:'#FF2D78', title:'Give the AI a role first',
+   desc:'Start every prompt with "You are [role]." This sets the AI\'s personality, expertise, and voice before it writes a single word.',
+   ex:'"You are NOVA, a viral Instagram content strategist who specializes in graphic reels for the AI and XR space."'},
+  {num:2, color:'#00F5D4', title:'State the output format exactly',
+   desc:'Tell the AI precisely what you want back. Don\'t say "give me content ideas." Say "give me 3 Instagram reel hooks, each under 7 words."',
+   ex:'"Deliver: (1) Hook, (2) Visual concept, (3) Caption under 300 chars, (4) 10 hashtags."'},
+  {num:3, color:'#FFE000', title:'Add context that changes everything',
+   desc:'The AI doesn\'t know your situation. Tell it your platform, audience, current stats, and goal. Better context = dramatically better output.',
+   ex:'"Context: @metakittyz, 334 followers, Day 1/90, goal is 1M followers, graphic reels only."'},
+  {num:4, color:'#7B2FFF', title:'Give a constraint, not just a request',
+   desc:'Constraints force creativity. "Write a caption" is weak. "Write a caption under 150 characters that leads with a question" is powerful.',
+   ex:'"Must be under 7 words. Must include a number. Must make the reader stop scrolling."'},
+  {num:5, color:'#00FF41', title:'Always ask for a verdict or score',
+   desc:'Don\'t just ask for content — ask the AI to evaluate it too. Having it score its own output forces higher quality.',
+   ex:'"After writing, score this caption on a scale of 1–10 for hook strength and explain why."'},
+];
+
+/* ── ACTIVE FILTER ─────────────────────────────────────────── */
+var activeCat = 'all';
+
+/* ── INIT ──────────────────────────────────────────────────── */
+function init(){
+  buildCats();
+  buildPrompts('all');
+  buildTips();
+  loadTemplate();
+}
+
+/* ── BUILD CATEGORIES ──────────────────────────────────────── */
+function buildCats(){
+  var el = document.getElementById('catGrid');
+  el.innerHTML = CATS.map(function(c){
+    return '<button class="cat-btn'+(c.id==='all'?' on':'')+'" onclick="filterCat(\''+c.id+'\')" id="cat-'+c.id+'">' +
+      '<span class="cat-icon">'+c.icon+'</span>' +
+      '<div class="cat-name">'+c.name+'</div>' +
+    '</button>';
+  }).join('');
+}
+
+/* ── FILTER CATEGORY ───────────────────────────────────────── */
+function filterCat(id){
+  activeCat = id;
+  document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('on'); });
+  var el = document.getElementById('cat-'+id);
+  if(el) el.classList.add('on');
+  buildPrompts(id);
+}
+
+/* ── BUILD PROMPT CARDS ────────────────────────────────────── */
+function buildPrompts(cat){
+  var list = cat === 'all' ? PROMPTS : PROMPTS.filter(function(p){ return p.cat === cat; });
+  var el = document.getElementById('promptGrid');
+  if(!list.length){
+    el.innerHTML = '<p style="color:var(--muted);font-family:\'Space Mono\',monospace;font-size:12px;padding:20px 0;">No prompts in this category yet — more coming soon.</p>';
+    return;
+  }
+  el.innerHTML = list.map(function(p, i){
+    return '<div class="prompt-card" style="--i:'+i+'">' +
+      '<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,'+p.agentColor+',transparent);"></div>' +
+      '<div class="pc-head">' +
+        '<div class="pc-icon">'+p.icon+'</div>' +
+        '<div class="pc-meta">' +
+          '<div class="pc-cat" style="color:'+p.agentColor+'">'+p.cat.toUpperCase()+'</div>' +
+          '<div class="pc-title">'+p.title+'</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="pc-agent" style="color:'+p.agentColor+';border-color:'+p.agentColor+'40;background:'+p.agentBadge+'">'+
+        '<span>●</span>'+p.agent+
+      '</div>' +
+      '<div class="pc-body">'+p.desc+'<code>'+p.code+'</code></div>' +
+      '<div class="pc-actions">' +
+        '<button class="pc-copy" onclick="copyPromptCard(\''+escStr(p.code)+'\')" style="border-color:'+p.agentColor+'40;color:'+p.agentColor+'">📋 Copy</button>' +
+        '<button class="pc-try" onclick="loadPromptCard(\''+p.agent.toLowerCase().split(' ')[0]+'\',\''+escStr(p.code)+'\')" style="background:linear-gradient(135deg,'+p.agentColor+',#7B2FFF)">⚡ Try in Lab</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function escStr(s){
+  return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
+}
+
+/* ── BUILD TIPS ────────────────────────────────────────────── */
+function buildTips(){
+  var el = document.getElementById('tipsGrid');
+  el.innerHTML = TIPS.map(function(t){
+    return '<div class="tip-card">' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">' +
+        '<div class="tip-num" style="background:'+t.color+'">'+t.num+'</div>' +
+        '<div class="tip-title">'+t.title+'</div>' +
+      '</div>' +
+      '<div class="tip-desc">'+t.desc+'</div>' +
+      '<div class="tip-ex">'+t.ex+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* ── LOAD TEMPLATE FROM SELECT ─────────────────────────────── */
+function loadTemplate(){
+  var id = document.getElementById('agentPick').value;
+  var tpl = TEMPLATES[id] || '';
+  document.getElementById('labPrompt').value = tpl;
+}
+
+/* ── LOAD PROMPT CARD INTO LAB ─────────────────────────────── */
+function loadPromptCard(agentId, code){
+  document.getElementById('agentPick').value = agentId;
+  document.getElementById('labPrompt').value = code.replace(/\\n/g,'\n');
+  document.getElementById('labOutput').classList.remove('show');
+  window.scrollTo({top: document.querySelector('.lab-box').offsetTop - 70, behavior:'smooth'});
+  stats.templates++;
+  updateRC();
+}
+
+/* ── RUN LAB ───────────────────────────────────────────────── */
+async function runLab(){
+  var agentId  = document.getElementById('agentPick').value;
+  var prompt   = document.getElementById('labPrompt').value.trim();
+  var task     = document.getElementById('labTask').value.trim();
+  if(!prompt){ toast('Write or load a prompt first'); return; }
+
+  var btn = document.getElementById('labRunBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Thinking...';
+
+  var out = document.getElementById('labOutput');
+  var txt = document.getElementById('outputText');
+  out.classList.add('show');
+  txt.innerHTML = '<div class="output-thinking">🧠 <span>Agent running</span><span class="thinking-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+  document.getElementById('outputLbl').textContent = '▸ ' + agentId.toUpperCase() + ' RESPONSE';
+
+  var sys = AGENT_PROMPTS[agentId] || '';
+  var userMsg = prompt + (task ? '\n\nTask/Context: '+task : '');
+
+  try{
+    var r = await fetch('/api/anthropic',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-opus-4-8',max_tokens:1500,
+        system:sys,
+        messages:[{role:'user',content:userMsg}]
+      })
+    });
+    var d = await r.json();
+    var text = d.content&&d.content[0]?d.content[0].text:null;
+    if(!text) throw new Error(d.error&&d.error.message||'No response');
+    txt.textContent = text;
+    stats.runs++;
+    stats.agents.add(agentId);
+    updateRC();
+  }catch(e){
+    try{
+      var r2 = await fetch('/api/openai',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'gpt-4o',messages:[
+          {role:'system',content:sys},
+          {role:'user',content:userMsg}
+        ]})
+      });
+      var d2 = await r2.json();
+      var t2 = d2.choices&&d2.choices[0]&&d2.choices[0].message&&d2.choices[0].message.content;
+      if(!t2) throw new Error('No response from fallback');
+      txt.textContent = t2;
+      stats.runs++;
+      stats.agents.add(agentId);
+      updateRC();
+    }catch(e2){
+      txt.innerHTML = '<span style="color:var(--pk)">⚠ API not available — copy the prompt and paste into Claude or ChatGPT to test it.\n\nError: '+e.message+'</span>';
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = '⚡ RUN PROMPT';
+}
+
+/* ── UPDATE REPORT CARD ────────────────────────────────────── */
+function updateRC(){
+  document.getElementById('rcRuns').textContent = stats.runs;
+  document.getElementById('rcTemplates').textContent = stats.templates;
+  document.getElementById('rcAgents').textContent = stats.agents.size;
+  document.getElementById('rcCopies').textContent = stats.copies;
+
+  document.getElementById('rcRunsFill').style.width = Math.min(stats.runs*10,100)+'%';
+  document.getElementById('rcTplFill').style.width  = Math.min(stats.templates*10,100)+'%';
+  document.getElementById('rcAgFill').style.width   = Math.min(stats.agents.size*10,100)+'%';
+  document.getElementById('rcCpFill').style.width   = Math.min(stats.copies*10,100)+'%';
+
+  var total = stats.runs + stats.templates + stats.agents.size + stats.copies;
+  var grade, pct;
+  if(total >= 20){ grade = 'A+'; pct = '100%'; }
+  else if(total >= 12){ grade = 'A'; pct = '85%'; }
+  else if(total >= 8){ grade = 'B'; pct = '70%'; }
+  else if(total >= 4){ grade = 'C'; pct = '50%'; }
+  else if(total >= 1){ grade = 'D'; pct = '25%'; }
+  else { grade = '—'; pct = '0%'; }
+
+  var grEl = document.getElementById('rcGrade');
+  grEl.textContent = grade;
+  grEl.style.color = total >= 8 ? 'var(--mx)' : total >= 4 ? 'var(--yl)' : 'var(--pk)';
+  document.querySelector('.rc-score').style.setProperty('--pct', pct);
+
+  if(total > 0){
+    document.getElementById('rcSub').textContent = 'Session active · '+stats.runs+' run'+(stats.runs===1?'':'s')+' · '+stats.agents.size+' agent'+(stats.agents.size===1?'':'s')+' activated.';
+  }
+}
+
+/* ── UTILITIES ─────────────────────────────────────────────── */
+function clearLab(){
+  document.getElementById('labPrompt').value = '';
+  document.getElementById('labTask').value = '';
+  document.getElementById('labOutput').classList.remove('show');
+}
+
+function copyLabPrompt(){
+  var p = document.getElementById('labPrompt').value;
+  if(!p){ toast('No prompt to copy'); return; }
+  navigator.clipboard.writeText(p).then(function(){
+    stats.copies++; updateRC();
+    toast('Prompt copied to clipboard ✓');
+  });
+}
+
+function copyOutput(){
+  var t = document.getElementById('outputText').textContent;
+  if(!t){ toast('No output yet'); return; }
+  navigator.clipboard.writeText(t).then(function(){
+    stats.copies++; updateRC();
+    toast('Output copied ✓');
+  });
+}
+
+function copyPromptCard(code){
+  var clean = code.replace(/\\n/g,'\n');
+  navigator.clipboard.writeText(clean).then(function(){
+    stats.copies++; updateRC();
+    toast('Prompt copied ✓');
+  });
+}
+
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+/* ── START ─────────────────────────────────────────────────── */
+init();
+</script>
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" aria-label="Site navigation">
+  <a class="mnav-item" href="/"><span class="mnav-ic">🏠</span><span class="mnav-lb">Home</span></a>
+  <a class="mnav-item" href="/guide.html"><span class="mnav-ic">📖</span><span class="mnav-lb">Guide</span></a>
+  <a class="mnav-item" href="/playbook.html"><span class="mnav-ic">📋</span><span class="mnav-lb">Playbook</span></a>
+  <a class="mnav-item" href="/learn-more.html"><span class="mnav-ic">🛍</span><span class="mnav-lb">Products</span></a>
+  <a class="mnav-item" href="/about.html"><span class="mnav-ic">⚡</span><span class="mnav-lb">About</span></a>
+</nav>
+<script>
+function mkTheme(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mk-theme',t);var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';}
+(function(){var t=document.documentElement.getAttribute('data-theme')||'dark';var b=document.getElementById('themeBtn');if(b)b.textContent=t==='dark'?'☀️':'🌙';})();
+</script>
+</body>
+</html>

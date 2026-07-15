@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Email Admin · Metakittyz</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0015; --card: #0f001e; --surf: rgba(255,255,255,.04);
+  --border: rgba(255,255,255,.08); --border2: rgba(255,255,255,.12);
+  --pk: #FF2D78; --tl: #00F5D4; --yl: #FFE000; --pu: #7B2FFF; --or: #FF6B35; --gr: #00FF41;
+  --txt: #e8e8f0; --muted: #666; --dim: #333;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--txt); min-height: 100vh; }
+
+/* ── LOGIN SCREEN ── */
+.login-wrap {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 24px;
+}
+.login-box {
+  background: var(--card); border: 1px solid var(--border2); border-radius: 20px;
+  overflow: hidden; width: 100%; max-width: 360px;
+}
+.login-rb { height: 3px; background: linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78); background-size:200%; animation: rbshift 4s linear infinite; }
+@keyframes rbshift { from{background-position:0%} to{background-position:200%} }
+.login-body { padding: 32px; }
+.login-logo { font-family: 'Orbitron', monospace; font-weight: 900; font-size: 11px; letter-spacing: .16em; color: rgba(255,255,255,.4); text-transform: uppercase; margin-bottom: 20px; }
+.login-title { font-family: 'Orbitron', monospace; font-weight: 700; font-size: 18px; margin-bottom: 6px; }
+.login-sub { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+.login-input {
+  width: 100%; background: rgba(255,255,255,.05); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 12px 14px; font-family: 'Space Mono', monospace;
+  font-size: 13px; color: var(--txt); outline: none; margin-bottom: 12px;
+  transition: border-color .15s;
+}
+.login-input:focus { border-color: rgba(255,45,120,.5); }
+.login-input.err { border-color: var(--pk); }
+.login-btn {
+  width: 100%; padding: 13px; border: none; border-radius: 100px;
+  background: linear-gradient(90deg, #FF2D78, #7B2FFF); color: #fff;
+  font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: .1em;
+  font-weight: 700; text-transform: uppercase; cursor: pointer; transition: opacity .15s;
+}
+.login-btn:hover { opacity: .88; }
+.login-err { font-size: 11px; color: var(--pk); text-align: center; margin-top: 8px; min-height: 16px; }
+
+/* ── DASHBOARD ── */
+.dash { display: none; padding: 0 0 80px; }
+.topbar {
+  background: rgba(10,0,21,.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); padding: 0 clamp(16px,4vw,40px);
+  display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100;
+}
+.topbar-logo { font-family: 'Orbitron', monospace; font-weight: 900; font-size: 11px; letter-spacing: .14em; color: rgba(255,255,255,.5); padding: 16px 0; }
+.topbar-badge { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: .14em; padding: 3px 10px; border-radius: 100px; border: 1px solid rgba(255,45,120,.4); color: var(--pk); text-transform: uppercase; }
+.topbar-spacer { flex: 1; }
+.topbar-logout { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: .1em; color: var(--muted); cursor: pointer; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border); border-radius: 100px; background: none; transition: all .15s; }
+.topbar-logout:hover { color: var(--pk); border-color: rgba(255,45,120,.4); }
+
+.dash-body { max-width: 1100px; margin: 0 auto; padding: 32px clamp(16px,4vw,40px) 0; }
+
+/* ── STATS ROW ── */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; margin-bottom: 28px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+.stat-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+.stat-value { font-family: 'Orbitron', monospace; font-weight: 700; font-size: 28px; line-height: 1; }
+.stat-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.sv-pk { color: var(--pk); }
+.sv-tl { color: var(--tl); }
+.sv-yl { color: var(--yl); }
+.sv-pu { color: var(--pu); }
+
+/* ── PRODUCT BREAKDOWN ── */
+.breakdown { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 28px; }
+.section-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: .16em; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; }
+.prod-rows { display: flex; flex-direction: column; gap: 8px; }
+.prod-row { display: flex; align-items: center; gap: 12px; }
+.prod-name { font-size: 12px; min-width: 220px; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prod-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,.06); border-radius: 100px; overflow: hidden; }
+.prod-bar { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--pk), var(--pu)); transition: width .6s ease; }
+.prod-count { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); min-width: 24px; text-align: right; }
+
+/* ── TOOLBAR ── */
+.toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; opacity: .4; }
+.search-input {
+  width: 100%; background: var(--card); border: 1px solid var(--border2); border-radius: 100px;
+  padding: 9px 14px 9px 34px; font-family: 'Inter', sans-serif; font-size: 12px;
+  color: var(--txt); outline: none; transition: border-color .15s;
+}
+.search-input:focus { border-color: rgba(123,47,255,.5); }
+.filter-select {
+  background: var(--card); border: 1px solid var(--border2); border-radius: 100px;
+  padding: 9px 14px; font-family: 'Space Mono', monospace; font-size: 9px;
+  color: var(--txt); outline: none; cursor: pointer; letter-spacing: .05em;
+}
+.btn-export {
+  background: linear-gradient(90deg,#00F5D4,#00FF41); color: #0A0015;
+  border: none; border-radius: 100px; padding: 9px 18px;
+  font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .08em;
+  font-weight: 700; text-transform: uppercase; cursor: pointer; transition: opacity .15s;
+  white-space: nowrap; text-decoration: none; display: inline-block;
+}
+.btn-export:hover { opacity: .88; }
+.btn-dl {
+  background: linear-gradient(90deg,#FF6B35,#FFE000); color: #0A0015;
+  border: none; border-radius: 100px; padding: 9px 18px;
+  font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .08em;
+  font-weight: 700; text-transform: uppercase; cursor: pointer; transition: opacity .15s;
+  white-space: nowrap; text-decoration: none; display: inline-block;
+}
+.btn-dl:hover { opacity: .88; }
+.dl-row { display: flex; gap: 8px; align-items: center; padding: 14px 22px 14px; border-top: 1px solid var(--border); }
+.dl-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; margin-right: 4px; }
+.result-count { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+thead tr { background: rgba(255,255,255,.03); border-bottom: 1px solid var(--border); }
+th {
+  font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: .12em;
+  color: var(--muted); text-transform: uppercase; padding: 11px 16px; text-align: left;
+  white-space: nowrap;
+}
+th.sortable { cursor: pointer; user-select: none; }
+th.sortable:hover { color: var(--txt); }
+th .sort-arrow { margin-left: 4px; opacity: .4; }
+td { padding: 11px 16px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,.02); }
+.td-email { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--txt); }
+.td-product { font-size: 11px; color: #aaa; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.td-source { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); }
+.td-date { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); white-space: nowrap; }
+.td-num { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--dim); }
+.empty-row td { text-align: center; color: var(--muted); padding: 40px; font-size: 12px; }
+
+/* ── LOADING / ERROR ── */
+.loading { text-align: center; padding: 60px 20px; }
+.loading-spin { font-size: 28px; animation: spin .8s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: .1em; margin-top: 12px; }
+.dash-err { background: rgba(255,45,120,.08); border: 1px solid rgba(255,45,120,.2); border-radius: 10px; padding: 16px; font-size: 12px; color: var(--pk); margin: 20px 0; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px) {
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .prod-name { min-width: 140px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-rb"></div>
+    <div class="login-body">
+      <div class="login-logo">Metakittyz · Admin</div>
+      <h1 class="login-title">Email Dashboard</h1>
+      <p class="login-sub">Enter your admin password to view collected emails.</p>
+      <input class="login-input" type="password" id="pwInput" placeholder="Admin password" autocomplete="current-password">
+      <button class="login-btn" onclick="doLogin()">Access Dashboard →</button>
+      <div class="login-err" id="loginErr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div class="dash" id="dash">
+  <div class="topbar">
+    <div class="topbar-logo">Metakittyz</div>
+    <span class="topbar-badge">Admin</span>
+    <div class="topbar-spacer"></div>
+    <button class="topbar-logout" onclick="doLogout()">Log Out</button>
+  </div>
+
+  <div class="dash-body">
+
+    <div id="dashLoading" class="loading">
+      <div class="loading-spin">⚡</div>
+      <div class="loading-text">Loading submissions…</div>
+    </div>
+
+    <div id="dashError" class="dash-err" style="display:none;"></div>
+
+    <div id="dashContent" style="display:none;">
+
+      <!-- Stats -->
+      <div class="stats-row" id="statsRow"></div>
+
+      <!-- Product breakdown + direct download -->
+      <div class="breakdown">
+        <div class="section-label">Signups by Product</div>
+        <div class="prod-rows" id="prodRows"></div>
+        <div class="dl-row">
+          <span class="dl-label">Download all emails:</span>
+          <a class="btn-dl" id="dlCsvBtn" href="#" download>⬇ CSV File</a>
+          <a class="btn-export" id="dlJsonBtn" href="#" download>{ } JSON</a>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" type="text" id="searchInput" placeholder="Search email or product…" oninput="renderTable()">
+        </div>
+        <select class="filter-select" id="filterProduct" onchange="renderTable()">
+          <option value="">All products</option>
+        </select>
+        <span class="result-count" id="resultCount"></span>
+        <button class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="td-num">#</th>
+              <th class="sortable" onclick="sortBy('email')">Email <span class="sort-arrow" id="sarr-email"></span></th>
+              <th class="sortable" onclick="sortBy('product')">Product <span class="sort-arrow" id="sarr-product"></span></th>
+              <th>Source</th>
+              <th class="sortable" onclick="sortBy('date')">Date <span class="sort-arrow" id="sarr-date">↓</span></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+    </div><!-- end dashContent -->
+  </div><!-- end dash-body -->
+</div><!-- end dash -->
+
+<script>
+var ALL_ENTRIES = [];
+var SORT_KEY = 'date';
+var SORT_DIR = -1; // -1 = desc
+
+function doLogin() {
+  var pw = document.getElementById('pwInput').value.trim();
+  if (!pw) {
+    document.getElementById('loginErr').textContent = 'Enter a password.';
+    document.getElementById('pwInput').classList.add('err');
+    return;
+  }
+  fetchDashboard(pw);
+}
+
+document.getElementById('pwInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+function doLogout() {
+  ALL_ENTRIES = [];
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('dash').style.display = 'none';
+  document.getElementById('pwInput').value = '';
+  document.getElementById('loginErr').textContent = '';
+  document.getElementById('pwInput').classList.remove('err');
+}
+
+async function fetchDashboard(pw) {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('dash').style.display = 'block';
+  document.getElementById('dashLoading').style.display = 'block';
+  document.getElementById('dashError').style.display = 'none';
+  document.getElementById('dashContent').style.display = 'none';
+
+  try {
+    var res = await fetch('/.netlify/functions/admin-emails?password=' + encodeURIComponent(pw));
+    var data = await res.json();
+
+    if (res.status === 401) {
+      document.getElementById('dashLoading').style.display = 'none';
+      document.getElementById('dashError').style.display = 'block';
+      document.getElementById('dashError').textContent = '🔒 Incorrect password.';
+      setTimeout(doLogout, 1800);
+      return;
+    }
+    if (!res.ok) throw new Error(data.error || 'Server error');
+
+    ALL_ENTRIES = data.entries || [];
+    renderStats(data);
+    renderProductBreakdown(data);
+    renderProductFilter(data);
+    renderTable();
+
+    document.getElementById('dashLoading').style.display = 'none';
+    document.getElementById('dashContent').style.display = 'block';
+
+    // Store pw in memory so download links and refresh work
+    window.__adminPw = pw;
+
+    // Wire direct download links — hitting these URLs triggers a server-side file download
+    var base = '/.netlify/functions/download-emails?password=' + encodeURIComponent(pw);
+    document.getElementById('dlCsvBtn').href  = base + '&format=csv';
+    document.getElementById('dlJsonBtn').href = base + '&format=json';
+
+  } catch (err) {
+    document.getElementById('dashLoading').style.display = 'none';
+    document.getElementById('dashError').style.display = 'block';
+    document.getElementById('dashError').textContent = '⚠ Error: ' + err.message;
+  }
+}
+
+function renderStats(data) {
+  document.getElementById('statsRow').innerHTML =
+    statCard(data.total,                                   'Total Signups',  '',             'sv-pk') +
+    statCard(data.unique,                                  'Unique Emails',  '',             'sv-tl') +
+    statCard(data.todayCount || 0,                         'Today',          '',             'sv-yl') +
+    statCard(Object.keys(data.byProduct || {}).length,     'Products',       'with signups', 'sv-pu');
+}
+
+function statCard(val, label, sub, cls) {
+  return '<div class="stat-card"><div class="stat-label">' + label + '</div>' +
+    '<div class="stat-value ' + cls + '">' + val + '</div>' +
+    (sub ? '<div class="stat-sub">' + sub + '</div>' : '') + '</div>';
+}
+
+function renderProductBreakdown(data) {
+  var bp = data.byProduct || {};
+  var items = Object.entries(bp).sort(function(a,b){ return b[1]-a[1]; });
+  var max = items.length ? items[0][1] : 1;
+
+  document.getElementById('prodRows').innerHTML = items.length
+    ? items.map(function(item) {
+        var pct = Math.round((item[1] / max) * 100);
+        return '<div class="prod-row">' +
+          '<div class="prod-name" title="' + esc(item[0]) + '">' + esc(item[0]) + '</div>' +
+          '<div class="prod-bar-wrap"><div class="prod-bar" style="width:' + pct + '%"></div></div>' +
+          '<div class="prod-count">' + item[1] + '</div></div>';
+      }).join('')
+    : '<div style="color:var(--muted);font-size:12px;">No data yet</div>';
+}
+
+function renderProductFilter(data) {
+  var bp = data.byProduct || {};
+  var sel = document.getElementById('filterProduct');
+  sel.innerHTML = '<option value="">All products</option>' +
+    Object.keys(bp).map(function(p) {
+      return '<option value="' + esc(p) + '">' + esc(p) + '</option>';
+    }).join('');
+}
+
+function renderTable() {
+  var q = document.getElementById('searchInput').value.trim().toLowerCase();
+  var fp = document.getElementById('filterProduct').value;
+
+  var rows = ALL_ENTRIES.filter(function(e) {
+    if (fp && e.product !== fp) return false;
+    if (q && !e.email.includes(q) && !(e.product||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  // Sort
+  rows.sort(function(a,b) {
+    var av = a[SORT_KEY] || '', bv = b[SORT_KEY] || '';
+    if (SORT_KEY === 'date') { av = a.timestamp||0; bv = b.timestamp||0; }
+    return SORT_DIR * (av < bv ? -1 : av > bv ? 1 : 0);
+  });
+
+  document.getElementById('resultCount').textContent = rows.length + ' of ' + ALL_ENTRIES.length;
+
+  document.getElementById('tableBody').innerHTML = rows.length
+    ? rows.map(function(e, i) {
+        return '<tr>' +
+          '<td class="td-num">' + (i+1) + '</td>' +
+          '<td class="td-email">' + esc(e.email) + '</td>' +
+          '<td class="td-product" title="' + esc(e.product||'') + '">' + esc(e.product||'—') + '</td>' +
+          '<td class="td-source">' + esc(e.source||'—') + '</td>' +
+          '<td class="td-date">' + fmtDate(e.date) + '</td>' +
+          '</tr>';
+      }).join('')
+    : '<tr class="empty-row"><td colspan="5">No submissions match your search.</td></tr>';
+}
+
+function sortBy(key) {
+  if (SORT_KEY === key) { SORT_DIR *= -1; }
+  else { SORT_KEY = key; SORT_DIR = key === 'date' ? -1 : 1; }
+  // Update arrows
+  ['email','product','date'].forEach(function(k) {
+    var el = document.getElementById('sarr-' + k);
+    if (!el) return;
+    el.textContent = SORT_KEY === k ? (SORT_DIR === 1 ? '↑' : '↓') : '';
+  });
+  renderTable();
+}
+
+function exportCSV() {
+  var q = document.getElementById('searchInput').value.trim().toLowerCase();
+  var fp = document.getElementById('filterProduct').value;
+
+  var rows = ALL_ENTRIES.filter(function(e) {
+    if (fp && e.product !== fp) return false;
+    if (q && !e.email.includes(q) && !(e.product||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  var csv = 'Email,Product,Source,Date\n' + rows.map(function(e) {
+    return [e.email, e.product, e.source, e.date].map(function(v) {
+      return '"' + String(v||'').replace(/"/g,'""') + '"';
+    }).join(',');
+  }).join('\n');
+
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'metakittyz-emails-' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  var d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) +
+    ' ' + d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', hour12:true });
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
