@@ -842,6 +842,8 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
 </nav>
 
 <script>
+const VENMO_HANDLE = 'Corporatebarbie';
+
 /* ══════════════════════════════════════════
    UNLOCK CODES — include in your purchase confirmation email
    One code per pack. User enters it → content unlocks instantly.
@@ -852,6 +854,10 @@ const UNLOCK_CODES = {
   creator:  'MK97UNLOCK',
   business: 'MK297UNLOCK',
   ceo:      'MK497UNLOCK'
+};
+
+const PACK_PRICES = {
+  starter: '17', growth: '47', creator: '97', business: '297', ceo: '497'
 };
 
 let currentPack = 'starter';
@@ -933,24 +939,60 @@ function openPay(packName, price, packKey) {
 /* ── Purchase request form submit ── */
 function handlePurchaseSubmit(e) {
   e.preventDefault();
-  const form = e.target;
-  const data = new FormData(form);
-  // Submit to Netlify Forms
+  const form   = e.target;
+  const data   = new FormData(form);
+  const method = data.get('payment_method') || '';
+  const email  = data.get('email') || '';
+  const name   = data.get('name')  || '';
+
+  // Submit to Netlify Forms in background
   fetch('/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(data).toString()
   }).catch(() => {});
-  // Save email for future pre-fill
-  const email  = data.get('email')  || '';
-  const name   = data.get('name')   || '';
-  const method = data.get('payment_method') || '';
+
+  // Save for future pre-fill
   if (email) { localStorage.setItem('mk_email', email); localStorage.setItem('mk_email_captured', '1'); }
   if (name)    localStorage.setItem('mk_name', name);
   trackEvent('purchase_intent', { method: method, pack: currentPack });
+
   // Show confirmation
   document.getElementById('pay-form-wrap').style.display = 'none';
-  document.getElementById('pay-confirm').style.display   = '';
+  const confirm = document.getElementById('pay-confirm');
+  confirm.style.display = '';
+
+  const packName = document.getElementById('modal-pack-name').textContent;
+  const price    = '$' + (PACK_PRICES[currentPack] || '');
+
+  if (method === 'Venmo') {
+    const venmoUrl = 'https://venmo.com/u/' + VENMO_HANDLE;
+    confirm.innerHTML =
+      '<div style="font-size:2rem;margin-bottom:0.4rem">💜</div>' +
+      '<p style="font-weight:700;color:var(--tl);font-size:1rem;margin-bottom:0.5rem">Almost there!</p>' +
+      '<p style="font-size:0.82rem;color:var(--muted);line-height:1.7;margin-bottom:0.9rem">' +
+        'Send <strong style="color:var(--txt)">' + price + '</strong> to ' +
+        '<strong style="color:var(--txt)">@' + VENMO_HANDLE + '</strong> on Venmo.<br>' +
+        'Put <strong style="color:var(--yl)">"' + packName + '"</strong> in the note.' +
+      '</p>' +
+      '<a href="' + venmoUrl + '" target="_blank" rel="noopener"' +
+        ' style="display:block;width:100%;box-sizing:border-box;padding:0.85rem;' +
+                'background:#008CFF;color:#fff;font-weight:700;font-size:0.95rem;' +
+                'border-radius:12px;text-align:center;text-decoration:none;margin-bottom:0.8rem">' +
+        'Open Venmo →' +
+      '</a>' +
+      '<p style="font-size:0.75rem;color:var(--muted);line-height:1.6">' +
+        'After paying, DM <strong style="color:var(--txt)">@metakittyz</strong> on Instagram with <strong style="color:var(--txt)">"PAID"</strong> and your email — your unlock code arrives within a few hours.' +
+      '</p>';
+  } else {
+    confirm.innerHTML =
+      '<div style="font-size:2.2rem;margin-bottom:0.4rem">✅</div>' +
+      '<p style="font-weight:700;color:var(--tl);font-size:1rem;margin-bottom:0.4rem">Request received!</p>' +
+      '<p style="font-size:0.8rem;color:var(--muted);line-height:1.6">' +
+        'Check your inbox — a payment link is coming your way. Once you pay, your ' +
+        '<strong style="color:var(--txt)">unlock code</strong> arrives in the same email.' +
+      '</p>';
+  }
 }
 
 function closePayModal() {
