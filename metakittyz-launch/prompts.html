@@ -6,6 +6,9 @@
 <title>Prompt Store — Metakittyz</title>
 <meta name="description" content="Proven AI prompt packs for content creation, brand building, and marketing. Built and tested live on stream by Metakittyz.">
 
+<!-- ── Stripe.js — must load before any stripe calls ── -->
+<script src="https://js.stripe.com/v3/"></script>
+
 <!-- ── Google Analytics 4 ──
      SETUP: Replace G-XXXXXXXXXX with your Measurement ID from analytics.google.com
      Create account → New property → Web → copy Measurement ID -->
@@ -146,14 +149,15 @@ a { color: inherit; text-decoration: none; }
 .pay-note {
   font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 0.8rem; line-height: 1.5;
 }
-.pay-method-opt {
-  display: flex; align-items: center; gap: 0.5rem;
-  background: var(--surf); border: 1px solid var(--dim); border-radius: 10px;
-  padding: 0.6rem 0.75rem; cursor: pointer; font-size: 0.85rem; font-weight: 600;
-  transition: 0.15s;
+.pay-or-divider {
+  display: flex; align-items: center; gap: 0.6rem;
+  color: var(--muted); font-size: 0.73rem;
 }
-.pay-method-opt:has(input:checked) { border-color: var(--tl); background: rgba(0,245,212,0.07); }
-.pay-method-opt input[type="radio"] { accent-color: var(--tl); }
+.pay-or-divider::before, .pay-or-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--dim);
+}
+#card-element.StripeElement--focus { border-color: var(--tl); }
+#card-element.StripeElement--invalid { border-color: var(--pk); }
 
 /* ══════════════════════════════════════════
    PAGE HEADER
@@ -761,60 +765,53 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
     <div class="pay-price" id="modal-price">$17</div>
     <div class="pay-divider"></div>
 
-    <!-- Payment buttons -->
-    <div id="pay-buttons">
-      <p class="pay-label" style="margin-bottom:0.7rem">Choose how to pay</p>
-      <div style="display:flex;flex-direction:column;gap:0.5rem">
-        <a id="btn-paypal" href="#" target="_blank" rel="noopener" onclick="handlePayClick('paypal')"
-          style="display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;
-                 background:var(--surf);border:1px solid var(--dim);border-radius:12px;
-                 text-decoration:none;color:var(--txt);font-weight:600;font-size:0.88rem;transition:0.15s">
-          <span style="font-size:1.3rem">🅿️</span>
-          <span style="flex:1">
-            <span style="display:block">PayPal</span>
-            <span style="font-size:0.72rem;color:var(--muted);font-weight:400">Balance · bank · card</span>
-          </span>
-          <span style="font-size:0.75rem;color:var(--muted)">→</span>
-        </a>
-        <a id="btn-applepay" href="#" target="_blank" rel="noopener" onclick="handlePayClick('applepay')"
-          style="display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;
-                 background:#000;border:1px solid #333;border-radius:12px;
-                 text-decoration:none;color:#fff;font-weight:600;font-size:0.88rem;transition:0.15s">
-          <span style="font-size:1.3rem">🍎</span>
-          <span style="flex:1">
-            <span style="display:block">Apple Pay</span>
-            <span style="font-size:0.72rem;color:#aaa;font-weight:400">One tap · iPhone · Safari</span>
-          </span>
-          <span style="font-size:0.75rem;color:#888">→</span>
-        </a>
-        <a id="btn-card" href="#" target="_blank" rel="noopener" onclick="handlePayClick('card')"
-          style="display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;
-                 background:var(--surf);border:1px solid var(--dim);border-radius:12px;
-                 text-decoration:none;color:var(--txt);font-weight:600;font-size:0.88rem;transition:0.15s">
-          <span style="font-size:1.3rem">💳</span>
-          <span style="flex:1">
-            <span style="display:block">Credit / Debit Card</span>
-            <span style="font-size:0.72rem;color:var(--muted);font-weight:400">Visa · Mastercard · Amex</span>
-          </span>
-          <span style="font-size:0.75rem;color:var(--muted)">→</span>
-        </a>
-        <a id="btn-venmo" href="#" target="_blank" rel="noopener" onclick="handlePayClick('venmo')"
-          style="display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;
-                 background:var(--surf);border:1px solid var(--dim);border-radius:12px;
-                 text-decoration:none;color:var(--txt);font-weight:600;font-size:0.88rem;transition:0.15s">
-          <span style="font-size:1.3rem">💜</span>
-          <span style="flex:1">
-            <span style="display:block">Venmo</span>
-            <span style="font-size:0.72rem;color:var(--muted);font-weight:400">@Corporatebarbie</span>
-          </span>
-          <span style="font-size:0.75rem;color:var(--muted)">→</span>
-        </a>
-      </div>
+    <!-- Apple Pay / Google Pay (shown automatically when available) -->
+    <div id="payment-request-btn-wrap" style="margin-bottom:0.6rem;display:none">
+      <div id="payment-request-button"></div>
+      <div class="pay-or-divider"><span>or pay with card</span></div>
     </div>
 
-    <!-- After-payment instructions (shown after any button click) -->
-    <div id="pay-confirm" style="display:none;padding:0.3rem 0 0.5rem">
-      <div id="pay-confirm-inner"></div>
+    <!-- Card form -->
+    <div id="card-form-wrap">
+      <p class="pay-label" style="margin-bottom:0.6rem">Card details</p>
+      <div id="card-element"
+        style="background:var(--surf);border:1px solid var(--dim);border-radius:10px;
+               padding:0.75rem 0.9rem;margin-bottom:0.5rem;transition:border-color 0.15s">
+      </div>
+      <div id="card-errors"
+        style="font-size:0.78rem;color:var(--pk);min-height:1.1rem;margin-bottom:0.5rem"></div>
+      <button id="submit-card-btn" onclick="submitCardPayment()"
+        style="width:100%;padding:0.9rem;background:linear-gradient(90deg,var(--pk),var(--pu));
+               color:#fff;font-weight:800;font-size:0.95rem;border:none;border-radius:12px;
+               cursor:pointer;letter-spacing:0.2px;transition:opacity 0.15s">
+        Pay <span id="modal-pay-amount">$17</span>
+      </button>
+    </div>
+
+    <!-- Venmo option -->
+    <div class="pay-or-divider" style="margin:0.8rem 0"><span>or</span></div>
+    <a id="btn-venmo" href="https://venmo.com/u/Corporatebarbie" target="_blank" rel="noopener"
+      onclick="handleVenmoClick()"
+      style="display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;
+             background:var(--surf);border:1px solid var(--dim);border-radius:12px;
+             text-decoration:none;color:var(--txt);font-weight:600;font-size:0.88rem">
+      <span style="font-size:1.3rem">💜</span>
+      <span style="flex:1">
+        <span style="display:block">Pay with Venmo</span>
+        <span style="font-size:0.72rem;color:var(--muted);font-weight:400">@Corporatebarbie</span>
+      </span>
+      <span style="font-size:0.75rem;color:var(--muted)">→</span>
+    </a>
+    <div id="venmo-instructions" style="display:none;margin-top:0.6rem;padding:0.7rem;
+         background:rgba(0,140,255,0.07);border:1px solid rgba(0,140,255,0.2);
+         border-radius:10px;font-size:0.78rem;color:var(--muted);line-height:1.7">
+    </div>
+
+    <!-- Success state -->
+    <div id="pay-success" style="display:none;text-align:center;padding:0.8rem 0">
+      <div style="font-size:2.4rem;margin-bottom:0.3rem">🔓</div>
+      <p style="font-weight:800;color:var(--tl);font-size:1.05rem;margin-bottom:0.3rem">Payment confirmed!</p>
+      <p style="font-size:0.8rem;color:var(--muted)">Your prompts are unlocked below.</p>
     </div>
 
     <button class="pay-close-btn" onclick="closePayModal()">Close</button>
@@ -830,7 +827,11 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
 </nav>
 
 <script>
-const PAYPAL_ME   = 'Metakittyz';
+/* ══════════════════════════════════════════
+   STRIPE — replace with your publishable key from dashboard.stripe.com
+   Keys → Publishable key (starts with pk_live_ or pk_test_)
+══════════════════════════════════════════ */
+const STRIPE_PK    = 'pk_test_REPLACE_WITH_YOUR_PUBLISHABLE_KEY';
 const VENMO_HANDLE = 'Corporatebarbie';
 
 /* ══════════════════════════════════════════
@@ -900,62 +901,163 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+/* ── Stripe setup ── */
+let stripe, stripeElements, cardElement, prButton;
+
+function getStripe() {
+  if (!stripe) stripe = Stripe(STRIPE_PK);
+  return stripe;
+}
+
 /* ── Payment Modal ── */
 function openPay(packName, price, packKey) {
   currentPack = packKey;
-  const amount = PACK_PRICES[packKey] || '0';
   document.getElementById('modal-pack-name').textContent = packName;
-  document.getElementById('modal-price').textContent = price;
+  document.getElementById('modal-price').textContent     = price;
+  document.getElementById('modal-pay-amount').textContent = price;
 
-  // Set real payment URLs
-  const ppUrl     = 'https://paypal.me/' + PAYPAL_ME + '/' + amount;
-  const venmoUrl  = 'https://venmo.com/u/' + VENMO_HANDLE;
-  document.getElementById('btn-paypal').href   = ppUrl;
-  document.getElementById('btn-applepay').href = ppUrl;
-  document.getElementById('btn-card').href     = ppUrl;
-  document.getElementById('btn-venmo').href    = venmoUrl;
+  // Reset UI
+  document.getElementById('card-form-wrap').style.display      = '';
+  document.getElementById('pay-success').style.display          = 'none';
+  document.getElementById('venmo-instructions').style.display   = 'none';
+  document.getElementById('card-errors').textContent            = '';
+  const btn = document.getElementById('submit-card-btn');
+  btn.disabled = false;
+  btn.innerHTML = 'Pay ' + price;
 
-  // Reset state
-  document.getElementById('pay-buttons').style.display       = '';
-  document.getElementById('pay-confirm').style.display       = 'none';
-  document.getElementById('pay-confirm-inner').innerHTML     = '';
+  // Mount card element
+  const s = getStripe();
+  if (!stripeElements) {
+    stripeElements = s.elements();
+    cardElement = stripeElements.create('card', {
+      style: {
+        base: {
+          color: '#ffffff', fontSize: '16px', fontFamily: 'system-ui, sans-serif',
+          '::placeholder': { color: '#555' }
+        },
+        invalid: { color: '#FF2D78' }
+      }
+    });
+    cardElement.mount('#card-element');
+    cardElement.on('change', (e) => {
+      document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
+    });
+  }
+
+  // Apple Pay / Google Pay button
+  const amountCents = parseInt(PACK_PRICES[packKey] || '0') * 100;
+  const pr = s.paymentRequest({
+    country: 'US', currency: 'usd',
+    total: { label: packName, amount: amountCents },
+    requestPayerName: true, requestPayerEmail: true,
+  });
+
+  pr.canMakePayment().then(result => {
+    const wrap = document.getElementById('payment-request-btn-wrap');
+    if (result) {
+      wrap.style.display = '';
+      document.getElementById('payment-request-button').innerHTML = '';
+      if (prButton) prButton.destroy();
+      prButton = stripeElements.create('paymentRequestButton', {
+        paymentRequest: pr,
+        style: { paymentRequestButton: { type: 'buy', theme: 'dark', height: '50px' } }
+      });
+      prButton.mount('#payment-request-button');
+    } else {
+      wrap.style.display = 'none';
+    }
+  });
+
+  pr.on('paymentmethod', async (ev) => {
+    try {
+      const { clientSecret } = await createPaymentIntent();
+      const { error, paymentIntent } = await stripe.confirmCardPayment(
+        clientSecret, { payment_method: ev.paymentMethod.id }, { handleActions: false }
+      );
+      if (error) { ev.complete('fail'); showCardError(error.message); return; }
+      ev.complete('success');
+      if (paymentIntent.status === 'requires_action') await stripe.confirmCardPayment(clientSecret);
+      showPaySuccess();
+    } catch (e) { ev.complete('fail'); showCardError('Payment failed. Please try again.'); }
+  });
+
   document.getElementById('pay-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
   trackEvent('view_pack', { pack: packKey, price: price });
 }
 
-/* ── After clicking a payment button ── */
-function handlePayClick(method) {
-  const packName = document.getElementById('modal-pack-name').textContent;
-  const price    = '$' + (PACK_PRICES[currentPack] || '');
-  trackEvent('purchase_intent', { method: method, pack: currentPack });
-
-  const confirm = document.getElementById('pay-confirm');
-  const inner   = document.getElementById('pay-confirm-inner');
-  confirm.style.display = '';
-
-  const note = method === 'venmo'
-    ? '💜 Send <strong style="color:var(--txt)">' + price + '</strong> to <strong style="color:var(--txt)">@' + VENMO_HANDLE + '</strong> — put <strong style="color:var(--yl)">"' + packName + '"</strong> in the note.'
-    : '✅ Complete your payment in the new tab.';
-
-  inner.innerHTML =
-    '<div style="margin-top:0.75rem;padding:0.75rem;background:rgba(0,245,212,0.05);' +
-         'border:1px solid rgba(0,245,212,0.18);border-radius:10px;font-size:0.78rem;' +
-         'color:var(--muted);line-height:1.7;margin-bottom:0.75rem">' +
-      note +
-    '</div>' +
-    '<button onclick="confirmAndUnlock()" ' +
-      'style="width:100%;padding:0.9rem;background:linear-gradient(90deg,var(--tl),var(--pu));' +
-             'color:#000;font-weight:800;font-size:0.95rem;border:none;border-radius:12px;' +
-             'cursor:pointer;letter-spacing:0.2px">' +
-      'I\'ve Paid — Unlock My Prompts 🔓' +
-    '</button>';
+/* ── Create PaymentIntent via Netlify Function ── */
+async function createPaymentIntent() {
+  const amount = parseInt(PACK_PRICES[currentPack] || '0') * 100;
+  const res = await fetch('/.netlify/functions/create-payment-intent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ amount, pack: currentPack })
+  });
+  if (!res.ok) throw new Error('Could not start payment.');
+  return res.json();
 }
 
-/* ── Confirm payment and unlock immediately ── */
-function confirmAndUnlock() {
+/* ── Card form submit ── */
+async function submitCardPayment() {
+  const btn = document.getElementById('submit-card-btn');
+  btn.disabled = true;
+  btn.textContent = 'Processing…';
+  document.getElementById('card-errors').textContent = '';
+  trackEvent('purchase_intent', { method: 'card', pack: currentPack });
+
+  try {
+    const { clientSecret } = await createPaymentIntent();
+    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card: cardElement }
+    });
+    if (error) {
+      showCardError(error.message);
+      btn.disabled = false;
+      btn.textContent = 'Pay ' + '$' + PACK_PRICES[currentPack];
+    } else if (paymentIntent.status === 'succeeded') {
+      showPaySuccess();
+    }
+  } catch (e) {
+    showCardError('Something went wrong. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'Pay ' + '$' + PACK_PRICES[currentPack];
+  }
+}
+
+function showCardError(msg) {
+  document.getElementById('card-errors').textContent = msg;
+}
+
+function showPaySuccess() {
   trackEvent('purchase_complete', { pack: currentPack });
+  document.getElementById('card-form-wrap').style.display    = 'none';
+  document.getElementById('payment-request-btn-wrap').style.display = 'none';
+  document.getElementById('venmo-instructions').style.display = 'none';
+  document.getElementById('pay-success').style.display       = '';
   unlockPack(currentPack);
+}
+
+/* ── Venmo click ── */
+function handleVenmoClick() {
+  const packName = document.getElementById('modal-pack-name').textContent;
+  const price    = '$' + (PACK_PRICES[currentPack] || '');
+  trackEvent('purchase_intent', { method: 'venmo', pack: currentPack });
+  const el = document.getElementById('venmo-instructions');
+  el.style.display = '';
+  el.innerHTML =
+    '💜 Send <strong style="color:var(--txt)">' + price + '</strong> to ' +
+    '<strong style="color:var(--txt)">@' + VENMO_HANDLE + '</strong> — ' +
+    'put <strong style="color:var(--yl)">"' + packName + '"</strong> in the note.<br>' +
+    'Then tap the button below once sent:';
+  el.innerHTML +=
+    '<br><button onclick="showPaySuccess()" ' +
+      'style="margin-top:0.6rem;width:100%;padding:0.75rem;' +
+             'background:linear-gradient(90deg,var(--tl),var(--pu));' +
+             'color:#000;font-weight:800;font-size:0.88rem;border:none;' +
+             'border-radius:10px;cursor:pointer">' +
+      'I\'ve Sent the Payment — Unlock 🔓' +
+    '</button>';
 }
 
 function closePayModal() {
