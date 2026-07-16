@@ -916,10 +916,9 @@ function openPay(packName, price, packKey) {
   document.getElementById('btn-venmo').href    = venmoUrl;
 
   // Reset state
-  document.getElementById('pay-buttons').style.display  = '';
-  document.getElementById('pay-confirm').style.display  = 'none';
-  document.getElementById('code-msg').textContent = '';
-  document.getElementById('unlock-input').value   = '';
+  document.getElementById('pay-buttons').style.display       = '';
+  document.getElementById('pay-confirm').style.display       = 'none';
+  document.getElementById('pay-confirm-inner').innerHTML     = '';
   document.getElementById('pay-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
   trackEvent('view_pack', { pack: packKey, price: price });
@@ -968,35 +967,6 @@ function closePayOutside(e) {
   if (e.target === document.getElementById('pay-modal')) closePayModal();
 }
 
-/* ── Unlock Code ── */
-function applyCode() {
-  const input = document.getElementById('unlock-input');
-  const msg   = document.getElementById('code-msg');
-  const code  = input.value.trim().toUpperCase();
-
-  if (!code) {
-    msg.style.color = 'var(--muted)';
-    msg.textContent = 'Enter the code from your purchase email.';
-    return;
-  }
-
-  if (UNLOCK_CODES[currentPack] === code) {
-    msg.style.color = 'var(--gr)';
-    msg.textContent = '✅ Code accepted! Unlocking your prompts…';
-    unlockPack(currentPack);
-  } else {
-    // Check if code matches a different pack (maybe they bought a different tier)
-    const matchedPack = Object.keys(UNLOCK_CODES).find(k => UNLOCK_CODES[k] === code);
-    if (matchedPack) {
-      msg.style.color = 'var(--yl)';
-      msg.textContent = '✅ Code matched! Unlocking ' + matchedPack + ' pack…';
-      unlockPack(matchedPack);
-    } else {
-      msg.style.color = 'var(--pk)';
-      msg.textContent = '❌ Invalid code. Double-check your purchase confirmation email.';
-    }
-  }
-}
 
 function unlockPack(packKey) {
   localStorage.setItem('mk_unlocked_' + packKey, '1');
