@@ -11,378 +11,359 @@
   --pk:#FF2D78; --tl:#00F5D4; --pu:#7B2FFF; --gr:#00FF41; --yl:#FFE000; --or:#FF6B35;
   --txt:#E8E0F0; --muted:#9A90B0; --dim:#2a2040;
   --rb: linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);
+  --hh: 58px;
+  --bnh: 64px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh;overflow-x:hidden;padding-top:var(--hh);padding-bottom:calc(var(--bnh) + 0.5rem)}
 
 /* ===== ANIMATIONS ===== */
 @keyframes shimmer{0%{background-position:0% 50%}100%{background-position:300% 50%}}
 @keyframes rb-flow{0%{background-position:0% 50%}100%{background-position:300% 50%}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes fade-up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse-glow{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.02)}}
-@keyframes layer-pulse{0%,100%{box-shadow:0 0 0px rgba(0,245,212,0)}50%{box-shadow:0 0 20px rgba(0,245,212,0.12)}}
-@keyframes streak-fire{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes online-pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,65,0.7)}70%{box-shadow:0 0 0 6px rgba(0,255,65,0)}}
 @keyframes toast-in{from{transform:translateY(80px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes toast-out{from{opacity:1}to{transform:translateY(80px);opacity:0}}
-@keyframes ceo-flash{0%,100%{text-shadow:0 0 8px rgba(255,224,0,0.5)}50%{text-shadow:0 0 24px rgba(255,224,0,0.9)}}
+@keyframes toast-out{from{opacity:1}to{opacity:0;transform:translateY(80px)}}
+@keyframes streak-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+@keyframes ceo-glow{0%,100%{text-shadow:0 0 6px rgba(255,224,0,0.4)}50%{text-shadow:0 0 20px rgba(255,224,0,0.8)}}
+@keyframes rb-border{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+@keyframes layer-hover{from{transform:scale(1)}to{transform:scale(1.01)}}
 
-/* ===== RAINBOW BAR ===== */
-.rb-bar{height:3px;background:var(--rb);background-size:300%;animation:rb-flow 4s linear infinite}
+/* ===== FIXED TOP HEADER ===== */
+.top-header{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,0,21,0.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);height:var(--hh);display:flex;align-items:center;padding:0 1.25rem;gap:0.75rem;border-bottom:none}
+.rb-underline{position:fixed;top:var(--hh);left:0;right:0;height:3px;background:var(--rb);background-size:300%;animation:rb-flow 4s linear infinite;z-index:299}
+.th-brand{font-size:1.1rem;font-weight:900;text-decoration:none;color:var(--txt);display:flex;align-items:center;gap:0.4rem;flex:1}
+.th-brand span{background:var(--rb);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
+.th-guide-btn{background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.4);color:var(--or);font-size:0.72rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:0.35rem 0.9rem;border-radius:100px;text-decoration:none;white-space:nowrap;transition:all 0.2s}
+.th-guide-btn:hover{background:rgba(255,107,53,0.28);border-color:var(--or)}
+.th-theme{background:none;border:1px solid var(--dim);color:var(--muted);font-size:0.95rem;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-family:inherit;flex-shrink:0}
+.th-theme:hover{border-color:var(--tl);color:var(--tl)}
 
-/* ===== NAV ===== */
-.topnav{position:sticky;top:0;z-index:200;background:rgba(10,0,21,0.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--dim);padding:0.7rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap}
-.nav-brand{font-size:1.05rem;font-weight:800;text-decoration:none;color:var(--txt);display:flex;align-items:center;gap:0.4rem;white-space:nowrap}
-.nav-brand span{background:var(--rb);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
-.nav-links{display:flex;gap:0.2rem;flex-wrap:wrap;align-items:center}
-.nav-links a{color:var(--muted);text-decoration:none;font-size:0.76rem;font-weight:500;padding:0.3rem 0.6rem;border-radius:8px;transition:all 0.2s;white-space:nowrap}
-.nav-links a:hover{color:var(--txt);background:var(--surf)}
-.nav-links a.active{color:var(--or);background:rgba(255,107,53,0.12)}
+/* ===== FIXED BOTTOM NAV ===== */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:300;background:rgba(10,0,21,0.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--dim);height:var(--bnh);display:flex;align-items:stretch}
+.bn-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:var(--muted);gap:0.15rem;font-family:'SF Mono','Cascadia Code',monospace;font-size:0.6rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;transition:all 0.2s;border-top:2px solid transparent}
+.bn-tab:hover{color:var(--txt)}
+.bn-tab.active{color:var(--tl);border-top-color:var(--tl)}
+.bn-tab.prompts{background:linear-gradient(135deg,rgba(255,45,120,0.18),rgba(123,47,255,0.18));color:var(--pk)}
+.bn-icon{font-size:1.15rem;line-height:1}
 
-/* ===== STREAK WIDGET ===== */
-.streak-widget{background:var(--bg2);border-bottom:1px solid var(--dim);padding:0.65rem 1.25rem}
-.streak-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
-.streak-item{display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:700}
-.streak-fire{animation:streak-fire 1.2s ease-in-out infinite;display:inline-block}
-.streak-num{color:var(--or);font-size:1rem}
-.score-wrap{display:flex;align-items:center;gap:0.6rem;flex:1;min-width:160px}
-.score-label{font-size:0.8rem;font-weight:700;white-space:nowrap}
-.score-bar-bg{flex:1;height:7px;background:var(--dim);border-radius:100px;overflow:hidden;min-width:80px}
-.score-bar-fill{height:100%;background:var(--rb);background-size:300%;animation:rb-flow 3s linear infinite;border-radius:100px;transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);width:0%}
-.score-num{font-size:0.82rem;font-weight:800;color:var(--tl);white-space:nowrap}
-.ceo-badge{display:none;align-items:center;gap:0.3rem;background:rgba(255,224,0,0.12);border:1px solid rgba(255,224,0,0.4);color:var(--yl);font-size:0.75rem;font-weight:800;padding:0.2rem 0.65rem;border-radius:100px;animation:ceo-flash 2s ease-in-out infinite;letter-spacing:0.05em}
-.weekly-note{font-size:0.7rem;color:var(--muted);margin-left:auto}
+/* ===== ERIKA AVATAR ===== */
+.erika-float{position:fixed;bottom:calc(var(--bnh) + 1.25rem);right:1.25rem;z-index:250;width:52px;height:52px;border-radius:50%;cursor:pointer;border:2px solid rgba(0,255,65,0.5);box-shadow:0 0 20px rgba(0,255,65,0.2);transition:all 0.2s;overflow:hidden}
+.erika-float:hover{transform:scale(1.08);box-shadow:0 0 30px rgba(0,255,65,0.4)}
+.erika-float img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.erika-dot{position:absolute;bottom:2px;right:2px;width:12px;height:12px;background:var(--gr);border-radius:50%;border:2px solid var(--bg);animation:online-pulse 2s ease-in-out infinite}
+.erika-bubble{position:fixed;bottom:calc(var(--bnh) + 4.5rem);right:1.25rem;z-index:249;background:var(--surf);border:1px solid var(--gr);border-radius:14px 14px 4px 14px;padding:0.85rem 1rem;max-width:220px;font-size:0.82rem;line-height:1.5;display:none;animation:fade-up 0.25s ease}
+.erika-bubble.open{display:block}
+.erika-bubble a{display:inline-block;color:var(--tl);font-weight:700;font-size:0.8rem;text-decoration:none;margin-top:0.4rem}
+.erika-bubble-close{float:right;background:none;border:none;color:var(--muted);font-size:0.9rem;cursor:pointer;margin-left:0.5rem;line-height:1;font-family:inherit}
 
 /* ===== TOAST ===== */
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surf);border:1px solid var(--gr);border-radius:14px;padding:0.85rem 1.25rem;font-size:0.85rem;font-weight:600;color:var(--txt);z-index:500;max-width:320px;display:none}
-.toast.in{display:block;animation:toast-in 0.3s ease both}
+.toast{position:fixed;bottom:calc(var(--bnh) + 5rem);right:1.25rem;background:var(--surf);border:1px solid var(--gr);border-radius:13px;padding:0.8rem 1.1rem;font-size:0.82rem;font-weight:600;color:var(--txt);z-index:350;max-width:280px;display:none;line-height:1.5}
+.toast.in{display:block;animation:toast-in 0.3s ease}
 .toast.out{animation:toast-out 0.3s ease forwards}
 
 /* ===== HERO ===== */
-.hero{text-align:center;padding:4.5rem 1.5rem 3.5rem;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(255,107,53,0.1) 0%,transparent 65%);pointer-events:none}
-.hero-tag{display:inline-block;background:rgba(255,107,53,0.14);border:1px solid rgba(255,107,53,0.35);color:var(--or);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 0.9rem;border-radius:100px;margin-bottom:1.25rem;animation:fade-up 0.5s ease both}
-.hero h1{font-size:clamp(2rem,5vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:0.75rem;animation:fade-up 0.55s ease 0.08s both}
-.grd{background:var(--rb);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
-.hero-sub{font-size:1.05rem;color:var(--muted);max-width:580px;margin:0 auto 0.6rem;animation:fade-up 0.55s ease 0.15s both}
-.hero-sub strong{color:var(--or)}
-.hero-meta{font-size:0.88rem;color:var(--muted);animation:fade-up 0.55s ease 0.2s both}
+.hero{padding:3rem 1.5rem 2rem;max-width:900px;margin:0 auto}
+.step-label{font-family:'SF Mono','Cascadia Code',monospace;font-size:0.68rem;font-weight:800;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:0.85rem;display:block}
+.hero h1{font-size:clamp(1.9rem,5vw,3.4rem);font-weight:900;line-height:1.15;margin-bottom:0.5rem}
+.hero h1 .tl{color:var(--tl)}
+.hero-sub{font-size:0.95rem;color:var(--muted);max-width:580px;margin-bottom:0.85rem;line-height:1.7}
+.hero-sub strong{color:var(--txt)}
+.matrix-tip{display:inline-flex;align-items:center;gap:0.35rem;font-size:0.82rem;color:var(--muted);background:var(--bg2);border:1px solid var(--dim);border-radius:8px;padding:0.4rem 0.75rem;cursor:pointer;transition:border-color 0.2s;position:relative}
+.matrix-tip:hover{border-color:var(--tl)}
+.matrix-tip-text{font-weight:700;color:var(--tl)}
+.matrix-tip-q{width:18px;height:18px;background:var(--surf);border:1px solid var(--dim);border-radius:50%;font-size:0.65rem;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;font-style:normal}
+.matrix-expand{display:none;position:absolute;bottom:calc(100% + 8px);left:0;background:var(--surf);border:1px solid var(--tl);border-radius:12px;padding:0.85rem 1rem;font-size:0.78rem;color:var(--txt);width:280px;z-index:20;line-height:1.6}
+.matrix-tip:hover .matrix-expand{display:block}
+.matrix-expand strong{color:var(--tl)}
+
+/* ===== STREAK CARD ===== */
+.streak-section{padding:0 1.5rem 2rem;max-width:900px;margin:0 auto}
+.streak-card{background:var(--card);border:1px solid var(--dim);border-radius:18px;padding:1.5rem;position:relative;overflow:hidden}
+.streak-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(255,107,53,0.07) 0%,transparent 55%);pointer-events:none}
+.streak-card-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.streak-main{display:flex;align-items:center;gap:0.65rem}
+.streak-fire{font-size:1.4rem;animation:streak-pulse 1.2s ease-in-out infinite;display:inline-block}
+.streak-label{font-family:'SF Mono','Cascadia Code',monospace;font-size:0.78rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)}
+.streak-num-big{font-size:2rem;font-weight:900;color:var(--or);line-height:1}
+.streak-unit{font-size:0.8rem;font-weight:700;color:var(--muted)}
+.ceo-badge{display:none;align-items:center;gap:0.3rem;background:rgba(255,224,0,0.12);border:1px solid rgba(255,224,0,0.4);color:var(--yl);font-size:0.72rem;font-weight:900;padding:0.25rem 0.75rem;border-radius:100px;animation:ceo-glow 2s ease-in-out infinite;letter-spacing:0.05em;font-family:'SF Mono','Cascadia Code',monospace}
+.streak-sub{font-size:0.78rem;color:var(--muted);margin-bottom:0.85rem}
+.streak-sub strong{color:var(--txt)}
+/* today score */
+.today-score-row{display:flex;align-items:center;gap:0.85rem;flex-wrap:wrap}
+.score-label{font-size:0.78rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.score-bar-bg{flex:1;min-width:80px;height:8px;background:var(--dim);border-radius:100px;overflow:hidden}
+.score-bar-fill{height:100%;background:var(--rb);background-size:300%;animation:rb-flow 3s linear infinite;border-radius:100px;transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);width:0%}
+.score-num{font-size:0.82rem;font-weight:900;color:var(--tl);white-space:nowrap}
 
 /* ===== SECTION ===== */
-.section{max-width:1100px;margin:0 auto;padding:4rem 1.5rem}
-.section-header{text-align:center;margin-bottom:2.75rem}
-.section-tag{display:inline-block;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--tl);margin-bottom:0.55rem}
-.section-header h2{font-size:clamp(1.55rem,3.8vw,2.3rem);font-weight:800;margin-bottom:0.55rem}
-.section-header p{color:var(--muted);font-size:0.92rem;max-width:540px;margin:0 auto}
+.section{max-width:1000px;margin:0 auto;padding:3rem 1.5rem}
+.section-header{text-align:center;margin-bottom:2.5rem}
+.section-tag{display:inline-block;font-family:'SF Mono','Cascadia Code',monospace;font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--tl);margin-bottom:0.5rem}
+.section-header h2{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:800;margin-bottom:0.5rem}
+.section-header p{color:var(--muted);font-size:0.88rem;max-width:520px;margin:0 auto}
 
 /* ===== MATRIX PYRAMID ===== */
-.matrix-wrap{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:4rem 1.5rem}
-.matrix-inner{max-width:800px;margin:0 auto}
-.acronym-row{display:flex;justify-content:center;gap:0.2rem;flex-wrap:wrap;margin-bottom:0.75rem;margin-top:1rem}
-.acronym-letter{background:var(--surf);border:1px solid var(--dim);border-radius:8px;padding:0.3rem 0.55rem;font-size:0.95rem;font-weight:900;line-height:1.2;text-align:center}
-.acronym-letter span{display:block;font-size:0.58rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-top:0.1rem}
-.acronym-letter.m{color:var(--pk)}.acronym-letter.a{color:var(--or)}.acronym-letter.t{color:var(--yl)}.acronym-letter.r{color:var(--tl)}.acronym-letter.i{color:var(--pu)}.acronym-letter.x{color:var(--gr)}
+.matrix-section{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:3rem 1.5rem}
+.matrix-inner{max-width:760px;margin:0 auto}
+.acronym-row{display:flex;justify-content:center;gap:0.3rem;flex-wrap:wrap;margin:1.25rem 0 2rem}
+.al{background:var(--surf);border:1px solid var(--dim);border-radius:8px;padding:0.4rem 0.6rem;text-align:center;min-width:44px}
+.al-letter{font-size:1rem;font-weight:900;line-height:1.1;display:block}
+.al-word{font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-top:0.15rem}
+.al.m .al-letter{color:var(--pk)}.al.a .al-letter{color:var(--or)}.al.t .al-letter{color:var(--yl)}.al.r .al-letter{color:var(--tl)}.al.i .al-letter{color:var(--pu)}.al.x .al-letter{color:var(--gr)}
 
-.pyramid{display:flex;flex-direction:column;align-items:center;gap:0;margin-top:2.5rem}
-.p-layer{border-radius:12px;padding:1.1rem 1.5rem;text-align:center;transition:transform 0.25s,box-shadow 0.25s;cursor:default;position:relative}
+.pyramid{display:flex;flex-direction:column;align-items:center}
+.p-layer{border-radius:12px;padding:1rem 1.5rem;text-align:center;cursor:default;transition:all 0.25s;position:relative}
 .p-layer:hover{transform:scale(1.02);z-index:2}
-.p-layer-4{width:min(30%,220px);background:rgba(123,47,255,0.12);border:1px solid rgba(123,47,255,0.35);border-radius:12px 12px 0 0}
-.p-layer-3{width:min(52%,380px);background:rgba(0,245,212,0.07);border:1px solid rgba(0,245,212,0.25);border-top:none}
-.p-layer-2{width:min(73%,540px);background:rgba(255,45,120,0.07);border:1px solid rgba(255,45,120,0.22);border-top:none}
-.p-layer-1{width:min(94%,700px);background:rgba(0,255,65,0.06);border:1px solid rgba(0,255,65,0.2);border-top:none;border-radius:0 0 12px 12px}
-.p-num{display:inline-block;width:22px;height:22px;border-radius:50%;font-size:0.65rem;font-weight:900;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.3rem}
-.p-layer-4 .p-num{background:rgba(123,47,255,0.3);color:var(--pu)}
-.p-layer-3 .p-num{background:rgba(0,245,212,0.2);color:var(--tl)}
-.p-layer-2 .p-num{background:rgba(255,45,120,0.2);color:var(--pk)}
-.p-layer-1 .p-num{background:rgba(0,255,65,0.15);color:var(--gr)}
-.p-title{font-size:0.9rem;font-weight:800;margin-bottom:0.2rem}
-.p-layer-4 .p-title{color:var(--pu)}
-.p-layer-3 .p-title{color:var(--tl)}
-.p-layer-2 .p-title{color:var(--pk)}
-.p-layer-1 .p-title{color:var(--gr)}
-.p-desc{font-size:0.75rem;color:var(--muted)}
+.p4{width:min(32%,240px);background:rgba(123,47,255,0.12);border:1px solid rgba(123,47,255,0.35);border-radius:12px 12px 0 0}
+.p3{width:min(54%,400px);background:rgba(0,245,212,0.07);border:1px solid rgba(0,245,212,0.25);border-top:none}
+.p2{width:min(76%,560px);background:rgba(255,45,120,0.07);border:1px solid rgba(255,45,120,0.22);border-top:none}
+.p1{width:min(98%,720px);background:rgba(0,255,65,0.05);border:1px solid rgba(0,255,65,0.18);border-top:none;border-radius:0 0 12px 12px}
+.p-icon{font-size:1.25rem;display:block;margin-bottom:0.2rem}
+.p-name{font-size:0.9rem;font-weight:800;margin-bottom:0.15rem}
+.p4 .p-name{color:var(--pu)}.p3 .p-name{color:var(--tl)}.p2 .p-name{color:var(--pk)}.p1 .p-name{color:var(--gr)}
+.p-agents{font-size:0.72rem;color:var(--muted)}
 
-/* ===== DAILY TIMELINE ===== */
-.timeline-section{padding:4rem 1.5rem}
-.timeline-inner{max-width:820px;margin:0 auto}
-.timeline{display:flex;flex-direction:column;gap:0;margin-top:2.5rem;position:relative}
-.timeline::before{content:'';position:absolute;left:28px;top:0;bottom:0;width:2px;background:var(--dim)}
-.tl-block{display:flex;gap:1.25rem;position:relative;padding-bottom:2rem}
+/* ===== TIMELINE ===== */
+.timeline-section{padding:3rem 1.5rem}
+.timeline-inner{max-width:780px;margin:0 auto}
+.timeline{display:flex;flex-direction:column;gap:0;margin-top:2rem;position:relative}
+.timeline::before{content:'';position:absolute;left:27px;top:0;bottom:0;width:2px;background:var(--dim)}
+.tl-block{display:flex;gap:1.1rem;padding-bottom:1.75rem;position:relative}
 .tl-block:last-child{padding-bottom:0}
-.tl-dot{width:58px;min-width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;position:relative;z-index:1;border:2px solid transparent;flex-shrink:0}
-.tl-morning .tl-dot{background:rgba(255,224,0,0.12);border-color:rgba(255,224,0,0.4)}
-.tl-midday .tl-dot{background:rgba(255,45,120,0.12);border-color:rgba(255,45,120,0.4)}
-.tl-evening .tl-dot{background:rgba(123,47,255,0.12);border-color:rgba(123,47,255,0.4)}
-.tl-content{background:var(--card);border:1px solid var(--dim);border-radius:14px;padding:1.25rem 1.4rem;flex:1;transition:border-color 0.2s}
-.tl-morning .tl-content{border-left:3px solid var(--yl)}
-.tl-midday .tl-content{border-left:3px solid var(--pk)}
-.tl-evening .tl-content{border-left:3px solid var(--pu)}
+.tl-dot{width:56px;height:56px;min-width:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;z-index:1;border:2px solid;flex-shrink:0}
+.t-morning .tl-dot{background:rgba(255,224,0,0.1);border-color:rgba(255,224,0,0.4)}
+.t-midday .tl-dot{background:rgba(255,45,120,0.1);border-color:rgba(255,45,120,0.4)}
+.t-evening .tl-dot{background:rgba(123,47,255,0.1);border-color:rgba(123,47,255,0.4)}
+.tl-content{background:var(--card);border:1px solid var(--dim);border-radius:13px;padding:1.1rem 1.25rem;flex:1;transition:border-color 0.2s}
+.t-morning .tl-content{border-left:3px solid var(--yl)}
+.t-midday .tl-content{border-left:3px solid var(--pk)}
+.t-evening .tl-content{border-left:3px solid var(--pu)}
 .tl-content:hover{border-color:var(--tl)}
-.tl-time{font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.35rem}
-.tl-morning .tl-time{color:var(--yl)}
-.tl-midday .tl-time{color:var(--pk)}
-.tl-evening .tl-time{color:var(--pu)}
-.tl-content h3{font-size:1rem;font-weight:800;margin-bottom:0.5rem}
-.tl-tasks{list-style:none;display:flex;flex-direction:column;gap:0.3rem}
-.tl-tasks li{font-size:0.85rem;color:var(--txt);display:flex;align-items:flex-start;gap:0.5rem}
-.tl-tasks li::before{content:'→';font-weight:700;flex-shrink:0;margin-top:0.05em}
-.tl-morning .tl-tasks li::before{color:var(--yl)}
-.tl-midday .tl-tasks li::before{color:var(--pk)}
-.tl-evening .tl-tasks li::before{color:var(--pu)}
-.tl-agents{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.65rem}
-.tl-agent-tag{font-size:0.68rem;font-weight:700;padding:0.18rem 0.5rem;border-radius:6px;border:1px solid}
+.tl-time{font-family:'SF Mono','Cascadia Code',monospace;font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem}
+.t-morning .tl-time{color:var(--yl)}.t-midday .tl-time{color:var(--pk)}.t-evening .tl-time{color:var(--pu)}
+.tl-content h3{font-size:0.95rem;font-weight:800;margin-bottom:0.4rem}
+.tl-tasks{list-style:none;display:flex;flex-direction:column;gap:0.25rem}
+.tl-tasks li{font-size:0.8rem;color:var(--txt);display:flex;gap:0.4rem}
+.tl-tasks li::before{content:'→';font-weight:800;flex-shrink:0}
+.t-morning .tl-tasks li::before{color:var(--yl)}.t-midday .tl-tasks li::before{color:var(--pk)}.t-evening .tl-tasks li::before{color:var(--pu)}
+.tl-agents{display:flex;gap:0.35rem;flex-wrap:wrap;margin-top:0.55rem}
+.tl-tag{font-size:0.62rem;font-weight:800;padding:0.15rem 0.5rem;border-radius:100px;border:1px solid}
 
-/* ===== MASTER COMMANDS ===== */
-.commands-section{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:4rem 1.5rem}
-.commands-inner{max-width:1000px;margin:0 auto}
-.today-score-bar{background:var(--card);border:1px solid var(--dim);border-radius:14px;padding:1rem 1.4rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:2rem;flex-wrap:wrap}
-.tsb-label{font-size:0.88rem;font-weight:800}
-.tsb-wrap{flex:1;min-width:120px;height:9px;background:var(--dim);border-radius:100px;overflow:hidden}
-.tsb-fill{height:100%;background:var(--rb);background-size:300%;animation:rb-flow 3s linear infinite;border-radius:100px;transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);width:0%}
-.tsb-num{font-size:0.9rem;font-weight:900;color:var(--tl);white-space:nowrap}
-.tsb-note{font-size:0.72rem;color:var(--muted);margin-left:auto}
-
-.cmd-grid{display:flex;flex-direction:column;gap:1.25rem}
-.cmd-card{background:var(--card);border:1px solid var(--dim);border-radius:18px;padding:1.75rem;position:relative;overflow:hidden;transition:border-color 0.25s,box-shadow 0.25s}
-.cmd-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,var(--cmd-glow,rgba(0,245,212,0.07)) 0%,transparent 55%);pointer-events:none}
-.cmd-card:hover{border-color:var(--cmd-ac,var(--tl));box-shadow:0 16px 45px rgba(0,0,0,0.5),0 0 35px var(--cmd-glow,rgba(0,245,212,0.12))}
-.cmd-card-bar{position:absolute;top:0;left:0;right:0;height:3px;background:var(--cmd-ac,var(--tl))}
-.cmd-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.85rem;flex-wrap:wrap}
-.cmd-title-row{display:flex;align-items:center;gap:0.75rem}
-.cmd-num{width:36px;height:36px;min-width:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:900;border:2px solid var(--cmd-ac,var(--tl));color:var(--cmd-ac,var(--tl));background:rgba(0,245,212,0.08)}
-.cmd-name{font-size:1.05rem;font-weight:800;color:var(--cmd-ac,var(--tl))}
-.cmd-agent-tag{font-size:0.68rem;font-weight:700;color:var(--muted);background:var(--surf);border:1px solid var(--dim);padding:0.18rem 0.5rem;border-radius:6px}
-.run-row{display:flex;align-items:center;gap:0.5rem}
-.run-label{display:flex;align-items:center;gap:0.45rem;cursor:pointer;font-size:0.8rem;font-weight:700;color:var(--muted);transition:color 0.2s;white-space:nowrap}
-.cmd-check{width:17px;height:17px;accent-color:var(--gr);cursor:pointer;flex-shrink:0}
-.run-label:has(.cmd-check:checked){color:var(--gr)}
-.cmd-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.6}
-.cmd-prompt-box{background:#050010;border:1px solid var(--dim);border-radius:11px;overflow:hidden}
-.cmd-ph{display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.85rem;background:var(--surf);border-bottom:1px solid var(--dim);gap:0.5rem}
-.cmd-ph-label{font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--cmd-ac,var(--tl))}
-.copy-btn{background:var(--bg);border:1px solid var(--dim);color:var(--muted);font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:6px;cursor:pointer;transition:all 0.2s;font-family:inherit;white-space:nowrap}
+/* ===== 5 MASTER COMMANDS ===== */
+.commands-section{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:3rem 1.5rem}
+.commands-inner{max-width:900px;margin:0 auto}
+.cmd-grid{display:flex;flex-direction:column;gap:1rem;margin-top:2.5rem}
+.cmd-card{background:var(--card);border:1px solid var(--dim);border-radius:17px;padding:1.5rem;position:relative;overflow:hidden;transition:border-color 0.25s,box-shadow 0.25s}
+.cmd-card:hover{border-color:var(--cmd-ac,var(--tl));box-shadow:0 14px 40px rgba(0,0,0,0.5),0 0 28px var(--cmd-glow,rgba(0,245,212,0.1))}
+.cmd-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,var(--cmd-glow,rgba(0,245,212,0.06)) 0%,transparent 55%);pointer-events:none}
+.cmd-top-bar{position:absolute;top:0;left:0;right:0;height:3px;background:var(--cmd-ac,var(--tl))}
+.cmd-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:0.85rem;flex-wrap:wrap}
+.cmd-num-badge{font-family:'SF Mono','Cascadia Code',monospace;font-size:0.75rem;font-weight:900;background:rgba(0,245,212,0.12);border:1px solid var(--cmd-ac,var(--tl));color:var(--cmd-ac,var(--tl));padding:0.25rem 0.65rem;border-radius:100px;white-space:nowrap;letter-spacing:0.06em}
+.cmd-title-block{flex:1}
+.cmd-name{font-size:1rem;font-weight:900;color:var(--cmd-ac,var(--tl));letter-spacing:0.03em;margin-bottom:0.2rem}
+.cmd-agent-tag{font-size:0.65rem;font-weight:700;color:var(--muted);background:var(--surf);border:1px solid var(--dim);padding:0.15rem 0.5rem;border-radius:6px}
+.cmd-meta-chips{display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center;margin-left:auto}
+.time-chip{background:rgba(154,144,176,0.1);border:1px solid var(--dim);color:var(--muted);font-size:0.65rem;font-weight:700;padding:0.18rem 0.5rem;border-radius:100px;white-space:nowrap;font-family:'SF Mono','Cascadia Code',monospace}
+.xp-chip{background:rgba(255,224,0,0.12);border:1px solid rgba(255,224,0,0.3);color:var(--yl);font-size:0.65rem;font-weight:900;padding:0.18rem 0.5rem;border-radius:100px;white-space:nowrap;font-family:'SF Mono','Cascadia Code',monospace;letter-spacing:0.04em}
+.cmd-desc{font-size:0.82rem;color:var(--muted);margin-bottom:0.9rem;line-height:1.6}
+.prompt-box{background:#050010;border:1px solid var(--dim);border-radius:11px;overflow:hidden;margin-bottom:0.85rem}
+.prompt-header{display:flex;align-items:center;justify-content:space-between;padding:0.48rem 0.85rem;background:var(--surf);border-bottom:1px solid var(--dim);gap:0.5rem}
+.prompt-label{font-size:0.62rem;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;color:var(--cmd-ac,var(--tl))}
+.copy-btn{background:var(--bg);border:1px solid var(--dim);color:var(--muted);font-size:0.63rem;font-weight:800;padding:0.18rem 0.55rem;border-radius:6px;cursor:pointer;transition:all 0.2s;font-family:inherit;white-space:nowrap}
 .copy-btn:hover{border-color:var(--cmd-ac,var(--tl));color:var(--cmd-ac,var(--tl))}
 .copy-btn.copied{color:var(--gr);border-color:var(--gr)}
-.cmd-code{font-family:'SF Mono','Fira Code',Consolas,monospace;font-size:0.78rem;line-height:1.75;color:#c4bce0;padding:0.85rem;overflow-x:auto;white-space:pre-wrap;word-break:break-word}
-
-/* ===== TOOL TABLE ===== */
-.tool-section{padding:4rem 1.5rem}
-.tool-inner{max-width:900px;margin:0 auto}
-.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--dim);margin-top:2rem}
-.tool-table{width:100%;border-collapse:collapse;min-width:540px}
-.tool-table th{background:var(--surf);color:var(--muted);font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:0.75rem 1rem;text-align:left;border-bottom:1px solid var(--dim)}
-.tool-table td{padding:0.85rem 1rem;font-size:0.85rem;border-bottom:1px solid var(--dim);color:var(--txt)}
-.tool-table tr:last-child td{border-bottom:none}
-.tool-table tr:hover td{background:rgba(255,255,255,0.02)}
-.td-agent{font-weight:800;white-space:nowrap}
-.td-nova{color:#FF2D78}.td-pulse{color:#FF6B35}.td-aria{color:#00F5D4}.td-reach{color:#FFE000}.td-spark{color:#7B2FFF}.td-guardian{color:#00FF41}
-.td-cost{font-size:0.78rem;color:var(--muted)}
-.cost-free{color:var(--gr);font-weight:700}
+.prompt-code{font-family:'SF Mono','Fira Code',Consolas,monospace;font-size:0.74rem;line-height:1.75;color:#c0b8dc;padding:0.85rem;overflow-x:auto;white-space:pre-wrap;word-break:break-word}
+.run-row{display:flex;align-items:center;gap:0.5rem}
+.run-label{display:flex;align-items:center;gap:0.4rem;cursor:pointer;font-size:0.78rem;font-weight:700;color:var(--muted);transition:color 0.2s;user-select:none}
+.cmd-check{width:16px;height:16px;accent-color:var(--gr);cursor:pointer;flex-shrink:0}
+.run-label:has(.cmd-check:checked){color:var(--gr)}
 
 /* ===== WEEKLY CHALLENGE ===== */
-.weekly-section{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:3rem 1.5rem}
-.weekly-inner{max-width:820px;margin:0 auto}
-.weekly-box{background:var(--card);border:1px solid rgba(255,224,0,0.3);border-radius:18px;padding:2rem;text-align:center;position:relative;overflow:hidden}
-.weekly-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(255,224,0,0.06) 0%,transparent 60%);pointer-events:none}
-.weekly-crown{font-size:3rem;display:block;margin-bottom:0.75rem;animation:float 3s ease-in-out infinite}
-.weekly-box h3{font-size:1.3rem;font-weight:900;color:var(--yl);margin-bottom:0.5rem}
-.weekly-box p{font-size:0.9rem;color:var(--muted);max-width:500px;margin:0 auto 1rem}
-.weekly-box strong{color:var(--txt)}
-.ceo-unlock-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,224,0,0.12);border:1px solid rgba(255,224,0,0.4);color:var(--yl);font-size:0.8rem;font-weight:800;padding:0.4rem 1rem;border-radius:100px;letter-spacing:0.05em}
+.weekly-section{padding:3rem 1.5rem}
+.weekly-inner{max-width:760px;margin:0 auto}
+.weekly-box{background:var(--card);border:1px solid rgba(255,224,0,0.25);border-radius:18px;padding:2rem;text-align:center;position:relative;overflow:hidden}
+.weekly-box::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(255,224,0,0.05) 0%,transparent 55%);pointer-events:none}
+.w-crown{font-size:2.5rem;display:block;margin-bottom:0.65rem;animation:float 3s ease-in-out infinite}
+.weekly-box h3{font-size:1.15rem;font-weight:900;color:var(--yl);margin-bottom:0.4rem}
+.weekly-box p{font-size:0.85rem;color:var(--muted);max-width:480px;margin:0 auto 1.25rem;line-height:1.6}
+.weekly-box p strong{color:var(--txt)}
+/* day dots */
+.day-dots{display:flex;justify-content:center;align-items:center;gap:0.5rem;flex-wrap:wrap}
+.day-dot{width:38px;height:38px;border-radius:50%;border:2px solid var(--dim);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:var(--muted);font-family:'SF Mono','Cascadia Code',monospace;transition:all 0.3s}
+.day-dot.done{background:rgba(255,224,0,0.15);border-color:var(--yl);color:var(--yl)}
+.day-dot.ceo{background:rgba(255,224,0,0.25);border-color:var(--yl);box-shadow:0 0 16px rgba(255,224,0,0.4)}
+.ceo-unlock{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,224,0,0.12);border:1px solid rgba(255,224,0,0.35);color:var(--yl);font-size:0.78rem;font-weight:900;padding:0.4rem 1rem;border-radius:100px;margin-top:1.25rem;letter-spacing:0.05em;font-family:'SF Mono','Cascadia Code',monospace}
+
+/* ===== TOOL STACK ===== */
+.tool-section{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:3rem 1.5rem}
+.tool-inner{max-width:900px;margin:0 auto}
+.tool-chips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:0.85rem;margin-top:2rem}
+.tool-chip{background:var(--card);border:1px solid var(--dim);border-radius:13px;padding:1rem 1.15rem;display:flex;flex-direction:column;gap:0.4rem;transition:border-color 0.2s}
+.tool-chip:hover{border-color:var(--tl)}
+.tc-agent{font-size:0.82rem;font-weight:900;margin-bottom:0.1rem}
+.tc-tool{font-size:0.78rem;color:var(--muted)}
+.tc-secondary{font-size:0.72rem;color:var(--muted)}
+.tc-cost{display:inline-block;font-family:'SF Mono','Cascadia Code',monospace;font-size:0.65rem;font-weight:800;padding:0.18rem 0.55rem;border-radius:100px;margin-top:0.2rem}
+.tc-cost.free{background:rgba(0,255,65,0.1);border:1px solid rgba(0,255,65,0.3);color:var(--gr)}
+.tc-cost.paid{background:rgba(154,144,176,0.1);border:1px solid var(--dim);color:var(--muted)}
+.tc-nova{color:#FF2D78}.tc-pulse{color:#FF6B35}.tc-aria{color:#00F5D4}.tc-reach{color:#FFE000}.tc-spark{color:#7B2FFF}.tc-guardian{color:#00FF41}
 
 /* ===== QUICKSTART ===== */
-.quickstart-section{padding:4rem 1.5rem}
-.quickstart-inner{max-width:880px;margin:0 auto}
-.qs-box{background:var(--card);border:2px solid transparent;border-radius:20px;padding:2.5rem;position:relative;overflow:hidden;background-clip:padding-box;box-shadow:0 0 60px rgba(0,245,212,0.12)}
+.quickstart-section{padding:3rem 1.5rem}
+.quickstart-inner{max-width:860px;margin:0 auto}
+.qs-box{background:var(--card);border-radius:20px;padding:2.25rem;position:relative;overflow:hidden;box-shadow:0 0 50px rgba(0,245,212,0.1)}
 .qs-box::before{content:'';position:absolute;inset:0;border-radius:20px;padding:2px;background:var(--rb);background-size:300%;animation:rb-flow 3s linear infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.qs-header{text-align:center;margin-bottom:1.75rem}
-.qs-badge{display:inline-block;background:rgba(255,45,120,0.15);border:1px solid rgba(255,45,120,0.4);color:var(--pk);font-size:0.72rem;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 0.9rem;border-radius:100px;margin-bottom:0.75rem}
-.qs-header h3{font-size:1.4rem;font-weight:800;margin-bottom:0.35rem}
-.qs-header p{color:var(--muted);font-size:0.88rem}
-.qs-prompt{background:#050010;border:1px solid var(--dim);border-radius:13px;overflow:hidden}
-.qs-ph{display:flex;align-items:center;justify-content:space-between;padding:0.55rem 1rem;background:var(--surf);border-bottom:1px solid var(--dim);gap:0.5rem}
-.qs-ph-label{font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--tl)}
-.qs-code{font-family:'SF Mono','Fira Code',Consolas,monospace;font-size:0.8rem;line-height:1.8;color:#c4bce0;padding:1.1rem;overflow-y:auto;white-space:pre-wrap;word-break:break-word;max-height:240px}
-.qs-code::-webkit-scrollbar{width:4px}
+.qs-header{text-align:center;margin-bottom:1.5rem}
+.qs-badge{display:inline-block;background:rgba(255,45,120,0.14);border:1px solid rgba(255,45,120,0.4);color:var(--pk);font-family:'SF Mono','Cascadia Code',monospace;font-size:0.65rem;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;padding:0.28rem 0.85rem;border-radius:100px;margin-bottom:0.65rem}
+.qs-header h3{font-size:1.25rem;font-weight:800;margin-bottom:0.3rem}
+.qs-header p{font-size:0.83rem;color:var(--muted)}
+.qs-prompt-box{background:#050010;border:1px solid var(--dim);border-radius:12px;overflow:hidden}
+.qs-ph{display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.9rem;background:var(--surf);border-bottom:1px solid var(--dim);gap:0.5rem}
+.qs-ph-label{font-size:0.65rem;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;color:var(--tl)}
+.qs-code{font-family:'SF Mono','Fira Code',Consolas,monospace;font-size:0.78rem;line-height:1.8;color:#c0b8dc;padding:1rem;overflow-y:auto;white-space:pre-wrap;word-break:break-word;max-height:240px}
+.qs-code::-webkit-scrollbar{width:3px}
 .qs-code::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
 
-/* ===== TOOLTIP ===== */
-.tip{position:relative;display:inline-flex;align-items:center;gap:3px;cursor:help}
-.tip-icon{width:15px;height:15px;background:var(--surf);border:1px solid var(--dim);border-radius:50%;font-size:0.6rem;font-style:normal;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0}
-.tip-popup{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--surf);border:1px solid var(--tl);border-radius:10px;padding:0.55rem 0.8rem;font-size:0.7rem;color:var(--txt);width:210px;text-align:center;opacity:0;pointer-events:none;transition:opacity 0.18s;z-index:50;font-weight:400;font-style:normal;white-space:normal}
-.tip:hover .tip-popup{opacity:1}
-
 /* ===== GLOSSARY ===== */
-.glossary-section{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:2.5rem 1.5rem}
-.glossary-inner{max-width:900px;margin:0 auto}
-.glossary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.75rem;margin-top:1.5rem}
-.gloss-card{background:var(--card);border:1px solid var(--dim);border-radius:11px;padding:0.85rem 1rem;cursor:pointer;transition:border-color 0.2s}
+.glossary-band{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:2rem 1.5rem}
+.glossary-inner{max-width:920px;margin:0 auto}
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.65rem;margin-top:1.5rem}
+.gloss-card{background:var(--card);border:1px solid var(--dim);border-radius:10px;padding:0.75rem 0.9rem;cursor:pointer;transition:border-color 0.2s}
 .gloss-card:hover{border-color:var(--tl)}
-.gloss-term{font-size:0.8rem;font-weight:800;color:var(--tl);display:flex;align-items:center;justify-content:space-between;gap:0.5rem}
-.gloss-arrow{transition:transform 0.2s;font-style:normal;font-size:0.68rem}
-.gloss-def{font-size:0.76rem;color:var(--muted);margin-top:0.35rem;line-height:1.6;display:none}
+.gloss-term{font-size:0.78rem;font-weight:800;color:var(--tl);display:flex;align-items:center;justify-content:space-between;gap:0.4rem}
+.gloss-arrow{transition:transform 0.2s;font-style:normal;font-size:0.62rem}
+.gloss-def{font-size:0.74rem;color:var(--muted);margin-top:0.35rem;line-height:1.6;display:none}
 .gloss-card.open .gloss-arrow{transform:rotate(180deg)}
 .gloss-card.open .gloss-def{display:block}
 
 /* ===== QUOTE BAR ===== */
-.quote-bar{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:1.25rem 2rem;text-align:center}
-.quote-bar p{font-size:0.98rem;font-style:italic;color:var(--muted);max-width:700px;margin:0 auto}
+.quote-bar{background:var(--bg2);border-top:1px solid var(--dim);border-bottom:1px solid var(--dim);padding:1.1rem 1.5rem;text-align:center}
+.quote-bar p{font-size:0.9rem;font-style:italic;color:var(--muted);max-width:700px;margin:0 auto}
 .quote-bar p strong{color:var(--txt);font-style:normal}
 
 /* ===== CTA ===== */
-.cta-section{text-align:center;padding:5rem 2rem;background:var(--bg2);border-top:1px solid var(--dim)}
-.cta-section h2{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin-bottom:0.85rem}
-.cta-section p{color:var(--muted);font-size:1rem;margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto}
-.cta-btn{display:inline-flex;align-items:center;gap:0.45rem;background:var(--or);color:#fff;text-decoration:none;font-size:1rem;font-weight:800;padding:0.85rem 2rem;border-radius:100px;transition:all 0.3s;box-shadow:0 0 35px rgba(255,107,53,0.45);letter-spacing:0.02em}
-.cta-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 55px rgba(255,107,53,0.65)}
+.cta-section{text-align:center;padding:4rem 2rem 3rem;background:var(--bg2);border-top:1px solid var(--dim)}
+.cta-section h2{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:800;margin-bottom:0.75rem}
+.cta-section p{color:var(--muted);font-size:0.92rem;margin-bottom:1.75rem;max-width:460px;margin-left:auto;margin-right:auto}
+.cta-btn{display:inline-flex;align-items:center;gap:0.4rem;background:var(--tl);color:#000;text-decoration:none;font-size:0.95rem;font-weight:900;padding:0.8rem 1.85rem;border-radius:100px;transition:all 0.3s;box-shadow:0 0 30px rgba(0,245,212,0.35);letter-spacing:0.02em}
+.cta-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 50px rgba(0,245,212,0.55)}
 
 /* ===== FOOTER ===== */
-.footer-bar{text-align:center;padding:1.25rem;color:var(--muted);font-size:0.78rem;border-top:1px solid var(--dim)}
+.footer-bar{text-align:center;padding:1rem;color:var(--muted);font-size:0.73rem;border-top:1px solid var(--dim)}
 
 /* ===== RESPONSIVE ===== */
-@media(max-width:640px){
-  .hero{padding:3rem 1rem 2.5rem}
-  .topnav{padding:0.6rem 1rem}
-  .p-layer-4{width:55%}
-  .p-layer-3{width:75%}
-  .p-layer-2{width:90%}
-  .p-layer-1{width:100%}
+@media(max-width:600px){
+  .hero{padding:2rem 1rem 1.5rem}
   .timeline::before{display:none}
   .tl-block{flex-direction:column;gap:0.5rem}
   .tl-dot{width:44px;height:44px;min-width:44px}
+  .p4{width:65%}.p3{width:82%}.p2{width:94%}.p1{width:100%}
+  .cmd-meta-chips{margin-left:0}
 }
 </style>
 </head>
 <body>
 
+<!-- ===== FIXED TOP HEADER ===== -->
+<header class="top-header">
+  <a href="index.html" class="th-brand">🐱 <span>METAKITTYZ</span></a>
+  <a href="metakittyz.html" class="th-guide-btn">⚡ BUILD GUIDE</a>
+  <button class="th-theme" onclick="showThemeToast()" aria-label="Toggle theme">🌙</button>
+</header>
+<div class="rb-underline"></div>
+
 <!-- ===== TOAST ===== -->
 <div class="toast" id="toast" role="status"><span id="toast-msg"></span></div>
 
-<!-- ===== NAV ===== -->
-<nav class="topnav">
-  <a href="index.html" class="nav-brand">🐱 <span>METAKITTYZ</span></a>
-  <div class="nav-links">
-    <a href="index.html">🏠 Home</a>
-    <a href="mk-team.html">👥 AI Team</a>
-    <a href="mk-command.html" class="active">⚡ Command</a>
-    <a href="mk-content.html">📱 Content OS</a>
-    <a href="mk-engage.html">✨ Prompts</a>
-    <a href="mk-journey.html">🗺️ 90-Day Plan</a>
-    <a href="mk-live.html">📺 Live</a>
-    <a href="metakittyz.html">📖 Build Guide</a>
-  </div>
-</nav>
-<div class="rb-bar"></div>
-
-<!-- ===== STREAK WIDGET ===== -->
-<div class="streak-widget">
-  <div class="streak-inner">
-    <div class="streak-item">
-      <span class="streak-fire">🔥</span>
-      Daily Streak: <span class="streak-num" id="streak-count">0</span>&nbsp;days
-    </div>
-    <div class="score-wrap">
-      <span class="score-label">Today's Score:</span>
-      <div class="score-bar-bg"><div class="score-bar-fill" id="score-bar-fill"></div></div>
-      <span class="score-num" id="today-score-display">0/5 commands</span>
-    </div>
-    <span class="ceo-badge" id="ceo-badge">👑 CEO BADGE EARNED!</span>
-    <span class="weekly-note">Run all 5 commands for 7 days straight → earn CEO BADGE 👑</span>
-  </div>
+<!-- ===== ERIKA AVATAR ===== -->
+<div class="erika-float" id="erika-btn" onclick="toggleErika()" title="Talk to AI Erika">
+  <img src="erika.webp" alt="AI Erika">
+  <div class="erika-dot"></div>
+</div>
+<div class="erika-bubble" id="erika-bubble">
+  <button class="erika-bubble-close" onclick="closeErika()">✕</button>
+  I'm AI Erika 🐱 Ready to run your command center? Start with Command 1 — the Morning Audit!
+  <br>
+  <a href="#cmd1">Run Command 1 →</a>
 </div>
 
 <!-- ===== HERO ===== -->
 <section class="hero">
-  <div class="hero-tag">⚡ The Command Center</div>
-  <h1>Your AI Company.<br><span class="grd">Your Rules. Your Schedule.</span></h1>
-  <p class="hero-sub">The <strong>MATRIX OS Command Center</strong> — run your entire content business in <strong>45 minutes a day.</strong></p>
-  <p class="hero-meta">Marketing Automation Through Responsive Intelligence Xtended &middot; All 6 agents, one system, infinite content.</p>
-</section>
-
-<div class="rb-bar"></div>
-
-<!-- ===== GLOSSARY ===== -->
-<section class="glossary-section">
-  <div class="glossary-inner">
-    <div class="section-header" style="margin-bottom:0;text-align:left">
-      <div class="section-tag">Plain English First</div>
-      <h2>Terms You'll See Here</h2>
-    </div>
-    <div class="glossary-grid">
-      <div class="gloss-card" onclick="toggleGloss(this)">
-        <div class="gloss-term">Orchestration <i class="gloss-arrow">▼</i></div>
-        <p class="gloss-def">Coordinating multiple AI agents to work together — like a conductor keeping all musicians in sync so they produce one great performance instead of noise.</p>
-      </div>
-      <div class="gloss-card" onclick="toggleGloss(this)">
-        <div class="gloss-term">System Prompt <i class="gloss-arrow">▼</i></div>
-        <p class="gloss-def">The job description you give your AI before it starts. It tells the AI who it is, what it does, and how it should behave for every response.</p>
-      </div>
-      <div class="gloss-card" onclick="toggleGloss(this)">
-        <div class="gloss-term">Workflow <i class="gloss-arrow">▼</i></div>
-        <p class="gloss-def">A set of steps that happen in a specific order, automatically — like a recipe your AI follows every single time without you having to re-explain it.</p>
-      </div>
-      <div class="gloss-card" onclick="toggleGloss(this)">
-        <div class="gloss-term">LLM <i class="gloss-arrow">▼</i></div>
-        <p class="gloss-def">Large Language Model — the brain inside Claude and ChatGPT. It was trained on enormous amounts of text and can write, reason, and answer questions like a human.</p>
-      </div>
-      <div class="gloss-card" onclick="toggleGloss(this)">
-        <div class="gloss-term">Token <i class="gloss-arrow">▼</i></div>
-        <p class="gloss-def">How AI measures text — roughly 1 token = 1 word. A 100-word Instagram caption is about 130 tokens. Free Claude accounts have daily token limits.</p>
-      </div>
-      <div class="gloss-card" onclick="toggleGloss(this)">
-        <div class="gloss-term">API <i class="gloss-arrow">▼</i></div>
-        <p class="gloss-def">A connection between two apps — like a phone call between software. When Buffer auto-posts to Instagram, it's using Instagram's API to deliver the content.</p>
-      </div>
-    </div>
+  <span class="step-label">STEP 2 — RUN YOUR COMMAND CENTER</span>
+  <h1>Run your AI company<br><span class="tl">in 45 minutes a day.</span></h1>
+  <p class="hero-sub">The <strong>MATRIX OS Command Center.</strong> 5 commands. 45 minutes. Your entire content machine runs itself — and you stay in the CEO seat the whole time.</p>
+  <div class="matrix-tip">
+    What is <span class="matrix-tip-text">MATRIX OS</span>? <i class="matrix-tip-q">?</i>
+    <div class="matrix-expand"><strong>MATRIX OS</strong> = <strong>M</strong>arketing <strong>A</strong>utomation <strong>T</strong>hrough <strong>R</strong>esponsive <strong>I</strong>ntelligence <strong>X</strong>tended. It's your system for running all 6 agents together like an orchestra conductor — so they produce one great performance instead of random noise.</div>
   </div>
 </section>
 
-<div class="rb-bar"></div>
+<!-- ===== STREAK CARD ===== -->
+<div class="streak-section">
+  <div class="streak-card">
+    <div class="streak-card-top">
+      <div class="streak-main">
+        <span class="streak-fire">🔥</span>
+        <div>
+          <div class="streak-label">Daily Streak</div>
+          <div><span class="streak-num-big" id="streak-count">0</span> <span class="streak-unit">days</span></div>
+        </div>
+      </div>
+      <span class="ceo-badge" id="ceo-badge">👑 CEO BADGE EARNED!</span>
+    </div>
+    <p class="streak-sub">Run all 5 commands today to <strong>start your streak.</strong> 7 days straight = CEO Badge 👑</p>
+    <div class="today-score-row">
+      <span class="score-label">Today's Score:</span>
+      <div class="score-bar-bg"><div class="score-bar-fill" id="score-fill"></div></div>
+      <span class="score-num" id="today-score">0/5</span>
+    </div>
+  </div>
+</div>
 
 <!-- ===== MATRIX OS ===== -->
-<section class="matrix-wrap">
+<section class="matrix-section">
   <div class="matrix-inner">
     <div class="section-header">
-      <div class="section-tag">The System Architecture</div>
-      <h2>The MATRIX OS Overview</h2>
-      <p>Your entire content business runs on four stacked layers. Each layer feeds the one above it.</p>
+      <div class="section-tag">System Architecture</div>
+      <h2>The MATRIX OS Stack</h2>
+      <p>Your content business runs on 4 layers. Each one feeds the next. You can't skip layers.</p>
     </div>
     <div class="acronym-row">
-      <div class="acronym-letter m">M<span>Marketing</span></div>
-      <div class="acronym-letter a">A<span>Automation</span></div>
-      <div class="acronym-letter t">T<span>Through</span></div>
-      <div class="acronym-letter r">R<span>Responsive</span></div>
-      <div class="acronym-letter i">I<span>Intelligence</span></div>
-      <div class="acronym-letter x">X<span>Xtended</span></div>
+      <div class="al m"><span class="al-letter">M</span><span class="al-word">Marketing</span></div>
+      <div class="al a"><span class="al-letter">A</span><span class="al-word">Automation</span></div>
+      <div class="al t"><span class="al-letter">T</span><span class="al-word">Through</span></div>
+      <div class="al r"><span class="al-letter">R</span><span class="al-word">Responsive</span></div>
+      <div class="al i"><span class="al-letter">I</span><span class="al-word">Intelligence</span></div>
+      <div class="al x"><span class="al-letter">X</span><span class="al-word">Xtended</span></div>
     </div>
     <div class="pyramid">
-      <div class="p-layer p-layer-4">
-        <div class="p-num">4</div>
-        <div class="p-title">Revenue System</div>
-        <div class="p-desc">Prompts &middot; Products &middot; Monetization</div>
+      <div class="p-layer p4">
+        <span class="p-icon">💰</span>
+        <div class="p-name">Revenue System</div>
+        <div class="p-agents">Prompts · Products · Monetization</div>
       </div>
-      <div class="p-layer p-layer-3">
-        <div class="p-num">3</div>
-        <div class="p-title">Content Engine</div>
-        <div class="p-desc">Generation &middot; Distribution &middot; Scheduling</div>
+      <div class="p-layer p3">
+        <span class="p-icon">📱</span>
+        <div class="p-name">Content Engine</div>
+        <div class="p-agents">Generation · Distribution · Scheduling</div>
       </div>
-      <div class="p-layer p-layer-2">
-        <div class="p-num">2</div>
-        <div class="p-title">Agent Team</div>
-        <div class="p-desc">NOVA &middot; PULSE &middot; ARIA &middot; REACH &middot; SPARK &middot; GUARDIAN</div>
+      <div class="p-layer p2">
+        <span class="p-icon">👥</span>
+        <div class="p-name">Agent Team</div>
+        <div class="p-agents">NOVA · PULSE · ARIA · REACH · SPARK · GUARDIAN</div>
       </div>
-      <div class="p-layer p-layer-1">
-        <div class="p-num">1</div>
-        <div class="p-title">Brand Foundation</div>
-        <div class="p-desc">Your Identity &middot; Your Voice &middot; Your Assets &middot; Your Niche</div>
+      <div class="p-layer p1">
+        <span class="p-icon">🧬</span>
+        <div class="p-name">Brand Foundation</div>
+        <div class="p-agents">Your Identity · Your Voice · Your Assets · Your Niche</div>
       </div>
     </div>
-    <p style="text-align:center;font-size:0.78rem;color:var(--muted);margin-top:1.25rem">Everything starts at Layer 1. You can't build Layer 4 without Layers 1–3 solid. The MATRIX OS makes each layer run on near-autopilot.</p>
   </div>
 </section>
-
-<div class="rb-bar"></div>
 
 <!-- ===== DAILY TIMELINE ===== -->
 <section class="timeline-section">
@@ -390,295 +371,227 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
     <div class="section-header">
       <div class="section-tag">Your Daily CEO Routine</div>
       <h2>The 45-Minute Schedule</h2>
-      <p>This is all it takes to run your AI content company every day. No more than 45 minutes — on purpose.</p>
+      <p>This is all it takes. Three windows. 45 minutes total. No more.</p>
     </div>
     <div class="timeline">
-
-      <div class="tl-block tl-morning">
+      <div class="tl-block t-morning">
         <div class="tl-dot">☀️</div>
         <div class="tl-content">
-          <div class="tl-time">Morning &middot; 10 minutes</div>
+          <div class="tl-time">Morning · 10 minutes</div>
           <h3>Daily Audit &amp; Direction</h3>
           <ul class="tl-tasks">
-            <li>Run GUARDIAN's daily audit prompt — review what happened yesterday</li>
-            <li>Check your top 3 performing pieces and note what worked</li>
-            <li>Set today's content theme and goal in one sentence</li>
+            <li>Run GUARDIAN's morning audit — review yesterday's numbers</li>
+            <li>Identify your top 3 performers and note what worked</li>
+            <li>Set today's content theme in one sentence</li>
           </ul>
-          <div class="tl-agents">
-            <span class="tl-agent-tag" style="border-color:#00FF41;color:#00FF41">🛡️ GUARDIAN</span>
-          </div>
+          <div class="tl-agents"><span class="tl-tag" style="border-color:#00FF41;color:#00FF41">🛡️ GUARDIAN</span></div>
         </div>
       </div>
-
-      <div class="tl-block tl-midday">
+      <div class="tl-block t-midday">
         <div class="tl-dot">🌤️</div>
         <div class="tl-content">
-          <div class="tl-time">Midday &middot; 20 minutes</div>
-          <h3>Content Generation &amp; Approval</h3>
+          <div class="tl-time">Midday · 20 minutes</div>
+          <h3>Generate &amp; Approve Content</h3>
           <ul class="tl-tasks">
-            <li>Activate NOVA for today's posts — one per platform, hook first</li>
-            <li>Activate PULSE for today's video brief and shot list</li>
-            <li>Review all output, approve or request one revision per piece</li>
+            <li>Activate NOVA — one post per platform, hook first</li>
+            <li>Activate PULSE — today's video brief and full shot list</li>
+            <li>Review all output; approve or request one revision per piece</li>
           </ul>
           <div class="tl-agents">
-            <span class="tl-agent-tag" style="border-color:#FF2D78;color:#FF2D78">🎨 NOVA</span>
-            <span class="tl-agent-tag" style="border-color:#FF6B35;color:#FF6B35">🎬 PULSE</span>
+            <span class="tl-tag" style="border-color:#FF2D78;color:#FF2D78">🎨 NOVA</span>
+            <span class="tl-tag" style="border-color:#FF6B35;color:#FF6B35">🎬 PULSE</span>
           </div>
         </div>
       </div>
-
-      <div class="tl-block tl-evening">
+      <div class="tl-block t-evening">
         <div class="tl-dot">🌙</div>
         <div class="tl-content">
-          <div class="tl-time">Evening &middot; 15 minutes</div>
+          <div class="tl-time">Evening · 15 minutes</div>
           <h3>Schedule, Ads &amp; Community</h3>
           <ul class="tl-tasks">
-            <li>ARIA schedules tomorrow's content with optimal timing and hashtag sets</li>
-            <li>REACH reviews ad performance and suggests tomorrow's hook variations</li>
+            <li>ARIA schedules tomorrow with optimal times and 30 hashtags per post</li>
+            <li>REACH reviews ad performance and drafts tomorrow's hook variations</li>
             <li>SPARK handles community replies and brand outreach drafts</li>
           </ul>
           <div class="tl-agents">
-            <span class="tl-agent-tag" style="border-color:#00F5D4;color:#00F5D4">📲 ARIA</span>
-            <span class="tl-agent-tag" style="border-color:#FFE000;color:#FFE000">🎯 REACH</span>
-            <span class="tl-agent-tag" style="border-color:#7B2FFF;color:#7B2FFF">💫 SPARK</span>
+            <span class="tl-tag" style="border-color:#00F5D4;color:#00F5D4">📲 ARIA</span>
+            <span class="tl-tag" style="border-color:#FFE000;color:#FFE000">🎯 REACH</span>
+            <span class="tl-tag" style="border-color:#7B2FFF;color:#7B2FFF">💫 SPARK</span>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<div class="rb-bar"></div>
+<!-- ===== GLOSSARY ===== -->
+<section class="glossary-band">
+  <div class="glossary-inner">
+    <div class="section-header" style="margin-bottom:0;text-align:left">
+      <div class="section-tag">What Does This Mean?</div>
+      <h2 style="font-size:1.2rem">Terms you'll see — click to expand</h2>
+    </div>
+    <div class="glossary-grid">
+      <div class="gloss-card" onclick="toggleGloss(this)"><div class="gloss-term">Orchestration <i class="gloss-arrow">▼</i></div><p class="gloss-def">Coordinating multiple AI agents to work as a team — like a conductor keeping all musicians in sync so they produce one result.</p></div>
+      <div class="gloss-card" onclick="toggleGloss(this)"><div class="gloss-term">System Prompt <i class="gloss-arrow">▼</i></div><p class="gloss-def">The job description you give your AI before it starts — tells it who it is, what it does, and how to behave for every response.</p></div>
+      <div class="gloss-card" onclick="toggleGloss(this)"><div class="gloss-term">Workflow <i class="gloss-arrow">▼</i></div><p class="gloss-def">Steps that happen in a specific order, automatically — like a recipe your AI follows every time without needing re-explanation.</p></div>
+      <div class="gloss-card" onclick="toggleGloss(this)"><div class="gloss-term">LLM <i class="gloss-arrow">▼</i></div><p class="gloss-def">Large Language Model — the brain inside Claude and ChatGPT. It was trained on billions of text examples and can write, reason, and create.</p></div>
+      <div class="gloss-card" onclick="toggleGloss(this)"><div class="gloss-term">Token <i class="gloss-arrow">▼</i></div><p class="gloss-def">How AI measures text — ~1 token = 1 word. A 100-word caption is about 130 tokens. Free AI plans have daily token limits.</p></div>
+      <div class="gloss-card" onclick="toggleGloss(this)"><div class="gloss-term">API <i class="gloss-arrow">▼</i></div><p class="gloss-def">A connection between two apps — like a phone call between software. Buffer uses Instagram's API to post for you automatically.</p></div>
+    </div>
+  </div>
+</section>
 
 <!-- ===== 5 MASTER COMMANDS ===== -->
 <section class="commands-section">
   <div class="commands-inner">
     <div class="section-header">
       <div class="section-tag">The 5 Master Commands</div>
-      <h2>Run Your Company with 5 Prompts</h2>
-      <p>These are the only commands you need to run your entire AI content operation. Check them off as you use them today.</p>
+      <h2>Run Everything With 5 Prompts</h2>
+      <p>These are the only commands you need. Check each one as you run it. Every check builds your streak. 🔥</p>
     </div>
-
-    <!-- Today's score bar -->
-    <div class="today-score-bar">
-      <span class="tsb-label">⚡ Today's Score</span>
-      <div class="tsb-wrap"><div class="tsb-fill" id="tsb-fill"></div></div>
-      <span class="tsb-num" id="score-text">0 / 5</span>
-      <span class="tsb-note">Complete all 5 daily to build your streak 🔥</span>
-    </div>
-
     <div class="cmd-grid">
 
-      <!-- CMD 1: Daily Briefing -->
-      <div class="cmd-card" style="--cmd-ac:#00FF41;--cmd-glow:rgba(0,255,65,0.08)">
-        <div class="cmd-card-bar"></div>
+      <!-- CMD 1 -->
+      <div class="cmd-card" id="cmd1" style="--cmd-ac:#00FF41;--cmd-glow:rgba(0,255,65,0.07)">
+        <div class="cmd-top-bar" style="background:#00FF41"></div>
         <div class="cmd-header">
-          <div class="cmd-title-row">
-            <div class="cmd-num" style="border-color:#00FF41;color:#00FF41;background:rgba(0,255,65,0.08)">1</div>
-            <div>
-              <div class="cmd-name" style="color:#00FF41">The Daily Briefing</div>
-              <span class="cmd-agent-tag">🛡️ GUARDIAN</span>
-            </div>
+          <div>
+            <span class="cmd-num-badge" style="background:rgba(0,255,65,0.1);border-color:#00FF41;color:#00FF41">01</span>
           </div>
-          <div class="run-row">
-            <label class="run-label">
-              <input type="checkbox" class="cmd-check" data-cmd="cmd1">
-              Run today ✓
-            </label>
+          <div class="cmd-title-block">
+            <div class="cmd-name" style="color:#00FF41">The Morning Audit</div>
+            <span class="cmd-agent-tag">🛡️ GUARDIAN</span>
+          </div>
+          <div class="cmd-meta-chips">
+            <span class="time-chip">⏱ 10 min</span>
+            <span class="xp-chip">+20 XP</span>
           </div>
         </div>
-        <p class="cmd-desc">Start every day by asking GUARDIAN to audit yesterday's results. This single habit compounds into dramatically better content over time — you'll know exactly what to repeat and what to kill.</p>
-        <div class="cmd-prompt-box">
-          <div class="cmd-ph">
-            <span class="cmd-ph-label" style="color:#00FF41">⚡ <span class="tip">Command Prompt<span class="tip-icon">i</span><span class="tip-popup">The instructions you give your AI before it starts working — like a job description</span></span></span>
-            <button class="copy-btn" onclick="copyCmd('cmd1-prompt',this)">📋 Copy</button>
+        <p class="cmd-desc">Start every day knowing exactly what worked yesterday, what to repeat, and what to kill. GUARDIAN gives you a data-driven brief in minutes — not hours.</p>
+        <div class="prompt-box">
+          <div class="prompt-header">
+            <span class="prompt-label" style="color:#00FF41">⚡ Command Prompt</span>
+            <button class="copy-btn" onclick="copyCmd('c1-prompt',this)">📋 Copy</button>
           </div>
-          <pre class="cmd-code" id="cmd1-prompt">GUARDIAN, run my morning audit. Review [yesterday's metrics — paste your numbers here]. Tell me: top 3 performing pieces and why they worked, what to repeat this week, what to stop doing immediately, and today's content focus theme.</pre>
+          <pre class="prompt-code" id="c1-prompt">GUARDIAN, run my morning audit. Review [yesterday's metrics — paste your numbers here]. Tell me: top 3 performing pieces and why they worked, what to repeat this week, what to stop doing immediately, and today's recommended content focus theme.</pre>
+        </div>
+        <div class="run-row">
+          <label class="run-label"><input type="checkbox" class="cmd-check" data-cmd="cmd1"> ✓ Run today</label>
         </div>
       </div>
 
-      <!-- CMD 2: Content Machine -->
-      <div class="cmd-card" style="--cmd-ac:#FF2D78;--cmd-glow:rgba(255,45,120,0.08)">
-        <div class="cmd-card-bar" style="background:#FF2D78"></div>
+      <!-- CMD 2 -->
+      <div class="cmd-card" style="--cmd-ac:#FF2D78;--cmd-glow:rgba(255,45,120,0.07)">
+        <div class="cmd-top-bar" style="background:#FF2D78"></div>
         <div class="cmd-header">
-          <div class="cmd-title-row">
-            <div class="cmd-num" style="border-color:#FF2D78;color:#FF2D78;background:rgba(255,45,120,0.08)">2</div>
-            <div>
-              <div class="cmd-name" style="color:#FF2D78">The Content Machine</div>
-              <span class="cmd-agent-tag">🎨 NOVA</span>
-            </div>
+          <div><span class="cmd-num-badge" style="background:rgba(255,45,120,0.1);border-color:#FF2D78;color:#FF2D78">02</span></div>
+          <div class="cmd-title-block">
+            <div class="cmd-name" style="color:#FF2D78">The Content Machine</div>
+            <span class="cmd-agent-tag">🎨 NOVA</span>
           </div>
-          <div class="run-row">
-            <label class="run-label">
-              <input type="checkbox" class="cmd-check" data-cmd="cmd2">
-              Run today ✓
-            </label>
+          <div class="cmd-meta-chips">
+            <span class="time-chip">⏱ 15 min</span>
+            <span class="xp-chip">+20 XP</span>
           </div>
         </div>
-        <p class="cmd-desc">One command. Full content suite for all your platforms. NOVA knows your voice, your audience, and your niche — just give it the day's theme and let it produce.</p>
-        <div class="cmd-prompt-box">
-          <div class="cmd-ph">
-            <span class="cmd-ph-label" style="color:#FF2D78">⚡ Command Prompt</span>
-            <button class="copy-btn" onclick="copyCmd('cmd2-prompt',this)">📋 Copy</button>
+        <p class="cmd-desc">One command. Full content suite for all platforms. NOVA knows your voice — just give it the day's theme and let it produce at scale.</p>
+        <div class="prompt-box">
+          <div class="prompt-header">
+            <span class="prompt-label" style="color:#FF2D78">⚡ Command Prompt</span>
+            <button class="copy-btn" onclick="copyCmd('c2-prompt',this)">📋 Copy</button>
           </div>
-          <pre class="cmd-code" id="cmd2-prompt">NOVA, create today's content suite: 1 main post for each platform (Instagram, TikTok, Twitter/X, LinkedIn). Theme: [TODAY'S THEME]. Hook first on every piece. Include platform-specific formatting and a CTA on each. Write in my brand voice.</pre>
+          <pre class="prompt-code" id="c2-prompt">NOVA, create today's content suite: 1 main post for each platform (Instagram, TikTok, Twitter/X, LinkedIn). Theme: [TODAY'S THEME]. Hook first on every piece. Include platform-specific formatting and a CTA on each. Write in my brand voice.</pre>
+        </div>
+        <div class="run-row">
+          <label class="run-label"><input type="checkbox" class="cmd-check" data-cmd="cmd2"> ✓ Run today</label>
         </div>
       </div>
 
-      <!-- CMD 3: Video Brief -->
-      <div class="cmd-card" style="--cmd-ac:#FF6B35;--cmd-glow:rgba(255,107,53,0.08)">
-        <div class="cmd-card-bar" style="background:#FF6B35"></div>
+      <!-- CMD 3 -->
+      <div class="cmd-card" style="--cmd-ac:#FF6B35;--cmd-glow:rgba(255,107,53,0.07)">
+        <div class="cmd-top-bar" style="background:#FF6B35"></div>
         <div class="cmd-header">
-          <div class="cmd-title-row">
-            <div class="cmd-num" style="border-color:#FF6B35;color:#FF6B35;background:rgba(255,107,53,0.08)">3</div>
-            <div>
-              <div class="cmd-name" style="color:#FF6B35">The Video Brief</div>
-              <span class="cmd-agent-tag">🎬 PULSE</span>
-            </div>
+          <div><span class="cmd-num-badge" style="background:rgba(255,107,53,0.1);border-color:#FF6B35;color:#FF6B35">03</span></div>
+          <div class="cmd-title-block">
+            <div class="cmd-name" style="color:#FF6B35">The Video Brief</div>
+            <span class="cmd-agent-tag">🎬 PULSE</span>
           </div>
-          <div class="run-row">
-            <label class="run-label">
-              <input type="checkbox" class="cmd-check" data-cmd="cmd3">
-              Run today ✓
-            </label>
+          <div class="cmd-meta-chips">
+            <span class="time-chip">⏱ 5 min</span>
+            <span class="xp-chip">+20 XP</span>
           </div>
         </div>
-        <p class="cmd-desc">Get a complete, ready-to-shoot video package — script, shot list, b-roll suggestions, and teleprompter formatting. You just show up and press record.</p>
-        <div class="cmd-prompt-box">
-          <div class="cmd-ph">
-            <span class="cmd-ph-label" style="color:#FF6B35">⚡ Command Prompt</span>
-            <button class="copy-btn" onclick="copyCmd('cmd3-prompt',this)">📋 Copy</button>
+        <p class="cmd-desc">A complete ready-to-shoot video package — script, shot list, teleprompter, B-roll. You just show up, press record, and follow directions.</p>
+        <div class="prompt-box">
+          <div class="prompt-header">
+            <span class="prompt-label" style="color:#FF6B35">⚡ Command Prompt</span>
+            <button class="copy-btn" onclick="copyCmd('c3-prompt',this)">📋 Copy</button>
           </div>
-          <pre class="cmd-code" id="cmd3-prompt">PULSE, script my video for today. Topic: [TOPIC]. Platform: [PLATFORM]. Length: [LENGTH — 15s / 30s / 60s]. Include: shot-by-shot script with [SHOT] [ACTION] [DIALOGUE] format, teleprompter script, B-roll shot list, and hook options (give me 3 hooks to choose from).</pre>
+          <pre class="prompt-code" id="c3-prompt">PULSE, script my video for today. Topic: [TOPIC]. Platform: [PLATFORM]. Length: [15s / 30s / 60s]. Include: shot-by-shot script in [SHOT] [ACTION] [DIALOGUE] format, teleprompter script, B-roll shot list, and 3 hook options to choose from.</pre>
+        </div>
+        <div class="run-row">
+          <label class="run-label"><input type="checkbox" class="cmd-check" data-cmd="cmd3"> ✓ Run today</label>
         </div>
       </div>
 
-      <!-- CMD 4: Growth Command -->
-      <div class="cmd-card" style="--cmd-ac:#00F5D4;--cmd-glow:rgba(0,245,212,0.08)">
-        <div class="cmd-card-bar" style="background:#00F5D4"></div>
+      <!-- CMD 4 -->
+      <div class="cmd-card" style="--cmd-ac:#00F5D4;--cmd-glow:rgba(0,245,212,0.07)">
+        <div class="cmd-top-bar" style="background:#00F5D4"></div>
         <div class="cmd-header">
-          <div class="cmd-title-row">
-            <div class="cmd-num" style="border-color:#00F5D4;color:#00F5D4;background:rgba(0,245,212,0.08)">4</div>
-            <div>
-              <div class="cmd-name" style="color:#00F5D4">The Growth Command</div>
-              <span class="cmd-agent-tag">📲 ARIA</span>
-            </div>
+          <div><span class="cmd-num-badge" style="background:rgba(0,245,212,0.1);border-color:#00F5D4;color:#00F5D4">04</span></div>
+          <div class="cmd-title-block">
+            <div class="cmd-name" style="color:#00F5D4">The Growth Schedule</div>
+            <span class="cmd-agent-tag">📲 ARIA</span>
           </div>
-          <div class="run-row">
-            <label class="run-label">
-              <input type="checkbox" class="cmd-check" data-cmd="cmd4">
-              Run today ✓
-            </label>
+          <div class="cmd-meta-chips">
+            <span class="time-chip">⏱ 10 min</span>
+            <span class="xp-chip">+20 XP</span>
           </div>
         </div>
-        <p class="cmd-desc">Hand your approved content to ARIA and it schedules, hashtags, and queues everything. Also gets 3 community engagement replies written so you look active without spending hours in the comments.</p>
-        <div class="cmd-prompt-box">
-          <div class="cmd-ph">
-            <span class="cmd-ph-label" style="color:#00F5D4">⚡ Command Prompt</span>
-            <button class="copy-btn" onclick="copyCmd('cmd4-prompt',this)">📋 Copy</button>
+        <p class="cmd-desc">Hand approved content to ARIA and it schedules, hashtags, and queues everything. Also preps 3 community replies so you look active without hours in comments.</p>
+        <div class="prompt-box">
+          <div class="prompt-header">
+            <span class="prompt-label" style="color:#00F5D4">⚡ Command Prompt</span>
+            <button class="copy-btn" onclick="copyCmd('c4-prompt',this)">📋 Copy</button>
           </div>
-          <pre class="cmd-code" id="cmd4-prompt">ARIA, schedule this week's content. Here's my content: [PASTE YOUR APPROVED CONTENT]. Assign optimal posting times per platform. Add 30-hashtag sets for each post. Write 3 community engagement reply templates I can use in my comments today.</pre>
+          <pre class="prompt-code" id="c4-prompt">ARIA, schedule this week's content. Here's my content: [PASTE YOUR APPROVED CONTENT]. Assign optimal posting times per platform. Add 30-hashtag sets for each post. Write 3 community engagement reply templates I can use in my comments today.</pre>
+        </div>
+        <div class="run-row">
+          <label class="run-label"><input type="checkbox" class="cmd-check" data-cmd="cmd4"> ✓ Run today</label>
         </div>
       </div>
 
-      <!-- CMD 5: Money Command -->
-      <div class="cmd-card" style="--cmd-ac:#FFE000;--cmd-glow:rgba(255,224,0,0.08)">
-        <div class="cmd-card-bar" style="background:#FFE000"></div>
+      <!-- CMD 5 -->
+      <div class="cmd-card" style="--cmd-ac:#FFE000;--cmd-glow:rgba(255,224,0,0.07)">
+        <div class="cmd-top-bar" style="background:#FFE000"></div>
         <div class="cmd-header">
-          <div class="cmd-title-row">
-            <div class="cmd-num" style="border-color:#FFE000;color:#FFE000;background:rgba(255,224,0,0.08)">5</div>
-            <div>
-              <div class="cmd-name" style="color:#FFE000">The Money Command</div>
-              <span class="cmd-agent-tag">🎯 REACH</span>
-            </div>
+          <div><span class="cmd-num-badge" style="background:rgba(255,224,0,0.1);border-color:#FFE000;color:#FFE000">05</span></div>
+          <div class="cmd-title-block">
+            <div class="cmd-name" style="color:#FFE000">The Money Command</div>
+            <span class="cmd-agent-tag">🎯 REACH</span>
           </div>
-          <div class="run-row">
-            <label class="run-label">
-              <input type="checkbox" class="cmd-check" data-cmd="cmd5">
-              Run today ✓
-            </label>
+          <div class="cmd-meta-chips">
+            <span class="time-chip">⏱ 5 min</span>
+            <span class="xp-chip">+20 XP</span>
           </div>
         </div>
-        <p class="cmd-desc">When it's time to run paid ads or launch an offer, REACH writes 3 complete ad variations in direct-response format. Five hooks, tested frameworks, built-in urgency — ready to plug into Ads Manager.</p>
-        <div class="cmd-prompt-box">
-          <div class="cmd-ph">
-            <span class="cmd-ph-label" style="color:#FFE000">⚡ Command Prompt</span>
-            <button class="copy-btn" onclick="copyCmd('cmd5-prompt',this)">📋 Copy</button>
+        <p class="cmd-desc">When it's time to run paid ads or launch an offer, REACH writes 3 complete variations in direct-response format — 5 hooks, proven frameworks, built-in urgency.</p>
+        <div class="prompt-box">
+          <div class="prompt-header">
+            <span class="prompt-label" style="color:#FFE000">⚡ Command Prompt</span>
+            <button class="copy-btn" onclick="copyCmd('c5-prompt',this)">📋 Copy</button>
           </div>
-          <pre class="cmd-code" id="cmd5-prompt">REACH, write 3 ad variations for [PRODUCT/SERVICE]. Target audience: [AUDIENCE]. Budget level: [BUDGET]. Format: [Facebook Feed / TikTok Spark / Instagram Story]. Include: 5 hook options, primary text for each variation, headline, description, and a strong CTA. Use AIDA framework on variation 1, PAS on variation 2, Before-After-Bridge on variation 3.</pre>
+          <pre class="prompt-code" id="c5-prompt">REACH, write 3 ad variations for [PRODUCT/SERVICE]. Target: [AUDIENCE]. Budget level: [BUDGET]. Format: [Facebook Feed / TikTok Spark / Instagram Story]. Include: 5 hook options, primary text for each variation, headline, description, strong CTA. Use AIDA on #1, PAS on #2, Before-After-Bridge on #3.</pre>
+        </div>
+        <div class="run-row">
+          <label class="run-label"><input type="checkbox" class="cmd-check" data-cmd="cmd5"> ✓ Run today</label>
         </div>
       </div>
 
     </div>
   </div>
 </section>
-
-<div class="rb-bar"></div>
-
-<!-- ===== TOOL STACK ===== -->
-<section class="tool-section">
-  <div class="tool-inner">
-    <div class="section-header">
-      <div class="section-tag">The Stack</div>
-      <h2>Tool Stack Map</h2>
-      <p>Every tool your agents use, what it's for, and what it costs. Most of this runs on free plans to start.</p>
-    </div>
-    <div class="table-wrap">
-      <table class="tool-table">
-        <thead>
-          <tr>
-            <th>Agent</th>
-            <th>Primary Tool</th>
-            <th>Secondary Tool</th>
-            <th>Monthly Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="td-agent td-nova">🎨 NOVA</td>
-            <td>Claude.ai</td>
-            <td>ChatGPT</td>
-            <td class="td-cost"><span class="cost-free">Free</span> / $20 Pro</td>
-          </tr>
-          <tr>
-            <td class="td-agent td-pulse">🎬 PULSE</td>
-            <td>Higgsfield AI</td>
-            <td>Runway ML</td>
-            <td class="td-cost">$49/mo</td>
-          </tr>
-          <tr>
-            <td class="td-agent td-aria">📲 ARIA</td>
-            <td>Buffer</td>
-            <td>Later</td>
-            <td class="td-cost"><span class="cost-free">Free</span> / $18/mo</td>
-          </tr>
-          <tr>
-            <td class="td-agent td-reach">🎯 REACH</td>
-            <td>Claude.ai</td>
-            <td>Meta Ads Manager</td>
-            <td class="td-cost"><span class="cost-free">Free</span> + ad spend</td>
-          </tr>
-          <tr>
-            <td class="td-agent td-spark">💫 SPARK</td>
-            <td>Midjourney</td>
-            <td>Claude.ai</td>
-            <td class="td-cost">$10/mo</td>
-          </tr>
-          <tr>
-            <td class="td-agent td-guardian">🛡️ GUARDIAN</td>
-            <td>Claude.ai</td>
-            <td>Platform Analytics</td>
-            <td class="td-cost"><span class="cost-free">Free</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="font-size:0.78rem;color:var(--muted);margin-top:0.85rem;text-align:center">Total minimum cost to run all 6 agents: <strong style="color:var(--gr)">$0/mo</strong> using free tiers. Scale up tools as your revenue grows.</p>
-  </div>
-</section>
-
-<div class="rb-bar"></div>
 
 <!-- ===== WEEKLY CHALLENGE ===== -->
 <section class="weekly-section">
@@ -686,47 +599,105 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSys
     <div class="section-header">
       <div class="section-tag">7-Day Challenge</div>
       <h2>The CEO Badge Challenge</h2>
+      <p>Run all 5 commands for 7 consecutive days. No skips. The badge proves you've built a real operating system.</p>
     </div>
     <div class="weekly-box">
-      <span class="weekly-crown">👑</span>
-      <h3>Run All 5 Commands for 7 Days Straight</h3>
-      <p>The <strong>CEO Badge</strong> isn't just a badge — it's proof that you've built a real operating system for your content business. <strong>Seven days of all 5 commands = a fully automated content machine.</strong> Most creators never get here. You will.</p>
-      <div class="ceo-unlock-badge">👑 CEO BADGE · Unlock at 7-Day Streak</div>
+      <span class="w-crown">👑</span>
+      <h3>7 Days · All 5 Commands · CEO Badge Earned</h3>
+      <p>Most creators never get here because they <strong>never build the system.</strong> You're building it right now. Seven days of consistency = a fully automated content machine that runs with or without you.</p>
+      <div class="day-dots" id="day-dots">
+        <div class="day-dot" data-day="1">1</div>
+        <div class="day-dot" data-day="2">2</div>
+        <div class="day-dot" data-day="3">3</div>
+        <div class="day-dot" data-day="4">4</div>
+        <div class="day-dot" data-day="5">5</div>
+        <div class="day-dot" data-day="6">6</div>
+        <div class="day-dot" data-day="7">7</div>
+      </div>
+      <div class="ceo-unlock">👑 CEO BADGE · Unlock at 7-Day Streak</div>
     </div>
   </div>
 </section>
 
-<div class="rb-bar"></div>
+<!-- ===== TOOL STACK ===== -->
+<section class="tool-section">
+  <div class="tool-inner">
+    <div class="section-header">
+      <div class="section-tag">The Stack</div>
+      <h2>Tool Stack Map</h2>
+      <p>Every tool your agents use, what it costs, and where to get it. Most of this runs free to start.</p>
+    </div>
+    <div class="tool-chips-grid">
+      <div class="tool-chip">
+        <div class="tc-agent tc-nova">🎨 NOVA</div>
+        <div class="tc-tool">Primary: Claude.ai</div>
+        <div class="tc-secondary">Secondary: ChatGPT</div>
+        <span class="tc-cost free">Free / $20 Pro</span>
+      </div>
+      <div class="tool-chip">
+        <div class="tc-agent tc-pulse">🎬 PULSE</div>
+        <div class="tc-tool">Primary: Higgsfield AI</div>
+        <div class="tc-secondary">Secondary: Runway ML</div>
+        <span class="tc-cost paid">$49/mo</span>
+      </div>
+      <div class="tool-chip">
+        <div class="tc-agent tc-aria">📲 ARIA</div>
+        <div class="tc-tool">Primary: Buffer</div>
+        <div class="tc-secondary">Secondary: Later</div>
+        <span class="tc-cost free">Free / $18/mo</span>
+      </div>
+      <div class="tool-chip">
+        <div class="tc-agent tc-reach">🎯 REACH</div>
+        <div class="tc-tool">Primary: Claude.ai</div>
+        <div class="tc-secondary">Secondary: Meta Ads Manager</div>
+        <span class="tc-cost free">Free + ad spend</span>
+      </div>
+      <div class="tool-chip">
+        <div class="tc-agent tc-spark">💫 SPARK</div>
+        <div class="tc-tool">Primary: Midjourney</div>
+        <div class="tc-secondary">Secondary: Claude.ai</div>
+        <span class="tc-cost paid">$10/mo</span>
+      </div>
+      <div class="tool-chip">
+        <div class="tc-agent tc-guardian">🛡️ GUARDIAN</div>
+        <div class="tc-tool">Primary: Claude.ai</div>
+        <div class="tc-secondary">Secondary: Platform Analytics</div>
+        <span class="tc-cost free">Free</span>
+      </div>
+    </div>
+    <p style="font-size:0.75rem;color:var(--muted);margin-top:0.85rem;text-align:center">Total minimum cost: <strong style="color:var(--gr)">$0/mo</strong> using free tiers only. Scale tools as revenue grows.</p>
+  </div>
+</section>
 
 <!-- ===== QUICKSTART ===== -->
 <section class="quickstart-section">
   <div class="quickstart-inner">
     <div class="section-header">
       <div class="section-tag">Start Right Now</div>
-      <h2>Copy-Paste Quickstart</h2>
-      <p>Don't wait to set up all 6 agents individually. Paste this single master prompt into Claude.ai right now and it will walk you through the whole setup in one conversation.</p>
+      <h2>One Prompt to Rule Them All</h2>
+      <p>Don't wait to set up 6 agents individually. Paste this into Claude.ai and it walks you through the entire setup in one conversation.</p>
     </div>
     <div class="qs-box">
       <div class="qs-header">
         <div class="qs-badge">🚀 RUN THIS NOW</div>
-        <h3>Open Claude.ai and paste this:</h3>
-        <p>This one prompt configures all 6 agents and runs your first daily briefing.</p>
+        <h3>Open Claude.ai and paste this</h3>
+        <p>One prompt. All 6 agents configured. First briefing delivered.</p>
       </div>
-      <div class="qs-prompt">
+      <div class="qs-prompt-box">
         <div class="qs-ph">
           <span class="qs-ph-label">⚡ Full System Setup Prompt</span>
-          <button class="copy-btn" onclick="copyCmd('qs-prompt-code',this)" style="font-size:0.72rem;padding:0.25rem 0.7rem">📋 Copy Full Prompt</button>
+          <button class="copy-btn" onclick="copyCmd('qs-code',this)" style="font-size:0.65rem">📋 Copy Full Prompt</button>
         </div>
-        <pre class="qs-code" id="qs-prompt-code">You are my 6-agent AI content company. This system includes six specialists: NOVA (content creator), PULSE (video director), ARIA (social media manager), REACH (ad copywriter), SPARK (brand influencer strategist), and GUARDIAN (QA analyst and system optimizer).
+        <pre class="qs-code" id="qs-code">You are my 6-agent AI content company. This system includes: NOVA (content creator), PULSE (video director), ARIA (social media manager), REACH (ad copywriter), SPARK (brand influencer strategist), and GUARDIAN (QA analyst).
 
 Before we begin, ask me these 5 questions to configure all agents:
 1. What is your brand name and niche?
-2. Who is your exact target audience (be specific)?
-3. Which platforms are you focused on (rank them 1-3)?
-4. Describe your brand voice in 3 words.
+2. Who is your exact target audience — be very specific?
+3. Which platforms are you focused on — rank your top 3?
+4. Describe your brand voice in exactly 3 words.
 5. What is your main product, service, or offer?
 
-After I answer, confirm all 6 agents are configured with my details, then immediately run GUARDIAN's daily audit. Ask me for yesterday's performance numbers, then give me: top insights, what to repeat, what to stop, and today's recommended content theme.
+After I answer, confirm all 6 agents are configured with my details. Then immediately run GUARDIAN's morning audit — ask me for yesterday's performance numbers and give me: top 3 insights, what to repeat, what to stop, and today's recommended content theme.
 
 We are open for business.</pre>
       </div>
@@ -734,153 +705,121 @@ We are open for business.</pre>
   </div>
 </section>
 
-<div class="rb-bar"></div>
-
 <!-- ===== QUOTE ===== -->
 <div class="quote-bar">
-  <p>"You are not just a content creator anymore. <strong>You are a CEO who delegates to AI.</strong> The difference between creators who scale and creators who burn out is this system. You're in it now. 🔥"</p>
+  <p>"You are not just a content creator anymore. <strong>You are a CEO who delegates to AI.</strong> The difference between creators who scale and those who burn out is exactly this system. You're in it now. 🔥"</p>
 </div>
 
 <!-- ===== CTA ===== -->
 <section class="cta-section">
-  <h2>Your Team is Ready.<br>Now Feed It <span class="grd">Content.</span></h2>
+  <h2>Your Team is Ready.<br>Now Feed It <span style="background:var(--rb);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite">Content.</span></h2>
   <p>Head to the Content OS to see how NOVA, PULSE, and ARIA generate, format, and distribute your content at scale — every single day.</p>
   <a href="mk-content.html" class="cta-btn">Your Team is Ready. Now Feed It Content →</a>
 </section>
 
-<div class="rb-bar"></div>
 <div class="footer-bar">© 2024 METAKITTYZ · MATRIX OS running · 45 min/day is all it takes ⚡</div>
+
+<!-- ===== FIXED BOTTOM NAV ===== -->
+<nav class="bottom-nav">
+  <a href="index.html" class="bn-tab"><span class="bn-icon">🏠</span>HOME</a>
+  <a href="mk-team.html" class="bn-tab active"><span class="bn-icon">👥</span>TEAM</a>
+  <a href="metakittyz.html" class="bn-tab"><span class="bn-icon">📖</span>GUIDE</a>
+  <a href="mk-engage.html" class="bn-tab prompts"><span class="bn-icon">✨</span>PROMPTS</a>
+</nav>
 
 <script>
 // ===== UTILITIES =====
-function getToday() {
-  return new Date().toISOString().split('T')[0];
-}
-function getYesterday() {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  return d.toISOString().split('T')[0];
-}
-function safeGet(key, fallback) {
-  try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : fallback; } catch(e) { return fallback; }
-}
-function safeSet(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
-}
+function getToday() { return new Date().toISOString().split('T')[0]; }
+function getYesterday() { const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().split('T')[0]; }
+function safeGet(k, fb) { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : fb; } catch(e) { return fb; } }
+function safeSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
 
 // ===== STREAK LOGIC =====
-const STREAK_KEY = 'mk-streak';
-const LAST_DATE_KEY = 'mk-last-date';
-const CMD_PREFIX = 'mk-cmds-';
-
 function initStreak() {
   const today = getToday();
-  const lastDate = safeGet(LAST_DATE_KEY, '');
-  let streak = safeGet(STREAK_KEY, 0);
-
+  const lastDate = safeGet('mk-last-date', '');
+  let streak = safeGet('mk-streak', 0);
   if (lastDate === '') {
-    // First ever visit — start at 0
+    // first visit
   } else if (lastDate === today) {
-    // Same day, no change to streak
+    // same day — no change
   } else if (lastDate === getYesterday()) {
-    // Perfect — came back the next day
-    // Only increment if all 5 commands were done yesterday
-    const yestCmds = safeGet(CMD_PREFIX + lastDate, {});
-    const yestDone = Object.values(yestCmds).filter(Boolean).length;
-    if (yestDone >= 5) {
+    const yestCmds = safeGet('mk-cmds-' + lastDate, {});
+    if (Object.values(yestCmds).filter(Boolean).length >= 5) {
       streak += 1;
-      safeSet(STREAK_KEY, streak);
     } else {
-      // Didn't complete yesterday's commands — reset
       streak = 0;
-      safeSet(STREAK_KEY, 0);
     }
+    safeSet('mk-streak', streak);
   } else {
-    // Gap — reset streak
     streak = 0;
-    safeSet(STREAK_KEY, 0);
+    safeSet('mk-streak', 0);
   }
-
-  safeSet(LAST_DATE_KEY, today);
-  return streak;
+  safeSet('mk-last-date', today);
 }
 
-function getCommandsDoneToday() {
+function updateUI() {
+  const streak = safeGet('mk-streak', 0);
   const today = getToday();
-  return safeGet(CMD_PREFIX + today, {});
-}
-
-function updateStreakUI() {
-  const streak = safeGet(STREAK_KEY, 0);
-  const cmds = getCommandsDoneToday();
+  const cmds = safeGet('mk-cmds-' + today, {});
   const done = Object.values(cmds).filter(Boolean).length;
 
-  // Streak display
+  // streak display
   document.getElementById('streak-count').textContent = streak;
-
-  // Score display (both widgets)
-  const pct = (done / 5 * 100) + '%';
-  const el1 = document.getElementById('score-bar-fill');
-  const el2 = document.getElementById('tsb-fill');
-  if (el1) el1.style.width = pct;
-  if (el2) el2.style.width = pct;
-
-  const scoreText = document.getElementById('score-text');
-  const scoreDisp = document.getElementById('today-score-display');
-  if (scoreText) scoreText.textContent = done + ' / 5';
-  if (scoreDisp) scoreDisp.textContent = done + '/5 commands';
-
-  // CEO badge at 7+ days
-  const ceoBadge = document.getElementById('ceo-badge');
   if (streak >= 7) {
-    ceoBadge.style.display = 'inline-flex';
+    const badge = document.getElementById('ceo-badge');
+    badge.style.display = 'inline-flex';
   }
 
-  // Restore checkbox states
+  // score display
+  document.getElementById('score-fill').style.width = (done/5*100)+'%';
+  document.getElementById('today-score').textContent = done+'/5';
+
+  // restore command checkboxes
   document.querySelectorAll('.cmd-check').forEach(cb => {
     cb.checked = !!cmds[cb.dataset.cmd];
+  });
+
+  // day dots
+  document.querySelectorAll('.day-dot').forEach((dot, i) => {
+    if (i < streak) dot.classList.add('done');
+    else dot.classList.remove('done');
+    if (streak >= 7 && i < 7) dot.classList.add('ceo');
   });
 }
 
 function onCmdCheck(e) {
   const cmd = e.target.dataset.cmd;
   const today = getToday();
-  const cmds = safeGet(CMD_PREFIX + today, {});
+  const key = 'mk-cmds-' + today;
+  const cmds = safeGet(key, {});
   cmds[cmd] = e.target.checked;
-  safeSet(CMD_PREFIX + today, cmds);
-  updateStreakUI();
-
+  safeSet(key, cmds);
+  updateUI();
   const done = Object.values(cmds).filter(Boolean).length;
   if (e.target.checked) {
-    if (done === 5) {
-      showToast('🎉 All 5 commands done today! Streak is building. Keep going tomorrow!');
-    } else {
-      showToast('✓ Command logged! ' + done + '/5 done today.');
-    }
+    if (done === 5) showToast('🎉 All 5 commands done today! Streak is building — come back tomorrow!');
+    else showToast('✓ Command logged! '+done+'/5 done today.');
   }
 }
 
-// ===== COPY PROMPT =====
+// ===== COPY =====
 function copyCmd(id, btn) {
-  const el = document.getElementById(id);
-  const text = el.innerText || el.textContent;
+  const text = document.getElementById(id).innerText || document.getElementById(id).textContent;
   const orig = btn.textContent;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => flashCopied(btn, orig)).catch(() => fallback(text, btn, orig));
-  } else { fallback(text, btn, orig); }
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+    .then(() => flashBtn(btn, orig))
+    .catch(() => { fallback(text); flashBtn(btn, orig); });
 }
-function fallback(text, btn, orig) {
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.cssText = 'position:fixed;left:-9999px;top:0';
-  document.body.appendChild(ta);
-  ta.focus(); ta.select();
-  try { document.execCommand('copy'); flashCopied(btn, orig); } catch(e) {}
+function fallback(text) {
+  const ta = Object.assign(document.createElement('textarea'), {value:text});
+  ta.style.cssText = 'position:fixed;left:-9999px';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch(e){}
   document.body.removeChild(ta);
 }
-function flashCopied(btn, orig) {
-  btn.textContent = '✓ Copied!';
-  btn.classList.add('copied');
+function flashBtn(btn, orig) {
+  btn.textContent = '✓ Copied!'; btn.classList.add('copied');
   setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2200);
 }
 
@@ -889,25 +828,25 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   document.getElementById('toast-msg').textContent = msg;
   t.className = 'toast in';
-  clearTimeout(t._tid);
-  t._tid = setTimeout(() => {
-    t.className = 'toast out';
-    setTimeout(() => { t.className = 'toast'; }, 320);
-  }, 3500);
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.className='toast out'; setTimeout(()=>t.className='toast',320); }, 3600);
 }
 
-// ===== GLOSSARY TOGGLE =====
-function toggleGloss(card) {
-  card.classList.toggle('open');
-}
+// ===== ERIKA =====
+function toggleErika() { document.getElementById('erika-bubble').classList.toggle('open'); }
+function closeErika() { document.getElementById('erika-bubble').classList.remove('open'); }
+
+// ===== GLOSSARY =====
+function toggleGloss(c) { c.classList.toggle('open'); }
+
+// ===== THEME =====
+function showThemeToast() { showToast('🐱 Dark mode is the only mode around here.'); }
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
   initStreak();
-  updateStreakUI();
-  document.querySelectorAll('.cmd-check').forEach(cb => {
-    cb.addEventListener('change', onCmdCheck);
-  });
+  updateUI();
+  document.querySelectorAll('.cmd-check').forEach(cb => cb.addEventListener('change', onCmdCheck));
 });
 </script>
 </body>

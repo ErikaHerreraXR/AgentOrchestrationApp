@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Metakittyz — Build Your AI Company This Weekend</title>
+<meta name="description" content="No coding. No team. Learn to build 6 AI agents that create content, run your marketing, and grow your brand to 1 million followers — while you sleep.">
+<style>
+:root {
+  --bg: #0A0015;
+  --card: #0f0022;
+  --surf: #160030;
+  --pk: #FF2D78;
+  --tl: #00F5D4;
+  --pu: #7B2FFF;
+  --gr: #00FF41;
+  --yl: #FFE000;
+  --or: #FF6B35;
+  --txt: #E8E0F0;
+  --muted: #9A90B0;
+  --dim: #2a2040;
+  --rb: linear-gradient(90deg, #FF2D78, #FF6B35, #FFE000, #00F5D4, #7B2FFF, #FF2D78);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+@keyframes shimmer { to { background-position: 200% 0; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* ── Rainbow Bar ── */
+.rb-bar {
+  height: 4px;
+  background: var(--rb);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ── Nav ── */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  height: 60px;
+  background: rgba(10, 0, 21, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(123, 47, 255, 0.2);
+}
+.nav-logo {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-logo span {
+  background: var(--rb);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav-links a {
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: 0.15s;
+  font-weight: 500;
+}
+.nav-links a:hover, .nav-links a.active {
+  color: var(--txt);
+  background: rgba(255, 45, 120, 0.12);
+}
+.nav-cta {
+  background: var(--pk);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 100px;
+  letter-spacing: 0.3px;
+  transition: 0.15s;
+  white-space: nowrap;
+}
+.nav-cta:hover { opacity: 0.85; }
+
+/* ── Hero ── */
+.hero {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 3rem;
+  text-align: center;
+  animation: fade-up 0.5s ease;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--tl);
+  border: 1px solid rgba(0, 245, 212, 0.3);
+  border-radius: 100px;
+  padding: 5px 14px;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 7vw, 4rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -1px;
+  margin-bottom: 1.2rem;
+}
+.hero h1 .line-pk { color: var(--pk); }
+.hero h1 .line-tl { color: var(--tl); }
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 540px;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.hero-sub strong { color: var(--txt); }
+.cta-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  background: var(--pk);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  transition: 0.18s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent;
+  color: var(--txt);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 13px 28px;
+  border-radius: 100px;
+  border: 1px solid var(--dim);
+  cursor: pointer;
+  transition: 0.15s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-secondary:hover { border-color: var(--pk); color: var(--pk); }
+
+/* ── Mission Strip ── */
+.mission {
+  background: var(--card);
+  border-top: 1px solid var(--dim);
+  border-bottom: 1px solid var(--dim);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+.mission p {
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  font-weight: 600;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+  color: var(--txt);
+}
+.mission p em { color: var(--yl); font-style: normal; }
+.mission p strong { color: var(--pk); }
+
+/* ── How It Works ── */
+.section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem;
+}
+.section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--tl);
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 900;
+  margin-bottom: 2rem;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+}
+.section-title span { color: var(--pk); }
+
+.steps-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.step-card {
+  background: var(--card);
+  border: 1px solid var(--dim);
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: 0.2s;
+}
+.step-card:hover { border-color: rgba(255, 45, 120, 0.3); }
+.step-num {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: rgba(255, 45, 120, 0.15);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  letter-spacing: -2px;
+}
+.step-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.step-card p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* ── Agent Team ── */
+.agents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.agent-card {
+  background: var(--card);
+  border: 1px solid var(--dim);
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: 0.2s;
+}
+.agent-card:hover { transform: translateY(-2px); }
+.agent-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.agent-meta h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.agent-meta p {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ── Stat Bar ── */
+.stat-bar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  border-top: 1px solid var(--dim);
+  border-bottom: 1px solid var(--dim);
+  background: var(--card);
+}
+.stat-item {
+  text-align: center;
+  flex: 1;
+  min-width: 120px;
+}
+.stat-num {
+  font-size: 2rem;
+  font-weight: 900;
+  background: var(--rb);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+  letter-spacing: -1px;
+}
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ── Bottom Nav ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: rgba(10, 0, 21, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--dim);
+  display: flex;
+  height: 66px;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bnav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: 0.15s;
+}
+.bnav-item:hover, .bnav-item.active { color: var(--pk); }
+.bnav-item:last-child { color: var(--pu); }
+.bnav-ic { font-size: 1.1rem; }
+
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .hero { padding: 2.5rem 1rem 2rem; }
+  .section { padding: 2.5rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="rb-bar"></div>
+
+<nav class="topnav">
+  <div class="nav-logo">🐱 <span>METAKITTYZ</span></div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="guide.html">Build Guide</a>
+    <a href="prompts.html">Prompts</a>
+    <a href="live.html">Watch Live</a>
+  </div>
+  <a class="nav-cta" href="guide.html">Start Building →</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-tag">🐱 Metakittyz · AI Orchestration</div>
+  <h1>
+    <span class="line-pk">Build Your AI Company</span><br>
+    <span class="line-tl">This Weekend.</span>
+  </h1>
+  <p class="hero-sub">
+    <strong>No coding. No team. No prior experience.</strong><br>
+    Learn to build 6 AI agents that write your content, run your marketing,
+    and grow your brand to 1 million followers — while you sleep.
+  </p>
+  <div class="cta-row">
+    <a class="btn-primary" href="guide.html">📖 Start the Build Guide</a>
+    <a class="btn-secondary" href="live.html">📺 Watch Live</a>
+  </div>
+</section>
+
+<!-- Mission Strip -->
+<div class="mission">
+  <p>
+    My mission: <em>teach 1 million people</em> how to build their own AI team,
+    stay <strong>CEO</strong>, and use automation to create content
+    and make money — <em>while they sleep.</em>
+  </p>
+</div>
+
+<!-- How It Works -->
+<section class="section">
+  <p class="section-label">How It Works</p>
+  <h2 class="section-title">6 Episodes. <span>1 AI Business.</span><br>One Weekend.</h2>
+  <div class="steps-row">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <h3>Your AI Foundation</h3>
+      <p>Set up Claude AI and create your Brand Bible — the document your AI team reads before creating anything.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <h3>Build Your AI Team</h3>
+      <p>Create 6 specialized AI agents, each with their own job: writing, video, social media, ads, brand, and quality control.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <h3>The Content Machine</h3>
+      <p>One idea → 12 pieces of content across 6 platforms. Your AI team does the writing. You do the approving.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">04</div>
+      <h3>Grow Your Audience</h3>
+      <p>AI-written ads, captions, and campaigns. Launch your first campaign for as little as $5/day.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">05</div>
+      <h3>Sell Your Prompts</h3>
+      <p>Package the prompts you've built and sell them as digital products. Your first revenue stream launches this weekend.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">06</div>
+      <h3>Go Fully Automated</h3>
+      <p>Automate your entire content funnel. Set it up once, and your AI business runs without you being online 24/7.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stat-bar">
+  <div class="stat-item">
+    <div class="stat-num">6</div>
+    <div class="stat-label">AI Agents You'll Build</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">12</div>
+    <div class="stat-label">Posts From 1 Idea</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">48hr</div>
+    <div class="stat-label">To Launch Your AI Biz</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">0</div>
+    <div class="stat-label">Coding Skills Needed</div>
+  </div>
+</div>
+
+<!-- AI Team -->
+<section class="section">
+  <p class="section-label">Your AI Team</p>
+  <h2 class="section-title">Meet the <span>6 Agents</span><br>You'll Build</h2>
+  <div class="agents-grid">
+    <div class="agent-card">
+      <div class="agent-icon" style="background:rgba(255,45,120,.12);">✍️</div>
+      <div class="agent-meta">
+        <h4>NOVA — Content Creator</h4>
+        <p>Writes blog posts, scripts, and captions in your exact brand voice, on demand, for any topic you give it.</p>
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon" style="background:rgba(255,107,53,.12);">🎬</div>
+      <div class="agent-meta">
+        <h4>PULSE — Video Producer</h4>
+        <p>Writes your YouTube and TikTok scripts with hooks, key points, and CTAs that keep people watching.</p>
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon" style="background:rgba(0,245,212,.12);">📱</div>
+      <div class="agent-meta">
+        <h4>ARIA — Social Media Manager</h4>
+        <p>Adapts your content for every platform's style, character limits, and what's trending right now.</p>
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon" style="background:rgba(255,224,0,.12);">📢</div>
+      <div class="agent-meta">
+        <h4>REACH — Ads & Growth</h4>
+        <p>Writes scroll-stopping ad copy, growth strategies, and audience targeting briefs for paid campaigns.</p>
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon" style="background:rgba(123,47,255,.12);">✨</div>
+      <div class="agent-meta">
+        <h4>SPARK — Brand Designer</h4>
+        <p>Writes visual direction briefs for Canva and Midjourney so every image matches your brand identity.</p>
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-icon" style="background:rgba(0,255,65,.12);">🛡️</div>
+      <div class="agent-meta">
+        <h4>GUARDIAN — Quality & Legal</h4>
+        <p>Reviews every piece of content for FTC compliance, brand consistency, and accuracy before it goes live.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <a class="bnav-item active" href="index.html"><span class="bnav-ic">🏠</span>Home</a>
+  <a class="bnav-item" href="guide.html"><span class="bnav-ic">📖</span>Guide</a>
+  <a class="bnav-item" href="prompts.html"><span class="bnav-ic">✨</span>Prompts</a>
+  <a class="bnav-item" href="live.html"><span class="bnav-ic">📺</span>Live</a>
+</nav>
+
+</body>
+</html>

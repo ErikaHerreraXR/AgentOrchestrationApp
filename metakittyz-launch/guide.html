@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Build Guide — Metakittyz</title>
+<meta name="description" content="Step-by-step guide to building your AI content business in 6 episodes. No coding required.">
+<style>
+:root {
+  --bg: #0A0015; --card: #0f0022; --surf: #160030;
+  --pk: #FF2D78; --tl: #00F5D4; --pu: #7B2FFF;
+  --gr: #00FF41; --yl: #FFE000; --or: #FF6B35;
+  --txt: #E8E0F0; --muted: #9A90B0; --dim: #2a2040;
+  --rb: linear-gradient(90deg, #FF2D78, #FF6B35, #FFE000, #00F5D4, #7B2FFF, #FF2D78);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--txt);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px; line-height: 1.6; overflow-x: hidden; padding-bottom: 80px;
+}
+a { color: inherit; text-decoration: none; }
+@keyframes shimmer { to { background-position: 200% 0; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+.rb-bar { height: 4px; background: var(--rb); background-size: 200%; animation: shimmer 3s linear infinite; }
+
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem; height: 60px;
+  background: rgba(10,0,21,0.95); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(123,47,255,0.2);
+}
+.nav-logo { font-size: 1.1rem; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+.nav-logo span { background: var(--rb); background-size: 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 3s linear infinite; }
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-links a { font-size: 0.8rem; color: var(--muted); padding: 6px 12px; border-radius: 8px; transition: 0.15s; font-weight: 500; }
+.nav-links a:hover, .nav-links a.active { color: var(--txt); background: rgba(255,45,120,0.12); }
+.nav-cta { background: var(--pk); color: #fff; font-size: 0.78rem; font-weight: 700; padding: 8px 18px; border-radius: 100px; transition: 0.15s; }
+.nav-cta:hover { opacity: 0.85; }
+
+.page-header {
+  max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem 2rem;
+  text-align: center; animation: fade-up 0.4s ease;
+}
+.page-header-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--tl); margin-bottom: 0.6rem; }
+.page-header h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.8rem; }
+.page-header h1 span { color: var(--pk); }
+.page-header p { font-size: 1rem; color: var(--muted); }
+
+/* ── Episodes ── */
+.episodes { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+.ep {
+  background: var(--card); border: 1px solid var(--dim);
+  border-radius: 14px; margin-bottom: 1rem; overflow: hidden;
+}
+.ep.done { border-color: rgba(0,255,65,0.3); }
+.ep-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 1.1rem 1.3rem; cursor: pointer; user-select: none;
+}
+.ep-num {
+  font-size: 1.6rem; font-weight: 900; color: rgba(255,45,120,0.2);
+  min-width: 36px; letter-spacing: -1px; flex-shrink: 0;
+}
+.ep-info { flex: 1; }
+.ep-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+.ep-info p { font-size: 0.8rem; color: var(--muted); }
+.ep-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.ep-badge { font-size: 1.2rem; }
+.ep-chevron { font-size: 0.65rem; color: var(--muted); font-weight: 700; transition: 0.2s; }
+.ep.open .ep-chevron { transform: rotate(180deg); }
+
+.ep-body { display: none; padding: 0 1.3rem 1.3rem; border-top: 1px solid var(--dim); }
+.ep.open .ep-body { display: block; }
+
+.what-youll-build {
+  background: var(--surf); border-radius: 10px;
+  padding: 0.9rem 1.1rem; margin: 1rem 0 0.8rem;
+  font-size: 0.85rem; color: var(--txt);
+}
+.what-youll-build strong { color: var(--tl); }
+
+.steps { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.8rem; }
+.steps li {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 0.75rem 0.9rem; background: rgba(22,0,48,0.5); border-radius: 10px; font-size: 0.87rem;
+  counter-increment: step;
+}
+.steps li::before {
+  content: counter(step);
+  background: var(--pk); color: #fff;
+  font-size: 0.68rem; font-weight: 700;
+  min-width: 22px; height: 22px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.steps li em { color: var(--yl); font-style: italic; }
+
+.checklist { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 0.6rem 0.8rem; border-radius: 8px; cursor: pointer;
+  font-size: 0.85rem; transition: 0.12s;
+}
+.check-item:hover { background: rgba(255,45,120,0.06); }
+.check-box {
+  width: 20px; height: 20px; border: 2px solid var(--dim);
+  border-radius: 5px; flex-shrink: 0; display: flex;
+  align-items: center; justify-content: center; margin-top: 1px; transition: 0.15s;
+}
+.check-item.checked .check-box { background: var(--gr); border-color: var(--gr); }
+.check-item.checked .check-box::after { content: '✓'; font-size: 0.72rem; font-weight: 900; color: #000; }
+.check-item.checked .check-label { color: var(--muted); text-decoration: line-through; }
+
+.ep-done-btn {
+  margin-top: 0.8rem; width: 100%;
+  background: rgba(0,255,65,0.1); border: 1px solid rgba(0,255,65,0.3);
+  color: var(--gr); font-size: 0.8rem; font-weight: 700;
+  padding: 10px; border-radius: 10px; cursor: pointer; transition: 0.15s;
+}
+.ep-done-btn:hover { background: rgba(0,255,65,0.2); }
+.ep.done .ep-done-btn { opacity: 0.5; cursor: default; }
+
+/* ── Glossary ── */
+.glossary { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem; }
+.section-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--tl); margin-bottom: 0.4rem; }
+.section-title { font-size: clamp(1.4rem,3.5vw,1.9rem); font-weight: 900; margin-bottom: 1.2rem; }
+.section-title span { color: var(--pk); }
+.terms { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 0.8rem; }
+.term { background: var(--card); border: 1px solid var(--dim); border-radius: 12px; padding: 1rem; }
+.term-word { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--pk); margin-bottom: 0.3rem; }
+.term-def { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+/* ── Bottom Nav ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(10,0,21,0.97); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--dim); display: flex;
+  height: 66px; padding-bottom: env(safe-area-inset-bottom);
+}
+.bnav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.4px;
+  color: var(--muted); text-transform: uppercase; text-decoration: none; transition: 0.15s;
+}
+.bnav-item:hover, .bnav-item.active { color: var(--pk); }
+.bnav-item:last-child { color: var(--pu); }
+.bnav-ic { font-size: 1.1rem; }
+
+@media (max-width: 640px) { .nav-links { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="rb-bar"></div>
+
+<nav class="topnav">
+  <a class="nav-logo" href="index.html">🐱 <span>METAKITTYZ</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="guide.html" class="active">Build Guide</a>
+    <a href="prompts.html">Prompts</a>
+    <a href="live.html">Watch Live</a>
+  </div>
+  <a class="nav-cta" href="live.html">Watch Live →</a>
+</nav>
+
+<div class="page-header">
+  <p class="page-header-tag">📖 Step-by-Step Build Guide</p>
+  <h1>6 Episodes. <span>1 AI Business.</span></h1>
+  <p>Complete each episode in order. Check off each step as you go. No coding. No experience needed. Just follow along.</p>
+</div>
+
+<div class="episodes">
+
+  <!-- EP01 -->
+  <div class="ep" id="ep1">
+    <div class="ep-head" onclick="toggleEp('ep1')">
+      <div class="ep-num">01</div>
+      <div class="ep-info">
+        <h3>Your AI Foundation</h3>
+        <p>Set up Claude AI and write your Brand Bible</p>
+      </div>
+      <div class="ep-right">
+        <div class="ep-badge">🐣</div>
+        <div class="ep-chevron">▼</div>
+      </div>
+    </div>
+    <div class="ep-body">
+      <div class="what-youll-build"><strong>You'll have:</strong> A Claude AI account + a Brand Bible document that tells your AI team exactly who you are and how to sound like you.</div>
+      <ul class="steps">
+        <li>Go to <strong>claude.ai</strong> → click "Start for free" → sign in with Google or email</li>
+        <li>Start a new chat. Paste this: <em>"My name is [NAME]. I create content about [TOPIC] for [AUDIENCE]. My vibe is [casual / bold / professional]. Write my brand voice guide."</em></li>
+        <li>Copy the output into a <strong>Google Doc</strong> — title it "My Brand Bible." This is your most important document.</li>
+        <li>Ask Claude: <em>"Using my brand voice guide above, write 3 versions of my bio for social media."</em></li>
+        <li>Pick your favorite version and update your Instagram, TikTok, and LinkedIn bio right now.</li>
+      </ul>
+      <ul class="checklist" id="checks-ep1">
+        <li class="check-item" onclick="toggleCheck(this, 'ep1-1')"><div class="check-box"></div><span class="check-label">I created a Claude AI account</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep1-2')"><div class="check-box"></div><span class="check-label">I wrote my Brand Bible</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep1-3')"><div class="check-box"></div><span class="check-label">I updated my social media bios</span></li>
+      </ul>
+      <button class="ep-done-btn" onclick="markDone('ep1')">✓ Mark Episode 1 Complete</button>
+    </div>
+  </div>
+
+  <!-- EP02 -->
+  <div class="ep" id="ep2">
+    <div class="ep-head" onclick="toggleEp('ep2')">
+      <div class="ep-num">02</div>
+      <div class="ep-info">
+        <h3>Build Your AI Team</h3>
+        <p>Create your 6 AI agents — NOVA, PULSE, ARIA, REACH, SPARK, GUARDIAN</p>
+      </div>
+      <div class="ep-right">
+        <div class="ep-badge">🔧</div>
+        <div class="ep-chevron">▼</div>
+      </div>
+    </div>
+    <div class="ep-body">
+      <div class="what-youll-build"><strong>You'll have:</strong> 6 AI agents, each with a specific job. You tell them who they are once — then they remember it every time you chat with them.</div>
+      <ul class="steps">
+        <li>Open Claude and start a new chat for your first agent, NOVA.</li>
+        <li>Paste: <em>"You are NOVA, my AI Content Creator. [Paste your Brand Bible]. Your job is to write all my content in my brand voice. When I give you a topic, create: a hook, 3 key points, and a call to action."</em></li>
+        <li>Test NOVA by saying: <em>"Write a post about why AI is the best tool for solo creators."</em> See how it sounds like you.</li>
+        <li>Repeat for ARIA: <em>"You are ARIA, my Social Media Manager. Adapt content I give you for Instagram, TikTok, LinkedIn, and X. Match each platform's style and character limits."</em></li>
+        <li>Set up GUARDIAN: <em>"You are GUARDIAN, my QA Agent. Review content for: FTC disclosure, brand voice consistency, and no false claims. Flag anything that needs fixing."</em></li>
+        <li>Build PULSE, REACH, and SPARK the same way — each gets their own chat with their job description + your Brand Bible.</li>
+      </ul>
+      <ul class="checklist" id="checks-ep2">
+        <li class="check-item" onclick="toggleCheck(this, 'ep2-1')"><div class="check-box"></div><span class="check-label">NOVA — Content Creator is set up</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep2-2')"><div class="check-box"></div><span class="check-label">ARIA — Social Media Manager is set up</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep2-3')"><div class="check-box"></div><span class="check-label">GUARDIAN — QA Agent is set up</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep2-4')"><div class="check-box"></div><span class="check-label">PULSE, REACH, and SPARK are set up</span></li>
+      </ul>
+      <button class="ep-done-btn" onclick="markDone('ep2')">✓ Mark Episode 2 Complete</button>
+    </div>
+  </div>
+
+  <!-- EP03 -->
+  <div class="ep" id="ep3">
+    <div class="ep-head" onclick="toggleEp('ep3')">
+      <div class="ep-num">03</div>
+      <div class="ep-info">
+        <h3>The 1→12 Content Machine</h3>
+        <p>Turn one idea into 12 posts across 6 platforms in 30 minutes</p>
+      </div>
+      <div class="ep-right">
+        <div class="ep-badge">🎨</div>
+        <div class="ep-chevron">▼</div>
+      </div>
+    </div>
+    <div class="ep-body">
+      <div class="what-youll-build"><strong>You'll have:</strong> A weekly content workflow where one topic becomes 12 ready-to-post pieces of content — your full week, done in under 30 minutes.</div>
+      <ul class="steps">
+        <li>Choose ONE topic for the week. Example: "Why every creator needs an AI team in 2025."</li>
+        <li>Give it to NOVA: <em>"Create a full content suite for this topic: [TOPIC]. I need: 1 YouTube script hook, 2 Instagram captions, 2 TikTok scripts, 2 LinkedIn posts, 2 X/Twitter posts, 2 email snippets, and 1 blog intro."</em></li>
+        <li>Take each piece and hand it to ARIA: <em>"Adapt these for each platform — match the vibe, keep the message."</em></li>
+        <li>Run everything through GUARDIAN: <em>"Review all this content for compliance and brand consistency."</em></li>
+        <li>Create a free account at <strong>buffer.com</strong> or <strong>later.com</strong> and paste the posts in to schedule them for the week.</li>
+        <li>Best posting times: Tuesday, Wednesday, Thursday — at 9am, 12pm, and 6pm in your local timezone.</li>
+      </ul>
+      <ul class="checklist" id="checks-ep3">
+        <li class="check-item" onclick="toggleCheck(this, 'ep3-1')"><div class="check-box"></div><span class="check-label">I ran the 1→12 workflow for my first topic</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep3-2')"><div class="check-box"></div><span class="check-label">I set up a Buffer or Later account</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep3-3')"><div class="check-box"></div><span class="check-label">I have at least 3 posts scheduled this week</span></li>
+      </ul>
+      <button class="ep-done-btn" onclick="markDone('ep3')">✓ Mark Episode 3 Complete</button>
+    </div>
+  </div>
+
+  <!-- EP04 -->
+  <div class="ep" id="ep4">
+    <div class="ep-head" onclick="toggleEp('ep4')">
+      <div class="ep-num">04</div>
+      <div class="ep-info">
+        <h3>Grow Your Audience</h3>
+        <p>AI-written ads and a $5/day campaign to grow your following</p>
+      </div>
+      <div class="ep-right">
+        <div class="ep-badge">📢</div>
+        <div class="ep-chevron">▼</div>
+      </div>
+    </div>
+    <div class="ep-body">
+      <div class="what-youll-build"><strong>You'll have:</strong> Your first paid campaign running — REACH writes the copy, GUARDIAN checks it, and you launch it. Even $5/day can build real momentum.</div>
+      <ul class="steps">
+        <li>Ask REACH: <em>"Write 3 ad hooks under 10 words each for this offer: [your freebie or page]. Target: [your audience description]. Make them scroll-stopping."</em></li>
+        <li>Pick the best hook. Ask REACH to expand it: <em>"Turn this into a full ad: headline, 2-sentence body, and a CTA button text."</em></li>
+        <li>Run the ad through GUARDIAN: <em>"Check this ad for FTC compliance, false promises, and platform policy issues."</em></li>
+        <li>Go to <strong>Meta Business Suite</strong> (Facebook/Instagram ads) or <strong>TikTok Ads Manager</strong> — create a free account.</li>
+        <li>Create a campaign → pick Traffic or Awareness → paste your ad copy → set $5/day budget → set interest targeting that matches your audience → launch.</li>
+        <li>Check results after 3 days. If it's getting clicks, let it run. If not, ask REACH to write 3 new hooks and test again.</li>
+      </ul>
+      <ul class="checklist" id="checks-ep4">
+        <li class="check-item" onclick="toggleCheck(this, 'ep4-1')"><div class="check-box"></div><span class="check-label">I wrote 3 ad hooks with REACH</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep4-2')"><div class="check-box"></div><span class="check-label">I set up a Meta or TikTok Ads account</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep4-3')"><div class="check-box"></div><span class="check-label">My first campaign is live</span></li>
+      </ul>
+      <button class="ep-done-btn" onclick="markDone('ep4')">✓ Mark Episode 4 Complete</button>
+    </div>
+  </div>
+
+  <!-- EP05 -->
+  <div class="ep" id="ep5">
+    <div class="ep-head" onclick="toggleEp('ep5')">
+      <div class="ep-num">05</div>
+      <div class="ep-info">
+        <h3>Sell Your Prompts</h3>
+        <p>Package your best prompts as a digital product and make your first sale</p>
+      </div>
+      <div class="ep-right">
+        <div class="ep-badge">💰</div>
+        <div class="ep-chevron">▼</div>
+      </div>
+    </div>
+    <div class="ep-body">
+      <div class="what-youll-build"><strong>You'll have:</strong> Your first digital product on sale. The prompts you've already built and tested — packaged so other creators can shortcut their learning curve.</div>
+      <ul class="steps">
+        <li>Open your best Claude conversations and copy your top 5 prompts that got great results.</li>
+        <li>Open a Google Doc. For each prompt, write: the name, what it does in one sentence, the exact prompt text, and an example of the output you got.</li>
+        <li>Export the document as a PDF. Name it: <em>"[Your Name] AI Starter Prompts"</em></li>
+        <li>Go to <strong>gumroad.com</strong> → Create an account → New Product → Digital Product → Upload your PDF → Set the price to $17.</li>
+        <li>Write a product description using NOVA: <em>"Write a Gumroad product description for my AI prompt starter pack. It includes 5 proven prompts for [topic]. Audience: [your audience]. Price: $17."</em></li>
+        <li>Publish and share the link in your bio, a post, and anywhere you have community — your first sale is coming.</li>
+      </ul>
+      <ul class="checklist" id="checks-ep5">
+        <li class="check-item" onclick="toggleCheck(this, 'ep5-1')"><div class="check-box"></div><span class="check-label">I packaged my top 5 prompts into a PDF</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep5-2')"><div class="check-box"></div><span class="check-label">My product is live on Gumroad</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep5-3')"><div class="check-box"></div><span class="check-label">I shared my product link at least once</span></li>
+      </ul>
+      <button class="ep-done-btn" onclick="markDone('ep5')">✓ Mark Episode 5 Complete</button>
+    </div>
+  </div>
+
+  <!-- EP06 -->
+  <div class="ep" id="ep6">
+    <div class="ep-head" onclick="toggleEp('ep6')">
+      <div class="ep-num">06</div>
+      <div class="ep-info">
+        <h3>Run Your AI Business</h3>
+        <p>Set up automation so your business runs without you being online all day</p>
+      </div>
+      <div class="ep-right">
+        <div class="ep-badge">🚀</div>
+        <div class="ep-chevron">▼</div>
+      </div>
+    </div>
+    <div class="ep-body">
+      <div class="what-youll-build"><strong>You'll have:</strong> A fully automated weekly content routine. 45 minutes of work on Monday morning = a full week of content running on its own.</div>
+      <ul class="steps">
+        <li>Every Monday, spend 30 minutes with NOVA: pick your topic for the week, run the 1→12 workflow, schedule everything in Buffer.</li>
+        <li>Set up a free email list at <strong>beehiiv.com</strong> → use NOVA to write a 3-email welcome sequence for new subscribers.</li>
+        <li>Connect your product link to your email welcome sequence so every new subscriber sees your prompt pack.</li>
+        <li>Once a week, ask GUARDIAN to review your last 5 posts for brand consistency and FTC compliance.</li>
+        <li>Post your results publicly — share what's working, what you built, and what your AI team made this week. This IS your content.</li>
+        <li>Tag <strong>@metakittyz</strong> when you post your wins. You're part of the 1M mission now. 🚀</li>
+      </ul>
+      <ul class="checklist" id="checks-ep6">
+        <li class="check-item" onclick="toggleCheck(this, 'ep6-1')"><div class="check-box"></div><span class="check-label">I set up my email list on Beehiiv</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep6-2')"><div class="check-box"></div><span class="check-label">I have a weekly Monday content routine</span></li>
+        <li class="check-item" onclick="toggleCheck(this, 'ep6-3')"><div class="check-box"></div><span class="check-label">I posted my "I built my AI business" update</span></li>
+      </ul>
+      <button class="ep-done-btn" onclick="markDone('ep6')">✓ Mark Episode 6 Complete</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Glossary -->
+<div class="glossary">
+  <p class="section-label">Plain English Glossary</p>
+  <h2 class="section-title">Terms You'll <span>Actually Use</span></h2>
+  <div class="terms">
+    <div class="term"><div class="term-word">AI Agent</div><div class="term-def">An AI with a specific job and personality. Like an employee who only does what their job description says.</div></div>
+    <div class="term"><div class="term-word">System Prompt</div><div class="term-def">The instructions you give an AI before it starts working. It tells the AI WHO it is and HOW to behave.</div></div>
+    <div class="term"><div class="term-word">Brand Voice</div><div class="term-def">The personality behind your words. Consistent across all content so people recognize it as you.</div></div>
+    <div class="term"><div class="term-word">FTC Disclosure</div><div class="term-def">A required legal statement for paid promotions and AI-generated content. "Powered by AI" or "#ad" — it's the law.</div></div>
+    <div class="term"><div class="term-word">Content Pipeline</div><div class="term-def">The path from idea → creation → review → scheduling → publishing. Your 1→12 machine is your pipeline.</div></div>
+    <div class="term"><div class="term-word">Digital Product</div><div class="term-def">Something you sell online that requires no shipping — like a PDF or prompt pack. Create once, sell forever.</div></div>
+    <div class="term"><div class="term-word">Automation</div><div class="term-def">Setting up tasks so they happen on their own without you clicking anything — like autopay for your content business.</div></div>
+    <div class="term"><div class="term-word">Lead Magnet</div><div class="term-def">A free gift you offer in exchange for someone's email address — a guide, cheat sheet, or free prompt pack.</div></div>
+    <div class="term"><div class="term-word">Prompt</div><div class="term-def">The instructions or question you give to an AI. Better prompts = better output. It's like knowing exactly what to wish for.</div></div>
+    <div class="term"><div class="term-word">Hallucination</div><div class="term-def">When AI makes up something that sounds true but isn't. Always fact-check before publishing — GUARDIAN's job is to catch this.</div></div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <a class="bnav-item" href="index.html"><span class="bnav-ic">🏠</span>Home</a>
+  <a class="bnav-item active" href="guide.html"><span class="bnav-ic">📖</span>Guide</a>
+  <a class="bnav-item" href="prompts.html"><span class="bnav-ic">✨</span>Prompts</a>
+  <a class="bnav-item" href="live.html"><span class="bnav-ic">📺</span>Live</a>
+</nav>
+
+<script>
+function toggleEp(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+function toggleCheck(el, key) {
+  if (el.classList.contains('checked')) return;
+  el.classList.add('checked');
+  localStorage.setItem('mk_check_' + key, '1');
+}
+function markDone(id) {
+  const ep = document.getElementById(id);
+  ep.classList.add('done');
+  localStorage.setItem('mk_ep_done_' + id, '1');
+}
+// Restore state
+document.querySelectorAll('.check-item').forEach(el => {
+  const key = el.getAttribute('onclick').match(/'([^']+)'/g);
+  if (key && key[1]) {
+    const k = key[1].replace(/'/g, '');
+    if (localStorage.getItem('mk_check_' + k)) el.classList.add('checked');
+  }
+});
+['ep1','ep2','ep3','ep4','ep5','ep6'].forEach(id => {
+  if (localStorage.getItem('mk_ep_done_' + id)) document.getElementById(id).classList.add('done');
+});
+</script>
+</body>
+</html>

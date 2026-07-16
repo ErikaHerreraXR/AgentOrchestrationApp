@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Watch Live — Metakittyz</title>
+<meta name="description" content="Watch Metakittyz build live on Twitch and YouTube. Build your AI company alongside the stream — episode by episode.">
+<style>
+:root {
+  --bg: #0A0015; --card: #0f0022; --surf: #160030;
+  --pk: #FF2D78; --tl: #00F5D4; --pu: #7B2FFF;
+  --gr: #00FF41; --yl: #FFE000; --or: #FF6B35;
+  --txt: #E8E0F0; --muted: #9A90B0; --dim: #2a2040;
+  --rb: linear-gradient(90deg, #FF2D78, #FF6B35, #FFE000, #00F5D4, #7B2FFF, #FF2D78);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--txt);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px; line-height: 1.6; overflow-x: hidden; padding-bottom: 80px;
+}
+a { color: inherit; text-decoration: none; }
+@keyframes shimmer { to { background-position: 200% 0; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes live-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.rb-bar { height: 4px; background: var(--rb); background-size: 200%; animation: shimmer 3s linear infinite; }
+
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem; height: 60px;
+  background: rgba(10,0,21,0.95); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(123,47,255,0.2);
+}
+.nav-logo { font-size: 1.1rem; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+.nav-logo span { background: var(--rb); background-size: 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 3s linear infinite; }
+.nav-links { display: flex; gap: 4px; }
+.nav-links a { font-size: 0.8rem; color: var(--muted); padding: 6px 12px; border-radius: 8px; transition: 0.15s; font-weight: 500; }
+.nav-links a:hover, .nav-links a.active { color: var(--txt); background: rgba(255,45,120,0.12); }
+.nav-cta { background: var(--pk); color: #fff; font-size: 0.78rem; font-weight: 700; padding: 8px 18px; border-radius: 100px; transition: 0.15s; }
+.nav-cta:hover { opacity: 0.85; }
+
+.page-header {
+  max-width: 700px; margin: 0 auto; padding: 2.5rem 1.5rem 1.5rem;
+  text-align: center; animation: fade-up 0.4s ease;
+}
+.page-header-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--tl); margin-bottom: 0.6rem; }
+.page-header h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 900; letter-spacing: -0.5px; margin-bottom: 0.8rem; }
+.page-header h1 span { color: var(--pk); }
+.page-header p { font-size: 1rem; color: var(--muted); }
+
+/* ── Live Status ── */
+.live-status {
+  max-width: 780px; margin: 0 auto 1rem; padding: 0 1.5rem;
+}
+.live-banner {
+  background: rgba(255,45,120,0.08); border: 1px solid rgba(255,45,120,0.25);
+  border-radius: 12px; padding: 0.9rem 1.2rem;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.88rem;
+}
+.live-dot { width: 10px; height: 10px; background: var(--gr); border-radius: 50%; flex-shrink: 0; animation: live-pulse 1.5s ease infinite; }
+.live-banner strong { color: var(--gr); }
+
+/* ── Platform Tabs ── */
+.player-wrap { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 1.5rem; }
+.platform-tabs { display: flex; gap: 6px; margin-bottom: 1rem; }
+.tab-btn {
+  font-size: 0.8rem; font-weight: 700;
+  padding: 8px 18px; border-radius: 100px; cursor: pointer; transition: 0.15s;
+  border: 1px solid var(--dim); background: transparent; color: var(--muted);
+}
+.tab-btn.active-yt { background: rgba(255,0,0,0.12); border-color: rgba(255,0,0,0.3); color: #ff4444; }
+.tab-btn.active-tw { background: rgba(145,70,255,0.12); border-color: rgba(145,70,255,0.3); color: #9146FF; }
+
+.embed-frame {
+  position: relative; padding-bottom: 56.25%; height: 0;
+  background: var(--card); border: 1px solid var(--dim); border-radius: 14px; overflow: hidden;
+}
+.embed-frame iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.embed-frame.hidden { display: none; }
+
+/* ── Schedule ── */
+.schedule-wrap { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+.section-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--tl); margin-bottom: 0.4rem; }
+.section-title { font-size: clamp(1.4rem, 3.5vw, 1.9rem); font-weight: 900; margin-bottom: 1rem; }
+.section-title span { color: var(--pk); }
+
+.schedule { display: flex; flex-direction: column; gap: 0.6rem; }
+.sched-item {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border: 1px solid var(--dim);
+  border-radius: 12px; padding: 0.9rem 1.1rem;
+}
+.sched-day { font-size: 0.72rem; font-weight: 700; color: var(--yl); min-width: 60px; text-transform: uppercase; letter-spacing: 0.5px; }
+.sched-info h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 1px; }
+.sched-info p { font-size: 0.78rem; color: var(--muted); }
+.sched-time { margin-left: auto; font-size: 0.78rem; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+
+/* ── Episodes ── */
+.eps-wrap { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+.eps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 0.8rem; }
+.ep-card {
+  background: var(--card); border: 1px solid var(--dim);
+  border-radius: 12px; padding: 1rem 1.1rem; transition: 0.2s;
+}
+.ep-card:hover { border-color: rgba(255,45,120,0.3); }
+.ep-card.done { border-color: rgba(0,255,65,0.3); }
+.ep-num-sm { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+.ep-card h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.3rem; }
+.ep-card p { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.8rem; line-height: 1.5; }
+.ep-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.ep-link {
+  font-size: 0.72rem; font-weight: 700; padding: 5px 11px; border-radius: 8px;
+  border: 1px solid var(--dim); color: var(--txt); transition: 0.15s; cursor: pointer;
+  background: transparent;
+}
+.ep-link:hover { border-color: var(--pk); color: var(--pk); }
+.ep-done-toggle {
+  font-size: 0.72rem; font-weight: 700; padding: 5px 11px; border-radius: 8px;
+  background: rgba(0,255,65,0.08); border: 1px solid rgba(0,255,65,0.2); color: var(--gr); cursor: pointer; transition: 0.15s;
+}
+.ep-card.done .ep-done-toggle { opacity: 0.5; cursor: default; }
+
+/* ── Follow Cards ── */
+.follow-wrap { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+.follow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 0.8rem; }
+.follow-card {
+  background: var(--card); border: 1px solid var(--dim);
+  border-radius: 14px; padding: 1.3rem; text-align: center; transition: 0.2s;
+}
+.follow-card:hover { transform: translateY(-2px); }
+.follow-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+.follow-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+.follow-card p { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; }
+.follow-btn {
+  display: inline-block; font-size: 0.8rem; font-weight: 700;
+  padding: 9px 20px; border-radius: 100px; transition: 0.15s; text-decoration: none;
+}
+.btn-yt { background: rgba(255,0,0,0.12); color: #ff4444; border: 1px solid rgba(255,0,0,0.25); }
+.btn-yt:hover { background: #ff4444; color: #fff; }
+.btn-tw { background: rgba(145,70,255,0.12); color: #9146FF; border: 1px solid rgba(145,70,255,0.25); }
+.btn-tw:hover { background: #9146FF; color: #fff; }
+.btn-dc { background: rgba(88,101,242,0.12); color: #5865F2; border: 1px solid rgba(88,101,242,0.25); }
+.btn-dc:hover { background: #5865F2; color: #fff; }
+
+/* ── Bottom Nav ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(10,0,21,0.97); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--dim); display: flex;
+  height: 66px; padding-bottom: env(safe-area-inset-bottom);
+}
+.bnav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.4px;
+  color: var(--muted); text-transform: uppercase; text-decoration: none; transition: 0.15s;
+}
+.bnav-item:hover, .bnav-item.active { color: var(--pk); }
+.bnav-item:last-child { color: var(--pu); }
+.bnav-ic { font-size: 1.1rem; }
+
+@media (max-width: 640px) { .nav-links { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="rb-bar"></div>
+
+<nav class="topnav">
+  <a class="nav-logo" href="index.html">🐱 <span>METAKITTYZ</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="guide.html">Build Guide</a>
+    <a href="prompts.html">Prompts</a>
+    <a href="live.html" class="active">Watch Live</a>
+  </div>
+  <a class="nav-cta" href="guide.html">Start Building →</a>
+</nav>
+
+<div class="page-header">
+  <p class="page-header-tag">📺 Watch Live</p>
+  <h1>Build <span>With Me</span><br>Live on Stream.</h1>
+  <p>Every episode is built live — you watch, you follow along, you build your own AI business at the same time.</p>
+</div>
+
+<!-- Live Status Banner -->
+<div class="live-status">
+  <div class="live-banner">
+    <div class="live-dot"></div>
+    <span>Streams every <strong>Thursday</strong> — check YouTube and Twitch for upcoming schedules and episode replays.</span>
+  </div>
+</div>
+
+<!-- Player -->
+<div class="player-wrap">
+  <div class="platform-tabs">
+    <button class="tab-btn active-yt" onclick="switchTab('yt')">▶ YouTube</button>
+    <button class="tab-btn" id="tw-tab" onclick="switchTab('tw')" style="color:var(--muted)">🟣 Twitch</button>
+  </div>
+  <div class="embed-frame" id="yt-embed">
+    <iframe
+      src="https://www.youtube.com/embed?listType=user_uploads&list=metakittyz"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      title="Metakittyz on YouTube">
+    </iframe>
+  </div>
+  <div class="embed-frame hidden" id="tw-embed">
+    <iframe
+      src="https://player.twitch.tv/?channel=metakittyz&parent=metakittyz.com&autoplay=false"
+      allowfullscreen
+      title="Metakittyz on Twitch">
+    </iframe>
+  </div>
+</div>
+
+<!-- Schedule -->
+<div class="schedule-wrap">
+  <p class="section-label">Stream Schedule</p>
+  <h2 class="section-title">When to <span>Show Up</span></h2>
+  <div class="schedule">
+    <div class="sched-item">
+      <div class="sched-day">Thursday</div>
+      <div class="sched-info">
+        <h4>Build Live — Episode Challenge</h4>
+        <p>Live build session. We complete one episode together, step by step.</p>
+      </div>
+      <div class="sched-time">7pm PT / 10pm ET</div>
+    </div>
+    <div class="sched-item">
+      <div class="sched-day">Saturday</div>
+      <div class="sched-info">
+        <h4>Weekend Build Session</h4>
+        <p>Extended session for newcomers catching up or going deeper on the week's episode.</p>
+      </div>
+      <div class="sched-time">12pm PT / 3pm ET</div>
+    </div>
+    <div class="sched-item">
+      <div class="sched-day">On Demand</div>
+      <div class="sched-info">
+        <h4>Episode Replays on YouTube</h4>
+        <p>All past episodes are available as YouTube replays — watch at your own pace anytime.</p>
+      </div>
+      <div class="sched-time">Always available</div>
+    </div>
+  </div>
+</div>
+
+<!-- Episode List -->
+<div class="eps-wrap">
+  <p class="section-label">Episode Progress</p>
+  <h2 class="section-title">Track Your <span>Episodes</span></h2>
+  <div class="eps-grid">
+    <div class="ep-card" id="live-ep1">
+      <div class="ep-num-sm">Episode 01</div>
+      <h4>Your AI Foundation</h4>
+      <p>Claude AI setup, Brand Bible, social media bios</p>
+      <div class="ep-actions">
+        <a class="ep-link" href="https://youtube.com/@metakittyz" target="_blank">Watch →</a>
+        <button class="ep-done-toggle" onclick="markLiveEp('live-ep1')">✓ Done</button>
+      </div>
+    </div>
+    <div class="ep-card" id="live-ep2">
+      <div class="ep-num-sm">Episode 02</div>
+      <h4>Build Your AI Team</h4>
+      <p>Create all 6 agents — NOVA, PULSE, ARIA, REACH, SPARK, GUARDIAN</p>
+      <div class="ep-actions">
+        <a class="ep-link" href="https://youtube.com/@metakittyz" target="_blank">Watch →</a>
+        <button class="ep-done-toggle" onclick="markLiveEp('live-ep2')">✓ Done</button>
+      </div>
+    </div>
+    <div class="ep-card" id="live-ep3">
+      <div class="ep-num-sm">Episode 03</div>
+      <h4>The Content Machine</h4>
+      <p>1→12 workflow, Buffer setup, first week scheduled</p>
+      <div class="ep-actions">
+        <a class="ep-link" href="https://youtube.com/@metakittyz" target="_blank">Watch →</a>
+        <button class="ep-done-toggle" onclick="markLiveEp('live-ep3')">✓ Done</button>
+      </div>
+    </div>
+    <div class="ep-card" id="live-ep4">
+      <div class="ep-num-sm">Episode 04</div>
+      <h4>Grow Your Audience</h4>
+      <p>Ad copy, first campaign, $5/day budget setup</p>
+      <div class="ep-actions">
+        <a class="ep-link" href="https://youtube.com/@metakittyz" target="_blank">Watch →</a>
+        <button class="ep-done-toggle" onclick="markLiveEp('live-ep4')">✓ Done</button>
+      </div>
+    </div>
+    <div class="ep-card" id="live-ep5">
+      <div class="ep-num-sm">Episode 05</div>
+      <h4>Sell Your Prompts</h4>
+      <p>Package your prompts, Gumroad setup, first sale</p>
+      <div class="ep-actions">
+        <a class="ep-link" href="https://youtube.com/@metakittyz" target="_blank">Watch →</a>
+        <button class="ep-done-toggle" onclick="markLiveEp('live-ep5')">✓ Done</button>
+      </div>
+    </div>
+    <div class="ep-card" id="live-ep6">
+      <div class="ep-num-sm">Episode 06</div>
+      <h4>Run Your AI Business</h4>
+      <p>Full automation setup, email list, CEO routine</p>
+      <div class="ep-actions">
+        <a class="ep-link" href="https://youtube.com/@metakittyz" target="_blank">Watch →</a>
+        <button class="ep-done-toggle" onclick="markLiveEp('live-ep6')">✓ Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Follow Links -->
+<div class="follow-wrap">
+  <p class="section-label">Follow Metakittyz</p>
+  <h2 class="section-title">Stay <span>Connected</span></h2>
+  <div class="follow-grid">
+    <div class="follow-card">
+      <div class="follow-icon">▶️</div>
+      <h4>YouTube</h4>
+      <p>Episode replays, tutorials, and shorts from every stream</p>
+      <a class="follow-btn btn-yt" href="https://youtube.com/@metakittyz" target="_blank">Subscribe →</a>
+    </div>
+    <div class="follow-card">
+      <div class="follow-icon">🟣</div>
+      <h4>Twitch</h4>
+      <p>Watch live builds and chat with the community in real time</p>
+      <a class="follow-btn btn-tw" href="https://twitch.tv/metakittyz" target="_blank">Follow →</a>
+    </div>
+    <div class="follow-card">
+      <div class="follow-icon">💬</div>
+      <h4>Discord</h4>
+      <p>Ask questions, share your builds, and connect with other builders</p>
+      <a class="follow-btn btn-dc" href="https://discord.gg/txB9JCDf29" target="_blank">Join →</a>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <a class="bnav-item" href="index.html"><span class="bnav-ic">🏠</span>Home</a>
+  <a class="bnav-item" href="guide.html"><span class="bnav-ic">📖</span>Guide</a>
+  <a class="bnav-item" href="prompts.html"><span class="bnav-ic">✨</span>Prompts</a>
+  <a class="bnav-item active" href="live.html"><span class="bnav-ic">📺</span>Live</a>
+</nav>
+
+<script>
+function switchTab(tab) {
+  const yt = document.getElementById('yt-embed');
+  const tw = document.getElementById('tw-embed');
+  const ytBtn = document.querySelector('.tab-btn:first-child');
+  const twBtn = document.getElementById('tw-tab');
+  if (tab === 'yt') {
+    yt.classList.remove('hidden'); tw.classList.add('hidden');
+    ytBtn.classList.add('active-yt'); ytBtn.style.color = '';
+    twBtn.classList.remove('active-tw'); twBtn.style.color = 'var(--muted)';
+  } else {
+    tw.classList.remove('hidden'); yt.classList.add('hidden');
+    twBtn.classList.add('active-tw'); twBtn.style.color = '';
+    ytBtn.classList.remove('active-yt'); ytBtn.style.color = 'var(--muted)';
+  }
+}
+function markLiveEp(id) {
+  const card = document.getElementById(id);
+  if (card.classList.contains('done')) return;
+  card.classList.add('done');
+  localStorage.setItem('mk_live_' + id, '1');
+}
+['live-ep1','live-ep2','live-ep3','live-ep4','live-ep5','live-ep6'].forEach(id => {
+  if (localStorage.getItem('mk_live_' + id)) document.getElementById(id).classList.add('done');
+});
+</script>
+</body>
+</html>
