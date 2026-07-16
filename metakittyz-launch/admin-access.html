@@ -1,0 +1,298 @@
+<title>Access Admin — Metakittyz</title>
+<style>
+:root {
+  --bg:   #0A0015;
+  --surf: #120025;
+  --dim:  rgba(255,255,255,0.08);
+  --txt:  #f0eaf8;
+  --muted:#7a6e8a;
+  --pk:   #FF2D78;
+  --tl:   #00F5D4;
+  --pu:   #7B2FFF;
+  --gr:   #00FF41;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surf);
+  border: 1px solid var(--dim);
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+.logo {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+h1 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 1.75rem;
+  color: var(--txt);
+}
+
+h1 span { color: var(--tl); }
+
+label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+input, select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--dim);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  color: var(--txt);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  margin-bottom: 1rem;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus { border-color: var(--tl); }
+select option { background: #1a0035; }
+
+.field { margin-bottom: 0.25rem; }
+
+button {
+  width: 100%;
+  padding: 0.85rem;
+  background: linear-gradient(90deg, var(--pk), var(--pu));
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: opacity 0.15s;
+}
+button:disabled { opacity: 0.5; cursor: default; }
+
+.divider {
+  height: 1px;
+  background: var(--dim);
+  margin: 1.5rem 0;
+}
+
+.token-box {
+  display: none;
+  background: var(--bg);
+  border: 1px solid rgba(0,245,212,0.3);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.token-box.visible { display: block; }
+
+.token-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--tl);
+  margin-bottom: 0.5rem;
+}
+
+.token-val {
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: var(--txt);
+  word-break: break-all;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.copy-token-btn {
+  background: var(--tl);
+  color: #000;
+  font-size: 0.78rem;
+  padding: 0.5rem;
+  margin-top: 0;
+}
+
+.link-box {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(123,47,255,0.1);
+  border: 1px solid rgba(123,47,255,0.25);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.link-box strong { color: var(--txt); }
+
+.error-msg {
+  display: none;
+  color: var(--pk);
+  font-size: 0.8rem;
+  margin-top: 0.6rem;
+}
+.error-msg.visible { display: block; }
+
+.step-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--pu);
+  margin-bottom: 1rem;
+}
+</style>
+
+<div class="card">
+  <p class="logo">Metakittyz</p>
+  <h1>Access <span>Admin</span></h1>
+
+  <!-- Step 1: Login -->
+  <div id="step-login">
+    <p class="step-tag">Step 1 — Authenticate</p>
+    <div class="field">
+      <label for="admin-pw">Admin password</label>
+      <input id="admin-pw" type="password" placeholder="Enter your admin password"
+        onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <button onclick="login()">Unlock Admin →</button>
+    <p class="error-msg" id="login-err">Incorrect password. Try again.</p>
+  </div>
+
+  <!-- Step 2: Issue token (shown after login) -->
+  <div id="step-issue" style="display:none">
+    <p class="step-tag">Issue access token</p>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6">
+      Use this after verifying a Venmo payment. Generate a token for the buyer's pack, then send them the unlock link.
+    </p>
+
+    <div class="field">
+      <label for="pack-select">Pack purchased</label>
+      <select id="pack-select">
+        <option value="starter">🐣 Starter Pack — $17</option>
+        <option value="growth">🔥 Growth Pack — $47</option>
+        <option value="creator">💡 Creator Pack — $97</option>
+        <option value="business">🏢 Business Pack — $297</option>
+        <option value="ceo">👑 CEO Pack — $497</option>
+      </select>
+    </div>
+
+    <button id="issue-btn" onclick="issueToken()">Generate Access Token →</button>
+    <p class="error-msg" id="issue-err">Something went wrong. Check your connection.</p>
+
+    <div class="token-box" id="token-result">
+      <p class="token-label">Access token generated ✓</p>
+      <p class="token-val" id="token-display"></p>
+      <button class="copy-token-btn" onclick="copyToken()">Copy token</button>
+      <div class="link-box">
+        <strong>Send this to the buyer:</strong><br>
+        Copy the token above and send it to them.<br>
+        They go to the Prompts page → click their pack → paste token in the unlock field.
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <button onclick="logout()"
+      style="background:transparent;border:1px solid var(--dim);color:var(--muted);font-weight:600">
+      Log out
+    </button>
+  </div>
+</div>
+
+<script>
+let adminPassword = '';
+
+async function login() {
+  const pw = document.getElementById('admin-pw').value.trim();
+  if (!pw) return;
+
+  // Quick check — actual auth is validated server-side when issuing token
+  const res = await fetch('/.netlify/functions/admin-issue-token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ adminPassword: pw, pack: 'starter' })
+  });
+
+  if (res.ok) {
+    adminPassword = pw;
+    document.getElementById('step-login').style.display = 'none';
+    document.getElementById('step-issue').style.display = '';
+    document.getElementById('login-err').classList.remove('visible');
+  } else {
+    document.getElementById('login-err').classList.add('visible');
+  }
+}
+
+async function issueToken() {
+  const pack = document.getElementById('pack-select').value;
+  const btn  = document.getElementById('issue-btn');
+  const err  = document.getElementById('issue-err');
+  btn.disabled = true;
+  btn.textContent = 'Generating…';
+  err.classList.remove('visible');
+
+  try {
+    const res = await fetch('/.netlify/functions/admin-issue-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ adminPassword, pack })
+    });
+
+    if (!res.ok) throw new Error();
+    const { token } = await res.json();
+
+    document.getElementById('token-display').textContent = token;
+    document.getElementById('token-result').classList.add('visible');
+  } catch {
+    err.classList.add('visible');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Generate Access Token →';
+  }
+}
+
+function copyToken() {
+  const t = document.getElementById('token-display').textContent;
+  navigator.clipboard.writeText(t).then(() => {
+    const btn = document.querySelector('.copy-token-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy token'; }, 2000);
+  });
+}
+
+function logout() {
+  adminPassword = '';
+  document.getElementById('admin-pw').value = '';
+  document.getElementById('step-login').style.display = '';
+  document.getElementById('step-issue').style.display = 'none';
+  document.getElementById('token-result').classList.remove('visible');
+}
+</script>

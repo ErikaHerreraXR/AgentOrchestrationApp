@@ -814,6 +814,22 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
       <p style="font-size:0.8rem;color:var(--muted)">Your prompts are unlocked below.</p>
     </div>
 
+    <!-- Token redemption (for Venmo buyers who receive a token from admin) -->
+    <div class="pay-or-divider" style="margin:0.9rem 0"><span>have a token?</span></div>
+    <div style="display:flex;gap:8px">
+      <input id="token-input" type="text" placeholder="Paste your access token"
+        style="flex:1;background:var(--surf);border:1px solid var(--dim);border-radius:10px;
+               padding:0.6rem 0.8rem;color:var(--txt);font-size:0.78rem;outline:none;
+               font-family:monospace;letter-spacing:0.5px"
+        onkeydown="if(event.key==='Enter')redeemToken()">
+      <button onclick="redeemToken()"
+        style="background:var(--pu);color:#fff;font-weight:700;font-size:0.78rem;
+               padding:0 1rem;border-radius:10px;border:none;cursor:pointer;white-space:nowrap">
+        Redeem
+      </button>
+    </div>
+    <div id="token-msg" style="font-size:0.75rem;min-height:1.1rem;color:var(--muted);margin-top:0.35rem"></div>
+
     <button class="pay-close-btn" onclick="closePayModal()">Close</button>
   </div>
 </div>
@@ -891,14 +907,25 @@ if (localStorage.getItem('mk_email_captured')) {
   if (gate) gate.style.display = 'none';
 }
 
-/* ── Restore unlocked packs on load ── */
-document.addEventListener('DOMContentLoaded', () => {
-  Object.keys(UNLOCK_CODES).forEach(packKey => {
-    if (localStorage.getItem('mk_unlocked_' + packKey)) {
-      const wrap = document.querySelector('#pack-' + packKey + ' .locked-wrap');
+/* ── Restore verified packs on load ── */
+document.addEventListener('DOMContentLoaded', async () => {
+  const packs    = ['starter','growth','creator','business','ceo'];
+  const stored   = packs.map(p => localStorage.getItem('mk_token_' + p)).filter(Boolean);
+  if (!stored.length) return;
+
+  try {
+    const res  = await fetch('/.netlify/functions/check-access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tokens: stored })
+    });
+    if (!res.ok) return;
+    const { unlockedPacks } = await res.json();
+    unlockedPacks.forEach(pack => {
+      const wrap = document.querySelector('#pack-' + pack + ' .locked-wrap');
       if (wrap) wrap.style.display = 'none';
-    }
-  });
+    });
+  } catch { /* offline or function not deployed yet — fail silently */ }
 });
 
 /* ── Stripe setup ── */
@@ -976,8 +1003,12 @@ function openPay(packName, price, packKey) {
       );
       if (error) { ev.complete('fail'); showCardError(error.message); return; }
       ev.complete('success');
-      if (paymentIntent.status === 'requires_action') await stripe.confirmCardPayment(clientSecret);
-      showPaySuccess();
+      if (paymentIntent.status === 'requires_action') {
+        const { paymentIntent: pi2 } = await stripe.confirmCardPayment(clientSecret);
+        if (pi2 && pi2.status === 'succeeded') showPaySuccess(pi2.id);
+      } else if (paymentIntent.status === 'succeeded') {
+        showPaySuccess(paymentIntent.id);
+      }
     } catch (e) { ev.complete('fail'); showCardError('Payment failed. Please try again.'); }
   });
 
@@ -1016,7 +1047,7 @@ async function submitCardPayment() {
       btn.disabled = false;
       btn.textContent = 'Pay ' + '$' + PACK_PRICES[currentPack];
     } else if (paymentIntent.status === 'succeeded') {
-      showPaySuccess();
+      showPaySuccess(paymentIntent.id);
     }
   } catch (e) {
     showCardError('Something went wrong. Please try again.');
@@ -1029,13 +1060,39 @@ function showCardError(msg) {
   document.getElementById('card-errors').textContent = msg;
 }
 
-function showPaySuccess() {
+async function showPaySuccess(paymentIntentId) {
   trackEvent('purchase_complete', { pack: currentPack });
-  document.getElementById('card-form-wrap').style.display    = 'none';
+  document.getElementById('card-form-wrap').style.display          = 'none';
   document.getElementById('payment-request-btn-wrap').style.display = 'none';
-  document.getElementById('venmo-instructions').style.display = 'none';
-  document.getElementById('pay-success').style.display       = '';
-  unlockPack(currentPack);
+  document.getElementById('venmo-instructions').style.display       = 'none';
+  document.getElementById('pay-success').style.display             = '';
+
+  if (paymentIntentId) {
+    // Verified path: get a signed token from the server
+    try {
+      const res = await fetch('/.netlify/functions/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentIntentId, pack: currentPack })
+      });
+      if (res.ok) {
+        const { token } = await res.json();
+        localStorage.setItem('mk_token_' + currentPack, token);
+      }
+    } catch { /* store nothing — user can re-verify on reload */ }
+  }
+
+  unlockPackUI(currentPack);
+}
+
+function unlockPackUI(packKey) {
+  const wrap = document.querySelector('#pack-' + packKey + ' .locked-wrap');
+  if (wrap) wrap.style.display = 'none';
+  closePayModal();
+  setTimeout(() => {
+    const pack = document.getElementById('pack-' + packKey);
+    if (pack) pack.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 800);
 }
 
 /* ── Venmo click ── */
@@ -1071,15 +1128,45 @@ function closePayOutside(e) {
 
 
 function unlockPack(packKey) {
-  localStorage.setItem('mk_unlocked_' + packKey, '1');
-  const wrap = document.querySelector('#pack-' + packKey + ' .locked-wrap');
-  if (wrap) wrap.style.display = 'none';
-  setTimeout(() => {
-    closePayModal();
-    // Scroll to the unlocked pack
-    const pack = document.getElementById('pack-' + packKey);
-    if (pack) pack.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 900);
+  // Called from admin token path — same as unlockPackUI but also accepts a token arg
+  unlockPackUI(packKey);
+}
+
+/* ── Redeem an admin-issued token (Venmo buyers) ── */
+async function redeemToken() {
+  const input = document.getElementById('token-input');
+  const msg   = document.getElementById('token-msg');
+  const token = input.value.trim();
+  if (!token) return;
+
+  msg.style.color = 'var(--muted)';
+  msg.textContent = 'Verifying…';
+
+  try {
+    const res = await fetch('/.netlify/functions/check-access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tokens: [token] })
+    });
+    const { unlockedPacks } = await res.json();
+
+    if (unlockedPacks && unlockedPacks.length > 0) {
+      unlockedPacks.forEach(pack => {
+        localStorage.setItem('mk_token_' + pack, token);
+      });
+      msg.style.color = 'var(--gr)';
+      msg.textContent = '✅ Token verified! Unlocking your pack…';
+      setTimeout(() => {
+        unlockedPacks.forEach(p => unlockPackUI(p));
+      }, 700);
+    } else {
+      msg.style.color = 'var(--pk)';
+      msg.textContent = '❌ Invalid or expired token. Contact @metakittyz on Instagram.';
+    }
+  } catch {
+    msg.style.color = 'var(--pk)';
+    msg.textContent = 'Could not verify token. Check your connection and try again.';
+  }
 }
 
 /* ── Track payment intent (kept for any inline onclick use) ── */
