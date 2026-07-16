@@ -817,24 +817,6 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
       <div id="pay-confirm-inner"></div>
     </div>
 
-    <!-- Unlock code (always visible) -->
-    <div class="pay-divider" style="margin:1rem 0"></div>
-    <p class="pay-label">Already purchased? Enter your unlock code</p>
-    <div style="display:flex;gap:8px;margin-bottom:0.5rem">
-      <input id="unlock-input" type="text" placeholder="e.g. MK17UNLOCK"
-        style="flex:1;background:var(--surf);border:1px solid var(--dim);border-radius:10px;
-               padding:0.65rem 0.9rem;color:var(--txt);font-size:0.9rem;outline:none;
-               font-family:monospace;text-transform:uppercase;letter-spacing:1px"
-        oninput="this.value=this.value.toUpperCase()"
-        onkeydown="if(event.key==='Enter')applyCode()">
-      <button onclick="applyCode()"
-        style="background:var(--tl);color:#000;font-weight:700;font-size:0.82rem;
-               padding:0 1rem;border-radius:10px;border:none;cursor:pointer;white-space:nowrap">
-        Unlock
-      </button>
-    </div>
-    <div id="code-msg" style="font-size:0.78rem;min-height:1.2rem;color:var(--muted)"></div>
-
     <button class="pay-close-btn" onclick="closePayModal()">Close</button>
   </div>
 </div>
@@ -949,30 +931,32 @@ function handlePayClick(method) {
   const price    = '$' + (PACK_PRICES[currentPack] || '');
   trackEvent('purchase_intent', { method: method, pack: currentPack });
 
-  // Show after-payment instructions below the buttons
   const confirm = document.getElementById('pay-confirm');
   const inner   = document.getElementById('pay-confirm-inner');
   confirm.style.display = '';
 
-  if (method === 'venmo') {
-    inner.innerHTML =
-      '<div style="margin-top:0.8rem;padding:0.8rem;background:rgba(0,140,255,0.08);' +
-           'border:1px solid rgba(0,140,255,0.25);border-radius:10px;font-size:0.78rem;' +
-           'color:var(--muted);line-height:1.7">' +
-        '💜 Send <strong style="color:var(--txt)">' + price + '</strong> to ' +
-        '<strong style="color:var(--txt)">@' + VENMO_HANDLE + '</strong>.<br>' +
-        'Put <strong style="color:var(--yl)">"' + packName + '"</strong> in the note.<br>' +
-        'Then DM <strong style="color:var(--txt)">@metakittyz</strong> on Instagram with <strong style="color:var(--txt)">"PAID"</strong> + your email to get your unlock code.' +
-      '</div>';
-  } else {
-    inner.innerHTML =
-      '<div style="margin-top:0.8rem;padding:0.8rem;background:rgba(0,245,212,0.06);' +
-           'border:1px solid rgba(0,245,212,0.2);border-radius:10px;font-size:0.78rem;' +
-           'color:var(--muted);line-height:1.7">' +
-        '✅ Complete your payment in the new tab.<br>' +
-        'Then DM <strong style="color:var(--txt)">@metakittyz</strong> on Instagram with <strong style="color:var(--txt)">"PAID"</strong> + your email to receive your unlock code.' +
-      '</div>';
-  }
+  const note = method === 'venmo'
+    ? '💜 Send <strong style="color:var(--txt)">' + price + '</strong> to <strong style="color:var(--txt)">@' + VENMO_HANDLE + '</strong> — put <strong style="color:var(--yl)">"' + packName + '"</strong> in the note.'
+    : '✅ Complete your payment in the new tab.';
+
+  inner.innerHTML =
+    '<div style="margin-top:0.75rem;padding:0.75rem;background:rgba(0,245,212,0.05);' +
+         'border:1px solid rgba(0,245,212,0.18);border-radius:10px;font-size:0.78rem;' +
+         'color:var(--muted);line-height:1.7;margin-bottom:0.75rem">' +
+      note +
+    '</div>' +
+    '<button onclick="confirmAndUnlock()" ' +
+      'style="width:100%;padding:0.9rem;background:linear-gradient(90deg,var(--tl),var(--pu));' +
+             'color:#000;font-weight:800;font-size:0.95rem;border:none;border-radius:12px;' +
+             'cursor:pointer;letter-spacing:0.2px">' +
+      'I\'ve Paid — Unlock My Prompts 🔓' +
+    '</button>';
+}
+
+/* ── Confirm payment and unlock immediately ── */
+function confirmAndUnlock() {
+  trackEvent('purchase_complete', { pack: currentPack });
+  unlockPack(currentPack);
 }
 
 function closePayModal() {
