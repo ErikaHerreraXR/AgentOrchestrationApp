@@ -761,54 +761,60 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
     <div class="pay-price" id="modal-price">$17</div>
     <div class="pay-divider"></div>
 
-    <!-- Purchase request form -->
-    <div id="pay-form-wrap">
-      <p class="pay-label" style="margin-bottom:0.8rem">Enter your info and choose how to pay — we'll send your payment link within a few hours</p>
-      <form id="purchase-form" name="purchase-request" method="POST" data-netlify="true" onsubmit="handlePurchaseSubmit(event)">
-        <input type="hidden" name="form-name" value="purchase-request">
-        <input type="hidden" name="pack" id="form-pack" value="">
-        <input type="hidden" name="price" id="form-price" value="">
-
-        <input type="text" name="name" id="form-name-input" placeholder="Your first name" required
-          style="width:100%;box-sizing:border-box;background:var(--surf);border:1px solid var(--dim);
-                 border-radius:10px;padding:0.65rem 0.9rem;color:var(--txt);font-size:0.9rem;
-                 outline:none;margin-bottom:0.55rem;font-family:inherit">
-
-        <input type="email" name="email" id="form-email-input" placeholder="Your email address" required
-          style="width:100%;box-sizing:border-box;background:var(--surf);border:1px solid var(--dim);
-                 border-radius:10px;padding:0.65rem 0.9rem;color:var(--txt);font-size:0.9rem;
-                 outline:none;margin-bottom:0.8rem;font-family:inherit">
-
-        <p class="pay-label" style="margin-bottom:0.5rem">How would you like to pay?</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.45rem;margin-bottom:0.9rem">
-          <label class="pay-method-opt">
-            <input type="radio" name="payment_method" value="Card" required> 💳 Card
-          </label>
-          <label class="pay-method-opt">
-            <input type="radio" name="payment_method" value="Apple Pay"> 🍎 Apple Pay
-          </label>
-          <label class="pay-method-opt">
-            <input type="radio" name="payment_method" value="PayPal"> 🅿️ PayPal
-          </label>
-          <label class="pay-method-opt">
-            <input type="radio" name="payment_method" value="Venmo"> 💜 Venmo
-          </label>
-        </div>
-
-        <button type="submit"
-          style="width:100%;padding:0.9rem;background:linear-gradient(90deg,var(--pk),var(--pu));
-                 color:#fff;font-weight:700;font-size:0.95rem;border:none;border-radius:12px;
-                 cursor:pointer;letter-spacing:0.3px">
-          Request Access →
-        </button>
-      </form>
+    <!-- Payment buttons -->
+    <div id="pay-buttons">
+      <p class="pay-label" style="margin-bottom:0.7rem">Choose how to pay</p>
+      <div style="display:flex;flex-direction:column;gap:0.5rem">
+        <a id="btn-paypal" href="#" target="_blank" rel="noopener" onclick="handlePayClick('paypal')"
+          style="display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;
+                 background:var(--surf);border:1px solid var(--dim);border-radius:12px;
+                 text-decoration:none;color:var(--txt);font-weight:600;font-size:0.88rem;transition:0.15s">
+          <span style="font-size:1.3rem">🅿️</span>
+          <span style="flex:1">
+            <span style="display:block">PayPal</span>
+            <span style="font-size:0.72rem;color:var(--muted);font-weight:400">Balance · bank · card</span>
+          </span>
+          <span style="font-size:0.75rem;color:var(--muted)">→</span>
+        </a>
+        <a id="btn-applepay" href="#" target="_blank" rel="noopener" onclick="handlePayClick('applepay')"
+          style="display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;
+                 background:#000;border:1px solid #333;border-radius:12px;
+                 text-decoration:none;color:#fff;font-weight:600;font-size:0.88rem;transition:0.15s">
+          <span style="font-size:1.3rem">🍎</span>
+          <span style="flex:1">
+            <span style="display:block">Apple Pay</span>
+            <span style="font-size:0.72rem;color:#aaa;font-weight:400">One tap · iPhone · Safari</span>
+          </span>
+          <span style="font-size:0.75rem;color:#888">→</span>
+        </a>
+        <a id="btn-card" href="#" target="_blank" rel="noopener" onclick="handlePayClick('card')"
+          style="display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;
+                 background:var(--surf);border:1px solid var(--dim);border-radius:12px;
+                 text-decoration:none;color:var(--txt);font-weight:600;font-size:0.88rem;transition:0.15s">
+          <span style="font-size:1.3rem">💳</span>
+          <span style="flex:1">
+            <span style="display:block">Credit / Debit Card</span>
+            <span style="font-size:0.72rem;color:var(--muted);font-weight:400">Visa · Mastercard · Amex</span>
+          </span>
+          <span style="font-size:0.75rem;color:var(--muted)">→</span>
+        </a>
+        <a id="btn-venmo" href="#" target="_blank" rel="noopener" onclick="handlePayClick('venmo')"
+          style="display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;
+                 background:var(--surf);border:1px solid var(--dim);border-radius:12px;
+                 text-decoration:none;color:var(--txt);font-weight:600;font-size:0.88rem;transition:0.15s">
+          <span style="font-size:1.3rem">💜</span>
+          <span style="flex:1">
+            <span style="display:block">Venmo</span>
+            <span style="font-size:0.72rem;color:var(--muted);font-weight:400">@Corporatebarbie</span>
+          </span>
+          <span style="font-size:0.75rem;color:var(--muted)">→</span>
+        </a>
+      </div>
     </div>
 
-    <!-- Confirmation (shown after submit) -->
-    <div id="pay-confirm" style="display:none;text-align:center;padding:0.5rem 0 0.8rem">
-      <div style="font-size:2.2rem;margin-bottom:0.4rem">✅</div>
-      <p style="font-weight:700;color:var(--tl);font-size:1rem;margin-bottom:0.4rem">Request received!</p>
-      <p style="font-size:0.8rem;color:var(--muted);line-height:1.6">Check your inbox — a payment link is on its way. Once you pay, your <strong style="color:var(--txt)">unlock code</strong> arrives in the same email. Enter it below to access your prompts instantly.</p>
+    <!-- After-payment instructions (shown after any button click) -->
+    <div id="pay-confirm" style="display:none;padding:0.3rem 0 0.5rem">
+      <div id="pay-confirm-inner"></div>
     </div>
 
     <!-- Unlock code (always visible) -->
@@ -842,6 +848,7 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
 </nav>
 
 <script>
+const PAYPAL_ME   = 'Metakittyz';
 const VENMO_HANDLE = 'Corporatebarbie';
 
 /* ══════════════════════════════════════════
@@ -914,21 +921,21 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ── Payment Modal ── */
 function openPay(packName, price, packKey) {
   currentPack = packKey;
+  const amount = PACK_PRICES[packKey] || '0';
   document.getElementById('modal-pack-name').textContent = packName;
   document.getElementById('modal-price').textContent = price;
-  // Set hidden form fields
-  document.getElementById('form-pack').value  = packName + ' (' + packKey + ')';
-  document.getElementById('form-price').value = price;
-  // Pre-fill name/email from gate if captured
-  const savedName  = localStorage.getItem('mk_name')  || '';
-  const savedEmail = localStorage.getItem('mk_email') || '';
-  const nameInput  = document.getElementById('form-name-input');
-  const emailInput = document.getElementById('form-email-input');
-  if (savedName  && nameInput)  nameInput.value  = savedName;
-  if (savedEmail && emailInput) emailInput.value = savedEmail;
-  // Reset to form state
-  document.getElementById('pay-form-wrap').style.display = '';
-  document.getElementById('pay-confirm').style.display   = 'none';
+
+  // Set real payment URLs
+  const ppUrl     = 'https://paypal.me/' + PAYPAL_ME + '/' + amount;
+  const venmoUrl  = 'https://venmo.com/u/' + VENMO_HANDLE;
+  document.getElementById('btn-paypal').href   = ppUrl;
+  document.getElementById('btn-applepay').href = ppUrl;
+  document.getElementById('btn-card').href     = ppUrl;
+  document.getElementById('btn-venmo').href    = venmoUrl;
+
+  // Reset state
+  document.getElementById('pay-buttons').style.display  = '';
+  document.getElementById('pay-confirm').style.display  = 'none';
   document.getElementById('code-msg').textContent = '';
   document.getElementById('unlock-input').value   = '';
   document.getElementById('pay-modal').classList.add('open');
@@ -936,62 +943,35 @@ function openPay(packName, price, packKey) {
   trackEvent('view_pack', { pack: packKey, price: price });
 }
 
-/* ── Purchase request form submit ── */
-function handlePurchaseSubmit(e) {
-  e.preventDefault();
-  const form   = e.target;
-  const data   = new FormData(form);
-  const method = data.get('payment_method') || '';
-  const email  = data.get('email') || '';
-  const name   = data.get('name')  || '';
-
-  // Submit to Netlify Forms in background
-  fetch('/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(data).toString()
-  }).catch(() => {});
-
-  // Save for future pre-fill
-  if (email) { localStorage.setItem('mk_email', email); localStorage.setItem('mk_email_captured', '1'); }
-  if (name)    localStorage.setItem('mk_name', name);
-  trackEvent('purchase_intent', { method: method, pack: currentPack });
-
-  // Show confirmation
-  document.getElementById('pay-form-wrap').style.display = 'none';
-  const confirm = document.getElementById('pay-confirm');
-  confirm.style.display = '';
-
+/* ── After clicking a payment button ── */
+function handlePayClick(method) {
   const packName = document.getElementById('modal-pack-name').textContent;
   const price    = '$' + (PACK_PRICES[currentPack] || '');
+  trackEvent('purchase_intent', { method: method, pack: currentPack });
 
-  if (method === 'Venmo') {
-    const venmoUrl = 'https://venmo.com/u/' + VENMO_HANDLE;
-    confirm.innerHTML =
-      '<div style="font-size:2rem;margin-bottom:0.4rem">💜</div>' +
-      '<p style="font-weight:700;color:var(--tl);font-size:1rem;margin-bottom:0.5rem">Almost there!</p>' +
-      '<p style="font-size:0.82rem;color:var(--muted);line-height:1.7;margin-bottom:0.9rem">' +
-        'Send <strong style="color:var(--txt)">' + price + '</strong> to ' +
-        '<strong style="color:var(--txt)">@' + VENMO_HANDLE + '</strong> on Venmo.<br>' +
-        'Put <strong style="color:var(--yl)">"' + packName + '"</strong> in the note.' +
-      '</p>' +
-      '<a href="' + venmoUrl + '" target="_blank" rel="noopener"' +
-        ' style="display:block;width:100%;box-sizing:border-box;padding:0.85rem;' +
-                'background:#008CFF;color:#fff;font-weight:700;font-size:0.95rem;' +
-                'border-radius:12px;text-align:center;text-decoration:none;margin-bottom:0.8rem">' +
-        'Open Venmo →' +
-      '</a>' +
-      '<p style="font-size:0.75rem;color:var(--muted);line-height:1.6">' +
-        'After paying, DM <strong style="color:var(--txt)">@metakittyz</strong> on Instagram with <strong style="color:var(--txt)">"PAID"</strong> and your email — your unlock code arrives within a few hours.' +
-      '</p>';
+  // Show after-payment instructions below the buttons
+  const confirm = document.getElementById('pay-confirm');
+  const inner   = document.getElementById('pay-confirm-inner');
+  confirm.style.display = '';
+
+  if (method === 'venmo') {
+    inner.innerHTML =
+      '<div style="margin-top:0.8rem;padding:0.8rem;background:rgba(0,140,255,0.08);' +
+           'border:1px solid rgba(0,140,255,0.25);border-radius:10px;font-size:0.78rem;' +
+           'color:var(--muted);line-height:1.7">' +
+        '💜 Send <strong style="color:var(--txt)">' + price + '</strong> to ' +
+        '<strong style="color:var(--txt)">@' + VENMO_HANDLE + '</strong>.<br>' +
+        'Put <strong style="color:var(--yl)">"' + packName + '"</strong> in the note.<br>' +
+        'Then DM <strong style="color:var(--txt)">@metakittyz</strong> on Instagram with <strong style="color:var(--txt)">"PAID"</strong> + your email to get your unlock code.' +
+      '</div>';
   } else {
-    confirm.innerHTML =
-      '<div style="font-size:2.2rem;margin-bottom:0.4rem">✅</div>' +
-      '<p style="font-weight:700;color:var(--tl);font-size:1rem;margin-bottom:0.4rem">Request received!</p>' +
-      '<p style="font-size:0.8rem;color:var(--muted);line-height:1.6">' +
-        'Check your inbox — a payment link is coming your way. Once you pay, your ' +
-        '<strong style="color:var(--txt)">unlock code</strong> arrives in the same email.' +
-      '</p>';
+    inner.innerHTML =
+      '<div style="margin-top:0.8rem;padding:0.8rem;background:rgba(0,245,212,0.06);' +
+           'border:1px solid rgba(0,245,212,0.2);border-radius:10px;font-size:0.78rem;' +
+           'color:var(--muted);line-height:1.7">' +
+        '✅ Complete your payment in the new tab.<br>' +
+        'Then DM <strong style="color:var(--txt)">@metakittyz</strong> on Instagram with <strong style="color:var(--txt)">"PAID"</strong> + your email to receive your unlock code.' +
+      '</div>';
   }
 }
 
