@@ -3,774 +3,806 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content="Follow Erika (@metakittyz) on a 90-day mission from 295 to 1,000,000 followers — live progress, daily content, and Harvard AI insights."/>
-<meta property="og:title" content="Metakittyz · The 90-Day Journey to 1M"/>
-<meta property="og:description" content="Live follower dashboard — Day X of 90. Building in public, learning AI at Harvard, going from 295 to 1,000,000."/>
-<title>Metakittyz · The 90-Day Journey to 1M</title>
+<title>The 90-Day Roadmap to 1 Million Followers | Metakittyz</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
 :root{
-  --pink:#FF2D78;--purple:#BF5AF2;--cyan:#00F5FF;--green:#00FF94;
-  --gold:#FFD60A;--orange:#FF6B2B;--red:#FF453A;
-  --bg:#07070D;--card:#141422;--card2:#1A1A2C;--card3:#202035;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
-  --text:#EEEEFF;--text2:#8B8BAD;--text3:#4A4A6A;
-  --font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
-  --grad:linear-gradient(135deg,#FF2D78,#BF5AF2,#00F5FF);
-  --grad2:linear-gradient(90deg,#FF2D78,#BF5AF2);
+  --bg:#0A0015;--bg2:#0d001f;--card:#0f0022;--surf:#160030;
+  --pk:#FF2D78;--tl:#00F5D4;--pu:#7B2FFF;--gr:#00FF41;--yl:#FFE000;--or:#FF6B35;
+  --txt:#E8E0F0;--muted:#9A90B0;--dim:#2a2040;
+  --rb:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);
+  --font:'Inter',system-ui,sans-serif;--mono:'Space Mono',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--font);min-height:100vh;overflow-x:hidden;padding-bottom:80px}
 
-/* ── AMBIENT GLOW ── */
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(255,45,120,.12) 0%,transparent 60%),
-    radial-gradient(ellipse 60% 40% at 10% 90%,rgba(191,90,242,.08) 0%,transparent 50%),
-    radial-gradient(ellipse 50% 40% at 90% 80%,rgba(0,245,255,.06) 0%,transparent 50%)}
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(10,0,21,.96);backdrop-filter:blur(20px);border-top:1px solid rgba(123,47,255,.3);display:flex;align-items:center;height:64px}
+.bn-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--muted);font-size:9px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;transition:color .2s;padding:8px 4px}
+.bn-tab:hover,.bn-tab.active{color:var(--tl)}
+.bn-tab span:first-child{font-size:1.2rem;line-height:1}
+/* ERIKA FLOAT */
+.erika-float{position:fixed;bottom:80px;right:20px;z-index:600;cursor:pointer;width:56px;height:56px;border-radius:50%;border:2px solid var(--pu);overflow:visible;transition:transform .2s}
+.erika-float:hover{transform:scale(1.08)}
+.erika-float img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--surf);display:block}
+.erika-dot{position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--gr);border:2px solid var(--bg);animation:dot-pulse2 2s ease infinite}
+@keyframes dot-pulse2{0%,100%{box-shadow:0 0 0 0 rgba(0,255,65,.4)}70%{box-shadow:0 0 0 6px rgba(0,255,65,0)}}
+.erika-chat{display:none;position:fixed;bottom:148px;right:16px;z-index:601;width:280px;background:var(--card);border:1px solid rgba(123,47,255,.3);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.erika-chat.open{display:block;animation:slide-up2 .3s ease}
+@keyframes slide-up2{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.chat-hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;background:rgba(123,47,255,.07);border-bottom:1px solid rgba(123,47,255,.15)}
+.chat-hdr img{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--surf)}
+.chat-hdr-info .cn{font-weight:800;font-size:.9rem}
+.chat-hdr-info .cs{font-size:.75rem;color:var(--gr)}
+.chat-close-btn{margin-left:auto;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px}
+.chat-body{padding:16px;font-size:.85rem;color:var(--muted);line-height:1.6}
+.chat-links{display:flex;flex-direction:column;gap:8px;padding:12px 16px;border-top:1px solid var(--dim)}
+.chat-links a{background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.25);color:var(--pu);text-decoration:none;font-size:.82rem;font-weight:700;padding:8px 14px;border-radius:10px;transition:all .2s;text-align:center;display:block}
+.chat-links a:hover{background:rgba(123,47,255,.2)}
 
-/* ── TOPBAR ── */
-.topbar{position:sticky;top:0;z-index:200;background:rgba(7,7,13,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.tb-inner{display:flex;align-items:center;height:52px;padding:0 16px;gap:10px;max-width:960px;margin:0 auto}
-.tb-brand{display:flex;align-items:center;gap:7px;text-decoration:none;flex-shrink:0}
-.tb-logo{font-size:1.2rem}
-.tb-name{font-weight:900;font-size:.95rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.tb-spacer{flex:1}
-.tb-live{display:flex;align-items:center;gap:5px;background:rgba(255,45,120,.12);border:1px solid rgba(255,45,120,.3);border-radius:20px;padding:4px 10px;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);flex-shrink:0}
-.live-dot{width:5px;height:5px;border-radius:50%;background:var(--pink);animation:live-blink 1.5s ease-in-out infinite}
-@keyframes live-blink{0%,100%{opacity:1;box-shadow:0 0 6px var(--pink)}50%{opacity:.4;box-shadow:none}}
-.tb-day{background:rgba(191,90,242,.15);border:1px solid rgba(191,90,242,.3);border-radius:7px;padding:4px 11px;font-size:.67rem;font-weight:800;color:var(--purple);white-space:nowrap;flex-shrink:0}
-.tb-share{background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:4px 11px;font-size:.67rem;font-weight:700;color:var(--text2);cursor:pointer;font-family:var(--font);transition:all .2s;white-space:nowrap}
-.tb-share:hover{color:var(--text);border-color:var(--border2)}
+.rainbow-bar{height:5px;background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite;width:100%;position:fixed;top:0;left:0;z-index:1000}
+@keyframes rbshift{0%{background-position:0% 50%}100%{background-position:300% 50%}}
 
-/* ── WRAPPER ── */
-.wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 16px 80px}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);opacity:.16;pointer-events:none;z-index:0}
+.orb1{width:600px;height:600px;background:var(--pu);top:-200px;right:-100px;animation:float1 13s ease-in-out infinite}
+.orb2{width:500px;height:500px;background:var(--pk);bottom:-150px;left:-150px;animation:float2 15s ease-in-out infinite}
+.orb3{width:300px;height:300px;background:var(--tl);top:60%;left:30%;animation:float3 9s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(50px)}}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-50px)}}
+@keyframes float3{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 
-/* ── HERO ── */
-.hero{padding:52px 0 48px;text-align:center;border-bottom:1px solid var(--border)}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,214,10,.1);border:1px solid rgba(255,214,10,.25);border-radius:20px;padding:5px 14px;font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
-.hero-title{font-size:clamp(1.8rem,7vw,3.6rem);font-weight:900;letter-spacing:-.03em;line-height:1.05;margin-bottom:14px}
-.hero-grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{font-size:clamp(.82rem,2.5vw,1rem);color:var(--text2);line-height:1.6;max-width:520px;margin:0 auto 36px}
-.hero-count-wrap{margin-bottom:28px}
-.hero-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text2);margin-bottom:8px}
-.hero-number{font-size:clamp(3rem,14vw,6rem);font-weight:900;letter-spacing:-.04em;line-height:1;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
-.hero-goal-row{display:flex;align-items:center;justify-content:center;gap:12px;font-size:.72rem;color:var(--text2);margin-top:6px}
-.hero-goal-row strong{color:var(--text);font-weight:800}
-/* Progress bar */
-.prog-wrap{max-width:540px;margin:0 auto 10px}
-.prog-track{height:10px;background:rgba(255,255,255,.07);border-radius:8px;overflow:hidden;position:relative}
-.prog-fill{height:100%;background:var(--grad);border-radius:8px;transition:width 1.8s cubic-bezier(.16,1,.3,1);min-width:4px}
-.prog-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:.6rem;font-weight:700;color:var(--text2)}
-.prog-pct{font-size:.65rem;font-weight:800;color:var(--purple);margin-top:4px;text-align:center}
-/* Hero CTA */
-.hero-ctas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:28px}
-.cta-primary{display:inline-flex;align-items:center;gap:7px;background:var(--grad);border:none;border-radius:10px;padding:11px 22px;color:#fff;font-weight:800;font-size:.85rem;cursor:pointer;text-decoration:none;font-family:var(--font);transition:opacity .2s;white-space:nowrap}
-.cta-primary:hover{opacity:.86}
-.cta-secondary{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:10px;padding:11px 22px;color:var(--text);font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;font-family:var(--font);transition:all .2s;white-space:nowrap}
-.cta-secondary:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+/* NAV */
+.topnav{position:sticky;top:5px;z-index:500;background:rgba(10,0,21,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(123,47,255,.25);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:18px;font-weight:900;flex-shrink:0}
+.nav-brand span{background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:2px;flex-wrap:nowrap}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:11.5px;font-weight:600;padding:6px 9px;border-radius:8px;transition:all .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--tl);background:rgba(0,245,212,.08)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:2px;background:var(--txt);border-radius:2px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;top:65px;left:0;right:0;z-index:490;background:rgba(10,0,21,.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(123,47,255,.3);padding:16px}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;padding:12px 16px;border-radius:10px;transition:all .2s}
+.mobile-menu a:hover{color:var(--tl);background:rgba(0,245,212,.08)}
+@media(max-width:900px){.nav-links{display:none}.hamburger{display:flex}}
 
-/* ── SECTION ── */
-.section{padding:40px 0;border-bottom:1px solid var(--border)}
-.section:last-of-type{border-bottom:none}
-.sec-label{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.13em;color:var(--text2);display:flex;align-items:center;gap:8px;margin-bottom:20px}
-.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
-.sec-title{font-size:clamp(1.2rem,4vw,1.7rem);font-weight:900;letter-spacing:-.02em;margin-bottom:6px}
-.sec-desc{font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:22px}
+main{position:relative;z-index:1;padding-top:40px}
 
-/* ── STATS GRID ── */
-.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:600px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 14px;text-align:center;position:relative;overflow:hidden}
-.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--sc)}
-.stat-icon{font-size:1.3rem;margin-bottom:8px}
-.stat-big{font-size:clamp(1.5rem,5vw,2.2rem);font-weight:900;letter-spacing:-.03em;line-height:1;margin-bottom:4px}
-.stat-name{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text2)}
-.stat-change{font-size:.7rem;font-weight:800;margin-top:5px}
+/* HERO */
+.hero{text-align:center;padding:70px 24px 50px;max-width:900px;margin:0 auto}
+.hero-tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:rgba(123,47,255,.12);border:1px solid rgba(123,47,255,.35);color:var(--pu);padding:6px 16px;border-radius:20px;margin-bottom:24px}
+.hero h1{font-size:clamp(2rem,6vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:20px}
+.grad{background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.1rem;color:var(--muted);max-width:640px;margin:0 auto 12px;line-height:1.7}
+.hero-truth{font-size:1rem;color:var(--tl);font-style:italic;max-width:680px;margin:0 auto 40px;line-height:1.7;background:rgba(0,245,212,.06);border-left:3px solid var(--tl);border-radius:8px;padding:16px 20px;text-align:left}
 
-/* ── TODAY'S CONTENT ── */
-.posts-grid{display:grid;grid-template-columns:1fr;gap:12px}
-@media(min-width:600px){.posts-grid{grid-template-columns:repeat(3,1fr)}}
-.post-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;position:relative;transition:border-color .2s;cursor:default}
-.post-card:hover{border-color:var(--border2)}
-.post-top{background:var(--pc);height:4px}
-.post-body{padding:14px}
-.post-time{font-family:var(--mono);font-size:.68rem;font-weight:800;margin-bottom:3px}
-.post-purpose{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;opacity:.7;margin-bottom:10px}
-.post-hook{font-size:.84rem;font-weight:800;line-height:1.35;margin-bottom:8px;color:var(--text)}
-.post-desc{font-size:.7rem;color:var(--text2);line-height:1.55;margin-bottom:10px;display:none}
-@media(min-width:600px){.post-desc{display:block}}
-.post-tags{display:flex;gap:4px;flex-wrap:wrap}
-.post-tag{font-size:.55rem;font-weight:700;padding:2px 7px;border-radius:4px;background:rgba(191,90,242,.12);color:var(--purple);border:1px solid rgba(191,90,242,.2)}
-.post-status{display:flex;align-items:center;gap:5px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:.62rem;font-weight:700;color:var(--text2)}
-.post-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+/* XP TRACKER */
+.xp-tracker{max-width:900px;margin:0 auto;padding:0 24px 40px}
+.xp-card{background:var(--card);border:1px solid rgba(123,47,255,.3);border-radius:24px;padding:28px;position:relative;overflow:hidden}
+.xp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite}
+.xp-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:24px}
+.xp-title{font-size:1.1rem;font-weight:800;color:var(--yl)}
+.xp-title span{font-size:.82rem;color:var(--muted);font-weight:400;display:block;margin-top:4px}
+.xp-num{text-align:right}
+.xp-num .xp-big{font-family:var(--mono);font-size:2.5rem;font-weight:700;color:var(--yl);line-height:1}
+.xp-num .xp-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.xp-bar-bg{height:14px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden;margin-bottom:8px}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--pu),var(--pk),var(--yl));border-radius:100px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.xp-milestones{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px;margin-bottom:24px}
+.xp-week-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.xp-week-btn{
+  background:var(--surf);border:1px solid rgba(123,47,255,.25);border-radius:12px;
+  padding:14px 16px;cursor:pointer;text-align:left;transition:all .2s;
+  font-family:var(--font);
+}
+.xp-week-btn:hover{border-color:var(--pu);background:rgba(123,47,255,.08)}
+.xp-week-btn.done{border-color:var(--gr);background:rgba(0,255,65,.07)}
+.xp-week-btn .wk-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.xp-week-btn .wk-name{font-size:.85rem;font-weight:700;color:var(--txt);margin-bottom:4px}
+.xp-week-btn .wk-xp{font-family:var(--mono);font-size:11px;color:var(--yl)}
+.xp-week-btn.done .wk-name{color:var(--gr)}
+.xp-week-btn.done .wk-xp{color:var(--gr)}
+.xp-week-btn .wk-badge{display:none;font-size:.75rem;color:var(--gr);margin-top:4px;font-weight:700}
+.xp-week-btn.done .wk-badge{display:block}
 
-/* ── JOURNEY MAP ── */
-.journey-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
-.journey-legend{display:flex;gap:14px;font-size:.62rem;font-weight:700;color:var(--text2)}
-.legend-item{display:flex;align-items:center;gap:5px}
-.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.day-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
-@media(min-width:400px){.day-grid{grid-template-columns:repeat(12,1fr)}}
-@media(min-width:540px){.day-grid{grid-template-columns:repeat(15,1fr)}}
-@media(min-width:720px){.day-grid{grid-template-columns:repeat(20,1fr)}}
-.day-dot{aspect-ratio:1;border-radius:4px;transition:transform .2s;cursor:default;position:relative}
-.day-dot.done{background:var(--grad2);opacity:.85}
-.day-dot.today{background:var(--pink);box-shadow:0 0 10px rgba(255,45,120,.6);animation:day-pulse 2s ease-in-out infinite}
-@keyframes day-pulse{0%,100%{box-shadow:0 0 10px rgba(255,45,120,.6)}50%{box-shadow:0 0 18px rgba(255,45,120,.9)}}
-.day-dot.future{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
-.day-dot:hover{transform:scale(1.2);z-index:2}
-.day-dot[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--border2);border-radius:6px;padding:3px 8px;font-size:.58rem;font-weight:700;color:var(--text);white-space:nowrap;z-index:10;pointer-events:none}
+/* BADGE REVEAL */
+.badge-reveal{
+  display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+  background:var(--card);border:2px solid var(--yl);border-radius:24px;
+  padding:32px 40px;text-align:center;z-index:900;
+  animation:badge-pop .5s ease forwards;
+}
+.badge-reveal.show{display:block}
+@keyframes badge-pop{0%{transform:translate(-50%,-50%) scale(0)}60%{transform:translate(-50%,-50%) scale(1.1)}100%{transform:translate(-50%,-50%) scale(1)}}
+.badge-reveal .badge-icon{font-size:3rem;margin-bottom:12px}
+.badge-reveal h3{font-size:1.3rem;font-weight:900;color:var(--yl);margin-bottom:8px}
+.badge-reveal p{color:var(--muted);font-size:.9rem}
+.badge-reveal .close-btn{margin-top:16px;background:var(--yl);color:#000;border:none;border-radius:8px;padding:8px 20px;font-weight:800;cursor:pointer;font-family:var(--font)}
+.badge-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:899}
+.badge-overlay.show{display:block}
 
-/* ── PLATFORMS ── */
-.platform-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:600px){.platform-grid{grid-template-columns:repeat(4,1fr)}}
-.plat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 14px;text-align:center;transition:border-color .2s}
-.plat-card:hover{border-color:var(--border2)}
-.plat-icon{font-size:1.6rem;margin-bottom:8px}
-.plat-name{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);margin-bottom:6px}
-.plat-count{font-size:1.6rem;font-weight:900;letter-spacing:-.03em;line-height:1;margin-bottom:4px}
-.plat-bar-wrap{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;margin:8px 0 4px}
-.plat-bar{height:100%;border-radius:2px;transition:width 1.5s ease}
-.plat-goal{font-size:.58rem;color:var(--text3);font-weight:600}
-.plat-change{font-size:.65rem;font-weight:800;margin-top:2px}
+/* SECTION */
+.section{padding:50px 24px;max-width:1100px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--tl);margin-bottom:12px;display:block}
+.section h2{font-size:clamp(1.5rem,3.5vw,2.4rem);font-weight:800;margin-bottom:16px;line-height:1.2}
+.section > p{color:var(--muted);line-height:1.7;margin-bottom:20px}
 
-/* ── HARVARD SECTION ── */
-.insights-grid{display:grid;grid-template-columns:1fr;gap:10px}
-@media(min-width:600px){.insights-grid{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:840px){.insights-grid{grid-template-columns:repeat(3,1fr)}}
-.insight-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 16px;position:relative;overflow:hidden;transition:border-color .2s}
-.insight-card:hover{border-color:var(--border2)}
-.insight-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ic)}
-.insight-num{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--ic);margin-bottom:10px;opacity:.8}
-.insight-quote{font-size:.84rem;font-weight:700;line-height:1.55;color:var(--text);margin-bottom:10px}
-.insight-context{font-size:.7rem;color:var(--text2);line-height:1.5}
+/* MATH */
+.math-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:28px}
+.math-card{background:var(--surf);border:1px solid rgba(123,47,255,.2);border-radius:16px;padding:20px;text-align:center;transition:all .2s}
+.math-card:hover{transform:translateY(-3px);border-color:var(--tl)}
+.math-num{font-family:var(--mono);font-size:2rem;font-weight:700;margin-bottom:6px}
+.math-desc{font-size:.82rem;color:var(--muted);line-height:1.4}
+.math-result{background:linear-gradient(135deg,rgba(0,255,65,.08),rgba(0,245,212,.08));border:2px solid var(--gr);border-radius:20px;padding:24px;text-align:center;margin-top:20px;grid-column:1/-1}
+.math-result .res-label{font-family:var(--mono);font-size:11px;color:var(--gr);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.math-result .res-big{font-size:1.3rem;font-weight:900;color:var(--gr)}
 
-/* ── ABOUT / MISSION ── */
-.about-grid{display:grid;grid-template-columns:1fr;gap:20px;align-items:center}
-@media(min-width:640px){.about-grid{grid-template-columns:auto 1fr}}
-.about-avatar{width:80px;height:80px;border-radius:50%;background:var(--card2);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;margin:0 auto}
-@media(min-width:640px){.about-avatar{margin:0}}
-.about-name{font-size:1.1rem;font-weight:900;margin-bottom:4px}
-.about-handle{font-size:.75rem;font-weight:700;color:var(--purple);margin-bottom:12px}
-.about-text{font-size:.8rem;color:var(--text2);line-height:1.7}
-.about-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.about-tag{font-size:.62rem;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text2)}
+/* PHASE */
+.phase{margin-top:32px}
+.phase-header{
+  display:flex;align-items:center;gap:16px;margin-bottom:20px;
+  background:var(--surf);border-radius:16px;padding:20px 24px;
+  border-left:4px solid var(--pk);
+}
+.phase-header.p2{border-left-color:var(--tl)}
+.phase-header.p3{border-left-color:var(--yl)}
+.phase-num{font-family:var(--mono);font-size:2rem;font-weight:700;line-height:1;flex-shrink:0}
+.phase-num.c1{color:var(--pk)}.phase-num.c2{color:var(--tl)}.phase-num.c3{color:var(--yl)}
+.phase-title h3{font-size:1.15rem;font-weight:800;margin-bottom:4px}
+.phase-title p{font-size:.85rem;color:var(--muted)}
+.phase-weeks{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.week-card{background:var(--card);border:1px solid rgba(123,47,255,.22);border-radius:14px;padding:18px 20px;transition:all .2s}
+.week-card:hover{border-color:var(--tl);transform:translateY(-2px)}
+.week-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.week-title{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.week-items{list-style:none;display:flex;flex-direction:column;gap:5px}
+.week-items li{font-size:.8rem;color:var(--muted);display:flex;align-items:flex-start;gap:6px}
+.week-items li::before{content:'→';color:var(--tl);flex-shrink:0;font-weight:700}
+.phase-milestone{
+  background:linear-gradient(135deg,rgba(255,224,0,.07),rgba(255,107,53,.07));
+  border:1px solid rgba(255,224,0,.25);border-radius:12px;padding:14px 20px;
+  font-size:.88rem;font-weight:700;color:var(--yl);margin-top:14px;
+  display:flex;align-items:center;gap:8px;
+}
 
-/* ── FOLLOW CTA ── */
-.follow-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:600px){.follow-grid{grid-template-columns:repeat(4,1fr)}}
-.follow-btn{display:flex;flex-direction:column;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 14px;text-decoration:none;transition:all .2s;cursor:pointer;font-family:var(--font)}
-.follow-btn:hover{border-color:var(--fb-color);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
-.follow-icon{font-size:1.5rem}
-.follow-platform{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text2)}
-.follow-handle{font-size:.8rem;font-weight:800;color:var(--text)}
-.follow-cta-text{font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid var(--fb-color);color:var(--fb-color)}
+/* DAILY TRACKER */
+.daily-list{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.daily-item{
+  background:var(--surf);border:1px solid rgba(123,47,255,.2);border-radius:12px;
+  padding:14px 18px;display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all .2s;
+}
+.daily-item:hover{border-color:var(--tl)}
+.daily-item.checked{border-color:var(--gr);background:rgba(0,255,65,.05)}
+.daily-check{
+  width:22px;height:22px;border-radius:6px;border:2px solid rgba(123,47,255,.4);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;font-size:.9rem;
+}
+.daily-item.checked .daily-check{background:var(--gr);border-color:var(--gr);color:#000}
+.daily-info h4{font-size:.9rem;font-weight:700;margin-bottom:3px}
+.daily-info p{font-size:.78rem;color:var(--muted)}
+.daily-time{font-family:var(--mono);font-size:11px;color:var(--tl);margin-left:auto;flex-shrink:0}
+.daily-total{background:var(--card);border:1px solid rgba(0,255,65,.2);border-radius:12px;padding:14px 18px;text-align:center;margin-top:12px;font-weight:700;color:var(--gr)}
 
-/* ── MILESTONES ── */
-.milestone-list{display:flex;flex-direction:column;gap:8px}
-.milestone-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px}
-.milestone-ico{font-size:1.1rem;flex-shrink:0;margin-top:1px}
-.milestone-date{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:2px}
-.milestone-text{font-size:.78rem;font-weight:700;color:var(--text)}
-.milestone-badge{display:inline-block;font-size:.58rem;font-weight:800;padding:2px 7px;border-radius:4px;margin-top:4px}
+/* MILESTONE MAP */
+.milestone-map{margin-top:28px;padding:28px;background:var(--card);border:1px solid rgba(123,47,255,.25);border-radius:20px;position:relative;overflow:hidden}
+.milestone-map::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite}
+.ms-track{display:flex;align-items:center;gap:0;margin-bottom:20px;overflow-x:auto;padding-bottom:8px}
+.ms-node{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;min-width:90px}
+.ms-dot{
+  width:48px;height:48px;border-radius:50%;border:3px solid rgba(123,47,255,.3);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;
+  font-family:var(--mono);transition:all .3s;
+}
+.ms-dot.achieved{border-color:var(--gr);background:rgba(0,255,65,.1);color:var(--gr)}
+.ms-dot.current{border-color:var(--yl);background:rgba(255,224,0,.1);color:var(--yl);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,224,0,.3)}50%{box-shadow:0 0 0 8px rgba(255,224,0,.0)}}
+.ms-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.05em;text-align:center}
+.ms-line{flex:1;height:2px;background:rgba(123,47,255,.2);min-width:20px;flex-shrink:0}
+.ms-line.done{background:var(--gr)}
+.ms-unlocks{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.ms-unlock-card{background:var(--surf);border:1px solid rgba(123,47,255,.18);border-radius:10px;padding:12px 14px}
+.ms-unlock-card .ms-follower{font-family:var(--mono);font-size:11px;color:var(--pk);font-weight:700;margin-bottom:4px}
+.ms-unlock-card .ms-revenue{font-size:.8rem;color:var(--muted);line-height:1.4}
 
-/* ── ADMIN FLOAT ── */
-.admin-float{position:fixed;bottom:20px;right:16px;z-index:300}
-.admin-float-btn{width:44px;height:44px;border-radius:50%;background:rgba(30,30,50,.9);border:1px solid var(--border2);backdrop-filter:blur(10px);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:var(--font)}
-.admin-float-btn:hover{background:var(--card2);border-color:rgba(191,90,242,.4)}
+/* LEGAL CHECKLIST */
+.legal-checklist{background:var(--card);border:1px solid rgba(255,45,120,.25);border-radius:20px;padding:28px;margin-top:28px;position:relative;overflow:hidden}
+.legal-checklist::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pk),var(--or))}
+.legal-checklist h3{font-size:1.1rem;font-weight:800;color:var(--pk);margin-bottom:6px}
+.legal-checklist p{font-size:.85rem;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.legal-items{display:flex;flex-direction:column;gap:10px}
+.legal-item{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--surf);border:1px solid rgba(123,47,255,.18);border-radius:10px;
+  padding:12px 14px;cursor:pointer;transition:all .2s;
+}
+.legal-item:hover{border-color:var(--pk)}
+.legal-item.checked{border-color:var(--gr);background:rgba(0,255,65,.05)}
+.legal-cb{
+  width:20px;height:20px;border-radius:5px;border:2px solid rgba(123,47,255,.4);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  margin-top:1px;transition:all .2s;font-size:.8rem;
+}
+.legal-item.checked .legal-cb{background:var(--gr);border-color:var(--gr);color:#000}
+.legal-item-text{font-size:.85rem;color:var(--muted);line-height:1.5;flex:1}
+.legal-item-text strong{color:var(--txt);display:block;margin-bottom:2px}
 
-/* ── MODAL ── */
-.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(7,7,13,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity .25s}
-@media(min-width:480px){.modal-overlay{align-items:center;padding:16px}}
-.modal-overlay.open{opacity:1;pointer-events:auto}
-.modal{background:var(--card2);border:1px solid var(--border2);border-radius:20px 20px 0 0;padding:22px 20px;width:100%;max-width:440px;transform:translateY(30px);transition:transform .25s}
-@media(min-width:480px){.modal{border-radius:20px;transform:translateY(20px) scale(.96)}}
-.modal-overlay.open .modal{transform:none}
-.modal-handle{width:36px;height:3px;border-radius:2px;background:var(--border2);margin:0 auto 16px;display:block}
-@media(min-width:480px){.modal-handle{display:none}}
-.modal h3{font-size:1rem;font-weight:900;margin-bottom:4px}
-.modal p{font-size:.74rem;color:var(--text2);margin-bottom:16px;line-height:1.5}
-.modal-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.modal-lbl{font-size:.73rem;font-weight:700;min-width:82px;display:flex;align-items:center;gap:5px}
-.modal-inp{flex:1;background:var(--card3);border:1px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text);font-size:.85rem;font-family:var(--mono);outline:none;min-height:40px}
-.modal-inp:focus{border-color:var(--purple)}
-.modal-section{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);margin:14px 0 8px;padding-top:14px;border-top:1px solid var(--border)}
-.modal-textarea{width:100%;background:var(--card3);border:1px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text);font-size:.78rem;font-family:var(--font);outline:none;resize:none;line-height:1.5}
-.modal-textarea:focus{border-color:var(--purple)}
-.modal-acts{display:flex;gap:8px;margin-top:14px}
-.m-save{flex:1;padding:11px;border-radius:9px;border:none;cursor:pointer;font-family:var(--font);font-weight:800;font-size:.82rem;color:#fff;background:var(--grad);min-height:44px}
-.m-cancel{padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text2);font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font);min-height:44px}
+/* CTA STRIP */
+.cta-strip{text-align:center;padding:70px 24px;background:linear-gradient(180deg,transparent,rgba(123,47,255,.07),transparent)}
+.cta-strip h2{font-size:clamp(1.6rem,4vw,2.5rem);font-weight:900;margin-bottom:16px}
+.btn-cta{display:inline-flex;align-items:center;gap:10px;background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite;color:#000;font-size:1rem;font-weight:900;padding:16px 40px;border-radius:100px;text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 0 30px rgba(255,45,120,.3);border:none;cursor:pointer}
+.btn-cta:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(255,45,120,.5)}
 
-/* ── FOOTER ── */
-.footer{text-align:center;padding:30px 0 0;border-top:1px solid var(--border)}
-.footer-brand{font-size:.9rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
-.footer-text{font-size:.7rem;color:var(--text3);line-height:1.6;margin-bottom:16px}
-.footer-updated{font-size:.62rem;color:var(--text3)}
-
-/* ── ANIMATIONS ── */
-@keyframes fadein{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.fadein{animation:fadein .7s ease both}
-.fadein-2{animation:fadein .7s .15s ease both}
-.fadein-3{animation:fadein .7s .3s ease both}
+@media(max-width:640px){
+  .math-grid{grid-template-columns:1fr 1fr}
+  .phase-weeks{grid-template-columns:1fr}
+  .xp-week-grid{grid-template-columns:1fr 1fr}
+  .ms-unlocks{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
+<div class="rainbow-bar"></div>
+<div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
 
-<!-- ═══ TOPBAR ═══ -->
-<div class="topbar">
-  <div class="tb-inner">
-    <a class="tb-brand" href="https://www.instagram.com/metakittyz" target="_blank" rel="noopener">
-      <span class="tb-logo">🐱</span>
-      <span class="tb-name">Metakittyz</span>
-    </a>
-    <div class="tb-spacer"></div>
-    <div class="tb-live"><div class="live-dot"></div>Live</div>
-    <div class="tb-day" id="tb-day-badge">Day 1/90</div>
-    <button class="tb-share" onclick="shareJourney()">Share →</button>
+<!-- ERIKA AVATAR -->
+<div class="erika-float" onclick="toggleErikaChat()" title="Chat with Erika">
+  <img src="erika.webp" alt="Erika" onerror="this.style.background='var(--surf)'"/>
+  <div class="erika-dot"></div>
+</div>
+<div class="erika-chat" id="erika-chat">
+  <div class="chat-hdr">
+    <img src="erika.webp" alt="Erika" onerror="this.style.display='none'"/>
+    <div class="chat-hdr-info"><div class="cn">Erika 🐱</div><div class="cs">🟢 Online</div></div>
+    <button class="chat-close-btn" onclick="toggleErikaChat()">✕</button>
+  </div>
+  <div class="chat-body">Hey! 👋 Working through the 90-day plan? Mark your XP milestones above — every week you complete gets you closer to CEO level!</div>
+  <div class="chat-links">
+    <a href="mk-live.html">Watch The Build Live</a>
+    <a href="mk-engage.html">Get Prompt Packs</a>
   </div>
 </div>
 
-<div class="wrap">
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="index.html" class="bn-tab"><span>🏠</span><span>HOME</span></a>
+  <a href="mk-team.html" class="bn-tab"><span>👥</span><span>TEAM</span></a>
+  <a href="metakittyz.html" class="bn-tab"><span>📖</span><span>GUIDE</span></a>
+  <a href="mk-engage.html" class="bn-tab"><span>✨</span><span>PROMPTS</span></a>
+</nav>
 
-<!-- ═══ HERO ═══ -->
-<div class="hero fadein">
-  <div class="hero-eyebrow">⚡ 90-Day Public Challenge</div>
-  <h1 class="hero-title">
-    295 Followers<br>
-    <span class="hero-grad">to 1,000,000</span>
-  </h1>
-  <p class="hero-sub">I'm Erika — an AI builder, Harvard Agentic Intensive student, and founder of PI Agent OS. I'm documenting every step of this journey in public. Follow along.</p>
-
-  <div class="hero-count-wrap">
-    <div class="hero-label">Total Followers Right Now</div>
-    <span class="hero-number" id="hero-count">295</span>
-    <div class="hero-goal-row">
-      <span>Started: <strong id="start-date-txt">June 10, 2026</strong></span>
-      <span>·</span>
-      <span>Goal: <strong>1,000,000</strong></span>
-      <span>·</span>
-      <span id="days-left-txt"><strong>90 days</strong> left</span>
-    </div>
-  </div>
-
-  <div class="prog-wrap">
-    <div class="prog-track">
-      <div class="prog-fill" id="prog-fill" style="width:0%"></div>
-    </div>
-    <div class="prog-labels">
-      <span id="prog-start">295</span>
-      <span>1,000,000</span>
-    </div>
-    <div class="prog-pct" id="prog-pct">0.03% there</div>
-  </div>
-
-  <div class="hero-ctas">
-    <a class="cta-primary" href="https://www.instagram.com/metakittyz" target="_blank" rel="noopener">📸 Follow on Instagram</a>
-    <a class="cta-secondary" href="https://www.tiktok.com/@metakittyz" target="_blank" rel="noopener">🎵 Follow on TikTok</a>
-  </div>
+<!-- Badge reveal overlay -->
+<div class="badge-overlay" id="badge-overlay" onclick="closeBadge()"></div>
+<div class="badge-reveal" id="badge-reveal">
+  <div class="badge-icon" id="badge-icon">🏆</div>
+  <h3 id="badge-title">Badge Unlocked!</h3>
+  <p id="badge-desc">Keep going!</p>
+  <button class="close-btn" onclick="closeBadge()">Awesome!</button>
 </div>
 
-<!-- ═══ LIVE STATS ═══ -->
-<div class="section fadein-2">
-  <div class="sec-label">📊 Live Mission Stats</div>
-  <div class="stats-grid">
-    <div class="stat-card" style="--sc:var(--pink)">
-      <div class="stat-icon">🌍</div>
-      <div class="stat-big" id="stat-total" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">295</div>
-      <div class="stat-name">Total Reach</div>
-      <div class="stat-change" id="stat-growth" style="color:var(--green)">+0 today</div>
-    </div>
-    <div class="stat-card" style="--sc:var(--purple)">
-      <div class="stat-icon">📅</div>
-      <div class="stat-big" id="stat-day" style="color:var(--purple)">1</div>
-      <div class="stat-name">Day of 90</div>
-      <div class="stat-change" id="stat-daysleft" style="color:var(--text2)">89 days left</div>
-    </div>
-    <div class="stat-card" style="--sc:var(--gold)">
-      <div class="stat-icon">🎬</div>
-      <div class="stat-big" id="stat-posts" style="color:var(--gold)">0</div>
-      <div class="stat-name">Posts Published</div>
-      <div class="stat-change" style="color:var(--text2)">3 per day</div>
-    </div>
-    <div class="stat-card" style="--sc:var(--cyan)">
-      <div class="stat-icon">🚀</div>
-      <div class="stat-big" id="stat-needed" style="color:var(--cyan)">16,584</div>
-      <div class="stat-name">Needed / Day</div>
-      <div class="stat-change" id="stat-track" style="color:var(--orange)">⚠️ Building pace</div>
-    </div>
+<nav class="topnav">
+  <a href="index.html" class="nav-brand">🐱 <span>METAKITTYZ</span></a>
+  <div class="nav-links">
+    <a href="index.html">🏠 Home</a>
+    <a href="mk-team.html">👥 AI Team</a>
+    <a href="mk-command.html">⚡ Command</a>
+    <a href="mk-content.html">📱 Content OS</a>
+    <a href="mk-engage.html">✨ Prompts</a>
+    <a href="mk-journey.html">🗺️ 90-Day Plan</a>
+    <a href="mk-live.html">📺 Live</a>
+    <a href="metakittyz.html">📖 Build Guide</a>
   </div>
+  <button class="hamburger" id="hbg" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mob-menu">
+  <a href="index.html">🏠 Home</a><a href="mk-team.html">👥 AI Team</a><a href="mk-command.html">⚡ Command</a>
+  <a href="mk-content.html">📱 Content OS</a><a href="mk-engage.html">✨ Prompts</a>
+  <a href="mk-journey.html">🗺️ 90-Day Plan</a><a href="mk-live.html">📺 Live</a><a href="metakittyz.html">📖 Build Guide</a>
 </div>
 
-<!-- ═══ TODAY'S CONTENT ═══ -->
-<div class="section fadein-3">
-  <div class="sec-label">🎬 Today's Content Going Live</div>
-  <div class="sec-title">What I'm Posting Today</div>
-  <div class="sec-desc">Three reels, scheduled to drop at peak hours for maximum algorithm reach.</div>
-  <div class="posts-grid" id="posts-grid"></div>
+<main>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag" style="background:rgba(123,47,255,.1);border-color:rgba(123,47,255,.35);color:var(--pu)">🗺️ STEP 5 — FOLLOW THE 90-DAY PLAN</div>
+  <h1><span class="grad">90 Days.</span><br>Your AI Team.<br>1,000,000 Followers.</h1>
+  <p class="hero-sub">This is not a theory. This is the exact system Erika is executing live, teaching you every step of the way.</p>
+  <p class="hero-truth">Here's the truth: 90 days is not a long time. But it IS long enough to go from zero to a million followers — if you have an AI team working for you 24/7. Let's map it out. 🗺️</p>
 </div>
 
-<!-- ═══ 90-DAY MAP ═══ -->
-<div class="section">
-  <div class="sec-label">🗓️ The 90-Day Journey Map</div>
-  <div class="journey-header">
-    <div>
-      <div class="sec-title" style="margin-bottom:0">Every Day Counts</div>
-    </div>
-    <div class="journey-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--grad2)"></div>Done</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--pink);box-shadow:0 0 8px var(--pink)"></div>Today</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)"></div>Ahead</div>
-    </div>
-  </div>
-  <div class="day-grid" id="day-grid"></div>
-</div>
-
-<!-- ═══ PLATFORM BREAKDOWN ═══ -->
-<div class="section">
-  <div class="sec-label">📱 Platform Breakdown</div>
-  <div class="sec-title">Where to Find Me</div>
-  <div class="platform-grid">
-    <a class="plat-card" href="https://www.instagram.com/metakittyz" target="_blank" rel="noopener" style="text-decoration:none">
-      <div class="plat-icon">📸</div>
-      <div class="plat-name">Instagram</div>
-      <div class="plat-count" id="plat-ig" style="color:var(--pink)">295</div>
-      <div class="plat-bar-wrap"><div class="plat-bar" id="plat-ig-bar" style="background:var(--pink);width:0%"></div></div>
-      <div class="plat-goal">Goal: 500K</div>
-      <div class="plat-change" id="plat-ig-ch" style="color:var(--text2)">Primary platform</div>
-    </a>
-    <a class="plat-card" href="https://www.tiktok.com/@metakittyz" target="_blank" rel="noopener" style="text-decoration:none">
-      <div class="plat-icon">🎵</div>
-      <div class="plat-name">TikTok</div>
-      <div class="plat-count" id="plat-tt" style="color:var(--cyan)">0</div>
-      <div class="plat-bar-wrap"><div class="plat-bar" id="plat-tt-bar" style="background:var(--cyan);width:0%"></div></div>
-      <div class="plat-goal">Goal: 300K</div>
-      <div class="plat-change" id="plat-tt-ch" style="color:var(--text2)">Cross-posting daily</div>
-    </a>
-    <a class="plat-card" href="https://www.youtube.com/@metakittyz" target="_blank" rel="noopener" style="text-decoration:none">
-      <div class="plat-icon">▶️</div>
-      <div class="plat-name">YouTube</div>
-      <div class="plat-count" id="plat-yt" style="color:var(--red)">0</div>
-      <div class="plat-bar-wrap"><div class="plat-bar" id="plat-yt-bar" style="background:var(--red);width:0%"></div></div>
-      <div class="plat-goal">Goal: 100K</div>
-      <div class="plat-change" id="plat-yt-ch" style="color:var(--text2)">Shorts launching</div>
-    </a>
-    <a class="plat-card" href="https://www.linkedin.com/in/erika-herrera" target="_blank" rel="noopener" style="text-decoration:none">
-      <div class="plat-icon">💼</div>
-      <div class="plat-name">LinkedIn</div>
-      <div class="plat-count" id="plat-li" style="color:var(--blue)">0</div>
-      <div class="plat-bar-wrap"><div class="plat-bar" id="plat-li-bar" style="background:var(--blue);width:0%"></div></div>
-      <div class="plat-goal">Goal: 100K</div>
-      <div class="plat-change" id="plat-li-ch" style="color:var(--text2)">B2B AI audience</div>
-    </a>
-  </div>
-</div>
-
-<!-- ═══ HARVARD AI INSIGHTS ═══ -->
-<div class="section">
-  <div class="sec-label">🎓 Harvard AI Agentic Intensive</div>
-  <div class="sec-title">What I'm Learning — Shared Live</div>
-  <div class="sec-desc">Enrolled in Harvard's 2.5-week AI Agentic Intensive. Every concept I learn, I turn into a reel for you.</div>
-  <div class="insights-grid">
-    <div class="insight-card" style="--ic:var(--pink)">
-      <div class="insight-num">Concept 01</div>
-      <div class="insight-quote">"AI agents can collaborate like a specialized team — each one owns a single skill and passes the work forward."</div>
-      <div class="insight-context">This is why PI Agent OS uses 7 specialized agents instead of one general AI. Specialization = better output.</div>
-    </div>
-    <div class="insight-card" style="--ic:var(--purple)">
-      <div class="insight-num">Concept 02</div>
-      <div class="insight-quote">"The brief is the most powerful tool in agentic AI. Garbage in, garbage out — every time."</div>
-      <div class="insight-context">I built an entire briefing system for my platform because of this. A good brief eliminates 80% of revision rounds.</div>
-    </div>
-    <div class="insight-card" style="--ic:var(--cyan)">
-      <div class="insight-num">Concept 03</div>
-      <div class="insight-quote">"Governance in AI isn't about restriction — it's about building systems you can trust at scale."</div>
-      <div class="insight-context">GUARDIAN agent in my team handles this. Quality control isn't overhead — it's the foundation of consistency.</div>
-    </div>
-    <div class="insight-card" style="--ic:var(--green)">
-      <div class="insight-num">Concept 04</div>
-      <div class="insight-quote">"Multi-agent pipelines don't just automate tasks — they eliminate the coordination tax entirely."</div>
-      <div class="insight-context">The orchestration layer is where the magic happens. No more repeating yourself to 8 different people.</div>
-    </div>
-    <div class="insight-card" style="--ic:var(--gold)">
-      <div class="insight-num">Concept 05</div>
-      <div class="insight-quote">"The future of AI isn't one model that does everything — it's orchestrated specialists doing their best work."</div>
-      <div class="insight-context">Just like a world-class team. No single person is best at everything. Systems beat superheroes.</div>
-    </div>
-    <div class="insight-card" style="--ic:var(--orange)">
-      <div class="insight-num">Concept 06</div>
-      <div class="insight-quote">"Human-in-the-loop isn't a limitation — it's a competitive advantage when designed intentionally."</div>
-      <div class="insight-context">My platform keeps humans in control at every key decision point. AI does the work, humans set the direction.</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ MILESTONES ═══ -->
-<div class="section">
-  <div class="sec-label">🏆 Milestones &amp; Updates</div>
-  <div class="sec-title">The Journey, Logged</div>
-  <div class="milestone-list" id="milestone-list">
-    <div class="milestone-item">
-      <div class="milestone-ico">🚀</div>
-      <div>
-        <div class="milestone-date">Day 1 · June 10, 2026</div>
-        <div class="milestone-text">The 90-day challenge officially begins. Starting at 295 Instagram followers with a clear mission: 1 million in 90 days, documented in public.</div>
-        <span class="milestone-badge" style="background:rgba(255,45,120,.15);color:var(--pink);border:1px solid rgba(255,45,120,.3)">Mission Started</span>
+<!-- XP TRACKER -->
+<div class="xp-tracker">
+  <div class="xp-card">
+    <div class="xp-top">
+      <div class="xp-title">
+        🎮 Your 90-Day XP Progress
+        <span>Check off weeks as you complete them. Earn badges. Track your journey.</span>
+      </div>
+      <div class="xp-num">
+        <div class="xp-big" id="xp-num">0</div>
+        <div class="xp-lbl">total XP</div>
       </div>
     </div>
-    <div class="milestone-item">
-      <div class="milestone-ico">🎓</div>
-      <div>
-        <div class="milestone-date">Day 1 · June 10, 2026</div>
-        <div class="milestone-text">Enrolled in Harvard's AI Agentic Intensive — a 2.5-week immersive program. Every concept learned becomes content for this journey.</div>
-        <span class="milestone-badge" style="background:rgba(191,90,242,.15);color:var(--purple);border:1px solid rgba(191,90,242,.3)">Harvard Enrolled</span>
-      </div>
+    <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+    <div class="xp-milestones">
+      <span>0 XP</span><span>Level 2</span><span>Level 3</span><span>Level 4</span><span>Max 1,680 XP</span>
     </div>
-    <div class="milestone-item">
-      <div class="milestone-ico">🤖</div>
-      <div>
-        <div class="milestone-date">Day 1 · June 10, 2026</div>
-        <div class="milestone-text">Launched the 6-agent Metakittyz team (NOVA, PULSE, ARIA, REACH, SPARK, GUARDIAN) to run content operations 24/7 using PI Agent OS.</div>
-        <span class="milestone-badge" style="background:rgba(0,245,255,.1);color:var(--cyan);border:1px solid rgba(0,245,255,.25)">AI Team Live</span>
-      </div>
+    <div class="xp-week-grid" id="xp-weeks">
+      <!-- Generated by JS -->
     </div>
   </div>
 </div>
 
-<!-- ═══ ABOUT ═══ -->
+<!-- THE MATH -->
 <div class="section">
-  <div class="sec-label">👤 About the Creator</div>
-  <div class="about-grid">
-    <div class="about-avatar">🐱</div>
-    <div>
-      <div class="about-name">Erika Herrera</div>
-      <div class="about-handle">@metakittyz</div>
-      <div class="about-text">I build AI products that turn imagination into reality. My platform — PI Agent OS — uses multi-agent AI pipelines to run entire creative and business workflows automatically.<br><br>
-      I'm currently enrolled in Harvard's AI Agentic Intensive, learning the frontier of agentic systems and building in public the entire time. This 90-day challenge is my way of proving that AI tools, used right, can compress years of growth into weeks.<br><br>
-      Every post shares what I'm learning. Every reel shows what I'm building. You're not just watching — you're part of it.</div>
-      <div class="about-tags">
-        <span class="about-tag">🎓 Harvard AI</span>
-        <span class="about-tag">🤖 AI Builder</span>
-        <span class="about-tag">🛠️ PI Agent OS</span>
-        <span class="about-tag">📱 Content Creator</span>
-        <span class="about-tag">🌈 @metakittyz</span>
+  <span class="section-label">THE NUMBERS</span>
+  <h2>Why 1 Million Is Achievable</h2>
+  <p>Here's the math. This is a compound growth machine — not a one-time effort. Your AI team does the heavy lifting while you focus on strategy.</p>
+  <div class="math-grid">
+    <div class="math-card">
+      <div class="math-num" style="color:var(--tl)">3×</div>
+      <div class="math-desc">Posts per day across 6 platforms = 18 pieces of content daily</div>
+    </div>
+    <div class="math-card">
+      <div class="math-num" style="color:var(--pk)">1,620</div>
+      <div class="math-desc">Total posts over 90 days — all created by your AI team</div>
+    </div>
+    <div class="math-card">
+      <div class="math-num" style="color:var(--yl)">500–5K</div>
+      <div class="math-desc">Conservative average reach per post (pre-viral)</div>
+    </div>
+    <div class="math-card">
+      <div class="math-num" style="color:var(--pu)">45 min</div>
+      <div class="math-desc">Your daily time investment — AI handles everything else</div>
+    </div>
+    <div class="math-result">
+      <div class="res-label">The Output</div>
+      <div class="res-big">🚀 1,620 posts × compounding reach = exponential follower growth machine</div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 1 -->
+<div class="section">
+  <span class="section-label">PHASE 1 — DAYS 1–30</span>
+  <h2>Build The Machine</h2>
+  <p>The first 30 days are about infrastructure. You're not going viral yet. You're setting the stage. Everything you do in Phase 1 makes the growth in Phase 2 and 3 possible.</p>
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num c1">01</div>
+      <div class="phase-title">
+        <h3>Foundation — Build The Machine</h3>
+        <p>Days 1–30 · Target: 1K–10K followers</p>
+      </div>
+    </div>
+    <div class="phase-weeks">
+      <div class="week-card">
+        <div class="week-label">Week 1</div>
+        <div class="week-title">⚙️ Setup &amp; First Content</div>
+        <ul class="week-items">
+          <li>Brand setup complete</li>
+          <li>All 6 AI agents configured</li>
+          <li>First AI-generated content created</li>
+          <li>Profiles optimized on all 6 platforms</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 2</div>
+        <div class="week-title">📅 Rhythm Established</div>
+        <ul class="week-items">
+          <li>Posting 3× per day on all platforms</li>
+          <li>Buffer + ARIA scheduling live</li>
+          <li>Engagement routine locked in</li>
+          <li>First 100 followers milestone</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 3</div>
+        <div class="week-title">🔥 First Viral Attempt</div>
+        <ul class="week-items">
+          <li>Controversial take post published</li>
+          <li>Educational deep-dive series</li>
+          <li>Community engagement ramped up</li>
+          <li>GUARDIAN tracking all metrics</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 4</div>
+        <div class="week-title">📊 Review &amp; Double Down</div>
+        <ul class="week-items">
+          <li>GUARDIAN runs analytics audit</li>
+          <li>Top performers identified</li>
+          <li>Double down on winning formats</li>
+          <li>Cut what isn't working, fast</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase-milestone">🏆 Phase 1 Milestone: 1,000–10,000 followers · Content system fully operational</div>
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="section">
+  <span class="section-label">PHASE 2 — DAYS 31–60</span>
+  <h2>Feed The Machine</h2>
+  <p>The algorithm has your number now. Phase 2 is about accelerating — adding paid reach, landing collaborations, and launching your first product.</p>
+  <div class="phase">
+    <div class="phase-header p2">
+      <div class="phase-num c2">02</div>
+      <div class="phase-title">
+        <h3>Growth — Feed The Machine</h3>
+        <p>Days 31–60 · Target: 10K–100K followers</p>
+      </div>
+    </div>
+    <div class="phase-weeks">
+      <div class="week-card">
+        <div class="week-label">Week 5</div>
+        <div class="week-title">💰 Introduce Paid Ads</div>
+        <ul class="week-items">
+          <li>REACH agent creates all ad copy</li>
+          <li>First Meta Ads campaign live</li>
+          <li>$5–20/day test budget</li>
+          <li>A/B test 3 hooks per week</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 6</div>
+        <div class="week-title">🤝 Collaboration Outreach</div>
+        <ul class="week-items">
+          <li>SPARK handles all pitches</li>
+          <li>5 collab requests sent</li>
+          <li>First partnership posted</li>
+          <li>Cross-promotion content live</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 7</div>
+        <div class="week-title">📦 First Product Launch</div>
+        <ul class="week-items">
+          <li>Prompt pack launch sequence</li>
+          <li>NOVA writes all launch content</li>
+          <li>Email list capture starts</li>
+          <li>First revenue milestone hit</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 8</div>
+        <div class="week-title">🏘️ Community Launch</div>
+        <ul class="week-items">
+          <li>Discord or group launched</li>
+          <li>Founding member offer</li>
+          <li>PULSE handles community management</li>
+          <li>Superfan identification starts</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase-milestone" style="border-color:rgba(0,245,212,.3);color:var(--tl)">🏆 Phase 2 Milestone: 10,000–100,000 followers · First revenue generated</div>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="section">
+  <span class="section-label">PHASE 3 — DAYS 61–90</span>
+  <h2>Scale The Machine</h2>
+  <p>Phase 3 is about going big. Advanced video content, press attention, affiliate revenue, and scaling ad spend to match the momentum you've built.</p>
+  <div class="phase">
+    <div class="phase-header p3">
+      <div class="phase-num c3">03</div>
+      <div class="phase-title">
+        <h3>Scale — Scale The Machine</h3>
+        <p>Days 61–90 · Target: 100K–1M followers</p>
+      </div>
+    </div>
+    <div class="phase-weeks">
+      <div class="week-card">
+        <div class="week-label">Week 9</div>
+        <div class="week-title">🎬 Advanced AI Video</div>
+        <ul class="week-items">
+          <li>Higgsfield video campaigns live</li>
+          <li>AI avatar content at full scale</li>
+          <li>Long-form YouTube strategy activated</li>
+          <li>Short-form × long-form cross-promotion</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 10</div>
+        <div class="week-title">📰 PR &amp; Press</div>
+        <ul class="week-items">
+          <li>GUARDIAN manages press strategy</li>
+          <li>Press outreach to 10 outlets</li>
+          <li>Podcast pitch sequence sent</li>
+          <li>Guest post + feature content live</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 11</div>
+        <div class="week-title">🔗 Affiliate Program</div>
+        <ul class="week-items">
+          <li>Affiliate program officially launched</li>
+          <li>Top followers become affiliates</li>
+          <li>Commission structure announced</li>
+          <li>Revenue sharing model live</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 12</div>
+        <div class="week-title">🚀 Relaunch &amp; Scale</div>
+        <ul class="week-items">
+          <li>Retargeting campaigns live</li>
+          <li>Ad spend scaled 5–10×</li>
+          <li>Full system audit + optimization</li>
+          <li>Plan for next 90 days drafted</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase-milestone" style="border-color:rgba(255,224,0,.3);color:var(--yl)">🏆 Phase 3 Milestone: 100,000–1,000,000 followers · $10,000+/month revenue</div>
+  </div>
+</div>
+
+<!-- DAILY TRACKER -->
+<div class="section">
+  <span class="section-label">DAILY ROUTINE</span>
+  <h2>Your 45-Minute Daily Task List</h2>
+  <p>This is all the time you need. Your AI team does everything else. Check these off each day — they reset at midnight.</p>
+  <div class="daily-list" id="daily-list">
+    <div class="daily-item" onclick="toggleDaily(this)">
+      <div class="daily-check"></div>
+      <div class="daily-info"><h4>🛡️ Run GUARDIAN Audit</h4><p>Check yesterday's performance across all platforms</p></div>
+      <span class="daily-time">10 min</span>
+    </div>
+    <div class="daily-item" onclick="toggleDaily(this)">
+      <div class="daily-check"></div>
+      <div class="daily-info"><h4>📱 Post Today's Content</h4><p>AI created it — you just hit publish (or let ARIA do it)</p></div>
+      <span class="daily-time">5 min</span>
+    </div>
+    <div class="daily-item" onclick="toggleDaily(this)">
+      <div class="daily-check"></div>
+      <div class="daily-info"><h4>💬 Engage With Top Comments</h4><p>Reply to the most engaged comments to signal quality to algorithms</p></div>
+      <span class="daily-time">10 min</span>
+    </div>
+    <div class="daily-item" onclick="toggleDaily(this)">
+      <div class="daily-check"></div>
+      <div class="daily-info"><h4>✍️ Run NOVA for Tomorrow</h4><p>One prompt generates all of tomorrow's content</p></div>
+      <span class="daily-time">15 min</span>
+    </div>
+    <div class="daily-item" onclick="toggleDaily(this)">
+      <div class="daily-check"></div>
+      <div class="daily-info"><h4>📊 Review Metrics</h4><p>Quick pulse check — what's performing, what needs adjusting</p></div>
+      <span class="daily-time">5 min</span>
+    </div>
+  </div>
+  <div class="daily-total" id="daily-total">45 minutes total · AI handles the other 23 hours 15 minutes</div>
+</div>
+
+<!-- MILESTONE MAP -->
+<div class="section">
+  <span class="section-label">THE FOLLOWER JOURNEY</span>
+  <h2>Every Milestone Unlocks A New Revenue Stream</h2>
+  <p>Each level of growth opens new monetization options. The AI system is designed to hit each milestone and unlock the next opportunity in sequence.</p>
+  <div class="milestone-map">
+    <div class="ms-track">
+      <div class="ms-node">
+        <div class="ms-dot achieved">0</div>
+        <div class="ms-label">Start</div>
+      </div>
+      <div class="ms-line done"></div>
+      <div class="ms-node">
+        <div class="ms-dot current">1K</div>
+        <div class="ms-label">1,000</div>
+      </div>
+      <div class="ms-line"></div>
+      <div class="ms-node">
+        <div class="ms-dot">10K</div>
+        <div class="ms-label">10,000</div>
+      </div>
+      <div class="ms-line"></div>
+      <div class="ms-node">
+        <div class="ms-dot">50K</div>
+        <div class="ms-label">50,000</div>
+      </div>
+      <div class="ms-line"></div>
+      <div class="ms-node">
+        <div class="ms-dot">100K</div>
+        <div class="ms-label">100,000</div>
+      </div>
+      <div class="ms-line"></div>
+      <div class="ms-node">
+        <div class="ms-dot">500K</div>
+        <div class="ms-label">500,000</div>
+      </div>
+      <div class="ms-line"></div>
+      <div class="ms-node">
+        <div class="ms-dot">1M</div>
+        <div class="ms-label">1,000,000</div>
+      </div>
+    </div>
+    <div class="ms-unlocks">
+      <div class="ms-unlock-card">
+        <div class="ms-follower">🎯 1,000 Followers</div>
+        <div class="ms-revenue">TikTok Creator Fund eligibility · First affiliate deals · Digital product sales</div>
+      </div>
+      <div class="ms-unlock-card">
+        <div class="ms-follower">📱 10,000 Followers</div>
+        <div class="ms-revenue">Brand partnership deals · Instagram Link in Bio traffic · Paid community access</div>
+      </div>
+      <div class="ms-unlock-card">
+        <div class="ms-follower">⭐ 50,000 Followers</div>
+        <div class="ms-revenue">Sponsored content ($500–$2K/post) · Online course launch · Speaking opportunities</div>
+      </div>
+      <div class="ms-unlock-card">
+        <div class="ms-follower">🚀 100,000 Followers</div>
+        <div class="ms-revenue">Major brand deals · YouTube monetization · Membership revenue · $10K+/mo realistic</div>
+      </div>
+      <div class="ms-unlock-card">
+        <div class="ms-follower">💎 500,000 Followers</div>
+        <div class="ms-revenue">$50K–$100K+ brand deals · Book deals · Own product lines · Investor attention</div>
+      </div>
+      <div class="ms-unlock-card">
+        <div class="ms-follower">👑 1,000,000 Followers</div>
+        <div class="ms-revenue">Full-scale media company · $100K+/mo revenue potential · Your own AI company</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ FOLLOW CTA ═══ -->
+<!-- LEGAL CHECKLIST -->
 <div class="section">
-  <div class="sec-label">📲 Follow the Journey</div>
-  <div class="sec-title" style="margin-bottom:6px">Don't Miss a Day</div>
-  <div class="sec-desc">I post 3 times a day — morning, midday, evening. Every post moves the mission forward.</div>
-  <div class="follow-grid">
-    <a class="follow-btn" href="https://www.instagram.com/metakittyz" target="_blank" rel="noopener" style="--fb-color:var(--pink)">
-      <div class="follow-icon">📸</div>
-      <div class="follow-platform">Instagram</div>
-      <div class="follow-handle">@metakittyz</div>
-      <div class="follow-cta-text">Follow</div>
-    </a>
-    <a class="follow-btn" href="https://www.tiktok.com/@metakittyz" target="_blank" rel="noopener" style="--fb-color:var(--cyan)">
-      <div class="follow-icon">🎵</div>
-      <div class="follow-platform">TikTok</div>
-      <div class="follow-handle">@metakittyz</div>
-      <div class="follow-cta-text">Follow</div>
-    </a>
-    <a class="follow-btn" href="https://www.youtube.com/@metakittyz" target="_blank" rel="noopener" style="--fb-color:var(--red)">
-      <div class="follow-icon">▶️</div>
-      <div class="follow-platform">YouTube</div>
-      <div class="follow-handle">@metakittyz</div>
-      <div class="follow-cta-text">Subscribe</div>
-    </a>
-    <a class="follow-btn" href="https://www.linkedin.com/in/erika-herrera" target="_blank" rel="noopener" style="--fb-color:var(--blue)">
-      <div class="follow-icon">💼</div>
-      <div class="follow-platform">LinkedIn</div>
-      <div class="follow-handle">Erika Herrera</div>
-      <div class="follow-cta-text">Connect</div>
-    </a>
-  </div>
-</div>
-
-<!-- ═══ FOOTER ═══ -->
-<div class="footer">
-  <div class="footer-brand">Metakittyz</div>
-  <div class="footer-text">Building in public. Documenting the journey. Growing together.<br>PI Agent OS — AI Agent Orchestration for the Imagination Economy.</div>
-  <div class="footer-updated" id="last-updated">Stats last updated: —</div>
-</div>
-
-</div><!-- /wrap -->
-
-<!-- ═══ ADMIN BUTTON ═══ -->
-<div class="admin-float">
-  <button class="admin-float-btn" onclick="openAdmin()" title="Update stats">⚙️</button>
-</div>
-
-<!-- ═══ ADMIN MODAL ═══ -->
-<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeAdmin()">
-  <div class="modal">
-    <span class="modal-handle"></span>
-    <h3>⚙️ Update Journey Stats</h3>
-    <p>Keep your followers up to date with live numbers. Changes appear instantly on this page.</p>
-    <div class="modal-section">📱 Platform Followers</div>
-    <div class="modal-row"><div class="modal-lbl">📸 Instagram</div><input class="modal-inp" id="m-ig" type="number" placeholder="295" min="0"/></div>
-    <div class="modal-row"><div class="modal-lbl">🎵 TikTok</div><input class="modal-inp" id="m-tt" type="number" placeholder="0" min="0"/></div>
-    <div class="modal-row"><div class="modal-lbl">▶️ YouTube</div><input class="modal-inp" id="m-yt" type="number" placeholder="0" min="0"/></div>
-    <div class="modal-row"><div class="modal-lbl">💼 LinkedIn</div><input class="modal-inp" id="m-li" type="number" placeholder="0" min="0"/></div>
-    <div class="modal-section">📈 Growth</div>
-    <div class="modal-row"><div class="modal-lbl">Today's Gain</div><input class="modal-inp" id="m-growth" type="number" placeholder="0" min="0"/></div>
-    <div class="modal-row"><div class="modal-lbl">Posts Published</div><input class="modal-inp" id="m-posts" type="number" placeholder="0" min="0"/></div>
-    <div class="modal-section">🏆 Add Milestone (optional)</div>
-    <textarea class="modal-textarea" id="m-milestone" rows="2" placeholder="e.g. Hit 1,000 followers on Day 5!"></textarea>
-    <div class="modal-acts">
-      <button class="m-cancel" onclick="closeAdmin()">Cancel</button>
-      <button class="m-save" onclick="saveAdmin()">Update Dashboard</button>
+  <span class="section-label">⚖️ BEFORE YOU LAUNCH</span>
+  <h2>Legal &amp; Compliance Checklist</h2>
+  <p>Set this up before you hit 1,000 followers. Doing it early saves you major headaches later. Check off each item as you complete it.</p>
+  <div class="legal-checklist">
+    <h3>⚖️ Before You Launch — Legal Checklist</h3>
+    <p>These are not optional if you plan to monetize. Each item protects you and your business as you scale.</p>
+    <div class="legal-items" id="legal-items">
+      <div class="legal-item" onclick="toggleLegal(this)">
+        <div class="legal-cb"></div>
+        <div class="legal-item-text"><strong>Register Your Business Name</strong>LLC or Sole Proprietorship — consult an attorney for what's right for your situation. Protects your personal assets.</div>
+      </div>
+      <div class="legal-item" onclick="toggleLegal(this)">
+        <div class="legal-cb"></div>
+        <div class="legal-item-text"><strong>Open a Separate Business Bank Account</strong>Never mix personal and business funds. Makes taxes cleaner and looks more professional to partners.</div>
+      </div>
+      <div class="legal-item" onclick="toggleLegal(this)">
+        <div class="legal-cb"></div>
+        <div class="legal-item-text"><strong>Set Up FTC-Compliant Disclosure Tags</strong>Use #ad, #sponsored, or #AIGenerated on all commercial content. FTC requires this — non-compliance means fines.</div>
+      </div>
+      <div class="legal-item" onclick="toggleLegal(this)">
+        <div class="legal-cb"></div>
+        <div class="legal-item-text"><strong>Read Each Platform's Terms of Service for AI Content</strong>TikTok, Instagram, YouTube, and LinkedIn each have AI content policies. Know them before you post at scale.</div>
+      </div>
+      <div class="legal-item" onclick="toggleLegal(this)">
+        <div class="legal-cb"></div>
+        <div class="legal-item-text"><strong>Purchase Music Licensing</strong>If using music, you need a license. Epidemic Sound, Musicbed, or Artlist. Unlicensed music = content takedowns.</div>
+      </div>
+      <div class="legal-item" onclick="toggleLegal(this)">
+        <div class="legal-cb"></div>
+        <div class="legal-item-text"><strong>Get a Privacy Policy for Your Website</strong>Required by law if you collect emails or use cookies. Use Termly.io, Iubenda, or hire a lawyer to draft one.</div>
+      </div>
+      <div class="legal-item" onclick="toggleLegal(this)">
+        <div class="legal-cb"></div>
+        <div class="legal-item-text"><strong>Understand DMCA — Don't Use Others' Content Without Permission</strong>Copyright law applies to your AI content too. Don't train models on others' IP or use copyrighted images.</div>
+      </div>
+      <div class="legal-item" onclick="toggleLegal(this)">
+        <div class="legal-cb"></div>
+        <div class="legal-item-text"><strong>Keep Records of AI-Generated Content</strong>For tax purposes, track which content was AI-assisted. This matters for deductions and audit readiness.</div>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <h2>Watch The Build Happen Live</h2>
+  <p style="color:var(--muted);margin-bottom:32px;font-size:1rem">Every week, Erika goes live to build, teach, and show you exactly what's working right now.</p>
+  <a href="mk-live.html" class="btn-cta">Watch The Build Happen Live →</a>
+</div>
+
+</main>
 
 <script>
-/* ══ STATE ═════════════════════════════════════ */
-var KEY='mk_journey_v1';
-var START='2026-06-10';
-var GOAL=1000000;
-var S=JSON.parse(localStorage.getItem(KEY)||'null')||{
-  ig:295,tt:0,yt:0,li:0,
-  todayGrowth:0,postsPublished:0,
-  milestones:[],lastUpdate:null
-};
-function save(){localStorage.setItem(KEY,JSON.stringify(S));}
+// Nav
+const hbg=document.getElementById('hbg');
+const mob=document.getElementById('mob-menu');
+hbg.addEventListener('click',()=>{hbg.classList.toggle('open');mob.classList.toggle('open')});
 
-/* ══ HELPERS ═══════════════════════════════════ */
-function dayNum(){return Math.max(1,Math.min(Math.floor((new Date()-new Date(START))/86400000)+1,90));}
-function daysLeft(){return Math.max(0,91-dayNum());}
-function total(){return(S.ig||0)+(S.tt||0)+(S.yt||0)+(S.li||0);}
-function fmt(n){return n>=1e6?(n/1e6).toFixed(2)+'M':n>=1000?(n/1000).toFixed(1)+'K':n.toLocaleString();}
-function el(id){return document.getElementById(id);}
-function setText(id,v){var e=el(id);if(e)e.textContent=v;}
+function toggleErikaChat(){document.getElementById('erika-chat').classList.toggle('open')}
 
-/* ══ ANIMATED COUNTER ══════════════════════════ */
-function animateCounter(elem,target,duration){
-  if(!elem)return;
-  var start=0,startTime=null;
-  function step(ts){
-    if(!startTime)startTime=ts;
-    var progress=Math.min((ts-startTime)/duration,1);
-    var ease=1-Math.pow(1-progress,4);
-    var val=Math.floor(ease*target);
-    elem.textContent=val.toLocaleString();
-    if(progress<1)requestAnimationFrame(step);
-    else elem.textContent=target.toLocaleString();
-  }
-  requestAnimationFrame(step);
-}
-
-/* ══ RENDER HERO ════════════════════════════════ */
-function renderHero(){
-  var t=total(),dn=dayNum(),dl=daysLeft();
-  var pct=(t/GOAL*100);
-  var needed=dl>0?Math.ceil((GOAL-t)/dl):0;
-  var startFmt=new Date(START+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-
-  setText('tb-day-badge','Day '+dn+'/90');
-  setText('start-date-txt',startFmt);
-  setText('days-left-txt','​'); // clear, then set below
-  var dlt=el('days-left-txt');if(dlt)dlt.innerHTML='<strong>'+dl+' days</strong> left';
-
-  // Animated counter
-  animateCounter(el('hero-count'),t,1400);
-
-  // Progress bar
-  setTimeout(function(){
-    var pf=el('prog-fill');if(pf)pf.style.width=Math.max(.04,pct)+'%';
-    setText('prog-start',fmt(t));
-    setText('prog-pct',pct.toFixed(4)+'% to 1M');
-  },200);
-
-  // Stats
-  setText('stat-total',fmt(t));
-  setText('stat-growth',(S.todayGrowth>=0?'+':'')+fmt(S.todayGrowth)+' today');
-  el('stat-growth').style.color=S.todayGrowth>0?'var(--green)':'var(--text2)';
-  setText('stat-day',String(dn));
-  setText('stat-daysleft',dl+' days left');
-  setText('stat-posts',String(S.postsPublished));
-  setText('stat-needed',fmt(needed)+'/day');
-  var onTrack=S.todayGrowth>=needed*0.5;
-  setText('stat-track',onTrack?'✅ On track':'⚠️ Building pace');
-  el('stat-track').style.color=onTrack?'var(--green)':'var(--orange)';
-
-  // Last updated
-  if(S.lastUpdate){
-    setText('last-updated','Stats last updated: '+new Date(S.lastUpdate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}));
-  }
-}
-
-/* ══ RENDER PLATFORMS ══════════════════════════ */
-function renderPlatforms(){
-  var platforms=[
-    {id:'ig',goal:500000,color:'var(--pink)',change:S.todayGrowth>0?'+'+S.todayGrowth+' today':'Primary platform'},
-    {id:'tt',goal:300000,color:'var(--cyan)',change:'Cross-posting daily'},
-    {id:'yt',goal:100000,color:'var(--red)',change:'Shorts launching'},
-    {id:'li',goal:100000,color:'var(--blue)',change:'B2B AI audience'},
-  ];
-  platforms.forEach(function(p){
-    var val=S[p.id]||0;
-    var pct=Math.min(val/p.goal*100,100);
-    setText('plat-'+p.id,val.toLocaleString());
-    setText('plat-'+p.id+'-ch',p.change);
-    setTimeout(function(){
-      var bar=el('plat-'+p.id+'-bar');
-      if(bar)bar.style.width=Math.max(pct,.3)+'%';
-    },400);
-  });
-}
-
-/* ══ RENDER TODAY'S POSTS ══════════════════════ */
-var DAY_CONTENT=[
-  [
-    {time:'7–9am',purpose:'Hook & Announce',color:'#FF2D78',hook:'"I just started a Harvard AI course and I\'m documenting everything."',desc:'Show the enrollment. Show 295 followers. State the mission: 1M in 90 days.',tags:['#Harvard','#AgenticAI','#1MillionIn60Days'],status:'scheduled'},
-    {time:'12–1pm',purpose:'Educate & Value',color:'#BF5AF2',hook:'"What even IS an AI agent? 30 seconds."',desc:'ChatGPT = one employee. AI agent = a whole department that runs itself.',tags:['#AIAgent','#AIExplained','#LearnAI'],status:'scheduled'},
-    {time:'6–9pm',purpose:'Personal & Connect',color:'#00F5FF',hook:'"I told 295 people I\'m going to 1M in 90 days. Here\'s why."',desc:'Vulnerability + strategy. Three things that make this mission different.',tags:['#CreatorJourney','#MetakittyzLife'],status:'scheduled'},
-  ],
-  [
-    {time:'7–9am',purpose:'Educate',color:'#FF2D78',hook:'"The most powerful thing about AI agents: you brief them once."',desc:'One brief flows to every agent. No repeating yourself.',tags:['#AIAgents','#Harvard','#BuildingWithAI'],status:'scheduled'},
-    {time:'12–1pm',purpose:'Build in Public',color:'#BF5AF2',hook:'"Live tour of what I\'m building with AI."',desc:'Screen record PI Agent OS. Show the orchestration pipeline.',tags:['#BuildInPublic','#PIAgentOS'],status:'scheduled'},
-    {time:'6–9pm',purpose:'Journey Update',color:'#00F5FF',hook:'"Day 2: what actually happened after I announced this."',desc:'The real numbers. What surprised me. What I\'m doing differently.',tags:['#DayUpdate','#CreatorMission'],status:'scheduled'},
-  ],
-  [
-    {time:'7–9am',purpose:'Viral Hook',color:'#FF2D78',hook:'"A pipeline is a factory floor — not a chat."',desc:'Explain AI pipelines with a simple visual analogy.',tags:['#AgenticAI','#AIExplained','#TechTok'],status:'scheduled'},
-    {time:'12–1pm',purpose:'Demo',color:'#BF5AF2',hook:'"Watch AI build a complete brand in 60 seconds."',desc:'Fast-cut demo. Drop in a company name. Watch agents run.',tags:['#AIDemo','#BuildInPublic'],status:'scheduled'},
-    {time:'6–9pm',purpose:'Real Talk',color:'#00F5FF',hook:'"What I got wrong in my first 2 days of posting."',desc:'Honest reflection. One flop. What I learned. What I\'m changing.',tags:['#Mistakes','#RealTalk'],status:'scheduled'},
-  ],
+// XP Week data
+const WEEKS=[
+  {label:'Week 1',name:'Brand Setup',xp:120,badge:'🐱',badgeName:'AI Pioneer'},
+  {label:'Week 2',name:'First Posts Live',xp:160,badge:'📱',badgeName:'Content Creator'},
+  {label:'Week 3',name:'Viral Attempt',xp:140,badge:'🔥',badgeName:'Risk Taker'},
+  {label:'Week 4',name:'Analytics Audit',xp:100,badge:'📊',badgeName:'Data Wizard'},
+  {label:'Week 5',name:'First Paid Ad',xp:160,badge:'💰',badgeName:'Growth Hacker'},
+  {label:'Week 6',name:'Collaboration',xp:140,badge:'🤝',badgeName:'Networker'},
+  {label:'Week 7',name:'Product Launch',xp:200,badge:'📦',badgeName:'Founder'},
+  {label:'Week 8',name:'Community Launch',xp:140,badge:'🏘️',badgeName:'Community Builder'},
+  {label:'Week 9',name:'AI Video Scale',xp:160,badge:'🎬',badgeName:'Video Pro'},
+  {label:'Week 10',name:'PR Campaign',xp:140,badge:'📰',badgeName:'Press Magnet'},
+  {label:'Week 11',name:'Affiliate Launch',xp:120,badge:'🔗',badgeName:'Affiliate Boss'},
+  {label:'Week 12',name:'Scale & Relaunch',xp:200,badge:'🚀',badgeName:'Scale Master'},
 ];
-function renderToday(){
-  var dn=dayNum()-1;
-  var day=DAY_CONTENT[Math.min(dn,DAY_CONTENT.length-1)];
-  var grid=el('posts-grid');if(!grid)return;
-  var now=new Date().getHours();
-  grid.innerHTML=day.map(function(p,i){
-    var postHour=[8,12,18][i];
-    var status=S.postsPublished>i?'posted':now>=postHour?'due now':'scheduled';
-    var statusColor=status==='posted'?'var(--green)':status==='due now'?'var(--gold)':'var(--text3)';
-    var statusLabel=status==='posted'?'✓ Posted':status==='due now'?'● Due now':'○ Scheduled';
-    return '<div class="post-card">'+
-      '<div class="post-top" style="background:'+p.color+'"></div>'+
-      '<div class="post-body">'+
-        '<div class="post-time" style="color:'+p.color+'">'+p.time+'</div>'+
-        '<div class="post-purpose" style="color:'+p.color+'">'+p.purpose+'</div>'+
-        '<div class="post-hook">'+p.hook+'</div>'+
-        '<div class="post-desc">'+p.desc+'</div>'+
-        '<div class="post-tags">'+p.tags.map(function(t){return'<span class="post-tag">'+t+'</span>';}).join('')+'</div>'+
-        '<div class="post-status"><div class="post-dot" style="background:'+statusColor+'"></div><span style="color:'+statusColor+'">'+statusLabel+'</span></div>'+
-      '</div>'+
-    '</div>';
-  }).join('');
+const XP_KEY='mk_journey_xp';
+function getXPData(){try{return JSON.parse(localStorage.getItem(XP_KEY)||'[]')}catch{return[]}}
+function saveXPData(d){localStorage.setItem(XP_KEY,JSON.stringify(d))}
+
+function buildWeeks(){
+  const done=getXPData();
+  const grid=document.getElementById('xp-weeks');
+  grid.innerHTML='';
+  WEEKS.forEach((w,i)=>{
+    const isDone=done.includes(i);
+    const btn=document.createElement('button');
+    btn.className='xp-week-btn'+(isDone?' done':'');
+    btn.innerHTML=`<div class="wk-label">${w.label}</div><div class="wk-name">${w.name}</div><div class="wk-xp">+${w.xp} XP</div><div class="wk-badge">${w.badge} ${w.badgeName} Earned!</div>`;
+    btn.onclick=()=>completeWeek(i);
+    grid.appendChild(btn);
+  });
+  renderXP();
 }
 
-/* ══ RENDER JOURNEY MAP ════════════════════════ */
-function renderJourneyMap(){
-  var dn=dayNum();
-  var grid=el('day-grid');if(!grid)return;
-  var html='';
-  for(var d=1;d<=90;d++){
-    var cls=d<dn?'done':d===dn?'today':'future';
-    var label='Day '+d+(d<dn?' — Done':d===dn?' — Today':'');
-    html+='<div class="day-dot '+cls+'" title="'+label+'"></div>';
-  }
-  grid.innerHTML=html;
+function completeWeek(i){
+  const done=getXPData();
+  if(done.includes(i))return;
+  done.push(i);
+  saveXPData(done);
+  buildWeeks();
+  showBadge(WEEKS[i].badge,WEEKS[i].badgeName+' Badge Unlocked!','You completed '+WEEKS[i].label+': '+WEEKS[i].name+'. +'+WEEKS[i].xp+' XP earned!');
 }
 
-/* ══ RENDER MILESTONES ═════════════════════════ */
-function renderMilestones(){
-  if(!S.milestones||!S.milestones.length)return;
-  var list=el('milestone-list');if(!list)return;
-  var dn=dayNum();
-  var items=S.milestones.map(function(m){
-    return '<div class="milestone-item">'+
-      '<div class="milestone-ico">🎉</div>'+
-      '<div>'+
-        '<div class="milestone-date">Day '+dn+' · '+new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})+'</div>'+
-        '<div class="milestone-text">'+m+'</div>'+
-        '<span class="milestone-badge" style="background:rgba(0,255,148,.1);color:var(--green);border:1px solid rgba(0,255,148,.25)">New Milestone</span>'+
-      '</div>'+
-    '</div>';
-  }).join('');
-  list.insertAdjacentHTML('afterbegin',items);
-  S.milestones=[];save();
+function renderXP(){
+  const done=getXPData();
+  const total=done.reduce((sum,i)=>sum+WEEKS[i].xp,0);
+  const maxXP=WEEKS.reduce((sum,w)=>sum+w.xp,0);
+  document.getElementById('xp-num').textContent=total;
+  document.getElementById('xp-bar').style.width=Math.round((total/maxXP)*100)+'%';
 }
 
-/* ══ ADMIN MODAL ═══════════════════════════════ */
-function openAdmin(){
-  el('m-ig').value=S.ig||'';
-  el('m-tt').value=S.tt||'';
-  el('m-yt').value=S.yt||'';
-  el('m-li').value=S.li||'';
-  el('m-growth').value=S.todayGrowth||'';
-  el('m-posts').value=S.postsPublished||'';
-  el('m-milestone').value='';
-  el('modal').classList.add('open');
+function showBadge(icon,title,desc){
+  document.getElementById('badge-icon').textContent=icon;
+  document.getElementById('badge-title').textContent=title;
+  document.getElementById('badge-desc').textContent=desc;
+  document.getElementById('badge-reveal').classList.add('show');
+  document.getElementById('badge-overlay').classList.add('show');
 }
-function closeAdmin(){el('modal').classList.remove('open');}
-function saveAdmin(){
-  var prev=total();
-  S.ig=parseInt(el('m-ig').value)||S.ig||0;
-  S.tt=parseInt(el('m-tt').value)||0;
-  S.yt=parseInt(el('m-yt').value)||0;
-  S.li=parseInt(el('m-li').value)||0;
-  S.todayGrowth=parseInt(el('m-growth').value)||0;
-  S.postsPublished=parseInt(el('m-posts').value)||0;
-  S.lastUpdate=new Date().toISOString();
-  var milestone=el('m-milestone').value.trim();
-  if(milestone){if(!S.milestones)S.milestones=[];S.milestones.push(milestone);}
-  save();closeAdmin();
-  renderHero();renderPlatforms();renderJourneyMap();renderToday();renderMilestones();
+function closeBadge(){
+  document.getElementById('badge-reveal').classList.remove('show');
+  document.getElementById('badge-overlay').classList.remove('show');
 }
 
-/* ══ SHARE ═════════════════════════════════════ */
-function shareJourney(){
-  var url=window.location.href;
-  if(navigator.share){
-    navigator.share({
-      title:'Metakittyz · The 90-Day Journey to 1M',
-      text:'Follow @metakittyz going from 295 to 1,000,000 followers in 90 days — Harvard AI student building in public!',
-      url:url
-    }).catch(function(){});
-  }else if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(function(){
-      var btn=document.querySelector('.tb-share');
-      if(btn){var orig=btn.textContent;btn.textContent='Copied!';setTimeout(function(){btn.textContent=orig;},1600);}
-    });
-  }
+// Daily tracker (resets on page load each day)
+function toggleDaily(el){el.classList.toggle('checked');el.querySelector('.daily-check').textContent=el.classList.contains('checked')?'✓':''}
+
+// Legal checklist (persists)
+const LEGAL_KEY='mk_legal_checks';
+function getLegal(){try{return JSON.parse(localStorage.getItem(LEGAL_KEY)||'[]')}catch{return[]}}
+function saveLegal(d){localStorage.setItem(LEGAL_KEY,JSON.stringify(d))}
+function toggleLegal(el){
+  const idx=Array.from(el.parentElement.children).indexOf(el);
+  const data=getLegal();
+  if(data.includes(idx)){data.splice(data.indexOf(idx),1)}else{data.push(idx)}
+  saveLegal(data);
+  renderLegal();
 }
-
-/* ══ INIT ══════════════════════════════════════ */
-renderHero();
-renderPlatforms();
-renderJourneyMap();
-renderToday();
-renderMilestones();
-
-// Refresh every minute
-setInterval(function(){renderHero();renderJourneyMap();renderToday();},60000);
-
-// IntersectionObserver for section animations
-if('IntersectionObserver' in window){
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        e.target.style.opacity='1';
-        e.target.style.transform='none';
-        obs.unobserve(e.target);
-      }
-    });
-  },{threshold:.12});
-  document.querySelectorAll('.section').forEach(function(s){
-    s.style.opacity='0';
-    s.style.transform='translateY(20px)';
-    s.style.transition='opacity .6s ease, transform .6s ease';
-    obs.observe(s);
+function renderLegal(){
+  const data=getLegal();
+  document.querySelectorAll('#legal-items .legal-item').forEach((el,i)=>{
+    const done=data.includes(i);
+    el.classList.toggle('checked',done);
+    el.querySelector('.legal-cb').textContent=done?'✓':'';
   });
 }
+
+// Init
+buildWeeks();
+renderLegal();
 </script>
 </body>
 </html>

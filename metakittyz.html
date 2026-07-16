@@ -1,912 +1,2202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Metakittyz — 0→1M Command Center</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your AI Company in 48 Hours — Metakittyz Build Guide</title>
+<meta name="description" content="A complete weekend plan for beginners. No code. No team. Just you and 6 AI agents. Build NOVA, PULSE, ARIA, REACH, SPARK, and GUARDIAN this weekend.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-:root{
-  --neon-pink:#FF2D78;
-  --neon-purple:#BF5AF2;
-  --neon-cyan:#00F5FF;
-  --neon-green:#00FF94;
-  --neon-gold:#FFD60A;
-  --neon-orange:#FF6B2B;
-  --bg:#0A0A0F;
-  --bg2:#12121A;
-  --bg3:#1A1A28;
-  --card:#1E1E2E;
-  --card2:#252538;
-  --border:rgba(255,255,255,0.08);
-  --text:#F8F8FF;
-  --text2:#94A3B8;
-  --font:'Inter',system-ui,sans-serif;
-  --grad:linear-gradient(135deg,#FF2D78,#BF5AF2,#00F5FF);
-  --grad2:linear-gradient(135deg,#FF6B2B,#FFD60A,#00FF94);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+/* ══════════════════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════════════════ */
+:root {
+  --bg:   #0A0015;
+  --bg2:  #0d001f;
+  --card: #0f0022;
+  --surf: #160030;
+  --pk:   #FF2D78;
+  --tl:   #00F5D4;
+  --pu:   #7B2FFF;
+  --gr:   #00FF41;
+  --yl:   #FFE000;
+  --or:   #FF6B35;
+  --txt:  #E8E0F0;
+  --muted:#9A90B0;
+  --dim:  #2a2040;
+  --rb:   linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);
 
-/* ── Animated background ── */
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;
-  background:radial-gradient(ellipse 80% 50% at 20% 20%,rgba(191,90,242,0.08) 0%,transparent 60%),
-             radial-gradient(ellipse 60% 40% at 80% 80%,rgba(255,45,120,0.08) 0%,transparent 60%),
-             radial-gradient(ellipse 40% 60% at 50% 50%,rgba(0,245,255,0.04) 0%,transparent 70%);
-  pointer-events:none;
+  --font-d: 'Bebas Neue', 'Impact', 'Arial Black', sans-serif;
+  --font-b: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-m: 'Space Mono', 'Courier New', monospace;
+
+  --r:   12px;
+  --r2:  20px;
+  --max: 860px;   /* guide pages read better narrow */
 }
 
-/* ── Layout ── */
-.page{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:20px 16px 60px}
+/* ══════════════════════════════════════════════════════
+   RESET
+══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--font-b);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+a { color: var(--tl); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; display: block; }
 
-/* ── Header ── */
-.hdr{text-align:center;padding:40px 0 32px;position:relative}
-.hdr-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(191,90,242,0.15);border:1px solid rgba(191,90,242,0.3);border-radius:100px;padding:6px 16px;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--neon-purple);margin-bottom:16px}
-.hdr h1{font-size:clamp(2rem,6vw,3.5rem);font-weight:900;letter-spacing:-0.03em;line-height:1.05;margin-bottom:8px}
-.hdr h1 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hdr-sub{font-size:1rem;color:var(--text2);max-width:560px;margin:0 auto 24px}
-.mission-badge{display:inline-block;background:linear-gradient(135deg,rgba(255,45,120,0.2),rgba(191,90,242,0.2));border:1px solid rgba(255,45,120,0.4);border-radius:12px;padding:10px 24px;font-size:0.85rem;font-weight:700;color:#FF2D78}
+/* ══════════════════════════════════════════════════════
+   RAINBOW BAR
+══════════════════════════════════════════════════════ */
+.rb-bar {
+  height: 4px;
+  background: var(--rb);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+@keyframes shimmer { to { background-position: 200% 0; } }
 
-/* ── Section title ── */
-.sec-title{font-size:0.68rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--neon-purple);margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+/* ══════════════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════════════ */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 58px;
+  background: rgba(10,0,21,0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255,45,120,0.14);
+}
+.nav-brand {
+  font-family: var(--font-d);
+  font-size: 22px;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  text-decoration: none;
+  color: var(--txt);
+}
+.nav-brand span {
+  background: var(--rb);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.nav-links a {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  padding: 6px 9px;
+  border-radius: 6px;
+  transition: color 0.18s, background 0.18s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.nav-links a:hover,
+.nav-links a[aria-current="page"] { color: var(--txt); background: rgba(255,45,120,0.11); }
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--dim);
+  color: var(--txt);
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+}
 
-/* ── Grid layouts ── */
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:28px}
-.grid-main{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:28px}
-@media(max-width:900px){.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr}.grid-main{grid-template-columns:1fr}}
-@media(max-width:600px){.grid-4{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}}
+/* ══════════════════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════════════════ */
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.wrap--wide { max-width: 1100px; }
 
-/* ── Cards ── */
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
-.card-glow-pink{box-shadow:0 0 0 1px rgba(255,45,120,0.2),0 8px 32px rgba(255,45,120,0.08)}
-.card-glow-purple{box-shadow:0 0 0 1px rgba(191,90,242,0.2),0 8px 32px rgba(191,90,242,0.08)}
-.card-glow-cyan{box-shadow:0 0 0 1px rgba(0,245,255,0.2),0 8px 32px rgba(0,245,255,0.08)}
-.card-glow-green{box-shadow:0 0 0 1px rgba(0,255,148,0.2),0 8px 32px rgba(0,255,148,0.08)}
+.section { padding: 80px 0; }
+.section--alt {
+  background: var(--bg2);
+  border-top: 1px solid var(--dim);
+  border-bottom: 1px solid var(--dim);
+}
 
-/* ── Metric cards ── */
-.metric{text-align:center;padding:24px 16px}
-.metric-icon{font-size:1.8rem;margin-bottom:8px}
-.metric-val{font-size:2rem;font-weight:900;letter-spacing:-0.03em;line-height:1}
-.metric-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);margin-top:6px}
-.metric-sub{font-size:0.75rem;color:var(--text2);margin-top:4px}
+.eyebrow {
+  font-family: var(--font-m);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--pk);
+  margin-bottom: 14px;
+}
+.h1 {
+  font-family: var(--font-d);
+  font-size: clamp(44px, 7vw, 88px);
+  line-height: 0.97;
+  text-wrap: balance;
+  margin-bottom: 18px;
+}
+.h2 {
+  font-family: var(--font-d);
+  font-size: clamp(32px, 4.5vw, 56px);
+  line-height: 1.04;
+  text-wrap: balance;
+  margin-bottom: 14px;
+}
+.h3 {
+  font-family: var(--font-d);
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.lead {
+  font-size: 18px;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 62ch;
+}
 
-/* ── Progress bar ── */
-.prog-wrap{margin:20px 0}
-.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.8rem}
-.prog-label{font-weight:700;color:var(--text)}
-.prog-pct{font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.prog-track{height:10px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
-.prog-fill{height:100%;border-radius:100px;background:var(--grad);transition:width 1s ease}
-.prog-milestones{display:flex;justify-content:space-between;margin-top:6px;font-size:0.65rem;color:var(--text2)}
+/* Gradient text */
+.gt {
+  background: var(--rb);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
-/* ── Day tracker ── */
-.day-track{display:flex;flex-wrap:wrap;gap:4px;margin-top:16px}
-.day-dot{width:18px;height:18px;border-radius:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:all 0.2s;position:relative}
-.day-dot.done{background:var(--neon-green);border-color:var(--neon-green);box-shadow:0 0 8px rgba(0,255,148,0.4)}
-.day-dot.today{background:var(--neon-pink);border-color:var(--neon-pink);box-shadow:0 0 10px rgba(255,45,120,0.5);animation:pulse-dot 1.5s ease-in-out infinite}
-.day-dot.upcoming{background:rgba(191,90,242,0.15);border-color:rgba(191,90,242,0.3)}
-@keyframes pulse-dot{0%,100%{box-shadow:0 0 10px rgba(255,45,120,0.5)}50%{box-shadow:0 0 20px rgba(255,45,120,0.8)}}
-.day-dot-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.72rem;color:var(--text2)}
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-b);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  text-decoration: none;
+}
+.btn:hover { transform: translateY(-2px); text-decoration: none; }
+.btn-pk  { background: var(--pk);  color: #fff; }
+.btn-pk:hover  { box-shadow: 0 6px 28px rgba(255,45,120,0.42); }
+.btn-tl  { background: var(--tl);  color: #000; }
+.btn-tl:hover  { box-shadow: 0 6px 28px rgba(0,245,212,0.42); }
+.btn-yl  { background: var(--yl);  color: #000; }
+.btn-ghost { background: transparent; color: var(--txt); border: 1px solid var(--dim); }
+.btn-ghost:hover { border-color: var(--tl); background: rgba(0,245,212,0.07); }
 
-/* ── Follower input ── */
-.follower-input-wrap{display:flex;gap:10px;margin-top:16px}
-.follower-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.9rem;font-family:var(--font);outline:none}
-.follower-input:focus{border-color:var(--neon-pink)}
-.update-btn{background:var(--grad);border:none;border-radius:10px;padding:10px 18px;color:#fff;font-weight:800;font-size:0.82rem;cursor:pointer;white-space:nowrap;font-family:var(--font)}
+/* ══════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════ */
+.guide-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 80px 24px 72px;
+  text-align: center;
+}
+.guide-hero::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(123,47,255,0.22) 0%, transparent 70%);
+  filter: blur(80px);
+  top: -120px; left: -100px;
+  pointer-events: none;
+}
+.guide-hero::after {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,45,120,0.18) 0%, transparent 70%);
+  filter: blur(80px);
+  bottom: -80px; right: -80px;
+  pointer-events: none;
+}
+.guide-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+.guide-badge {
+  display: inline-block;
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: rgba(255,45,120,0.12);
+  border: 1px solid rgba(255,45,120,0.35);
+  color: var(--pk);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+.guide-hero-sub {
+  font-size: 18px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 20px;
+  max-width: 56ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 32px;
+}
+.hchip {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid var(--dim);
+  color: var(--muted);
+}
 
-/* ── Content calendar ── */
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}
-.cal-head{text-align:center;font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);padding:6px 0}
-.cal-day{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:8px 6px;min-height:80px;cursor:pointer;transition:all 0.2s;position:relative}
-.cal-day:hover{background:rgba(191,90,242,0.1);border-color:rgba(191,90,242,0.3)}
-.cal-day.today-cal{border-color:var(--neon-pink);background:rgba(255,45,120,0.08)}
-.cal-day.done-cal{background:rgba(0,255,148,0.06);border-color:rgba(0,255,148,0.2)}
-.cal-num{font-size:0.7rem;font-weight:800;color:var(--text2);margin-bottom:4px}
-.cal-tag{font-size:0.6rem;font-weight:700;border-radius:4px;padding:2px 5px;display:inline-block;margin-bottom:3px;white-space:nowrap}
-.cal-title{font-size:0.62rem;color:var(--text2);line-height:1.3}
-@media(max-width:700px){.cal-grid{grid-template-columns:repeat(7,1fr)}.cal-title{display:none}.cal-day{min-height:52px}}
+/* ══════════════════════════════════════════════════════
+   CHECKLIST
+══════════════════════════════════════════════════════ */
+.checklist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+}
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.check-icon {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: rgba(0,255,65,0.15);
+  border: 1px solid rgba(0,255,65,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  margin-top: 1px;
+  color: var(--gr);
+}
 
-/* ── Content pillars ── */
-.pillar{display:flex;align-items:flex-start;gap:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;transition:all 0.2s}
-.pillar:hover{background:rgba(191,90,242,0.06);border-color:rgba(191,90,242,0.2)}
-.pillar-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
-.pillar-body{}
-.pillar-name{font-size:0.85rem;font-weight:800;margin-bottom:3px}
-.pillar-desc{font-size:0.75rem;color:var(--text2);line-height:1.5}
-.pillar-pct{font-size:0.68rem;font-weight:700;margin-top:6px}
+/* ══════════════════════════════════════════════════════
+   TOOLS GRID
+══════════════════════════════════════════════════════ */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 32px;
+}
+.tool-card {
+  background: var(--card);
+  border: 1px solid var(--dim);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.tool-card:hover { border-color: rgba(0,245,212,0.35); transform: translateY(-2px); }
+.tool-emoji { font-size: 26px; flex-shrink: 0; }
+.tool-name { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+.tool-note { font-size: 12px; color: var(--muted); }
+.tool-free {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--gr);
+  text-transform: uppercase;
+  border: 1px solid rgba(0,255,65,0.3);
+  background: rgba(0,255,65,0.08);
+  border-radius: 20px;
+  padding: 2px 8px;
+  display: inline-block;
+  margin-top: 5px;
+}
 
-/* ── Time slots ── */
-.time-slot{display:flex;align-items:center;gap:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
-.time-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.time-val{font-weight:800;font-size:0.9rem;min-width:56px}
-.time-desc{font-size:0.78rem;color:var(--text2)}
-.time-badge{margin-left:auto;font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:6px}
+/* ══════════════════════════════════════════════════════
+   DAY DIVIDER
+══════════════════════════════════════════════════════ */
+.day-divider {
+  background: var(--surf);
+  border: 1px solid var(--dim);
+  border-radius: var(--r2);
+  padding: 28px 32px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.day-icon { font-size: 40px; flex-shrink: 0; }
+.day-label {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.day-title { font-family: var(--font-d); font-size: clamp(26px, 4vw, 42px); }
+.day-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
 
-/* ── Phase cards ── */
-.phase{border-radius:14px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
-.phase::before{content:'';position:absolute;inset:0;opacity:0.06;background:var(--phase-col)}
-.phase-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.phase-num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9rem;background:var(--phase-col);color:#000;flex-shrink:0}
-.phase-title{font-size:1rem;font-weight:800}
-.phase-days{font-size:0.72rem;color:var(--text2);margin-top:2px}
-.phase-goal{font-size:0.8rem;font-weight:700;margin-bottom:10px}
-.phase-tasks{list-style:none;display:flex;flex-direction:column;gap:6px}
-.phase-tasks li{font-size:0.78rem;color:var(--text2);display:flex;gap:8px;line-height:1.4}
-.phase-tasks li::before{content:'→';color:var(--neon-purple);flex-shrink:0}
+/* ══════════════════════════════════════════════════════
+   STEP CARDS
+══════════════════════════════════════════════════════ */
+.steps-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 8px;
+}
 
-/* ── Competitor watch ── */
-.comp-row{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
-.comp-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.comp-name{font-weight:700;font-size:0.85rem}
-.comp-handle{font-size:0.7rem;color:var(--text2)}
-.comp-followers{margin-left:auto;text-align:right}
-.comp-f-num{font-size:0.85rem;font-weight:800}
-.comp-f-label{font-size:0.65rem;color:var(--text2)}
-.comp-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
-.tag{font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:100px}
+.step {
+  background: var(--card);
+  border: 1px solid var(--dim);
+  border-radius: var(--r2);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.step:hover { border-color: rgba(255,255,255,0.12); }
 
-/* ── Checklist ── */
-.check-item{display:flex;align-items:flex-start;gap:12px;padding:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s}
-.check-item:last-child{border-bottom:none}
-.check-item:hover{background:rgba(255,255,255,0.02)}
-.check-box{width:20px;height:20px;border-radius:5px;border:2px solid rgba(255,255,255,0.2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
-.check-item.checked .check-box{background:var(--neon-green);border-color:var(--neon-green)}
-.check-item.checked .check-box::after{content:'✓';font-size:0.7rem;font-weight:900;color:#000}
-.check-item.checked .check-text{text-decoration:line-through;color:var(--text2)}
-.check-text{font-size:0.82rem;line-height:1.4}
-.check-priority{font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:6px;margin-left:auto;flex-shrink:0}
+.step-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 24px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.step-badge {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-d);
+  font-size: 22px;
+  color: #fff;
+}
+.step-meta { flex: 1; }
+.step-num-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.step-title {
+  font-family: var(--font-d);
+  font-size: clamp(20px, 3vw, 26px);
+  line-height: 1.1;
+  margin-bottom: 5px;
+}
+.step-time {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--tl);
+}
 
-/* ── Brand audit ── */
-.audit-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
-.audit-label{font-size:0.78rem;font-weight:700;min-width:140px}
-.audit-track{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
-.audit-fill{height:100%;border-radius:100px;transition:width 1s ease}
-.audit-score{font-size:0.82rem;font-weight:800;min-width:32px;text-align:right}
+.step-body { padding: 24px 28px; }
+.step-body > * + * { margin-top: 16px; }
 
-/* ── Platform tabs ── */
-.tab-bar{display:flex;gap:6px;margin-bottom:20px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:6px}
-.tab{padding:8px 16px;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.2s;border:none;background:none;color:var(--text2);font-family:var(--font)}
-.tab.active{background:var(--grad);color:#fff}
+.what-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.step-body p { font-size: 15px; line-height: 1.72; color: var(--txt); }
 
-/* ── Hook formulas ── */
-.hook-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
-.hook-formula{font-size:0.82rem;font-weight:700;color:var(--neon-cyan);margin-bottom:6px;font-family:monospace}
-.hook-example{font-size:0.78rem;color:var(--text2);font-style:italic;line-height:1.5}
+/* ══════════════════════════════════════════════════════
+   PRO TIPS & CALLOUTS
+══════════════════════════════════════════════════════ */
+.tip-box {
+  background: rgba(0,245,212,0.06);
+  border: 1px solid rgba(0,245,212,0.25);
+  border-radius: var(--r);
+  padding: 16px 20px;
+}
+.tip-box-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--tl);
+  margin-bottom: 6px;
+}
+.tip-box p { font-size: 14px; color: var(--muted); }
 
-/* ── Alert ── */
-.alert{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:12px;margin-bottom:14px;font-size:0.82rem;line-height:1.5}
-.alert-warn{background:rgba(255,214,10,0.08);border:1px solid rgba(255,214,10,0.25);color:var(--neon-gold)}
-.alert-success{background:rgba(0,255,148,0.08);border:1px solid rgba(0,255,148,0.25);color:var(--neon-green)}
-.alert-info{background:rgba(0,245,255,0.08);border:1px solid rgba(0,245,255,0.25);color:var(--neon-cyan)}
-.alert-danger{background:rgba(255,45,120,0.08);border:1px solid rgba(255,45,120,0.25);color:var(--neon-pink)}
-.alert-ico{font-size:1.1rem;flex-shrink:0}
+.cheer-box {
+  background: rgba(255,45,120,0.08);
+  border: 1px solid rgba(255,45,120,0.25);
+  border-radius: var(--r);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cheer-box span { font-size: 22px; }
+.cheer-box p { font-size: 14px; font-weight: 600; color: var(--txt); }
 
-/* ── Stat bar ── */
-.stat-bars{display:flex;flex-direction:column;gap:10px}
-.stat-bar-row{display:flex;align-items:center;gap:12px}
-.stat-bar-label{font-size:0.72rem;color:var(--text2);min-width:80px}
-.stat-bar-track{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
-.stat-bar-fill{height:100%;border-radius:100px}
-.stat-bar-val{font-size:0.72rem;font-weight:700;min-width:36px;text-align:right}
+.warn-box {
+  background: rgba(255,107,53,0.08);
+  border: 1px solid rgba(255,107,53,0.25);
+  border-radius: var(--r);
+  padding: 14px 20px;
+}
+.warn-box-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--or);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.warn-box p { font-size: 14px; color: var(--muted); }
 
-/* ── Today's plan ── */
-.today-post{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden}
-.today-post::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--post-col)}
-.post-time{font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);margin-bottom:4px}
-.post-hook{font-size:0.88rem;font-weight:800;margin-bottom:6px;color:var(--text)}
-.post-body{font-size:0.76rem;color:var(--text2);line-height:1.5;margin-bottom:8px}
-.post-tags{display:flex;flex-wrap:wrap;gap:4px}
-.post-tag{font-size:0.62rem;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(191,90,242,0.15);color:var(--neon-purple)}
+/* ══════════════════════════════════════════════════════
+   CODE BLOCKS (System Prompts)
+══════════════════════════════════════════════════════ */
+.prompt-block {
+  background: var(--card);
+  border: 1px solid var(--dim);
+  border-radius: var(--r2);
+  overflow: hidden;
+  margin-top: 20px;
+}
+.prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--dim);
+}
+.prompt-agent-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.prompt-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.prompt-label {
+  font-family: var(--font-m);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.copy-btn {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 5px 12px;
+  border: 1px solid var(--dim);
+  border-radius: 6px;
+  background: var(--surf);
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.copy-btn:hover { border-color: var(--tl); color: var(--tl); }
+.copy-btn.copied { border-color: var(--gr); color: var(--gr); }
 
-/* ── Navbar ── */
-.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:16px}
-.nav-brand{font-weight:900;font-size:1.1rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex-shrink:0}
-.nav-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.nav-link{padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:700;color:var(--text2);cursor:pointer;text-decoration:none;white-space:nowrap;transition:all 0.2s}
-.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.06)}
-.nav-link.active-link{color:var(--neon-pink)}
-.nav-day{margin-left:auto;font-size:0.75rem;font-weight:800;color:var(--neon-green);flex-shrink:0}
+.prompt-code {
+  display: block;
+  padding: 22px 24px;
+  font-family: var(--font-m);
+  font-size: 12px;
+  line-height: 1.75;
+  color: #c9e0f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+  max-height: 480px;
+  overflow-y: auto;
+}
+/* Custom scrollbar for code blocks */
+.prompt-code::-webkit-scrollbar { width: 6px; height: 6px; }
+.prompt-code::-webkit-scrollbar-track { background: transparent; }
+.prompt-code::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 3px; }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(191,90,242,0.3);border-radius:3px}
+/* Syntax-lite highlights */
+.kw  { color: var(--pk); }     /* keywords, caps labels */
+.str { color: var(--tl); }     /* strings, values */
+.cm  { color: var(--muted); }  /* comments */
+
+/* ══════════════════════════════════════════════════════
+   AGENT PROMPT SECTION HEADERS
+══════════════════════════════════════════════════════ */
+.agent-section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.agent-sec-emoji { font-size: 32px; }
+.agent-sec-name {
+  font-family: var(--font-d);
+  font-size: 32px;
+  letter-spacing: 2px;
+}
+.agent-sec-role { font-size: 14px; color: var(--muted); margin-top: 2px; }
+
+/* ══════════════════════════════════════════════════════
+   DAILY ROUTINE
+══════════════════════════════════════════════════════ */
+.routine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 32px;
+}
+.routine-card {
+  background: var(--card);
+  border: 1px solid var(--dim);
+  border-radius: var(--r);
+  padding: 22px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.routine-card:hover { transform: translateY(-3px); }
+.routine-card:nth-child(1) { border-top: 3px solid var(--pk); }
+.routine-card:nth-child(2) { border-top: 3px solid var(--tl); }
+.routine-card:nth-child(3) { border-top: 3px solid var(--pu); }
+.routine-card:nth-child(4) { border-top: 3px solid var(--yl); }
+.routine-card:nth-child(5) { border-top: 3px solid var(--gr); }
+
+.routine-time {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.routine-mins {
+  font-family: var(--font-d);
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.routine-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.routine-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ══════════════════════════════════════════════════════
+   GLOSSARY
+══════════════════════════════════════════════════════ */
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+.gloss-item {
+  background: var(--card);
+  border: 1px solid var(--dim);
+  border-radius: var(--r);
+  padding: 16px 18px;
+}
+.gloss-term {
+  font-family: var(--font-m);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--tl);
+  margin-bottom: 6px;
+}
+.gloss-def { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+/* ══════════════════════════════════════════════════════
+   LEGAL CHECKLIST
+══════════════════════════════════════════════════════ */
+.legal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+.legal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--dim);
+  border-radius: var(--r);
+  padding: 14px 18px;
+}
+.legal-check {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border-radius: 4px;
+  border: 1px solid var(--dim);
+  background: var(--surf);
+  cursor: pointer;
+  accent-color: var(--pk);
+  margin-top: 2px;
+}
+.legal-text { font-size: 14px; line-height: 1.6; }
+.legal-text strong { color: var(--txt); font-weight: 600; }
+.legal-text span  { color: var(--muted); }
+
+/* ══════════════════════════════════════════════════════
+   DOWNLOAD SECTION
+══════════════════════════════════════════════════════ */
+.dl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+.dl-card {
+  background: var(--card);
+  border: 1px solid var(--dim);
+  border-radius: var(--r2);
+  padding: 26px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.dl-card:hover { transform: translateY(-3px); border-color: rgba(255,45,120,0.3); }
+.dl-icon { font-size: 40px; margin-bottom: 14px; }
+.dl-title { font-family: var(--font-d); font-size: 22px; margin-bottom: 8px; }
+.dl-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.65; }
+
+/* ══════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════ */
+.footer {
+  background: var(--bg);
+  border-top: 1px solid var(--dim);
+  padding: 28px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-d);
+  font-size: 18px;
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+}
+.footer-copy { font-family: var(--font-m); font-size: 10px; color: var(--muted); }
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .section { padding: 56px 0; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 58px; left: 0; right: 0;
+    flex-direction: column;
+    background: rgba(10,0,21,0.97);
+    border-bottom: 1px solid var(--dim);
+    padding: 14px;
+    gap: 3px;
+    z-index: 199;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { font-size: 12px; padding: 9px 12px; }
+  .nav-toggle { display: block; }
+
+  .step-head { flex-direction: column; gap: 12px; }
+  .day-divider { flex-direction: column; gap: 12px; text-align: center; }
+  .prompt-code { font-size: 11px; }
+}
+
+@media (max-width: 500px) {
+  .step-body { padding: 18px; }
+  .step-head { padding: 18px; }
+}
+
+/* ══════════════════════════════════════════════════════
+   REDUCED MOTION
+══════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav-brand">🐱 Metakittyz</div>
-  <div class="nav-links">
-    <a class="nav-link active-link" href="#mission">Mission</a>
-    <a class="nav-link" href="#today">Today</a>
-    <a class="nav-link" href="#calendar">Calendar</a>
-    <a class="nav-link" href="#strategy">Strategy</a>
-    <a class="nav-link" href="#pillars">Pillars</a>
-    <a class="nav-link" href="#competitors">Intel</a>
-    <a class="nav-link" href="#hooks">Hooks</a>
-    <a class="nav-link" href="#brand">Brand</a>
+<div class="rb-bar"></div>
+
+<nav class="topnav">
+  <a href="index.html" class="nav-brand">🐱 <span>METAKITTYZ</span></a>
+  <div class="nav-links" id="navLinks">
+    <a href="index.html">🏠 Home</a>
+    <a href="mk-team.html">👥 AI Team</a>
+    <a href="mk-command.html">⚡ Command</a>
+    <a href="mk-content.html">📱 Content OS</a>
+    <a href="mk-engage.html">✨ Prompts</a>
+    <a href="mk-journey.html">🗺️ 90-Day Plan</a>
+    <a href="mk-live.html">📺 Live</a>
+    <a href="metakittyz.html" aria-current="page">📖 Build Guide</a>
   </div>
-  <div class="nav-day" id="nav-day">Day — / 90</div>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
 </nav>
 
-<div class="page">
-
-<!-- HEADER -->
-<div class="hdr" id="mission">
-  <div class="hdr-badge">🚀 0 → 1,000,000 Followers in 90 Days</div>
-  <h1><span>Metakittyz</span><br>Command Center</h1>
-  <p class="hdr-sub">AI-powered content strategy for @metakittyz — Harvard Agentic AI Intensive meets the most colorful creator in tech.</p>
-  <div class="mission-badge">Mission: 1,000,000 followers · 90 days · No shortcuts — just systems.</div>
-</div>
-
-<!-- ALERT -->
-<div class="alert alert-success">
-  <div class="alert-ico">🟢</div>
-  <div><strong>Day 1 — Journey Begins.</strong> You just posted your first video about the journey. That's the hardest day done. Everything from here is momentum. Update your follower count daily to track progress.</div>
-</div>
-
-<!-- MISSION METRICS -->
-<div class="sec-title">📊 Mission Control</div>
-<div class="grid-4" style="margin-bottom:20px">
-  <div class="card metric card-glow-pink">
-    <div class="metric-icon">👥</div>
-    <div class="metric-val" id="current-followers" style="color:var(--neon-pink)">295</div>
-    <div class="metric-label">Current Followers</div>
-    <div class="metric-sub">@metakittyz</div>
-  </div>
-  <div class="card metric card-glow-purple">
-    <div class="metric-icon">🎯</div>
-    <div class="metric-val" style="color:var(--neon-purple)">1,000,000</div>
-    <div class="metric-label">Goal</div>
-    <div class="metric-sub">90-day target</div>
-  </div>
-  <div class="card metric card-glow-cyan">
-    <div class="metric-icon">📅</div>
-    <div class="metric-val" id="days-remaining" style="color:var(--neon-cyan)">60</div>
-    <div class="metric-label">Days Left</div>
-    <div class="metric-sub" id="start-date-label">Started today</div>
-  </div>
-  <div class="card metric card-glow-green">
-    <div class="metric-icon">⚡</div>
-    <div class="metric-val" id="needed-per-day" style="color:var(--neon-green)">16,618</div>
-    <div class="metric-label">Followers / Day</div>
-    <div class="metric-sub">Needed to hit goal</div>
-  </div>
-</div>
-
-<!-- PROGRESS -->
-<div class="card" style="margin-bottom:28px">
-  <div class="sec-title">📈 Progress Tracker</div>
-  <div class="follower-input-wrap">
-    <input class="follower-input" id="follower-input" type="number" placeholder="Enter today's follower count…" min="0"/>
-    <button class="update-btn" onclick="updateFollowers()">Update Count</button>
-  </div>
-  <div class="prog-wrap">
-    <div class="prog-top">
-      <span class="prog-label">Journey to 1 Million</span>
-      <span class="prog-pct" id="prog-pct">0.03%</span>
-    </div>
-    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0.03%"></div></div>
-    <div class="prog-milestones">
-      <span>0</span><span>10K</span><span>50K</span><span>100K</span><span>500K</span><span>1M 🎯</span>
+<!-- ════════════════════════════════════════════════════
+     1. PAGE HERO
+════════════════════════════════════════════════════ -->
+<section class="guide-hero">
+  <div class="guide-hero-inner">
+    <div class="guide-badge">📖 The Weekend Build Guide</div>
+    <h1 class="h1">Build Your AI Company<br><span class="gt">in 48 Hours</span></h1>
+    <p class="guide-hero-sub">A complete weekend plan for beginners. No code. No team. Just you and 6 AI agents — built and running by Sunday night.</p>
+    <div class="hero-chips">
+      <span class="hchip">No Coding Required</span>
+      <span class="hchip">48 Hours Total</span>
+      <span class="hchip">6 AI Agents</span>
+      <span class="hchip">Free Tools Available</span>
     </div>
   </div>
-  <div>
-    <div class="day-dot-label"><span>90-Day Journey</span><span id="days-done-label">0 / 90 days complete</span></div>
-    <div class="day-track" id="day-dots"></div>
-  </div>
-</div>
+</section>
 
-<!-- TODAY'S PLAN -->
-<div class="sec-title" id="today">🎬 Today's Content Plan</div>
-<div class="alert alert-info">
-  <div class="alert-ico">💡</div>
-  <div><strong>Day 1 Strategy:</strong> You already posted the journey announcement. Your job now is to engage every single comment within the first hour, repost it to your Stories with a poll ("Should I really try this?"), and pin it to your profile top.</div>
-</div>
+<!-- ════════════════════════════════════════════════════
+     2. WHAT YOU'LL HAVE
+════════════════════════════════════════════════════ -->
+<section class="section section--alt">
+  <div class="wrap">
+    <p class="eyebrow">What You're Building</p>
+    <h2 class="h2">After This Weekend, You'll Have:</h2>
 
-<div class="grid-3" style="margin-bottom:28px">
-  <div class="today-post" style="--post-col:var(--neon-pink)">
-    <div class="post-time">🌅 7–9am · Morning Post</div>
-    <div class="post-hook">"I just enrolled in Harvard's AI course and I'm documenting everything — starting now."</div>
-    <div class="post-body">Introduce the 90-day challenge publicly. Show the Harvard enrollment screen. Tell them exactly what they're going to learn watching your journey. ✅ Already posted — now pin it & engage every comment.</div>
-    <div class="post-tags"><span class="post-tag">#AgenticAI</span><span class="post-tag">#Harvard</span><span class="post-tag">#AIJourney</span></div>
-  </div>
-  <div class="today-post" style="--post-col:var(--neon-purple)">
-    <div class="post-time">☀️ 12–1pm · Midday Post</div>
-    <div class="post-hook">"What even IS an AI agent? Let me explain it in 30 seconds."</div>
-    <div class="post-body">Simple explainer reel. Use one analogy: "ChatGPT is one employee. An AI agent is a whole department that runs itself." Show the PI Agent OS pipeline screen for 2 seconds at the end. Tease tomorrow.</div>
-    <div class="post-tags"><span class="post-tag">#WhatIsAI</span><span class="post-tag">#AIExplained</span><span class="post-tag">#LearnWithMe</span></div>
-  </div>
-  <div class="today-post" style="--post-col:var(--neon-cyan)">
-    <div class="post-time">🌙 6–9pm · Evening Post</div>
-    <div class="post-hook">"I told 295 people I'm going to 1 million in 90 days. Here's why I actually think it's possible."</div>
-    <div class="post-body">Vulnerability + strategy post. Show your face, be real. Explain the 3 things that make this mission different: Harvard credibility, PI Agent OS as live proof, and you documenting everything — mistakes included.</div>
-    <div class="post-tags"><span class="post-tag">#CreatorJourney</span><span class="post-tag">#1MillionIn60Days</span><span class="post-tag">#Metakittyz</span></div>
-  </div>
-</div>
+    <ul class="checklist">
+      <li><span class="check-icon">✓</span> 6 configured AI agents ready to work for your brand</li>
+      <li><span class="check-icon">✓</span> Your brand kit locked in — name, niche, audience, and voice</li>
+      <li><span class="check-icon">✓</span> 30 pieces of content written and ready to post</li>
+      <li><span class="check-icon">✓</span> Your content calendar set up and loaded</li>
+      <li><span class="check-icon">✓</span> Automated distribution pipeline running</li>
+      <li><span class="check-icon">✓</span> Your first ad campaign built and ready to launch</li>
+    </ul>
 
-<!-- 90-DAY CALENDAR -->
-<div class="sec-title" id="calendar">📅 90-Day Content Calendar</div>
-<div class="card" style="margin-bottom:28px;padding:24px">
-  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:0.72rem">
-    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(255,45,120,0.6);border-radius:3px;margin-right:4px"></span>Harvard / AI Fundamentals</span>
-    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(191,90,242,0.6);border-radius:3px;margin-right:4px"></span>Build in Public</span>
-    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(0,245,255,0.6);border-radius:3px;margin-right:4px"></span>Journey / Meta</span>
-    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(0,255,148,0.6);border-radius:3px;margin-right:4px"></span>Collab / Trend</span>
-    <span><span style="display:inline-block;width:12px;height:12px;background:rgba(255,214,10,0.6);border-radius:3px;margin-right:4px"></span>Viral / Hook Day</span>
+    <div class="tip-box" style="margin-top:28px">
+      <div class="tip-box-label">💡 Pro Tip</div>
+      <p>Block your calendar this weekend. Turn off Netflix. Put your phone on Do Not Disturb. You're building a business — give it 48 focused hours and you'll have something real when Monday hits.</p>
+    </div>
   </div>
-  <div class="cal-grid">
-    <div class="cal-head">MON</div><div class="cal-head">TUE</div><div class="cal-head">WED</div>
-    <div class="cal-head">THU</div><div class="cal-head">FRI</div><div class="cal-head">SAT</div><div class="cal-head">SUN</div>
-  </div>
-  <div class="cal-grid" id="cal-body"></div>
-</div>
+</section>
 
-<!-- STRATEGY PHASES -->
-<div class="sec-title" id="strategy">🗺️ 90-Day Battle Plan</div>
-<div style="margin-bottom:28px">
+<!-- ════════════════════════════════════════════════════
+     3. TOOLS YOU'LL NEED
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <p class="eyebrow">Before You Start</p>
+    <h2 class="h2">Your Toolkit</h2>
+    <p class="lead">Every tool below has a free tier — you can build your entire AI company without spending a dollar to start.</p>
 
-  <div class="phase" style="--phase-col:#FF2D78;border:1px solid rgba(255,45,120,0.25);background:rgba(255,45,120,0.04)">
-    <div class="phase-header">
-      <div class="phase-num" style="background:#FF2D78">1</div>
-      <div>
-        <div class="phase-title">Foundation & Spark — Days 1–10</div>
-        <div class="phase-days">Target: 0 → 5,000 followers · 3 posts/day</div>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-emoji">🧠</div>
+        <div>
+          <div class="tool-name">Claude.ai</div>
+          <div class="tool-note">AI writing, strategy &amp; system prompts — your main brain</div>
+          <div class="tool-free">Free Tier</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-emoji">🤖</div>
+        <div>
+          <div class="tool-name">ChatGPT</div>
+          <div class="tool-note">Content generation backup &amp; brainstorming</div>
+          <div class="tool-free">Free Tier</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-emoji">🎨</div>
+        <div>
+          <div class="tool-name">Midjourney</div>
+          <div class="tool-note">AI image creation for your avatar &amp; visuals</div>
+          <div class="tool-free">Trial Available</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-emoji">🎬</div>
+        <div>
+          <div class="tool-name">Higgsfield AI</div>
+          <div class="tool-note">AI video generation for your content</div>
+          <div class="tool-free">Free Tier</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-emoji">🎙️</div>
+        <div>
+          <div class="tool-name">ElevenLabs</div>
+          <div class="tool-note">AI voiceover for your videos</div>
+          <div class="tool-free">Free Tier</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-emoji">🖼️</div>
+        <div>
+          <div class="tool-name">Canva</div>
+          <div class="tool-note">Design templates for posts, thumbnails &amp; ads</div>
+          <div class="tool-free">Free Tier</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-emoji">📅</div>
+        <div>
+          <div class="tool-name">Buffer or Later</div>
+          <div class="tool-note">Scheduling &amp; automation for all platforms</div>
+          <div class="tool-free">Free Tier</div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-emoji">📱</div>
+        <div>
+          <div class="tool-name">Your Phone</div>
+          <div class="tool-note">Filming UGC-style authentic content</div>
+          <div class="tool-free">You Already Have It</div>
+        </div>
       </div>
     </div>
-    <div class="phase-goal" style="color:#FF2D78">Goal: Establish your 3 content pillars, lock the posting routine, get your first viral moment.</div>
-    <ul class="phase-tasks">
-      <li>Optimize bio: add clear value proposition — "I'm learning Agentic AI at Harvard & building the future of creative AI — follow the journey"</li>
-      <li>Post 3x daily: 7am hook, 12pm value, 7pm personal</li>
-      <li>Reel 1–3: Harvard AI fundamentals series begins (What is an Agent / Orchestration / The Brief)</li>
-      <li>Story: daily poll ("Did you know AI could do this?") to train the algorithm</li>
-      <li>Engage every comment in the first 60 minutes of every post</li>
-      <li>Add 3 story highlights: Harvard Journey / What I'm Building / AI Explained</li>
-      <li>Cross-post every reel to TikTok, YouTube Shorts, LinkedIn same day</li>
-      <li>DM 20 creators in your niche per day — genuine engagement, no spam</li>
-    </ul>
   </div>
+</section>
 
-  <div class="phase" style="--phase-col:#BF5AF2;border:1px solid rgba(191,90,242,0.25);background:rgba(191,90,242,0.04)">
-    <div class="phase-header">
-      <div class="phase-num" style="background:#BF5AF2">2</div>
+<!-- ════════════════════════════════════════════════════
+     4. SATURDAY — DAY 1
+════════════════════════════════════════════════════ -->
+<section class="section section--alt">
+  <div class="wrap">
+    <p class="eyebrow">Day 1 of 2</p>
+    <div class="day-divider">
+      <div class="day-icon">☀️</div>
       <div>
-        <div class="phase-title">Acceleration — Days 11–25</div>
-        <div class="phase-days">Target: 5K → 50,000 followers · First collab drops</div>
+        <div class="day-label" style="color:var(--pk)">Saturday — Day 1</div>
+        <div class="day-title">Build Your AI Team</div>
+        <div class="day-sub">~5 hours total · You'll have 6 agents ready by tonight</div>
       </div>
     </div>
-    <div class="phase-goal" style="color:#BF5AF2">Goal: Hit your first viral reel, launch a collab, and show PI Agent OS live on camera.</div>
-    <ul class="phase-tasks">
-      <li>Film "Watch AI build a full brand in 60 seconds" — live PI Agent OS demo reel</li>
-      <li>Harvard course midpoint check-in: "Here's what I've learned so far" compilation</li>
-      <li>Reach out to 3 creators for collab (AI space, Latinas in tech, founder journey)</li>
-      <li>Start weekly "AI term of the week" series — one concept, 30 seconds, plain English</li>
-      <li>Post your first "mistake" reel — what went wrong and what you learned</li>
-      <li>LinkedIn article: "What Harvard taught me about AI in week 2" — drives IG traffic</li>
-      <li>Create a custom Metakittyz sticker pack for Stories to build brand identity</li>
-      <li>Run your first Story Q&A: "Ask me anything about AI agents"</li>
-    </ul>
-  </div>
 
-  <div class="phase" style="--phase-col:#00F5FF;border:1px solid rgba(0,245,255,0.25);background:rgba(0,245,255,0.04)">
-    <div class="phase-header">
-      <div class="phase-num" style="background:#00F5FF;color:#000">3</div>
+    <div class="steps-stack">
+
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(255,45,120,0.2);color:var(--pk)">01</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 1 of 8 — Saturday</div>
+            <div class="step-title">Define Your Brand Identity</div>
+            <div class="step-time">⏱ 30 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What This Does</div>
+          <p>Everything your AI team creates comes from your brand identity. Get this wrong and your agents will produce generic content. Get it right and every piece they make sounds unmistakably like you.</p>
+
+          <div class="what-label" style="margin-top:16px">How To Do It</div>
+          <p>Open a new document (Google Docs, Notion, or Notes app) and answer these questions honestly:</p>
+          <ul style="margin-top:10px;padding-left:20px;color:var(--muted);font-size:14px;line-height:1.9">
+            <li><strong style="color:var(--txt)">Brand name:</strong> What do you want to be known as?</li>
+            <li><strong style="color:var(--txt)">Niche:</strong> What specific topic do you own? (Narrow wins.)</li>
+            <li><strong style="color:var(--txt)">Target audience:</strong> Who exactly are you talking to? Age, struggles, dreams.</li>
+            <li><strong style="color:var(--txt)">Brand voice:</strong> 3 adjectives that describe how you sound. (e.g., "Bold. Honest. Real.")</li>
+            <li><strong style="color:var(--txt)">Your unfair advantage:</strong> What do you know or have that others don't?</li>
+            <li><strong style="color:var(--txt)">Your big promise:</strong> In one sentence, what will you help people achieve?</li>
+          </ul>
+
+          <div class="tip-box">
+            <div class="tip-box-label">💡 Pro Tip</div>
+            <p>Save these answers in a doc called "BRAND MASTER FILE." You'll paste this into every agent prompt this weekend. It's the most important document in your whole system.</p>
+          </div>
+
+          <div class="what-label">Expected Output</div>
+          <p>A completed brand identity doc with all 6 answers. Don't overthink it — you can evolve this later. Done beats perfect today.</p>
+
+          <div class="cheer-box">
+            <span>🎉</span>
+            <p>Brand identity locked in! You officially know who you are. Step 1 complete.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(255,45,120,0.2);color:var(--pk)">02</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 2 of 8 — Saturday</div>
+            <div class="step-title">Create Your Character Anchor Block</div>
+            <div class="step-time">⏱ 20 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What This Does</div>
+          <p>The Character Anchor Block is a short description of your AI persona — how you look, your style, and your vibe — written specifically for Midjourney and Higgsfield AI. This makes sure every image and video your AI generates looks consistent and on-brand.</p>
+
+          <div class="what-label">How To Do It</div>
+          <p>Write a 2-3 sentence description of your desired AI avatar. Include: gender, hair color and style, skin tone, clothing aesthetic, setting or background, and overall vibe. Example:</p>
+
+          <div class="prompt-block" style="margin-top:12px">
+            <div class="prompt-header">
+              <div class="prompt-agent-name">
+                <div class="prompt-dot" style="background:var(--tl)"></div>
+                <span class="prompt-label" style="color:var(--tl)">CHARACTER ANCHOR BLOCK — EXAMPLE</span>
+              </div>
+            </div>
+            <pre class="prompt-code">A 28-year-old Black woman with natural curly hair, warm brown skin,
+wearing oversized hoodies and vintage streetwear. Always near a
+glowing laptop screen, purple and pink neon lighting, futuristic
+minimal background. Confident, creative, tech-forward energy.
+Consistent across all shots: same face, same hair, same vibe.</pre>
+          </div>
+
+          <div class="warn-box">
+            <div class="warn-box-label">Stuck? No problem.</div>
+            <p>Paste your description into Claude and say: "Help me refine this into a precise Midjourney character anchor block that will produce consistent results." It'll do the work.</p>
+          </div>
+
+          <div class="cheer-box">
+            <span>✨</span>
+            <p>Character Anchor Block done! Every piece of AI-generated content this weekend will look like YOU.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(255,45,120,0.2);color:var(--pk)">03</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 3 of 8 — Saturday</div>
+            <div class="step-title">Build NOVA — Your Content Creator</div>
+            <div class="step-time">⏱ 45 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What NOVA Does</div>
+          <p>NOVA is your content brain. Give NOVA one topic and it produces 12 pieces of platform-ready content — captions, scripts, emails, threads, everything. NOVA is how you stay consistent without burning out.</p>
+
+          <div class="what-label">How To Set Up NOVA</div>
+          <ol style="margin-top:8px;padding-left:20px;color:var(--muted);font-size:14px;line-height:2">
+            <li>Open <strong style="color:var(--txt)">Claude.ai</strong> in a new tab</li>
+            <li>Click <strong style="color:var(--txt)">"New Project"</strong> and name it "NOVA — Content Creator"</li>
+            <li>In the Project Instructions box, paste the NOVA system prompt below</li>
+            <li>Replace <code style="color:var(--tl)">[BRAND NAME]</code> and <code style="color:var(--tl)">[YOUR BRAND VOICE]</code> with your info</li>
+            <li>Test it by typing: "Create content about [your niche topic]"</li>
+          </ol>
+
+          <div class="what-label">Expected Output</div>
+          <p>NOVA should produce at least 5 content pieces immediately. If it doesn't, check that the system prompt was fully pasted and saved.</p>
+
+          <div class="tip-box">
+            <div class="tip-box-label">💡 Pro Tip</div>
+            <p>The full NOVA system prompt is in the Agent Prompts section below. Copy it, paste it once, and it's done. Takes about 2 minutes.</p>
+          </div>
+
+          <div class="cheer-box">
+            <span>🎨</span>
+            <p>NOVA is alive! Your first AI team member is ready to work. 5 more to go.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(255,107,53,0.2);color:var(--or)">04</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 4 of 8 — Saturday</div>
+            <div class="step-title">Build PULSE — Your Video Director</div>
+            <div class="step-time">⏱ 30 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What PULSE Does</div>
+          <p>PULSE scripts and directs your videos. Give PULSE your topic and it writes a full scene-by-scene video script with timestamps, B-roll notes, text overlay suggestions, and an AI video prompt for Higgsfield. No film school needed.</p>
+
+          <div class="what-label">How To Set Up PULSE</div>
+          <p>Same steps as NOVA — create a new Claude Project called "PULSE — Video Director" and paste the PULSE system prompt from the Agent Prompts section below.</p>
+
+          <div class="what-label">How To Test It</div>
+          <p>Type: "Script a 60-second video about [your niche topic] for TikTok." PULSE should return a full script with timestamps, hooks, and an AI video prompt.</p>
+
+          <div class="cheer-box">
+            <span>🎬</span>
+            <p>PULSE is set! Your video production team is one prompt away.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,245,212,0.15);color:var(--tl)">05</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 5 of 8 — Saturday</div>
+            <div class="step-title">Build ARIA — Your Social Media Manager</div>
+            <div class="step-time">⏱ 30 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What ARIA Does</div>
+          <p>ARIA manages your entire social media operation — content scheduling plans, community engagement scripts, platform-specific posting times, and weekly growth reports. ARIA is the manager so you don't have to be.</p>
+
+          <div class="what-label">How To Test It</div>
+          <p>Type: "ARIA, create my posting schedule for this week. I have 5 pieces of content: [paste your NOVA outputs]." ARIA will return a day-by-day schedule with platform recommendations and posting times.</p>
+
+          <div class="cheer-box">
+            <span>📲</span>
+            <p>ARIA online! Social media is now managed. You don't have to think about "when to post" ever again.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(255,224,0,0.15);color:var(--yl)">06</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 6 of 8 — Saturday</div>
+            <div class="step-title">Build REACH — Your Ad Creator</div>
+            <div class="step-time">⏱ 30 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What REACH Does</div>
+          <p>REACH writes high-converting ads for Meta (Facebook/Instagram) and TikTok. Give REACH your product, your audience, and your budget — it returns complete ad copy, targeting recommendations, and a structured campaign setup guide.</p>
+
+          <div class="what-label">How To Test It</div>
+          <p>Type: "REACH, write me a $10/day Meta ad to promote [your offer] to [your target audience]." You'll get primary text, headlines, and campaign structure immediately.</p>
+
+          <div class="cheer-box">
+            <span>🎯</span>
+            <p>REACH ready! Your ads are about to write themselves. Paid growth unlocked.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(123,47,255,0.2);color:#9b5eff">07</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 7 of 8 — Saturday</div>
+            <div class="step-title">Build SPARK — Your Brand Influencer</div>
+            <div class="step-time">⏱ 30 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What SPARK Does</div>
+          <p>SPARK builds your authority. It writes thought-leadership content, drafts collaboration outreach messages, creates podcast pitches, and positions you as the go-to expert in your niche. SPARK is how you go from unknown to in-demand.</p>
+
+          <div class="what-label">How To Test It</div>
+          <p>Type: "SPARK, write me 5 authority posts that position me as an expert in [your niche]." Review the output — these should sound confident, contrarian, and credible.</p>
+
+          <div class="cheer-box">
+            <span>💫</span>
+            <p>SPARK activated! Your authority machine is running. People are about to take you seriously.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,255,65,0.15);color:var(--gr)">08</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 8 of 8 — Saturday</div>
+            <div class="step-title">Build GUARDIAN — Your QA System Analyst</div>
+            <div class="step-time">⏱ 20 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What GUARDIAN Does</div>
+          <p>GUARDIAN audits everything before it goes live. Every morning, run a GUARDIAN check and it will tell you if your content has errors, brand inconsistencies, policy risks, or missing disclosures. GUARDIAN is your quality control.</p>
+
+          <div class="what-label">How To Test It</div>
+          <p>Paste in any piece of content and type: "GUARDIAN, review this before I post it." It will return a pass/fail checklist with specific issues flagged.</p>
+
+          <div class="cheer-box">
+            <span>🛡️</span>
+            <p>ALL 6 AGENTS BUILT! 🎉 Your AI team is complete. Saturday is a win. Take a break — you earned it.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /steps-stack -->
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     5. SUNDAY — DAY 2
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <p class="eyebrow">Day 2 of 2</p>
+    <div class="day-divider">
+      <div class="day-icon">🌅</div>
       <div>
-        <div class="phase-title">Momentum Lock — Days 26–40</div>
-        <div class="phase-days">Target: 50K → 200,000 followers · Authority building</div>
+        <div class="day-label" style="color:var(--tl)">Sunday — Day 2</div>
+        <div class="day-title">Create Your First Content</div>
+        <div class="day-sub">~5.5 hours total · By tonight you'll have 30 pieces of content ready to post</div>
       </div>
     </div>
-    <div class="phase-goal" style="color:#00F5FF">Goal: Establish Metakittyz as THE colorful AI creator. Media pitches begin. Community forms.</div>
-    <ul class="phase-tasks">
-      <li>Harvard course complete — post the final project reveal reel</li>
-      <li>Start a weekly live: "AI office hours with Metakittyz" — answer community questions</li>
-      <li>Pitch 5 podcasts in the AI / creator / Latina entrepreneur space</li>
-      <li>Launch Metakittyz newsletter: weekly AI breakdown, 1 building update, 1 resource</li>
-      <li>Film "I ran [Company X] through an AI agent pipeline — watch what happened"</li>
-      <li>Show follower growth transparency: post a real analytics screenshot weekly</li>
-      <li>Start tagging Harvard, AI creators, and tech media in relevant posts</li>
-    </ul>
-  </div>
 
-  <div class="phase" style="--phase-col:#00FF94;border:1px solid rgba(0,255,148,0.25);background:rgba(0,255,148,0.04)">
-    <div class="phase-header">
-      <div class="phase-num" style="background:#00FF94;color:#000">4</div>
-      <div>
-        <div class="phase-title">Scale & Own — Days 41–90</div>
-        <div class="phase-days">Target: 200K → 1,000,000 followers · Thought leader status</div>
+    <div class="steps-stack">
+
+      <!-- S1 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,245,212,0.15);color:var(--tl)">S1</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 1 of 8 — Sunday</div>
+            <div class="step-title">Generate Your AI Avatar</div>
+            <div class="step-time">⏱ 45 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What You're Doing</div>
+          <p>Creating your consistent AI character image using Midjourney. This avatar will appear across all your content — reels, ads, thumbnails, profile pictures — and becomes your visual brand.</p>
+
+          <div class="what-label">The Prompt Formula</div>
+          <p>Take your Character Anchor Block from Saturday and format it like this for Midjourney:</p>
+          <div class="prompt-block" style="margin-top:12px">
+            <div class="prompt-header">
+              <div class="prompt-agent-name">
+                <div class="prompt-dot" style="background:var(--tl)"></div>
+                <span class="prompt-label" style="color:var(--tl)">MIDJOURNEY AVATAR PROMPT TEMPLATE</span>
+              </div>
+              <button class="copy-btn" data-target="mjprompt">Copy</button>
+            </div>
+            <pre class="prompt-code" id="mjprompt">[Your Character Anchor Block], professional portrait photography,
+studio lighting, sharp focus, 8K resolution, hyper-realistic,
+cinematic --ar 1:1 --v 6 --style raw
+
+Then generate a second variation:
+[Same Character Anchor Block], lifestyle photo, natural light,
+candid feel, authentic, social media content --ar 9:16 --v 6</pre>
+          </div>
+
+          <div class="tip-box">
+            <div class="tip-box-label">💡 Pro Tip</div>
+            <p>Generate at least 10 variations and pick your top 3. Then use Midjourney's "seed" feature to lock in that exact face for all future generations. This is how you keep your avatar consistent forever.</p>
+          </div>
+
+          <div class="cheer-box">
+            <span>🎨</span>
+            <p>Your AI avatar exists! That's literally your brand face now. Wild, right?</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,245,212,0.15);color:var(--tl)">S2</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 2 of 8 — Sunday</div>
+            <div class="step-title">Script Your First Video</div>
+            <div class="step-time">⏱ 20 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What You're Doing</div>
+          <p>Using PULSE to write a complete video script for your first piece of content. This will become your hero video — the one that introduces your brand.</p>
+
+          <div class="what-label">The Prompt To Use</div>
+          <p>Open your PULSE project in Claude and type:</p>
+          <div class="prompt-block" style="margin-top:12px">
+            <div class="prompt-header">
+              <div class="prompt-agent-name">
+                <div class="prompt-dot" style="background:var(--or)"></div>
+                <span class="prompt-label" style="color:var(--or)">PULSE — FIRST VIDEO PROMPT</span>
+              </div>
+              <button class="copy-btn" data-target="pulse1">Copy</button>
+            </div>
+            <pre class="prompt-code" id="pulse1">PULSE, script my brand introduction video.
+Platform: TikTok and Instagram Reels
+Length: 60 seconds
+Topic: Who I am, what I do, and why you should follow me
+My brand: [paste your brand identity doc here]
+Goal: Make people hit Follow immediately after watching
+
+Deliver: Hook (3 options), full scene-by-scene script with timestamps,
+text overlay suggestions, and the Higgsfield AI video generation prompt.</pre>
+          </div>
+
+          <div class="cheer-box">
+            <span>🎬</span>
+            <p>You have a video script! A professional director just wrote it for you. That used to cost $500.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,245,212,0.15);color:var(--tl)">S3</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 3 of 8 — Sunday</div>
+            <div class="step-title">Record or Generate Your Video</div>
+            <div class="step-time">⏱ 60 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">Option A — Film It Yourself (Recommended for authenticity)</div>
+          <p>Set up your phone. Good lighting (window light or ring light). Follow the PULSE script. Film 3 takes. Use the best one. You don't need it to be perfect — raw and real converts better than polished and fake.</p>
+
+          <div class="what-label">Option B — AI-Generated Video (If you're camera-shy)</div>
+          <p>Take the Higgsfield AI prompt from PULSE's output. Go to <strong>higgsfield.ai</strong>, create a free account, and paste the prompt. Generate 3 variations. Pick the best one. Add captions using CapCut or Canva.</p>
+
+          <div class="tip-box">
+            <div class="tip-box-label">💡 Pro Tip</div>
+            <p>Do both. Film a raw UGC-style version of yourself AND generate an AI version. Test them both. The one with more views in the first 24 hours becomes your content style going forward.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- S4 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,245,212,0.15);color:var(--tl)">S4</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 4 of 8 — Sunday</div>
+            <div class="step-title">Add AI Voiceover</div>
+            <div class="step-time">⏱ 20 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What You're Doing</div>
+          <p>Adding professional voiceover to your video using ElevenLabs — either to replace your own voice or to create a consistent AI narrator voice for all your content.</p>
+
+          <div class="what-label">How To Do It</div>
+          <ol style="padding-left:20px;font-size:14px;color:var(--muted);line-height:2">
+            <li>Go to <strong style="color:var(--txt)">elevenlabs.io</strong> and create a free account</li>
+            <li>Click "Text to Speech" and paste your video script</li>
+            <li>Pick a voice that matches your brand vibe (audition a few)</li>
+            <li>Optional: Clone your own voice using "Voice Cloning"</li>
+            <li>Download the audio and add it to your video in CapCut</li>
+          </ol>
+
+          <div class="cheer-box">
+            <span>🎙️</span>
+            <p>Professional voiceover done! Your video sounds like it cost $10,000 to produce. It didn't.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- S5 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,245,212,0.15);color:var(--tl)">S5</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 5 of 8 — Sunday</div>
+            <div class="step-title">Create 30 Content Pieces</div>
+            <div class="step-time">⏱ 45 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">The 1→12 Content Machine</div>
+          <p>Open your NOVA project and run this prompt 3 times with 3 different topics. Each run produces 10–12 pieces. That's 30–36 pieces in under an hour.</p>
+
+          <div class="prompt-block" style="margin-top:12px">
+            <div class="prompt-header">
+              <div class="prompt-agent-name">
+                <div class="prompt-dot" style="background:var(--pk)"></div>
+                <span class="prompt-label" style="color:var(--pk)">NOVA — 1→12 CONTENT MACHINE PROMPT</span>
+              </div>
+              <button class="copy-btn" data-target="nova12">Copy</button>
+            </div>
+            <pre class="prompt-code" id="nova12">NOVA, run the 1→12 Content Machine on this topic:
+
+TOPIC: [Your topic here]
+AUDIENCE: [Your target audience]
+
+Produce:
+1. Long-form LinkedIn post (400-600 words)
+2. Twitter/X thread (8 tweets)
+3. Instagram carousel caption (150 words + 10 slide prompts)
+4. TikTok/Reels script (60-second hook-heavy)
+5. Instagram caption (short, punchy, 3 hook options)
+6. Story sequence (5 slides)
+7. Email newsletter section (250 words)
+8. Pinterest description + 15 keywords
+9. Facebook post (conversational)
+10. YouTube Community post
+11. Short-form hook line (15 options for A/B testing)
+12. Quote graphic text (5 pull-quote options)
+
+Include: Hashtag sets for each platform. All copy should match my brand voice.</pre>
+          </div>
+
+          <div class="cheer-box">
+            <span>🚀</span>
+            <p>30+ pieces of content banked! That's a full month of posting material. Done.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- S6 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,245,212,0.15);color:var(--tl)">S6</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 6 of 8 — Sunday</div>
+            <div class="step-title">Design Your Visuals</div>
+            <div class="step-time">⏱ 30 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What You're Doing</div>
+          <p>Turning your AI-generated avatar and NOVA content into designed social media graphics using Canva. You need 5 core templates — then duplicate and update forever.</p>
+
+          <div class="what-label">The 5 Templates To Create</div>
+          <ol style="padding-left:20px;font-size:14px;color:var(--muted);line-height:2">
+            <li><strong style="color:var(--txt)">Instagram Feed Post</strong> — 1080×1080, your colors + avatar</li>
+            <li><strong style="color:var(--txt)">Instagram Carousel Cover</strong> — hook text, bold headline</li>
+            <li><strong style="color:var(--txt)">Story Template</strong> — 1080×1920, swipe-up or link prompt</li>
+            <li><strong style="color:var(--txt)">Quote Graphic</strong> — pull quote over branded background</li>
+            <li><strong style="color:var(--txt)">YouTube Thumbnail</strong> — 1280×720, big text + avatar face</li>
+          </ol>
+
+          <div class="tip-box">
+            <div class="tip-box-label">💡 Pro Tip</div>
+            <p>Ask Claude: "Give me the hex codes, fonts, and layout description for a visual brand kit that matches this brand identity: [paste your brand doc]." Then apply those exactly in Canva. Instant brand guide.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- S7 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,245,212,0.15);color:var(--tl)">S7</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 7 of 8 — Sunday</div>
+            <div class="step-title">Schedule Everything</div>
+            <div class="step-time">⏱ 20 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What You're Doing</div>
+          <p>Loading your 30+ pieces of content into Buffer or Later and scheduling the next 30 days of posts across every platform.</p>
+
+          <div class="what-label">How To Do It</div>
+          <ol style="padding-left:20px;font-size:14px;color:var(--muted);line-height:2">
+            <li>Create a free account at <strong style="color:var(--txt)">buffer.com</strong> or <strong style="color:var(--txt)">later.com</strong></li>
+            <li>Connect your Instagram, TikTok, Twitter, and Facebook accounts</li>
+            <li>Upload your 30 pieces of content (text + image/video)</li>
+            <li>Ask ARIA: "Give me an optimal 30-day posting calendar for [your niche] posting 2x per day"</li>
+            <li>Schedule each piece using the times ARIA recommends</li>
+          </ol>
+
+          <div class="cheer-box">
+            <span>📅</span>
+            <p>30 days of content scheduled and automated! You could take a month off and your brand would still be posting. That's CEO behavior.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- S8 -->
+      <div class="step">
+        <div class="step-head">
+          <div class="step-badge" style="background:rgba(0,245,212,0.15);color:var(--tl)">S8</div>
+          <div class="step-meta">
+            <div class="step-num-label">Step 8 of 8 — Sunday</div>
+            <div class="step-title">Launch Your First Ad</div>
+            <div class="step-time">⏱ 30 minutes</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="what-label">What You're Doing</div>
+          <p>Using REACH to create your first paid ad and launching it on Meta with a small test budget ($5–$10/day). This starts building your audience faster than organic alone.</p>
+
+          <div class="what-label">How To Do It</div>
+          <ol style="padding-left:20px;font-size:14px;color:var(--muted);line-height:2">
+            <li>Open your REACH project in Claude</li>
+            <li>Type: "REACH, write a Facebook/Instagram ad to grow my following and promote [your free offer]. Budget: $10/day. Audience: [describe your target audience]."</li>
+            <li>REACH will return ad copy + targeting recommendations</li>
+            <li>Go to <strong style="color:var(--txt)">Meta Ads Manager</strong> (ads.facebook.com)</li>
+            <li>Create a Page Likes or Traffic campaign using REACH's copy and targeting</li>
+            <li>Set budget to $5–10/day and launch</li>
+          </ol>
+
+          <div class="warn-box">
+            <div class="warn-box-label">First Ads Reality Check</div>
+            <p>Your first ad probably won't be a home run — that's normal. Run it for 3 days, review results, then ask REACH to optimize based on what the data shows. That's the real strategy.</p>
+          </div>
+
+          <div class="cheer-box">
+            <span>🎯</span>
+            <p>YOUR AI COMPANY IS LIVE! 🎉 You built 6 AI agents, created 30 pieces of content, and launched a paid ad — in one weekend. Most people never do this in a lifetime. You did it in 48 hours.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /steps-stack -->
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     6. SYSTEM PROMPTS
+════════════════════════════════════════════════════ -->
+<section class="section section--alt">
+  <div class="wrap">
+    <p class="eyebrow">Ready-To-Use Prompts</p>
+    <h2 class="h2">System Prompts for Each Agent</h2>
+    <p class="lead">Copy each prompt exactly. Paste it into a new Claude Project's instruction box. Replace the bracketed placeholders with your info. That's it.</p>
+
+    <!-- NOVA -->
+    <div style="margin-top:48px">
+      <div class="agent-section-header">
+        <div class="agent-sec-emoji">🎨</div>
+        <div>
+          <div class="agent-sec-name" style="color:var(--pk)">NOVA</div>
+          <div class="agent-sec-role">Content Creator Agent</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-header">
+          <div class="prompt-agent-name">
+            <div class="prompt-dot" style="background:var(--pk);box-shadow:0 0 6px var(--pk)"></div>
+            <span class="prompt-label" style="color:var(--pk)">NOVA — SYSTEM PROMPT</span>
+          </div>
+          <button class="copy-btn" data-target="nova-prompt">Copy Prompt</button>
+        </div>
+        <pre class="prompt-code" id="nova-prompt">You are NOVA, the Content Creator Agent for [BRAND NAME].
+Your mission: generate scroll-stopping, conversion-focused content that
+educates, entertains, and grows the [BRAND NAME] audience.
+
+BRAND IDENTITY:
+Name: [BRAND NAME]
+Niche: [YOUR NICHE]
+Target audience: [DESCRIBE YOUR AUDIENCE — age, struggles, goals]
+Brand voice: [3 ADJECTIVES — e.g., "Bold. Honest. Practical."]
+Big promise: [ONE SENTENCE — what you help people achieve]
+
+THE 1→12 CONTENT MACHINE:
+When given ONE topic, expand it into all 12 formats (see list below).
+When given a specific format, produce that format only and make it exceptional.
+
+12 FORMATS YOU PRODUCE:
+1. Long-form LinkedIn post (400-600 words, storytelling structure)
+2. Twitter/X thread (8-12 tweets, each standalone valuable)
+3. Instagram carousel caption + 10 slide prompts
+4. TikTok/Reels script (60 seconds, hook in first 2 seconds)
+5. Instagram caption (3 hook variations, CTA in each)
+6. Story sequence (5 slides: hook → value → CTA)
+7. Email newsletter section (250-300 words, one idea)
+8. Pinterest description + 15 discovery keywords
+9. Facebook post (conversational, question to drive comments)
+10. YouTube Community post (short, engaging, drives to video)
+11. Hook line library (15 variations for A/B testing)
+12. Quote graphic pull-quotes (5 options, punchy and shareable)
+
+ALWAYS INCLUDE WITH EVERY OUTPUT:
+- Platform-specific hashtag set (10-20 relevant tags)
+- 3 hook variations (lead with problem, question, or bold statement)
+- Clear call-to-action (one per piece — don't double CTA)
+- Keyword-rich copy where appropriate for discoverability
+
+CONTENT PILLARS (rotate between these):
+- EDUCATION: Teach one actionable thing per post
+- INSPIRATION: Share wins, transformations, possibilities
+- ENTERTAINMENT: Keep it fun, surprising, or relatable
+- PROMOTION: Showcase value without feeling like a sales pitch
+
+NOVA'S QUALITY STANDARD:
+Every piece must pass the "3-second test" — would someone stop scrolling
+within 3 seconds? If not, rewrite the hook. Never produce generic content.
+[BRAND NAME] content is always specific, always useful, always on-brand.
+
+TO ACTIVATE ME: Tell me your topic, target platform, and any specific
+angle you want. I'll produce a complete content suite immediately.</pre>
       </div>
     </div>
-    <div class="phase-goal" style="color:#00FF94">Goal: The 90-day finale becomes its own viral moment. Brand partnerships. Speaking stage.</div>
-    <ul class="phase-tasks">
-      <li>Weekly recap series: "Day 41–45 of trying to get 1M followers — here's what worked"</li>
-      <li>The 90-day finale reel: raw honest breakdown of everything — numbers, mistakes, wins</li>
-      <li>PI Agent OS public beta announcement — followers become first users</li>
-      <li>Pitch Forbes, TechCrunch, Business Insider: "Creator goes from 295 to X followers in 90 days using AI systems"</li>
-      <li>First brand partnership pitch deck sent — you now have proof of concept</li>
-      <li>Create a free "AI for Creators" guide — email list builder + lead magnet</li>
-      <li>Document the full 90-day journey as a case study and sell it or release it</li>
-    </ul>
-  </div>
-</div>
 
-<!-- CONTENT PILLARS -->
-<div class="sec-title" id="pillars">🎨 Content Pillars</div>
-<div style="margin-bottom:28px">
-  <div class="pillar">
-    <div class="pillar-ico" style="background:rgba(255,45,120,0.15)">🎓</div>
-    <div class="pillar-body">
-      <div class="pillar-name" style="color:var(--neon-pink)">Harvard AI Fundamentals — 30% of content</div>
-      <div class="pillar-desc">One concept per reel. What is an agent. What is orchestration. What is governance. What is memory. Plain English, 30–60 seconds. This is your credibility content — it positions you as a teacher, not just a student.</div>
-      <div class="pillar-pct" style="color:var(--neon-pink)">3x / week · Mon, Wed, Fri</div>
-    </div>
-  </div>
-  <div class="pillar">
-    <div class="pillar-ico" style="background:rgba(191,90,242,0.15)">🏗️</div>
-    <div class="pillar-body">
-      <div class="pillar-name" style="color:var(--neon-purple)">Build in Public — 25% of content</div>
-      <div class="pillar-desc">Live demos of PI Agent OS. Show a real client workflow running. Show what you built this week. Show what broke. This is your proof-of-work content — it separates you from every other "AI creator" who just talks about it.</div>
-      <div class="pillar-pct" style="color:var(--neon-purple)">3x / week · Tue, Thu, Sat</div>
-    </div>
-  </div>
-  <div class="pillar">
-    <div class="pillar-ico" style="background:rgba(0,245,255,0.15)">🌊</div>
-    <div class="pillar-body">
-      <div class="pillar-name" style="color:var(--neon-cyan)">The Journey — 20% of content</div>
-      <div class="pillar-desc">Raw, honest documentation of trying to hit 1M in 90 days. The mistakes. The wins. The numbers. The doubt. The 2am breakthroughs. This is your most relatable content — it builds a community, not just an audience.</div>
-      <div class="pillar-pct" style="color:var(--neon-cyan)">Daily Stories + 2 reels / week</div>
-    </div>
-  </div>
-  <div class="pillar">
-    <div class="pillar-ico" style="background:rgba(255,214,10,0.15)">⚡</div>
-    <div class="pillar-body">
-      <div class="pillar-name" style="color:var(--neon-gold)">Viral Hooks & Trends — 15% of content</div>
-      <div class="pillar-desc">Jump on trending audio and formats — but always with an AI/Metakittyz twist. A trending sound with "POV: you asked an AI agent to run your whole business" overlay gets the reach. Your personality keeps the follows.</div>
-      <div class="pillar-pct" style="color:var(--neon-gold)">When relevant · 2–3x / week</div>
-    </div>
-  </div>
-  <div class="pillar">
-    <div class="pillar-ico" style="background:rgba(0,255,148,0.15)">🤝</div>
-    <div class="pillar-body">
-      <div class="pillar-name" style="color:var(--neon-green)">Collabs & Community — 10% of content</div>
-      <div class="pillar-desc">Duets with AI creators. Q&As. "I ran YOUR business through the agent pipeline" — where followers submit their company for a live demo. This is your distribution multiplier. Other people's audiences, coming to you.</div>
-      <div class="pillar-pct" style="color:var(--neon-green)">Weekly starting Day 11</div>
-    </div>
-  </div>
-</div>
+    <!-- PULSE -->
+    <div style="margin-top:48px">
+      <div class="agent-section-header">
+        <div class="agent-sec-emoji">🎬</div>
+        <div>
+          <div class="agent-sec-name" style="color:var(--or)">PULSE</div>
+          <div class="agent-sec-role">Video Director Agent</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-header">
+          <div class="prompt-agent-name">
+            <div class="prompt-dot" style="background:var(--or);box-shadow:0 0 6px var(--or)"></div>
+            <span class="prompt-label" style="color:var(--or)">PULSE — SYSTEM PROMPT</span>
+          </div>
+          <button class="copy-btn" data-target="pulse-prompt">Copy Prompt</button>
+        </div>
+        <pre class="prompt-code" id="pulse-prompt">You are PULSE, the Video Director Agent for [BRAND NAME].
+Your job: script, structure, and direct video content that stops the
+scroll within the first 3 seconds and drives viewers to take action.
 
-<!-- POSTING TIMES -->
-<div class="sec-title">⏰ Optimal Posting Schedule</div>
-<div class="grid-2" style="margin-bottom:28px">
-  <div class="card">
-    <div style="font-size:0.8rem;font-weight:800;margin-bottom:12px;color:var(--neon-pink)">📱 Instagram Reels</div>
-    <div class="time-slot">
-      <div class="time-dot" style="background:var(--neon-pink)"></div>
-      <div class="time-val">7–9am</div>
-      <div class="time-desc">Morning scroll · commute · coffee · high intent</div>
-      <div class="time-badge" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">PRIME</div>
-    </div>
-    <div class="time-slot">
-      <div class="time-dot" style="background:var(--neon-purple)"></div>
-      <div class="time-val">12–1pm</div>
-      <div class="time-desc">Lunch break scroll · midday reset</div>
-      <div class="time-badge" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">STRONG</div>
-    </div>
-    <div class="time-slot">
-      <div class="time-dot" style="background:var(--neon-cyan)"></div>
-      <div class="time-val">6–9pm</div>
-      <div class="time-desc">Evening wind-down · highest save rate</div>
-      <div class="time-badge" style="background:rgba(0,245,255,0.15);color:var(--neon-cyan)">PRIME</div>
-    </div>
-    <div style="margin-top:12px;font-size:0.72rem;color:var(--text2)">Best days: Tuesday, Wednesday, Thursday. Never post Saturday morning — lowest reach day for tech/AI content.</div>
-  </div>
-  <div class="card">
-    <div style="font-size:0.8rem;font-weight:800;margin-bottom:12px;color:var(--neon-purple)">🔄 Cross-Platform</div>
-    <div class="time-slot">
-      <div class="time-dot" style="background:var(--neon-pink)"></div>
-      <div class="time-val">TikTok</div>
-      <div class="time-desc">Same reel, 30 min after IG · different caption</div>
-      <div class="time-badge" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">2x REACH</div>
-    </div>
-    <div class="time-slot">
-      <div class="time-dot" style="background:var(--neon-gold)"></div>
-      <div class="time-val">LinkedIn</div>
-      <div class="time-desc">Tuesday 8am · text post linking IG · B2B audience</div>
-      <div class="time-badge" style="background:rgba(255,214,10,0.15);color:var(--neon-gold)">B2B LEADS</div>
-    </div>
-    <div class="time-slot">
-      <div class="time-dot" style="background:var(--neon-green)"></div>
-      <div class="time-val">YouTube</div>
-      <div class="time-desc">Shorts from IG reels · weekly long-form from Harvard content</div>
-      <div class="time-badge" style="background:rgba(0,255,148,0.15);color:var(--neon-green)">SEO POWER</div>
-    </div>
-    <div style="margin-top:12px;font-size:0.72rem;color:var(--text2)">Every piece of content hits 4 platforms. Same work, 4x the exposure. Never waste a reel on one platform only.</div>
-  </div>
-</div>
+BRAND IDENTITY:
+Name: [BRAND NAME] | Niche: [NICHE] | Audience: [AUDIENCE]
+Voice: [BRAND VOICE ADJECTIVES]
+Character anchor: [PASTE YOUR CHARACTER ANCHOR BLOCK]
 
-<!-- HOOK FORMULAS -->
-<div class="sec-title" id="hooks">🎣 Hook Formulas That Work for Your Brand</div>
-<div class="grid-2" style="margin-bottom:28px">
-  <div>
-    <div class="hook-card">
-      <div class="hook-formula">"[Surprising claim] about [AI topic] — here's the proof."</div>
-      <div class="hook-example">"Most people have no idea what an AI agent actually does — here's the proof that changes everything."</div>
-    </div>
-    <div class="hook-card">
-      <div class="hook-formula">"I gave AI [task] and it did [unexpected result] in [time]."</div>
-      <div class="hook-example">"I gave an AI agent a full real estate company to manage. It built a complete brand, pricing strategy, and guest system in under 60 seconds."</div>
-    </div>
-    <div class="hook-card">
-      <div class="hook-formula">"Harvard taught me [insight] that most [people] don't know yet."</div>
-      <div class="hook-example">"Harvard taught me that AI governance is the part nobody talks about — and it's the most important part."</div>
-    </div>
-  </div>
-  <div>
-    <div class="hook-card">
-      <div class="hook-formula">"POV: [relatable situation] but [Metakittyz twist]."</div>
-      <div class="hook-example">"POV: your entire project team is AI, it never sleeps, never has a bad day, and it costs less than one employee."</div>
-    </div>
-    <div class="hook-card">
-      <div class="hook-formula">"Day [X] of [mission] — here's what actually happened."</div>
-      <div class="hook-example">"Day 14 of trying to get 1 million Instagram followers using AI systems — here's what actually happened this week."</div>
-    </div>
-    <div class="hook-card">
-      <div class="hook-formula">"Stop using [common thing]. Use [better thing] instead — I'll show you."</div>
-      <div class="hook-example">"Stop asking ChatGPT to do everything. Use an agent pipeline instead — I'll show you the difference in 30 seconds."</div>
-    </div>
-  </div>
-</div>
+THE PULSE VIDEO FORMULA (apply to every video):
+- Hook (0-3 sec): Visual or verbal pattern interrupt. Bold, unexpected, specific.
+- Problem (3-10 sec): Name the exact pain or desire your audience has.
+- Agitation (10-20 sec): Make it relatable. They should be nodding.
+- Solution (20-45 sec): Your approach/product as the answer.
+- Proof (45-55 sec): One stat, testimonial, or visible transformation.
+- CTA (55-60 sec): ONE clear next step. No options, no confusion.
 
-<!-- COMPETITOR INTEL -->
-<div class="sec-title" id="competitors">🔍 Creator Intelligence — Who to Watch & Learn From</div>
-<div class="card" style="margin-bottom:28px">
-  <div class="alert alert-warn" style="margin-bottom:16px">
-    <div class="alert-ico">⚠️</div>
-    <div>Watch these creators for format and timing ideas — but never copy. Your edge is the combination of colorful personality + Harvard credibility + building live. No one else has all three.</div>
-  </div>
-  <div class="comp-row">
-    <div class="comp-avatar" style="background:rgba(255,45,120,0.15)">🤖</div>
-    <div><div class="comp-name">AI Explainer Creators</div><div class="comp-handle">@aisolopreneur, @thegptguide, @futurepedia</div><div class="comp-tags"><span class="tag" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">AI Education</span><span class="tag" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">Tools</span></div></div>
-    <div class="comp-followers" style="margin-left:auto"><div class="comp-f-num" style="color:var(--neon-pink)">100K–500K</div><div class="comp-f-label">Study their hook formats</div></div>
-  </div>
-  <div class="comp-row">
-    <div class="comp-avatar" style="background:rgba(0,245,255,0.15)">🏗️</div>
-    <div><div class="comp-name">Build in Public Founders</div><div class="comp-handle">@levelsio, @dagorenouf, @marc_louvion</div><div class="comp-tags"><span class="tag" style="background:rgba(0,245,255,0.15);color:var(--neon-cyan)">Transparency</span><span class="tag" style="background:rgba(255,214,10,0.15);color:var(--neon-gold)">Revenue</span></div></div>
-    <div class="comp-followers" style="margin-left:auto"><div class="comp-f-num" style="color:var(--neon-cyan)">200K–1M+</div><div class="comp-f-label">Study their transparency format</div></div>
-  </div>
-  <div class="comp-row">
-    <div class="comp-avatar" style="background:rgba(0,255,148,0.15)">🌈</div>
-    <div><div class="comp-name">Colorful Tech Creators</div><div class="comp-handle">@zoeunlimited, @fashiontech.girls</div><div class="comp-tags"><span class="tag" style="background:rgba(0,255,148,0.15);color:var(--neon-green)">Aesthetic</span><span class="tag" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">Personality</span></div></div>
-    <div class="comp-followers" style="margin-left:auto"><div class="comp-f-num" style="color:var(--neon-green)">50K–300K</div><div class="comp-f-label">Study their visual identity</div></div>
-  </div>
-  <div class="comp-row">
-    <div class="comp-avatar" style="background:rgba(255,214,10,0.15)">👩🏽‍💻</div>
-    <div><div class="comp-name">Latinas in Tech</div><div class="comp-handle">#LatinaInTech, #TechLatina community</div><div class="comp-tags"><span class="tag" style="background:rgba(255,214,10,0.15);color:var(--neon-gold)">Community</span><span class="tag" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">Representation</span></div></div>
-    <div class="comp-followers" style="margin-left:auto"><div class="comp-f-num" style="color:var(--neon-gold)">Collab pool</div><div class="comp-f-label">Your community to lead</div></div>
-  </div>
-</div>
+FOR EVERY VIDEO BRIEF, PRODUCE:
+1. Three hook options (bold, question-based, and story-open variations)
+2. Scene-by-scene script with timestamps (10-second intervals)
+3. Visual direction for each scene (camera angle, talent action, setting)
+4. B-roll shot list (5-8 supporting shots)
+5. Text overlay sequence (what appears on screen + timing)
+6. Music/sound direction (energy level, tempo, style reference)
+7. AI video generation prompt for Higgsfield/Runway/Pika
+8. Thumbnail concept (visual + headline text)
 
-<!-- DAILY CHECKLIST -->
-<div class="sec-title">✅ Daily Agent Checklist</div>
-<div class="grid-2" style="margin-bottom:28px">
-  <div class="card" id="checklist-morning">
-    <div style="font-size:0.8rem;font-weight:800;margin-bottom:12px;color:var(--neon-pink)">🌅 Morning Routine</div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Post morning reel by 9am</div><div class="check-priority" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">CRITICAL</div></div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Reply to every comment from last night's post</div><div class="check-priority" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">CRITICAL</div></div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Post morning Story with a poll or question</div><div class="check-priority" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">HIGH</div></div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Cross-post reel to TikTok</div><div class="check-priority" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">HIGH</div></div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Update follower count in command center</div><div class="check-priority" style="background:rgba(0,245,255,0.15);color:var(--neon-cyan)">DAILY</div></div>
-  </div>
-  <div class="card" id="checklist-evening">
-    <div style="font-size:0.8rem;font-weight:800;margin-bottom:12px;color:var(--neon-purple)">🌙 Evening Routine</div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Post evening reel by 7pm</div><div class="check-priority" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">CRITICAL</div></div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Engage comments within 60 min of posting</div><div class="check-priority" style="background:rgba(255,45,120,0.15);color:var(--neon-pink)">CRITICAL</div></div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Film tomorrow's morning reel tonight</div><div class="check-priority" style="background:rgba(191,90,242,0.15);color:var(--neon-purple)">HIGH</div></div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">DM 10 creators in your space (genuine engagement)</div><div class="check-priority" style="background:rgba(0,245,255,0.15);color:var(--neon-cyan)">GROWTH</div></div>
-    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Review analytics — what performed best today?</div><div class="check-priority" style="background:rgba(0,255,148,0.15);color:var(--neon-green)">LEARN</div></div>
-  </div>
-</div>
+VIDEO FORMATS I DIRECT:
+- TikTok (9:16, 30-60 seconds, highest priority)
+- Instagram Reels (9:16, 30-90 seconds)
+- YouTube Shorts (9:16, under 60 seconds)
+- YouTube Long-form (16:9, 8-20 minutes)
+- Facebook Video (16:9, 1-5 minutes)
+- UGC-style authentic content (handheld, raw, real)
 
-<!-- BRAND AUDIT -->
-<div class="sec-title" id="brand">🎨 Brand Audit — Current State</div>
-<div class="grid-2" style="margin-bottom:28px">
-  <div class="card">
-    <div style="font-size:0.8rem;font-weight:800;margin-bottom:16px;color:var(--neon-cyan)">Current Scores</div>
-    <div class="audit-row"><div class="audit-label">Brand Personality</div><div class="audit-track"><div class="audit-fill" style="width:85%;background:var(--neon-green)"></div></div><div class="audit-score" style="color:var(--neon-green)">8.5</div></div>
-    <div class="audit-row"><div class="audit-label">Visual Consistency</div><div class="audit-track"><div class="audit-fill" style="width:50%;background:var(--neon-gold)"></div></div><div class="audit-score" style="color:var(--neon-gold)">5.0</div></div>
-    <div class="audit-row"><div class="audit-label">Bio Value Clarity</div><div class="audit-track"><div class="audit-fill" style="width:60%;background:var(--neon-gold)"></div></div><div class="audit-score" style="color:var(--neon-gold)">6.0</div></div>
-    <div class="audit-row"><div class="audit-label">Content Strategy</div><div class="audit-track"><div class="audit-fill" style="width:30%;background:var(--neon-pink)"></div></div><div class="audit-score" style="color:var(--neon-pink)">3.0</div></div>
-    <div class="audit-row"><div class="audit-label">Posting Consistency</div><div class="audit-track"><div class="audit-fill" style="width:20%;background:var(--neon-pink)"></div></div><div class="audit-score" style="color:var(--neon-pink)">2.0</div></div>
-    <div class="audit-row"><div class="audit-label">Cross-Platform</div><div class="audit-track"><div class="audit-fill" style="width:25%;background:var(--neon-pink)"></div></div><div class="audit-score" style="color:var(--neon-pink)">2.5</div></div>
-    <div class="audit-row"><div class="audit-label">Credibility Signals</div><div class="audit-track"><div class="audit-fill" style="width:75%;background:var(--neon-purple)"></div></div><div class="audit-score" style="color:var(--neon-purple)">7.5</div></div>
-  </div>
-  <div class="card">
-    <div style="font-size:0.8rem;font-weight:800;margin-bottom:16px;color:var(--neon-pink)">🔧 Immediate Fixes (Do This Today)</div>
-    <ul style="list-style:none;display:flex;flex-direction:column;gap:10px">
-      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Bio rewrite:</strong> "I'm learning Agentic AI at Harvard & building AI tools that anyone can use — follow the journey 🌈🤖" + link to PI Agent OS</span></li>
-      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Pin 3 highlights:</strong> "Harvard Journey" / "What I'm Building" / "AI Explained" — create covers in your brand colors</span></li>
-      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Profile photo:</strong> use a bold, high-contrast version of your colorful photo — no "Inspo needed" note should be visible</span></li>
-      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Pin your best reel</strong> to the top of your grid — first impression = first post seen</span></li>
-      <li style="display:flex;gap:10px;font-size:0.8rem"><span style="color:var(--neon-pink);font-size:1rem">→</span><span><strong>Add link in bio:</strong> PI Agent OS landing page — every follower becomes a potential user</span></li>
-    </ul>
-  </div>
-</div>
-
-<!-- SYSTEMS -->
-<div class="sec-title">⚙️ Systems to Implement</div>
-<div class="grid-3" style="margin-bottom:28px">
-  <div class="card card-glow-pink">
-    <div style="font-size:1.5rem;margin-bottom:10px">🎬</div>
-    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Batch Filming System</div>
-    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">Film 9–12 reels in one 3-hour session, Sunday evenings. Schedule Mon–Sat automatically. You post once a week, publish every day. Never scramble for content again.</div>
-  </div>
-  <div class="card card-glow-purple">
-    <div style="font-size:1.5rem;margin-bottom:10px">💬</div>
-    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">60-Minute Engagement Window</div>
-    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">The algorithm judges a post in the first 60 minutes. Set a timer. Reply to every comment personally. Ask a follow-up question. This alone can 3x your reach per post.</div>
-  </div>
-  <div class="card card-glow-cyan">
-    <div style="font-size:1.5rem;margin-bottom:10px">📊</div>
-    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Weekly Analytics Review</div>
-    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">Every Sunday: review top 3 performing posts. What was the hook? What was the topic? What time? Double down on what worked. Kill what didn't. This is how you get smarter every week.</div>
-  </div>
-  <div class="card card-glow-green">
-    <div style="font-size:1.5rem;margin-bottom:10px">🔄</div>
-    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Cross-Platform Repurpose</div>
-    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">IG Reel → TikTok (same day) → YouTube Short (next day) → LinkedIn text post (Tuesday) → Newsletter snippet (Friday). One piece of content, 5 platforms, 5x the audience.</div>
-  </div>
-  <div class="card">
-    <div style="font-size:1.5rem;margin-bottom:10px">📧</div>
-    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Email List from Day 1</div>
-    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">Instagram can shadowban you. TikTok can ban you. Your email list is yours forever. Start building it now. Link in bio → free "AI Agents Explained" PDF → email captured. Every follower is also a subscriber.</div>
-  </div>
-  <div class="card">
-    <div style="font-size:1.5rem;margin-bottom:10px">🤝</div>
-    <div style="font-weight:800;margin-bottom:8px;font-size:0.9rem">Collab Pipeline</div>
-    <div style="font-size:0.75rem;color:var(--text2);line-height:1.6">DM 5 creators per day. Not "can we collab" — instead engage with their content genuinely for 1 week first, then pitch a specific idea. Collabs starting Day 11 become your biggest growth multiplier.</div>
-  </div>
-</div>
-
-<!-- HASHTAG STRATEGY -->
-<div class="sec-title">🏷️ Hashtag Strategy</div>
-<div class="card" style="margin-bottom:28px">
-  <div class="grid-3">
-    <div>
-      <div style="font-size:0.72rem;font-weight:800;color:var(--neon-pink);margin-bottom:10px">🔥 BIG (1M+ posts) — 3 per post</div>
-      <div style="font-size:0.78rem;color:var(--text2);line-height:2">#AI #ArtificialIntelligence #Tech #Innovation #FutureOfWork #DigitalCreator</div>
+TO ACTIVATE ME: Tell me the video topic, platform, length, and goal.
+I'll direct the complete production brief from hook to CTA.</pre>
+      </div>
     </div>
-    <div>
-      <div style="font-size:0.72rem;font-weight:800;color:var(--neon-purple);margin-bottom:10px">🎯 MID (100K–1M) — 5 per post</div>
-      <div style="font-size:0.78rem;color:var(--text2);line-height:2">#AgenticAI #AIAgents #AIForBusiness #BuildInPublic #AICreator #TechCreator #HarvardAI</div>
-    </div>
-    <div>
-      <div style="font-size:0.72rem;font-weight:800;color:var(--neon-cyan);margin-bottom:10px">🎪 NICHE (Under 100K) — 5 per post</div>
-      <div style="font-size:0.78rem;color:var(--text2);line-height:2">#Metakittyz #LatinaInTech #AIOrchestration #ProductImagination #1MillionIn60Days #AIJourneyLog</div>
-    </div>
-  </div>
-</div>
 
-<!-- MILESTONE TARGETS -->
-<div class="sec-title">🏆 Milestone Targets</div>
-<div class="grid-4" style="margin-bottom:48px">
-  <div class="card" style="text-align:center;padding:20px 14px">
-    <div style="font-size:1.5rem;margin-bottom:6px">🌱</div>
-    <div style="font-weight:900;font-size:1.1rem;color:var(--neon-green)">1,000</div>
-    <div style="font-size:0.7rem;color:var(--text2);margin-top:4px">Day 3–5 · First real proof</div>
-  </div>
-  <div class="card" style="text-align:center;padding:20px 14px">
-    <div style="font-size:1.5rem;margin-bottom:6px">🚀</div>
-    <div style="font-weight:900;font-size:1.1rem;color:var(--neon-cyan)">10,000</div>
-    <div style="font-size:0.7rem;color:var(--text2);margin-top:4px">Day 10–14 · First viral moment</div>
-  </div>
-  <div class="card" style="text-align:center;padding:20px 14px">
-    <div style="font-size:1.5rem;margin-bottom:6px">⚡</div>
-    <div style="font-weight:900;font-size:1.1rem;color:var(--neon-purple)">100,000</div>
-    <div style="font-size:0.7rem;color:var(--text2);margin-top:4px">Day 30 · Authority established</div>
-  </div>
-  <div class="card" style="text-align:center;padding:20px 14px">
-    <div style="font-size:1.5rem;margin-bottom:6px">👑</div>
-    <div style="font-weight:900;font-size:1.1rem;color:var(--neon-pink)">1,000,000</div>
-    <div style="font-size:0.7rem;color:var(--text2);margin-top:4px">Day 90 · The mission complete</div>
-  </div>
-</div>
+    <!-- ARIA -->
+    <div style="margin-top:48px">
+      <div class="agent-section-header">
+        <div class="agent-sec-emoji">📲</div>
+        <div>
+          <div class="agent-sec-name" style="color:var(--tl)">ARIA</div>
+          <div class="agent-sec-role">Social Media Manager</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-header">
+          <div class="prompt-agent-name">
+            <div class="prompt-dot" style="background:var(--tl);box-shadow:0 0 6px var(--tl)"></div>
+            <span class="prompt-label" style="color:var(--tl)">ARIA — SYSTEM PROMPT</span>
+          </div>
+          <button class="copy-btn" data-target="aria-prompt">Copy Prompt</button>
+        </div>
+        <pre class="prompt-code" id="aria-prompt">You are ARIA, the Social Media Manager for [BRAND NAME].
+You manage the full social media operation: scheduling, engagement,
+community growth, analytics review, and platform strategy.
 
-</div><!-- end page -->
+BRAND: [BRAND NAME] | Niche: [NICHE] | Goal: [FOLLOWER/REVENUE TARGET]
+Platforms: Instagram, TikTok, YouTube, Twitter/X, Facebook, Pinterest
+
+DAILY RESPONSIBILITIES:
+Morning (check these every day):
+- Review overnight engagement — flag top comments to reply to
+- Check trending sounds/topics relevant to our niche
+- Confirm today's scheduled posts are queued correctly
+
+Midday:
+- Draft 3 engagement comments for accounts in our niche (minimum)
+- Monitor any DMs or story replies that need a response
+- Check if any trending audio should be used within 24 hours
+
+Evening:
+- Review today's analytics (reach, engagement rate, new followers)
+- Adjust tomorrow's strategy based on what performed best
+- Confirm tomorrow's content is scheduled
+
+OPTIMAL POSTING TIMES (Eastern Time — adjust for your timezone):
+Instagram: 6am, 11am, 7pm
+TikTok: 7am, 12pm, 9pm
+Twitter/X: 8am, 12pm, 5pm, 8pm
+YouTube: Thursday–Sunday, 12pm–3pm
+Pinterest: 8pm–11pm daily
+
+GROWTH TACTICS (execute these weekly):
+- Engage meaningfully with 20 accounts in our niche daily
+- Use trending audio within 24-48 hours of its peak
+- Repurpose best-performing content at 7-day and 30-day marks
+- Pin our current lead magnet post on every platform
+
+ENGAGEMENT RESPONSE TEMPLATES (personalize these):
+Comment reply: Acknowledge their point + add extra value + soft CTA
+DM response: Thank → answer their question → offer next step
+Collaboration inquiry: Review their metrics → respond within 24 hours
+
+WEEKLY REPORT FORMAT:
+Date range | Total reach | New followers per platform | Top post (link + why it worked)
+| Engagement rate | One action item for next week
+
+TO ACTIVATE ME: Tell me today's date, your content queue, and this
+week's growth goal. I'll manage your entire social operation.</pre>
+      </div>
+    </div>
+
+    <!-- REACH -->
+    <div style="margin-top:48px">
+      <div class="agent-section-header">
+        <div class="agent-sec-emoji">🎯</div>
+        <div>
+          <div class="agent-sec-name" style="color:var(--yl)">REACH</div>
+          <div class="agent-sec-role">Ad Creator Agent</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-header">
+          <div class="prompt-agent-name">
+            <div class="prompt-dot" style="background:var(--yl);box-shadow:0 0 6px var(--yl)"></div>
+            <span class="prompt-label" style="color:var(--yl)">REACH — SYSTEM PROMPT</span>
+          </div>
+          <button class="copy-btn" data-target="reach-prompt">Copy Prompt</button>
+        </div>
+        <pre class="prompt-code" id="reach-prompt">You are REACH, the Ad Creator Agent for [BRAND NAME].
+You write high-converting paid ad campaigns for Meta (Facebook/Instagram),
+TikTok, YouTube, and Google — campaigns that drive measurable ROI.
+
+BRAND: [BRAND NAME] | Niche: [NICHE] | Audience: [TARGET AUDIENCE]
+Current offer: [WHAT YOU'RE SELLING OR PROMOTING]
+Average price point: [PRICE] | Goal: [FOLLOWERS / LEADS / SALES]
+
+MY 5 AD FRAMEWORKS (I rotate between these based on the offer):
+1. PSP (Problem-Solution-Proof): Lead with pain → offer solution → prove it
+2. Testimonial-Twist: Open with a customer result → reveal the unexpected journey
+3. BAB (Before-After-Bridge): Show the transformation → bridge with your method
+4. Question-Chain: 3 yes-questions → soft offer → CTA
+5. Bold Claim: Make a specific, provable claim → back it up → ask for action
+
+FOR EVERY AD, I PRODUCE:
+1. Primary text (3 versions: short/150 chars, medium/250 chars, long/500 chars)
+2. Headline (5 options — A/B test ready)
+3. Description line (2 options)
+4. Video script (15-second, 30-second, 60-second versions)
+5. Static ad concept (visual description + copy overlay text)
+6. Targeting recommendation (audiences, interests, behaviors, exclusions)
+7. Budget recommendation (daily budget + campaign objective)
+8. A/B test structure (which 2 variables to test first)
+
+WINNING AD PRINCIPLES I ALWAYS FOLLOW:
+- Call out the audience in line 1 ("Attention [PERSONA]:")
+- Lead with the biggest benefit, never the feature
+- Use specific numbers in claims (73% not "most")
+- Create urgency without fabricating scarcity
+- End with ONE clear CTA — never give two options
+
+TO ACTIVATE ME: Tell me what you're promoting, who you're targeting,
+your budget, and your KPI. I'll build the complete campaign.</pre>
+      </div>
+    </div>
+
+    <!-- SPARK -->
+    <div style="margin-top:48px">
+      <div class="agent-section-header">
+        <div class="agent-sec-emoji">💫</div>
+        <div>
+          <div class="agent-sec-name" style="color:#9b5eff">SPARK</div>
+          <div class="agent-sec-role">Brand Influencer Agent</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-header">
+          <div class="prompt-agent-name">
+            <div class="prompt-dot" style="background:#9b5eff;box-shadow:0 0 6px #9b5eff"></div>
+            <span class="prompt-label" style="color:#9b5eff">SPARK — SYSTEM PROMPT</span>
+          </div>
+          <button class="copy-btn" data-target="spark-prompt">Copy Prompt</button>
+        </div>
+        <pre class="prompt-code" id="spark-prompt">You are SPARK, the Brand Influencer Agent for [BRAND NAME].
+Your mission: build [CREATOR NAME]'s reputation as the go-to authority
+in [NICHE], create partnership opportunities, and amplify the brand
+through strategic influence and PR.
+
+BRAND: [BRAND NAME] | Creator: [YOUR NAME] | Niche: [NICHE]
+Current platform: [PRIMARY PLATFORM] | Follower count: [COUNT]
+Positioning: [ONE SENTENCE — how you want to be known]
+
+MY THREE ROLES:
+
+1. AUTHORITY CONTENT — I write posts that position you as an expert:
+   - "I did X for 30 days and here's what happened" (experiment format)
+   - "The truth about [TOPIC] nobody talks about" (contrarian format)
+   - "Here's exactly how I [ACHIEVED RESULT]" (transparent process)
+   - "Hot take: [BOLD STATEMENT]" (opinion format for engagement)
+   - "Unpopular opinion: [CHALLENGE THE NORM]" (debate starter)
+
+2. COLLAB STRATEGY — I identify and pitch creator partnerships:
+   Outreach template:
+   Subject: [BRAND] x [THEIR BRAND] — quick idea
+   "Hey [NAME], I've been following your [SPECIFIC CONTENT]. I think
+   [BRAND] and [THEIR BRAND] could create something together that helps
+   [SHARED AUDIENCE] with [SHARED PROBLEM]. Here's my quick idea:
+   [1-LINE CONCEPT]. Would you be open to a 15-min call?"
+
+3. PR & PRESS — I write media outreach:
+   - Press release for major milestones
+   - Podcast pitch email (3 templates)
+   - Newsletter swap proposal
+   - Brand deal pitch deck outline
+
+METRICS I TRACK:
+Brand mentions | Share of voice in niche | Collab conversion rate
+Press placements | Affiliate-driven sales
+
+TO ACTIVATE ME: Tell me your current positioning and growth goal.
+I'll build your authority and partnership strategy.</pre>
+      </div>
+    </div>
+
+    <!-- GUARDIAN -->
+    <div style="margin-top:48px">
+      <div class="agent-section-header">
+        <div class="agent-sec-emoji">🛡️</div>
+        <div>
+          <div class="agent-sec-name" style="color:var(--gr)">GUARDIAN</div>
+          <div class="agent-sec-role">QA &amp; System Analyst</div>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-header">
+          <div class="prompt-agent-name">
+            <div class="prompt-dot" style="background:var(--gr);box-shadow:0 0 6px var(--gr)"></div>
+            <span class="prompt-label" style="color:var(--gr)">GUARDIAN — SYSTEM PROMPT</span>
+          </div>
+          <button class="copy-btn" data-target="guardian-prompt">Copy Prompt</button>
+        </div>
+        <pre class="prompt-code" id="guardian-prompt">You are GUARDIAN, the QA and System Analyst for [BRAND NAME].
+Your role: audit every piece of content and system output before it
+goes live — protecting brand quality, consistency, and compliance.
+
+BRAND: [BRAND NAME] | Voice: [BRAND VOICE] | Platform rules: [PRIMARY PLATFORMS]
+
+THE GUARDIAN DAILY AUDIT — run this every morning:
+
+CONTENT QUALITY CHECKLIST:
+□ Brand voice matches established guidelines (not generic or off-tone)
+□ No factual errors, unverified claims, or made-up statistics
+□ Hashtags are relevant and not banned or flagged by platform
+□ Every CTA is clear and functional (links work, destination is right)
+□ Images/video meet platform specs (resolution, aspect ratio, length)
+□ Spelling, grammar, and punctuation are correct
+□ FTC disclosure included where required (#ad #sponsored #AIGenerated)
+□ No copyrighted music, images, or trademarked brand logos used
+
+SYSTEM HEALTH CHECK:
+□ Scheduling tool queue is loaded correctly for next 7 days
+□ Ad campaigns are running within budget (no overspend)
+□ Analytics tracking is active on all platforms
+□ Email sequences are triggered and sending correctly
+□ All links in bio and profile are current and functional
+
+BRAND CONSISTENCY AUDIT:
+□ Profile photos are consistent across all platforms
+□ Bio language reflects the current offer and positioning
+□ Pinned posts feature current lead magnet or best content
+□ Story highlights are organized and all links work
+
+RED FLAGS — escalate these immediately:
+- Negative viral moment developing (screenshot and assess)
+- Competitor copying content (document with timestamps)
+- Platform policy violation risk (pause content until cleared)
+- Ad account spend anomaly (pause and review)
+
+GUARDIAN DAILY REPORT FORMAT:
+DATE | CONTENT CLEARED (count) | ISSUES FOUND (list) | ACTION REQUIRED | SYSTEM STATUS: ✓ HEALTHY / ⚠ REVIEW / ✗ CRITICAL
+
+TO ACTIVATE ME: "GUARDIAN, run daily audit for [DATE]."
+I will produce a complete status report with every item reviewed.</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     7. DAILY 5-COMMAND ROUTINE
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <p class="eyebrow">After The Build Weekend</p>
+    <h2 class="h2">The Daily 5-Command Routine</h2>
+    <p class="lead">After your build weekend, maintaining your entire AI company takes less than 45 minutes a day. Here's the exact routine.</p>
+
+    <div class="routine-grid">
+      <div class="routine-card">
+        <div class="routine-time">Morning</div>
+        <div class="routine-mins">10<small style="font-size:18px;font-family:var(--font-b)"> min</small></div>
+        <div class="routine-title">GUARDIAN Daily Audit</div>
+        <div class="routine-desc">Run GUARDIAN's audit prompt. Review the report. Fix any flagged issues before anything goes live.</div>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">Midday</div>
+        <div class="routine-mins">15<small style="font-size:18px;font-family:var(--font-b)"> min</small></div>
+        <div class="routine-title">NOVA Content Drop</div>
+        <div class="routine-desc">Give NOVA one topic idea. Let it generate today's content. Review, approve, and queue in Buffer.</div>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">Afternoon</div>
+        <div class="routine-mins">10<small style="font-size:18px;font-family:var(--font-b)"> min</small></div>
+        <div class="routine-title">PULSE Video Brief</div>
+        <div class="routine-desc">Run one PULSE video brief per day — build a video bank of scripts for future filming sessions.</div>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">Evening</div>
+        <div class="routine-mins">5<small style="font-size:18px;font-family:var(--font-b)"> min</small></div>
+        <div class="routine-title">ARIA Schedules Tomorrow</div>
+        <div class="routine-desc">Ask ARIA to review tomorrow's queue and confirm optimal posting times. Approve and close.</div>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">Night</div>
+        <div class="routine-mins">5<small style="font-size:18px;font-family:var(--font-b)"> min</small></div>
+        <div class="routine-title">REACH Reviews Ads</div>
+        <div class="routine-desc">Paste today's ad performance numbers. Ask REACH to interpret and recommend one optimization.</div>
+      </div>
+    </div>
+
+    <div class="tip-box" style="margin-top:28px">
+      <div class="tip-box-label">💡 Pro Tip</div>
+      <p>Run all 5 commands back-to-back in a single browser session with all your Claude Projects open in separate tabs. Tab-switch workflow takes less than 40 minutes total once you're in the rhythm. Most people spend 4+ hours a day on what you're now doing in under one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     GLOSSARY
+════════════════════════════════════════════════════ -->
+<section class="section section--alt">
+  <div class="wrap wrap--wide">
+    <p class="eyebrow">Plain English Dictionary</p>
+    <h2 class="h2">20 AI Terms, Explained Simply</h2>
+    <p class="lead">No jargon. No gatekeeping. Here's every term you'll encounter — in language that actually makes sense.</p>
+
+    <div class="glossary-grid">
+      <div class="gloss-item">
+        <div class="gloss-term">AI Agent</div>
+        <div class="gloss-def">A smart AI assistant you give a specific job to. Like hiring a specialist — NOVA is your content specialist, GUARDIAN is your quality control specialist.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">System Prompt</div>
+        <div class="gloss-def">The instructions you give your AI before it starts working. It's how you tell the AI who it is, what it does, and how it should behave — every single time.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">LLM (Large Language Model)</div>
+        <div class="gloss-def">The brain inside tools like Claude and ChatGPT. An LLM is trained on massive amounts of text and can read, write, and reason like a human — but much faster.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Claude</div>
+        <div class="gloss-def">An AI assistant made by Anthropic. This is your main tool for building and running all 6 agents. Think of it as your AI headquarters.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">ChatGPT</div>
+        <div class="gloss-def">An AI assistant made by OpenAI. Similar to Claude — great for content generation, brainstorming, and writing. Use both for different strengths.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Prompt</div>
+        <div class="gloss-def">What you type into an AI to tell it what to do. The better your prompt (more specific, more context), the better the output you get back.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Token</div>
+        <div class="gloss-def">How AI measures text — roughly 1 token = 1 word. AI tools have token limits (how much text they can process at once). Don't worry about this unless you hit a limit.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Model</div>
+        <div class="gloss-def">The specific version of an AI. Claude Sonnet, GPT-4, etc. Different models have different strengths. Newer = generally smarter, but also more expensive.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Fine-tuning</div>
+        <div class="gloss-def">Training an AI on your specific data so it learns your style, voice, or domain. Advanced — you don't need this to start, but it's how brands get truly custom AI.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Automation</div>
+        <div class="gloss-def">Making tasks happen automatically without you having to do them. Buffer scheduling your posts = automation. ARIA managing your content calendar = automation.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Workflow</div>
+        <div class="gloss-def">The sequence of steps you follow to get something done. Your "1 topic → 12 posts → schedule → publish" process is a workflow.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Orchestration</div>
+        <div class="gloss-def">Managing multiple AI agents and making them work together. That's exactly what you're doing — you're the orchestra conductor, your agents are the musicians.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Midjourney</div>
+        <div class="gloss-def">An AI tool that generates images from text descriptions. You describe what you want, it creates a professional image. Used for your avatar and visual content.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Content Calendar</div>
+        <div class="gloss-def">A schedule that maps out what you're posting, where, and when. ARIA manages this for you. It keeps you consistent without having to think "what do I post today?"</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">UGC (User Generated Content)</div>
+        <div class="gloss-def">Casual, authentic-looking content — like a video you film on your phone. UGC converts better than polished production because it feels real and relatable.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Hook</div>
+        <div class="gloss-def">The first line, sentence, or visual of your content that makes someone stop scrolling. The most important 3 seconds of any piece of content you create.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">CTA (Call To Action)</div>
+        <div class="gloss-def">The instruction you give your audience at the end of content — "Follow for more," "Click the link in bio," "Comment YES if this resonates." Every post needs one.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">A/B Testing</div>
+        <div class="gloss-def">Running two versions of something (two ad headlines, two hooks, two thumbnails) to see which one performs better. Then doing more of the winner.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Brand Voice</div>
+        <div class="gloss-def">The consistent personality and tone of your content. If your brand voice is "bold, funny, and direct," every piece of content should sound bold, funny, and direct — whoever (or whatever AI) wrote it.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Engagement Rate</div>
+        <div class="gloss-def">The percentage of people who interact with your content (likes, comments, shares, saves) compared to those who saw it. Higher = better. 3-5% is good. 10%+ is great.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     LEGAL & COMPLIANCE
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <p class="eyebrow">Protect Yourself</p>
+    <h2 class="h2">Legal Stuff You Need To Know Before You Post</h2>
+    <p class="lead">This isn't meant to scare you — it's meant to protect you. 5 minutes of reading now saves headaches later.</p>
+
+    <div style="margin-top:32px">
+      <h3 class="h3" style="margin-bottom:20px">The Quick Facts</h3>
+
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="card" style="border-left:3px solid var(--pk)">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--pk);margin-bottom:8px">FTC DISCLOSURE</div>
+          <p style="font-size:14px;color:var(--muted);line-height:1.72">You must disclose when content is AI-generated, sponsored, or involves a paid partnership. Use <strong style="color:var(--txt)">#ad</strong>, <strong style="color:var(--txt)">#sponsored</strong>, or <strong style="color:var(--txt)">#AIGenerated</strong> in your captions. The FTC is actively enforcing this — don't skip it.</p>
+        </div>
+
+        <div class="card" style="border-left:3px solid var(--tl)">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--tl);margin-bottom:8px">COPYRIGHT</div>
+          <p style="font-size:14px;color:var(--muted);line-height:1.72">AI-generated images are not automatically copyrightable under current US law. Use original prompts, document your creative process, and never copy another creator's work. For music in videos — only use royalty-free tracks (Epidemic Sound, Artlist, or YouTube Audio Library).</p>
+        </div>
+
+        <div class="card" style="border-left:3px solid var(--pu)">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:#9b5eff;margin-bottom:8px">PLATFORM TERMS OF SERVICE</div>
+          <p style="font-size:14px;color:var(--muted);line-height:1.72">TikTok, Instagram, YouTube, and Twitter/X all allow AI-generated content — but require disclosure. Read each platform's current AI content policy. They change frequently. GUARDIAN should flag any content that might violate platform rules before it goes live.</p>
+        </div>
+
+        <div class="card" style="border-left:3px solid var(--or)">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--or);margin-bottom:8px">LIKENESS &amp; PRIVACY</div>
+          <p style="font-size:14px;color:var(--muted);line-height:1.72">Don't create AI avatars that look like real people (celebrities, public figures, or private individuals) without their consent. Don't include other people's personal data in your AI prompts. Your AI avatar must be original to you.</p>
+        </div>
+
+        <div class="card" style="border-left:3px solid var(--gr)">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gr);margin-bottom:8px">BUSINESS &amp; TAX</div>
+          <p style="font-size:14px;color:var(--muted);line-height:1.72">If you're making money, you need a business entity. An LLC (Limited Liability Company) is the standard starting point — it protects your personal assets and makes taxes cleaner. Register at your state's Secretary of State website (most states cost $50–$150). Consult a CPA for tax setup.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px">
+      <h3 class="h3" style="margin-bottom:16px">Before You Post — Legal Checklist</h3>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:20px">Run through this before publishing any monetized or AI-generated content:</p>
+
+      <div class="legal-list">
+        <label class="legal-item">
+          <input type="checkbox" class="legal-check">
+          <div class="legal-text"><strong>Disclosure added</strong> <span>— #ad, #sponsored, or #AIGenerated included if applicable</span></div>
+        </label>
+        <label class="legal-item">
+          <input type="checkbox" class="legal-check">
+          <div class="legal-text"><strong>Music is licensed</strong> <span>— royalty-free, platform audio library, or original</span></div>
+        </label>
+        <label class="legal-item">
+          <input type="checkbox" class="legal-check">
+          <div class="legal-text"><strong>No real person's likeness</strong> <span>— AI avatar is original, not based on someone else</span></div>
+        </label>
+        <label class="legal-item">
+          <input type="checkbox" class="legal-check">
+          <div class="legal-text"><strong>Claims are honest</strong> <span>— results mentioned are real, not fabricated testimonials</span></div>
+        </label>
+        <label class="legal-item">
+          <input type="checkbox" class="legal-check">
+          <div class="legal-text"><strong>No copyrighted logos or brands</strong> <span>— don't use Nike, Apple, or any trademarked brand assets</span></div>
+        </label>
+        <label class="legal-item">
+          <input type="checkbox" class="legal-check">
+          <div class="legal-text"><strong>No personal data of others</strong> <span>— don't share other people's emails, addresses, or private info</span></div>
+        </label>
+        <label class="legal-item">
+          <input type="checkbox" class="legal-check">
+          <div class="legal-text"><strong>Platform TOS checked</strong> <span>— content complies with TikTok/Instagram/YouTube's current AI policy</span></div>
+        </label>
+        <label class="legal-item">
+          <input type="checkbox" class="legal-check">
+          <div class="legal-text"><strong>Business entity active</strong> <span>— if earning money, you have an LLC or equivalent registered</span></div>
+        </label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     8. DOWNLOAD YOUR RESOURCES
+════════════════════════════════════════════════════ -->
+<section class="section section--alt">
+  <div class="wrap">
+    <p class="eyebrow">Keep Building</p>
+    <h2 class="h2">Download Your Resources</h2>
+    <p class="lead">Everything from this build guide — packaged, printable, and ready to use. Free to download.</p>
+
+    <div class="dl-grid">
+      <div class="dl-card">
+        <div class="dl-icon">📋</div>
+        <div class="dl-title">40 AI Prompts PDF</div>
+        <div class="dl-desc">The complete prompt library for all 6 agents, formatted for copy-paste use. Print it or save it to Notion.</div>
+        <a href="https://metakittyz.com/quickstart" class="btn btn-pk" target="_blank" rel="noopener">Get the PDF →</a>
+      </div>
+
+      <div class="dl-card">
+        <div class="dl-icon">📖</div>
+        <div class="dl-title">The Full Playbook</div>
+        <div class="dl-desc">The complete Metakittyz AI Build Playbook — the 90-day system, agent setup, and monetization roadmap.</div>
+        <a href="https://metakittyz.com/playbook" class="btn btn-tl" target="_blank" rel="noopener">Get The Playbook →</a>
+      </div>
+
+      <div class="dl-card">
+        <div class="dl-icon">💬</div>
+        <div class="dl-title">Join The Community</div>
+        <div class="dl-desc">Connect with other creators building their AI companies. Ask questions, share wins, get feedback from Erika live.</div>
+        <a href="https://metakittyz.com/discord" class="btn btn-yl" target="_blank" rel="noopener">Join Discord →</a>
+      </div>
+    </div>
+
+    <div class="cheer-box" style="margin-top:40px;padding:24px 28px;border-radius:var(--r2)">
+      <span style="font-size:32px">👑</span>
+      <div>
+        <p style="font-size:18px;font-weight:700;margin-bottom:6px">You built an AI company this weekend.</p>
+        <p style="font-size:14px;color:var(--muted);font-weight:400">Most people talk about AI. You actually used it. Share your build on social with <strong style="color:var(--pk)">#MetakittyzBuild</strong> — Erika watches every single one.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rb-bar"></div>
+
+<footer class="footer">
+  <div class="footer-brand gt">🐱 METAKITTYZ</div>
+  <div class="footer-copy">© 2025 Metakittyz &middot; Built with AI &middot; Teaching you to do the same &middot; <a href="index.html" style="color:var(--muted)">← Back to Home</a></div>
+</footer>
 
 <script>
-// ── State ────────────────────────────────────────────────────────
-var STATE_KEY = 'metakittyz_state';
-var state = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
-if (!state.startDate) state.startDate = new Date().toISOString().split('T')[0];
-if (!state.followers) state.followers = 295;
-if (!state.dayFollowers) state.dayFollowers = {};
-if (!state.doneDays) state.doneDays = [];
-if (!state.checks) state.checks = {};
-saveState();
+/* Nav toggle */
+(function () {
+  var btn = document.getElementById('navToggle');
+  var nav = document.getElementById('navLinks');
+  if (!btn || !nav) return;
+  btn.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    btn.textContent = open ? '✕' : '☰';
+    btn.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('click', function (e) {
+    if (!btn.contains(e.target) && !nav.contains(e.target)) {
+      nav.classList.remove('open');
+      btn.textContent = '☰';
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+}());
 
-function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
-
-// ── Day calculation ───────────────────────────────────────────────
-function getDayNum() {
-  var start = new Date(state.startDate);
-  var now = new Date();
-  var diff = Math.floor((now - start) / 86400000) + 1;
-  return Math.max(1, Math.min(diff, 90));
-}
-
-// ── Update metrics ────────────────────────────────────────────────
-function updateMetrics() {
-  var dayNum = getDayNum();
-  var daysLeft = Math.max(0, 91 - dayNum);
-  var goal = 1000000;
-  var followers = state.followers;
-  var needed = daysLeft > 0 ? Math.ceil((goal - followers) / daysLeft) : 0;
-  var pct = (followers / goal * 100);
-
-  document.getElementById('current-followers').textContent = followers.toLocaleString();
-  document.getElementById('days-remaining').textContent = daysLeft;
-  document.getElementById('needed-per-day').textContent = needed.toLocaleString();
-  document.getElementById('prog-pct').textContent = pct.toFixed(2) + '%';
-  document.getElementById('prog-fill').style.width = Math.max(0.1, pct) + '%';
-  document.getElementById('nav-day').textContent = 'Day ' + dayNum + ' / 90';
-  document.getElementById('start-date-label').textContent = 'Started ' + state.startDate;
-  document.getElementById('days-done-label').textContent = (dayNum - 1) + ' / 90 days complete';
-}
-
-// ── Update follower count ─────────────────────────────────────────
-function updateFollowers() {
-  var val = parseInt(document.getElementById('follower-input').value);
-  if (!val || isNaN(val) || val < 0) return;
-  state.followers = val;
-  var today = new Date().toISOString().split('T')[0];
-  state.dayFollowers[today] = val;
-  var dayNum = getDayNum();
-  if (!state.doneDays.includes(dayNum)) state.doneDays.push(dayNum);
-  saveState();
-  updateMetrics();
-  renderDots();
-  document.getElementById('follower-input').value = '';
-  document.getElementById('follower-input').placeholder = '✓ Updated to ' + val.toLocaleString() + ' followers';
-}
-
-// ── Day dots ─────────────────────────────────────────────────────
-function renderDots() {
-  var dayNum = getDayNum();
-  var wrap = document.getElementById('day-dots');
-  wrap.innerHTML = '';
-  for (var i = 1; i <= 90; i++) {
-    var d = document.createElement('div');
-    d.className = 'day-dot';
-    if (state.doneDays.includes(i)) d.classList.add('done');
-    else if (i === dayNum) d.classList.add('today');
-    else if (i > dayNum) d.classList.add('upcoming');
-    d.title = 'Day ' + i;
-    (function(day) {
-      d.onclick = function() {
-        if (!state.doneDays.includes(day)) { state.doneDays.push(day); }
-        else { state.doneDays = state.doneDays.filter(function(d){ return d !== day; }); }
-        saveState(); renderDots();
-      };
-    })(i);
-    wrap.appendChild(d);
-  }
-}
-
-// ── Calendar ─────────────────────────────────────────────────────
-var CAL_DATA = [
-  // Days 1–90 content plan
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Announce the 90-day mission'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'What IS an AI agent?'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Tour PI Agent OS live'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Orchestration explained simply'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Trending audio + AI twist'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Week 1 review + numbers'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Behind the scenes: filming day'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'The Brief: why you only explain once'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Shoreline Properties pipeline demo'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'What is a pipeline?'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'POV: AI runs your whole business'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'First week mistake I made'},
-  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Duet with AI creator'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Watch AI build a brand in 60s'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Governance: the part nobody talks about'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Adding new agent to pipeline'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'"Stop using ChatGPT for this"'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Follower count update: 2 weeks in'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Memory & context in agents'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Client portal demo walkthrough'},
-  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'AI creator collab drops'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Human in the loop explained'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Trending sound: AI workplace'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'What Harvard taught me so far'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Live Q&A: building with AI'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Agent vs chatbot: the real difference'},
-  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Latina in tech collab post'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Real client workflow: Shoreline'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'POV: your AI team never sleeps'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Month 1 finale recap'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Harvard course complete reveal'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'PI Agent OS beta announcement'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Month 2 begins: doubling down'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'"I ran [follower business] through AI"'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'The future of agentic AI'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'New template reveal'},
-  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Podcast appearance clip'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 37 numbers + what changed'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Trending challenge: AI edition'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Behind the algorithm: how it works'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Multi-agent systems: what comes next'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'The biggest mistake of the 90 days'},
-  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Entrepreneur creator collab'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'AI agent builds in real time on screen'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Controversial AI take (engagement bait)'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Transparency: real analytics screenshot'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'What I wish I knew on Day 1'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'User testimonial / first user story'},
-  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Media feature / PR clip'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 50: 10 days left — final push'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'"10 days to 1M — here\'s the plan"'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Full product demo: PI Agent OS'},
-  {tag:'Harvard',col:'rgba(255,45,120,0.7)',title:'Everything AI taught me this year'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 54: real talk, real numbers'},
-  {tag:'Collab',col:'rgba(0,255,148,0.7)',title:'Final big collab drops'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'Going viral on purpose — experiment'},
-  {tag:'Build',col:'rgba(191,90,242,0.7)',title:'Brand partnership reveal'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 58: 2 days left'},
-  {tag:'Journey',col:'rgba(0,245,255,0.7)',title:'Day 59: eve of the finale'},
-  {tag:'Viral',col:'rgba(255,214,10,0.7)',title:'🎯 DAY 60 FINALE — the full story'},
-];
-
-function renderCalendar() {
-  var body = document.getElementById('cal-body');
-  body.innerHTML = '';
-  var dayNum = getDayNum();
-  var startOffset = 0; // Mon = 0
-  for (var i = 0; i < startOffset; i++) {
-    body.appendChild(Object.assign(document.createElement('div'), {className:'cal-day',innerHTML:''}));
-  }
-  for (var d = 0; d < 90; d++) {
-    var data = CAL_DATA[d] || {tag:'Content',col:'rgba(99,102,241,0.6)',title:'Content day'};
-    var el = document.createElement('div');
-    el.className = 'cal-day';
-    if (d + 1 === dayNum) el.classList.add('today-cal');
-    else if (d + 1 < dayNum && state.doneDays.includes(d + 1)) el.classList.add('done-cal');
-    el.innerHTML = '<div class="cal-num">D' + (d+1) + '</div>' +
-      '<span class="cal-tag" style="background:' + data.col + ';color:#000">' + data.tag + '</span>' +
-      '<div class="cal-title">' + data.title + '</div>';
-    body.appendChild(el);
-  }
-}
-
-// ── Checklist ─────────────────────────────────────────────────────
-function toggleCheck(el) {
-  var key = el.querySelector('.check-text').textContent;
-  el.classList.toggle('checked');
-  var today = new Date().toISOString().split('T')[0];
-  state.checks[today + '_' + key] = el.classList.contains('checked');
-  saveState();
-}
-
-// ── Init ─────────────────────────────────────────────────────────
-updateMetrics();
-renderDots();
-renderCalendar();
-
-// Smooth scroll for nav links
-document.querySelectorAll('.nav-link').forEach(function(link) {
-  link.addEventListener('click', function(e) {
-    e.preventDefault();
-    var target = document.querySelector(this.getAttribute('href'));
-    if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
-    document.querySelectorAll('.nav-link').forEach(function(l){ l.classList.remove('active-link'); });
-    this.classList.add('active-link');
+/* Copy buttons */
+document.querySelectorAll('.copy-btn[data-target]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var target = document.getElementById(btn.getAttribute('data-target'));
+    if (!target) return;
+    navigator.clipboard.writeText(target.textContent).then(function () {
+      var orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function () {
+        btn.textContent = orig;
+        btn.classList.remove('copied');
+      }, 2000);
+    }).catch(function () {
+      /* Fallback for older browsers */
+      var ta = document.createElement('textarea');
+      ta.value = target.textContent;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function () {
+        btn.textContent = btn.getAttribute('data-target').includes('prompt') ? 'Copy Prompt' : 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
   });
 });
+
+/* Persist legal checkboxes in localStorage */
+(function () {
+  var checks = document.querySelectorAll('.legal-check');
+  checks.forEach(function (cb, i) {
+    var key = 'mk-legal-' + i;
+    if (localStorage.getItem(key) === 'true') cb.checked = true;
+    cb.addEventListener('change', function () {
+      localStorage.setItem(key, String(cb.checked));
+    });
+  });
+}());
 </script>
+
 </body>
 </html>

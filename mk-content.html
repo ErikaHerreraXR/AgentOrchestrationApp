@@ -3,1055 +3,694 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Content Studio — Metakittyz AI</title>
+<title>Content OS — The 1→12 Content Machine | Metakittyz</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
 :root{
-  --pink:#FF2D78;--cyan:#00F5FF;--green:#00FF94;--gold:#FFD60A;
-  --purple:#BF5AF2;--orange:#FF6B2B;
-  --bg:#0A0A0F;--surface:#13131A;--card:#1C1C28;--border:#2A2A3E;
-  --text:#E8E8F0;--muted:#6B6B8A;
-  --font:'Inter',system-ui,sans-serif;
+  --bg:#0A0015;--bg2:#0d001f;--card:#0f0022;--surf:#160030;
+  --pk:#FF2D78;--tl:#00F5D4;--pu:#7B2FFF;--gr:#00FF41;--yl:#FFE000;--or:#FF6B35;
+  --txt:#E8E0F0;--muted:#9A90B0;--dim:#2a2040;
+  --rb:linear-gradient(90deg,#FF2D78,#FF6B35,#FFE000,#00F5D4,#7B2FFF,#FF2D78);
+  --font:'Inter',system-ui,sans-serif;--mono:'Space Mono',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--font);min-height:100vh;overflow-x:hidden;padding-bottom:80px}
 
-/* ── TOPBAR ── */
-.topbar{
-  position:sticky;top:0;z-index:100;
-  background:rgba(10,10,15,.95);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-}
-.tb-inner{
-  max-width:1200px;margin:0 auto;
-  display:flex;align-items:center;gap:12px;
-  padding:12px 16px;
-}
-.tb-brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-.tb-logo{
-  width:32px;height:32px;border-radius:8px;
-  background:linear-gradient(135deg,var(--pink),var(--purple));
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:900;color:#fff;
-}
-.tb-name{font-size:14px;font-weight:700;color:var(--text)}
-.tb-tag{
-  font-size:10px;font-weight:600;letter-spacing:.06em;
-  color:var(--pink);background:rgba(255,45,120,.1);
-  padding:2px 8px;border-radius:20px;border:1px solid rgba(255,45,120,.3);
-}
-.tb-nav{display:flex;gap:4px;margin-left:auto}
-.tb-nav a{
-  font-size:12px;font-weight:500;color:var(--muted);
-  text-decoration:none;padding:6px 10px;border-radius:6px;
-  transition:all .2s;
-}
-.tb-nav a:hover{color:var(--text);background:var(--card)}
-.tb-nav a.active{color:var(--pink);background:rgba(255,45,120,.1)}
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(10,0,21,.96);backdrop-filter:blur(20px);border-top:1px solid rgba(123,47,255,.3);display:flex;align-items:center;height:64px}
+.bn-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--muted);font-size:9px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;transition:color .2s;padding:8px 4px}
+.bn-tab:hover,.bn-tab.active{color:var(--tl)}
+.bn-tab span:first-child{font-size:1.2rem;line-height:1}
+/* ERIKA FLOAT */
+.erika-float{position:fixed;bottom:80px;right:20px;z-index:600;cursor:pointer;width:56px;height:56px;border-radius:50%;border:2px solid var(--tl);overflow:visible;transition:transform .2s}
+.erika-float:hover{transform:scale(1.08)}
+.erika-float img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--surf);display:block}
+.erika-dot{position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--gr);border:2px solid var(--bg);animation:dot-pulse 2s ease infinite}
+@keyframes dot-pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,65,.4)}70%{box-shadow:0 0 0 6px rgba(0,255,65,0)}}
+.erika-chat{display:none;position:fixed;bottom:148px;right:16px;z-index:601;width:280px;background:var(--card);border:1px solid rgba(0,245,212,.3);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.erika-chat.open{display:block;animation:slide-up .3s ease}
+@keyframes slide-up{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.chat-hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;background:rgba(0,245,212,.07);border-bottom:1px solid rgba(0,245,212,.15)}
+.chat-hdr img{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--surf)}
+.chat-hdr-info .cn{font-weight:800;font-size:.9rem}
+.chat-hdr-info .cs{font-size:.75rem;color:var(--gr)}
+.chat-close{margin-left:auto;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px}
+.chat-body{padding:16px;font-size:.85rem;color:var(--muted);line-height:1.6}
+.chat-links{display:flex;flex-direction:column;gap:8px;padding:12px 16px;border-top:1px solid var(--dim)}
+.chat-links a{background:rgba(0,245,212,.1);border:1px solid rgba(0,245,212,.25);color:var(--tl);text-decoration:none;font-size:.82rem;font-weight:700;padding:8px 14px;border-radius:10px;transition:all .2s;text-align:center;display:block}
+.chat-links a:hover{background:rgba(0,245,212,.2)}
 
-/* ── LAYOUT ── */
-.main{max-width:1200px;margin:0 auto;padding:24px 16px;display:grid;gap:20px}
+.rainbow-bar{height:5px;background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite;width:100%;position:fixed;top:0;left:0;z-index:1000}
+@keyframes rbshift{0%{background-position:0% 50%}100%{background-position:300% 50%}}
 
-/* ── SECTION HEADER ── */
-.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.sec-icon{
-  width:36px;height:36px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:18px;
-}
-.sec-title{font-size:18px;font-weight:700}
-.sec-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);opacity:.17;pointer-events:none;z-index:0}
+.orb1{width:600px;height:600px;background:var(--pk);top:-200px;left:-200px;animation:float1 12s ease-in-out infinite}
+.orb2{width:500px;height:500px;background:var(--pu);bottom:-150px;right:-150px;animation:float2 14s ease-in-out infinite}
+.orb3{width:350px;height:350px;background:var(--tl);top:50%;left:50%;transform:translate(-50%,-50%);animation:float3 10s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(40px)}}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-40px)}}
+@keyframes float3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
 
-/* ── CARD ── */
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
-.card-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:640px){.card-row{grid-template-columns:1fr}}
+/* NAV */
+.topnav{position:sticky;top:5px;z-index:500;background:rgba(10,0,21,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(123,47,255,.25);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:18px;font-weight:900;flex-shrink:0}
+.nav-brand span{background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:2px;flex-wrap:nowrap}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:11.5px;font-weight:600;padding:6px 9px;border-radius:8px;transition:all .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--tl);background:rgba(0,245,212,.08)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:2px;background:var(--txt);border-radius:2px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;top:65px;left:0;right:0;z-index:490;background:rgba(10,0,21,.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(123,47,255,.3);padding:16px}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;padding:12px 16px;border-radius:10px;transition:all .2s}
+.mobile-menu a:hover{color:var(--tl);background:rgba(0,245,212,.08)}
+@media(max-width:900px){.nav-links{display:none}.hamburger{display:flex}}
 
-/* ── TABS ── */
-.tabs{display:flex;gap:4px;background:var(--surface);padding:4px;border-radius:10px;margin-bottom:20px}
-.tab{
-  flex:1;padding:8px 12px;border-radius:7px;border:none;
-  background:transparent;color:var(--muted);font-size:13px;font-weight:600;
-  cursor:pointer;transition:all .2s;text-align:center;
-}
-.tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+main{position:relative;z-index:1;padding-top:40px}
 
-/* ── FORMAT GRID ── */
-.format-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
-@media(max-width:480px){.format-grid{grid-template-columns:1fr}}
-.format-card{
-  border:2px solid var(--border);border-radius:12px;padding:14px;
-  cursor:pointer;transition:all .2s;text-align:left;background:var(--surface);
+/* GAMIFICATION COUNTER */
+.counter-banner{
+  background:linear-gradient(135deg,rgba(0,255,65,.08),rgba(0,245,212,.08));
+  border:1px solid rgba(0,255,65,.3);border-radius:16px;
+  padding:20px 28px;margin:0 24px 0;max-width:1100px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  position:relative;overflow:hidden;
 }
-.format-card:hover{border-color:var(--pink);background:rgba(255,45,120,.05)}
-.format-card.selected{border-color:var(--pink);background:rgba(255,45,120,.08)}
-.fmt-name{font-size:13px;font-weight:700;margin-bottom:3px}
-.fmt-desc{font-size:11px;color:var(--muted)}
-.fmt-badge{
-  display:inline-block;font-size:10px;font-weight:700;
-  padding:2px 6px;border-radius:20px;margin-top:6px;
-}
-.fmt-fire{background:rgba(255,107,43,.15);color:var(--orange)}
-.fmt-save{background:rgba(0,255,148,.1);color:var(--green)}
-.fmt-edu{background:rgba(191,90,242,.15);color:var(--purple)}
-.fmt-raw{background:rgba(255,214,10,.1);color:var(--gold)}
+.counter-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gr),var(--tl))}
+.counter-left h3{font-size:1.1rem;font-weight:800;color:var(--gr);margin-bottom:4px}
+.counter-left p{font-size:.85rem;color:var(--muted)}
+.counter-display{text-align:center}
+.counter-num{font-family:var(--mono);font-size:3rem;font-weight:700;color:var(--gr);line-height:1;display:block}
+.counter-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.counter-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn-count{background:rgba(0,255,65,.15);border:1px solid rgba(0,255,65,.4);color:var(--gr);font-family:var(--mono);font-size:12px;font-weight:700;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .2s;letter-spacing:.05em}
+.btn-count:hover{background:rgba(0,255,65,.25);transform:scale(1.03)}
+.btn-count:active{transform:scale(.97)}
+.btn-reset{background:transparent;border:1px solid rgba(255,45,120,.3);color:var(--pk);font-family:var(--mono);font-size:10px;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .2s}
+.btn-reset:hover{border-color:var(--pk)}
+.confetti-msg{display:none;font-size:1.5rem;animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+.counter-banner.milestone{animation:glow-pulse 1.5s ease}
+@keyframes glow-pulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 40px rgba(0,255,65,.4)}}
 
-/* ── FORM ELEMENTS ── */
-label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
-input,textarea,select{
-  width:100%;background:var(--surface);border:1px solid var(--border);
-  color:var(--text);font-family:var(--font);font-size:14px;
-  border-radius:10px;padding:10px 14px;
-  transition:border-color .2s;resize:vertical;
-}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--pink)}
-textarea{min-height:80px}
+/* HERO */
+.hero{text-align:center;padding:60px 24px 50px;max-width:900px;margin:0 auto}
+.hero-tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:rgba(0,245,212,.1);border:1px solid rgba(0,245,212,.3);color:var(--tl);padding:6px 16px;border-radius:20px;margin-bottom:24px}
+.hero h1{font-size:clamp(2rem,6vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:20px}
+.grad{background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.1rem;color:var(--muted);max-width:640px;margin:0 auto 12px;line-height:1.7}
+.hero .cheat-code{font-size:1rem;color:var(--tl);max-width:680px;margin:0 auto 40px;font-style:italic;line-height:1.6}
 
-/* ── BUTTONS ── */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  border:none;cursor:pointer;font-family:var(--font);font-weight:700;
-  border-radius:10px;transition:all .2s;padding:12px 20px;font-size:14px;
-}
-.btn-primary{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;width:100%}
-.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);font-size:13px;padding:8px 14px}
-.btn-outline:hover{border-color:var(--pink);color:var(--pink)}
-.btn-green{background:rgba(0,255,148,.15);border:1px solid rgba(0,255,148,.3);color:var(--green);font-size:13px;padding:8px 14px}
-.btn-green:hover{background:rgba(0,255,148,.25)}
-.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
+/* SECTIONS */
+.section{padding:60px 24px;max-width:1100px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--tl);margin-bottom:12px;display:block}
+.section h2{font-size:clamp(1.5rem,3.5vw,2.4rem);font-weight:800;margin-bottom:16px;line-height:1.2}
+.section > p{color:var(--muted);line-height:1.7;margin-bottom:20px}
 
-/* ── GENERATE BTN LOADING ── */
-.btn-primary.loading{pointer-events:none}
-.btn-primary.loading .btn-label::after{
-  content:' ...';animation:dots 1.2s infinite;
-}
-@keyframes dots{0%{content:' .'}33%{content:' ..'}66%{content:' ...'}}
+/* GLOW CARD */
+.glow-card{background:var(--card);border:1px solid rgba(123,47,255,.3);border-radius:20px;padding:28px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s}
+.glow-card:hover{border-color:var(--tl);box-shadow:0 0 30px rgba(0,245,212,.1),0 0 60px rgba(0,245,212,.04)}
+.glow-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite}
 
-/* ── OUTPUT PANEL ── */
-.output-panel{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:20px;min-height:200px;position:relative;
-}
-.output-placeholder{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:200px;color:var(--muted);gap:8px;text-align:center;
-}
-.output-placeholder .ph-icon{font-size:40px;opacity:.3}
-.output-placeholder p{font-size:13px}
+/* FLOW */
+.flow{display:flex;flex-direction:column;align-items:center;gap:0}
+.flow-start{background:linear-gradient(135deg,rgba(255,45,120,.15),rgba(123,47,255,.15));border:2px solid var(--pk);border-radius:16px;padding:20px 32px;text-align:center;font-size:1.15rem;font-weight:800;width:100%;max-width:420px}
+.flow-arrow{font-size:1.5rem;color:var(--muted);padding:8px 0;line-height:1}
+.flow-label{font-family:var(--mono);font-size:11px;color:var(--tl);text-align:center;letter-spacing:.12em;margin-bottom:12px;text-transform:uppercase}
+.flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;width:100%;margin-top:4px}
+.flow-item{background:var(--surf);border:1px solid rgba(123,47,255,.25);border-radius:14px;padding:16px 20px;display:flex;align-items:flex-start;gap:12px;transition:all .2s}
+.flow-item:hover{border-color:var(--tl);transform:translateY(-2px)}
+.flow-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+.flow-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.flow-item p{font-size:.8rem;color:var(--muted);line-height:1.5}
+.flow-total{background:linear-gradient(135deg,rgba(0,255,65,.08),rgba(0,245,212,.1));border:2px solid var(--gr);border-radius:16px;padding:20px 32px;text-align:center;font-size:1.1rem;font-weight:800;color:var(--gr);margin-top:16px;width:100%;max-width:420px}
 
-.output-content{display:none}
-.output-content.visible{display:block}
+/* CODE BOX */
+.code-wrap{position:relative}
+.code-box{background:rgba(0,0,0,.5);border:1px solid rgba(123,47,255,.3);border-radius:14px;padding:20px;padding-right:90px;font-family:var(--mono);font-size:12.5px;line-height:1.85;color:var(--txt);overflow:hidden;white-space:pre-wrap;word-break:break-word}
+.copy-btn{position:absolute;top:12px;right:12px;background:rgba(123,47,255,.2);border:1px solid rgba(123,47,255,.4);color:var(--tl);font-family:var(--mono);font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .2s;letter-spacing:.05em;white-space:nowrap}
+.copy-btn:hover{background:rgba(0,245,212,.15);border-color:var(--tl)}
+.copy-btn.copied{color:var(--gr);border-color:var(--gr)}
 
-.output-section{margin-bottom:20px}
-.output-section:last-child{margin-bottom:0}
-.out-label{
-  font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);
-  text-transform:uppercase;margin-bottom:8px;
-}
-.out-text{
-  font-size:14px;line-height:1.7;color:var(--text);
-  white-space:pre-wrap;
-}
-.out-hook{
-  font-size:18px;font-weight:800;line-height:1.3;color:var(--pink);
-  border-left:3px solid var(--pink);padding-left:12px;
-}
-.out-cta{
-  background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.2);
-  border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);
-}
-.hashtag-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.hashtag{
-  font-size:12px;padding:3px 10px;border-radius:20px;
-  background:rgba(0,245,255,.08);color:var(--cyan);
-  border:1px solid rgba(0,245,255,.15);cursor:pointer;
-  transition:all .2s;
-}
-.hashtag:hover{background:rgba(0,245,255,.18)}
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.cal-day{background:var(--surf);border:1px solid rgba(123,47,255,.2);border-radius:14px;padding:16px 14px;text-align:center;transition:all .25s}
+.cal-day:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(255,45,120,.1)}
+.day-name{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--pk);text-transform:uppercase;margin-bottom:8px;display:block}
+.day-type{font-size:.9rem;font-weight:700;margin-bottom:6px}
+.day-desc{font-size:.75rem;color:var(--muted);line-height:1.4}
 
-.output-actions{
-  display:flex;flex-wrap:wrap;gap:8px;padding-top:16px;
-  border-top:1px solid var(--border);margin-top:16px;
-}
+/* PLATFORM CARDS */
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.platform-card{background:var(--card);border:1px solid rgba(123,47,255,.22);border-radius:16px;padding:20px;transition:all .3s}
+.platform-card:hover{border-color:var(--tl);box-shadow:0 0 20px rgba(0,245,212,.08);transform:translateY(-2px)}
+.plat-name{font-size:1rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.plat-specs{list-style:none;display:flex;flex-direction:column;gap:7px}
+.plat-specs li{font-size:.82rem;color:var(--muted);display:flex;align-items:flex-start;gap:8px}
+.plat-specs li::before{content:'→';color:var(--tl);font-weight:700;flex-shrink:0;margin-top:1px}
 
-/* ── QUEUE STRIP ── */
-.queue-strip{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;
-}
-.queue-item{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:12px;position:relative;cursor:pointer;transition:all .2s;
-}
-.queue-item:hover{border-color:var(--pink)}
-.qi-day{font-size:10px;color:var(--muted);font-weight:600;margin-bottom:4px}
-.qi-title{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:6px}
-.qi-format{
-  font-size:10px;padding:2px 8px;border-radius:20px;
-  background:rgba(255,45,120,.1);color:var(--pink);display:inline-block;
-}
-.qi-status{
-  position:absolute;top:10px;right:10px;
-  width:8px;height:8px;border-radius:50%;
-}
-.qi-status.draft{background:var(--muted)}
-.qi-status.ready{background:var(--green)}
-.qi-status.posted{background:var(--cyan)}
+/* AUTOMATION */
+.auto-flow{display:flex;align-items:center;flex-wrap:wrap;gap:0;justify-content:center}
+.auto-step{background:var(--card);border:1px solid rgba(123,47,255,.3);border-radius:12px;padding:16px 20px;text-align:center;min-width:130px}
+.agent-name-lbl{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--tl);margin-bottom:4px}
+.agent-task-lbl{font-size:.78rem;color:var(--muted)}
+.auto-arrow{font-size:1.4rem;color:var(--dim);padding:0 8px;flex-shrink:0}
+.tools-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.tool-badge{background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.3);color:var(--txt);font-family:var(--mono);font-size:11px;font-weight:700;padding:6px 14px;border-radius:20px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(123,47,255,.3),transparent);margin:24px 0}
 
-/* ── STAT PILLS ── */
-.stat-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-.stat-pill{
-  display:flex;align-items:center;gap:6px;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:20px;padding:6px 12px;font-size:12px;
+/* GLOSSARY */
+.glossary-toggle{
+  width:100%;background:var(--surf);border:1px solid rgba(0,245,212,.25);border-radius:16px;
+  padding:20px 24px;display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;font-family:var(--font);transition:all .2s;
 }
-.sp-val{font-weight:700;color:var(--text)}
-.sp-label{color:var(--muted)}
-.sp-dot{width:8px;height:8px;border-radius:50%}
+.glossary-toggle:hover{border-color:var(--tl);background:rgba(0,245,212,.05)}
+.glossary-toggle h3{font-size:1rem;font-weight:800;color:var(--tl)}
+.glossary-toggle p{font-size:.82rem;color:var(--muted);margin-top:4px}
+.gt-left{text-align:left}
+.gt-arrow{font-size:1.2rem;color:var(--tl);transition:transform .3s;flex-shrink:0}
+.gt-arrow.open{transform:rotate(180deg)}
+.glossary-body{display:none;margin-top:16px}
+.glossary-body.open{display:block}
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.glossary-item{background:var(--card);border:1px solid rgba(123,47,255,.2);border-radius:12px;padding:16px}
+.glossary-item .term{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--pk);margin-bottom:6px;display:block}
+.glossary-item .def{font-size:.82rem;color:var(--muted);line-height:1.5}
 
-/* ── TRACKER ── */
-.tracker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.track-day{
-  aspect-ratio:1;border-radius:6px;border:1px solid var(--border);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-size:9px;color:var(--muted);cursor:pointer;transition:all .2s;
-  background:var(--surface);
-}
-.track-day:hover{border-color:var(--pink)}
-.track-day.posted{background:rgba(0,255,148,.1);border-color:rgba(0,255,148,.3);color:var(--green)}
-.track-day.today{border-color:var(--pink);color:var(--pink)}
-.track-day.future{opacity:.4}
+/* CTA */
+.cta-strip{text-align:center;padding:70px 24px;background:linear-gradient(180deg,transparent,rgba(123,47,255,.07),transparent)}
+.cta-strip h2{font-size:clamp(1.6rem,4vw,2.5rem);font-weight:900;margin-bottom:16px}
+.btn-cta{display:inline-flex;align-items:center;gap:10px;background:var(--rb);background-size:300% 100%;animation:rbshift 4s linear infinite;color:#000;font-size:1rem;font-weight:900;padding:16px 40px;border-radius:100px;text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 0 30px rgba(255,45,120,.3);border:none;cursor:pointer}
+.btn-cta:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(255,45,120,.5)}
 
-/* ── TOAST ── */
-.toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:var(--card);border:1px solid var(--border);border-radius:10px;
-  padding:12px 20px;font-size:13px;font-weight:600;
-  transition:transform .3s;z-index:999;white-space:nowrap;
-}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.toast.success{border-color:var(--green);color:var(--green)}
-.toast.error{border-color:var(--pink);color:var(--pink)}
-
-/* ── AGENT BADGE ── */
-.agent-credit{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:11px;color:var(--muted);padding:4px 10px;
-  background:var(--surface);border-radius:20px;border:1px solid var(--border);
-}
-.ac-dot{width:7px;height:7px;border-radius:50%}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .tb-nav a span{display:none}
-  .tb-nav a{padding:6px 8px}
-}
-@media(max-width:480px){
-  .format-grid{grid-template-columns:1fr 1fr}
-  .main{padding:16px 12px}
-  .card{padding:16px}
+@media(max-width:640px){
+  .auto-flow{flex-direction:column;align-items:center}
+  .auto-arrow{transform:rotate(90deg)}
+  .flow-grid{grid-template-columns:1fr}
+  .cal-grid{grid-template-columns:repeat(2,1fr)}
+  .platform-grid{grid-template-columns:1fr}
+  .counter-banner{flex-direction:column;text-align:center}
 }
 </style>
 </head>
 <body>
+<div class="rainbow-bar"></div>
+<div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
 
-<!-- TOPBAR -->
-<nav class="topbar">
-  <div class="tb-inner">
-    <a class="tb-brand" href="/">
-      <div class="tb-logo">MK</div>
-      <span class="tb-name">Metakittyz</span>
-    </a>
-    <span class="tb-tag">Content Studio</span>
-    <nav class="tb-nav">
-      <a href="/mk-live"><span>📊</span> Live</a>
-      <a href="/mk-team"><span>🤖</span> Team</a>
-      <a href="/mk-content" class="active"><span>✍️</span> Studio</a>
-      <a href="/mk-engage"><span>💬</span> Engage</a>
-      <a href="/journey"><span>🗺️</span> Journey</a>
-    </nav>
+<nav class="topnav">
+  <a href="index.html" class="nav-brand">🐱 <span>METAKITTYZ</span></a>
+  <div class="nav-links">
+    <a href="index.html">🏠 Home</a>
+    <a href="mk-team.html">👥 AI Team</a>
+    <a href="mk-command.html">⚡ Command</a>
+    <a href="mk-content.html">📱 Content OS</a>
+    <a href="mk-engage.html">✨ Prompts</a>
+    <a href="mk-journey.html">🗺️ 90-Day Plan</a>
+    <a href="mk-live.html">📺 Live</a>
+    <a href="metakittyz.html">📖 Build Guide</a>
   </div>
+  <button class="hamburger" id="hbg" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mob-menu">
+  <a href="index.html">🏠 Home</a><a href="mk-team.html">👥 AI Team</a><a href="mk-command.html">⚡ Command</a>
+  <a href="mk-content.html">📱 Content OS</a><a href="mk-engage.html">✨ Prompts</a>
+  <a href="mk-journey.html">🗺️ 90-Day Plan</a><a href="mk-live.html">📺 Live</a><a href="metakittyz.html">📖 Build Guide</a>
+</div>
+
+<!-- ERIKA AVATAR -->
+<div class="erika-float" onclick="toggleErikaChat()" title="Chat with Erika">
+  <img src="erika.webp" alt="Erika" onerror="this.style.background='var(--surf)';this.style.lineHeight='52px';this.style.textAlign='center';this.style.fontSize='1.6rem';this.textContent='🐱'"/>
+  <div class="erika-dot"></div>
+</div>
+<div class="erika-chat" id="erika-chat">
+  <div class="chat-hdr">
+    <img src="erika.webp" alt="Erika" onerror="this.style.display='none'"/>
+    <div class="chat-hdr-info"><div class="cn">Erika 🐱</div><div class="cs">🟢 Online</div></div>
+    <button class="chat-close" onclick="toggleErikaChat()">✕</button>
+  </div>
+  <div class="chat-body">Hey! 👋 Questions about the 1→12 system? The Content Machine prompt does all the heavy lifting — just fill in the 3 fields.</div>
+  <div class="chat-links">
+    <a href="mk-engage.html">Get Prompt Packs →</a>
+    <a href="mk-live.html">Watch The Build Live</a>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="index.html" class="bn-tab"><span>🏠</span><span>HOME</span></a>
+  <a href="mk-team.html" class="bn-tab"><span>👥</span><span>TEAM</span></a>
+  <a href="metakittyz.html" class="bn-tab"><span>📖</span><span>GUIDE</span></a>
+  <a href="mk-engage.html" class="bn-tab"><span>✨</span><span>PROMPTS</span></a>
 </nav>
 
-<!-- MAIN -->
-<div class="main">
+<main>
 
-  <!-- CURRENT MOMENTUM STRIP -->
-  <div class="stat-row" id="momentumStrip">
-    <div class="stat-pill">
-      <div class="sp-dot" style="background:#FF2D78"></div>
-      <span class="sp-val" id="followCount">334</span>
-      <span class="sp-label">followers</span>
+<!-- GAMIFICATION COUNTER -->
+<div style="max-width:1100px;margin:32px auto 0;padding:0 24px">
+  <div class="counter-banner" id="counter-banner">
+    <div class="counter-left">
+      <h3>🚀 Your Content Machine Stats</h3>
+      <p>Track every time you run the 1→12 prompt and generate content</p>
     </div>
-    <div class="stat-pill">
-      <div class="sp-dot" style="background:#00FF94"></div>
-      <span class="sp-val" id="postsToday">0</span>
-      <span class="sp-label">posted today</span>
+    <div class="counter-display">
+      <span class="counter-num" id="counter-num">0</span>
+      <span class="counter-label">pieces of AI content created</span>
+      <div class="confetti-msg" id="confetti-msg">🎉</div>
     </div>
-    <div class="stat-pill">
-      <div class="sp-dot" style="background:#00F5FF"></div>
-      <span class="sp-val" id="queueCount">0</span>
-      <span class="sp-label">in queue</span>
-    </div>
-    <div class="stat-pill">
-      <div class="sp-dot" style="background:#FFD60A"></div>
-      <span class="sp-val" id="dayNum">1</span>
-      <span class="sp-label">of 90 days</span>
+    <div class="counter-actions">
+      <button class="btn-count" onclick="incrementCounter()">✅ I ran the 1→12 prompt! (+12)</button>
+      <button class="btn-reset" onclick="resetCounter()">Reset</button>
     </div>
   </div>
+</div>
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('generate',this)">✍️ Generate</button>
-    <button class="tab" onclick="switchTab('queue',this)">📅 Queue</button>
-    <button class="tab" onclick="switchTab('tracker',this)">📈 Tracker</button>
-    <button class="tab" onclick="switchTab('templates',this)">⚡ Templates</button>
-  </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">📱 STEP 3 — ACTIVATE YOUR CONTENT MACHINE</div>
+  <h1><span class="grad">One Prompt.</span><br>12 Posts. 6 Platforms. Done.</h1>
+  <p>Stop creating content one piece at a time. Your AI team multiplies every idea into a full week's worth of posts — automatically, on-brand, every time.</p>
+  <p class="cheat-code">This is the cheat code. One idea. Twelve posts. Six platforms. While your competitors are spending 3 hours writing one caption, your AI team already published across the internet. 🚀</p>
+</div>
 
-  <!-- ═══════════════════════════════════════════════
-       TAB: GENERATE
-  ══════════════════════════════════════════════════ -->
-  <div id="tab-generate">
-    <div class="card-row">
-
-      <!-- LEFT: INPUTS -->
-      <div class="card">
-        <div class="sec-head">
-          <div class="sec-icon" style="background:rgba(255,45,120,.15)">✍️</div>
-          <div>
-            <div class="sec-title">Content Generator</div>
-            <div class="sec-sub">NOVA + SPARK agents working together</div>
-          </div>
+<!-- THE MACHINE -->
+<div class="section">
+  <span class="section-label">HOW IT WORKS</span>
+  <h2>The 1→12 Machine Explained</h2>
+  <p>Give your AI team one sentence. Watch it become an entire week of content across every platform that matters — with zero extra work from you.</p>
+  <div class="glow-card" style="margin-top:32px">
+    <div class="flow">
+      <div class="flow-start">
+        🎯 ONE CORE IDEA<br>
+        <span style="font-size:.82rem;font-weight:400;color:var(--muted)">You provide this in 1 sentence</span>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-label">NOVA PROCESSES IT INTO:</div>
+      <div class="flow-grid">
+        <div class="flow-item">
+          <div class="flow-icon">📺</div>
+          <div><h4>YouTube</h4><p>Full long-form script (10–20 min) with timestamps and chapter markers</p></div>
         </div>
-
-        <!-- FORMAT SELECTOR -->
-        <div style="margin-bottom:16px">
-          <label>Content Format</label>
-          <div class="format-grid">
-            <div class="format-card selected" data-format="graphic" onclick="selectFormat(this)">
-              <div class="fmt-name">📊 Graphic Reel</div>
-              <div class="fmt-desc">Bold text + data overlay</div>
-              <span class="fmt-badge fmt-fire">🔥 Best for follows</span>
-            </div>
-            <div class="format-card" data-format="results" onclick="selectFormat(this)">
-              <div class="fmt-name">📈 Results Reveal</div>
-              <div class="fmt-desc">Before/after, real numbers</div>
-              <span class="fmt-badge fmt-save">💾 High save rate</span>
-            </div>
-            <div class="format-card" data-format="education" onclick="selectFormat(this)">
-              <div class="fmt-name">🎓 Edu Drop</div>
-              <div class="fmt-desc">Cheat sheet, how-to, tips</div>
-              <span class="fmt-badge fmt-edu">📚 Reference content</span>
-            </div>
-            <div class="format-card" data-format="raw" onclick="selectFormat(this)">
-              <div class="fmt-name">📱 Raw Update</div>
-              <div class="fmt-desc">Day X of 90, what happened</div>
-              <span class="fmt-badge fmt-raw">⚡ High trust</span>
-            </div>
-          </div>
+        <div class="flow-item">
+          <div class="flow-icon">🎵</div>
+          <div><h4>TikTok — 3 Hooks</h4><p>15-sec problem/solution · 30-sec story format · 60-sec tutorial</p></div>
         </div>
-
-        <!-- TOPIC INPUT -->
-        <div style="margin-bottom:14px">
-          <label>Topic / Angle</label>
-          <textarea id="topicInput" rows="2" placeholder="e.g. My AI agents ran overnight and here's what they built, or: The biggest mistake I made on Day 1"></textarea>
+        <div class="flow-item">
+          <div class="flow-icon">📸</div>
+          <div><h4>Instagram — 4 Pieces</h4><p>Main caption + Story 1 (poll) + Story 2 (tip) + Story 3 (CTA)</p></div>
         </div>
-
-        <!-- CONTEXT -->
-        <div style="margin-bottom:14px">
-          <label>Today's Context (optional)</label>
-          <input id="contextInput" type="text" placeholder="e.g. 334 followers, posted 1 reel, 36 new follows yesterday"/>
+        <div class="flow-item">
+          <div class="flow-icon">🐦</div>
+          <div><h4>Twitter / X</h4><p>7-tweet thread with numbered hooks and engagement closers</p></div>
         </div>
-
-        <!-- TONE -->
-        <div style="margin-bottom:20px">
-          <label>Tone</label>
-          <select id="toneInput">
-            <option value="raw">Raw & Real (no filter, show the struggle)</option>
-            <option value="expert">Expert Authority (Harvard-level insights)</option>
-            <option value="hype">Hype Energy (we're actually doing this)</option>
-            <option value="teach">Teacher Mode (here's how this works)</option>
-          </select>
+        <div class="flow-item">
+          <div class="flow-icon">💼</div>
+          <div><h4>LinkedIn</h4><p>500-word professional article with story arc and CTA</p></div>
         </div>
-
-        <button class="btn btn-primary" id="generateBtn" onclick="generateContent()">
-          <span class="btn-label">⚡ Generate Content</span>
-        </button>
-
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-outline btn-sm" onclick="quickGenerate('announcement')">🚀 Announcement</button>
-          <button class="btn btn-outline btn-sm" onclick="quickGenerate('update')">📊 Day Update</button>
-          <button class="btn btn-outline btn-sm" onclick="quickGenerate('insight')">🧠 AI Insight</button>
-          <button class="btn btn-outline btn-sm" onclick="quickGenerate('behind')">🎬 Behind Scenes</button>
+        <div class="flow-item">
+          <div class="flow-icon">🧵</div>
+          <div><h4>Threads</h4><p>5-post conversational thread optimized for organic shares</p></div>
         </div>
       </div>
-
-      <!-- RIGHT: OUTPUT -->
-      <div class="card">
-        <div class="sec-head">
-          <div class="sec-icon" style="background:rgba(0,255,148,.1)">📤</div>
-          <div>
-            <div class="sec-title">Generated Output</div>
-            <div class="sec-sub" id="outputAgent">Waiting for NOVA + SPARK...</div>
-          </div>
-        </div>
-
-        <div class="output-panel">
-          <div class="output-placeholder" id="outputPlaceholder">
-            <div class="ph-icon">✨</div>
-            <p>Your content will appear here</p>
-            <p style="font-size:11px">Choose a format and topic, then generate</p>
-          </div>
-
-          <div class="output-content" id="outputContent">
-            <!-- HOOK -->
-            <div class="output-section">
-              <div class="out-label">🎣 Hook (first 3 seconds)</div>
-              <div class="out-hook" id="outHook"></div>
-            </div>
-            <!-- SCRIPT / BODY -->
-            <div class="output-section">
-              <div class="out-label">📝 Script / Text Overlay</div>
-              <div class="out-text" id="outScript"></div>
-            </div>
-            <!-- CAPTION -->
-            <div class="output-section">
-              <div class="out-label">📱 Caption</div>
-              <div class="out-text" id="outCaption"></div>
-            </div>
-            <!-- CTA -->
-            <div class="output-section">
-              <div class="out-cta" id="outCTA"></div>
-            </div>
-            <!-- HASHTAGS -->
-            <div class="output-section">
-              <div class="out-label">🏷️ Hashtags (tap to copy)</div>
-              <div class="hashtag-list" id="outHashtags"></div>
-            </div>
-
-            <div class="output-actions">
-              <button class="btn btn-green btn-sm" onclick="addToQueue()">+ Add to Queue</button>
-              <button class="btn btn-outline btn-sm" onclick="copyAll()">📋 Copy All</button>
-              <button class="btn btn-outline btn-sm" onclick="regenerate()">🔄 Regenerate</button>
-              <div class="agent-credit">
-                <div class="ac-dot" style="background:#FF2D78"></div>
-                NOVA + <div class="ac-dot" style="background:#FFD60A"></div> SPARK
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="flow-arrow" style="margin-top:16px">↓</div>
+      <div class="flow-total">✅ 12+ Pieces of Content from ONE Input</div>
     </div>
   </div>
+</div>
 
-  <!-- ═══════════════════════════════════════════════
-       TAB: QUEUE
-  ══════════════════════════════════════════════════ -->
-  <div id="tab-queue" style="display:none">
-    <div class="card">
-      <div class="sec-head">
-        <div class="sec-icon" style="background:rgba(0,245,255,.1)">📅</div>
-        <div>
-          <div class="sec-title">Content Queue</div>
-          <div class="sec-sub">Your next posts — drag to reorder, tap to edit</div>
-        </div>
-        <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="switchTab('generate',document.querySelector('.tab'))">+ New Post</button>
-      </div>
+<!-- THE COMMAND -->
+<div class="section">
+  <span class="section-label">COPY THIS PROMPT</span>
+  <h2>The Content Command</h2>
+  <p>Paste this into your NOVA agent. Fill in the three bracketed fields. Hit send. Your AI team returns 12 pieces of ready-to-post content in under a minute.</p>
+  <div class="glow-card" style="margin-top:24px">
+    <div class="code-wrap">
+      <div class="code-box" id="content-cmd">NOVA, I have one content idea: [YOUR IDEA]. Generate the full 1→12 content suite:
 
-      <div id="queueEmpty" style="text-align:center;padding:40px;color:var(--muted);display:none">
-        <div style="font-size:40px;opacity:.3;margin-bottom:8px">📭</div>
-        <p style="font-size:14px">Queue is empty — generate your first piece</p>
-      </div>
+1. YouTube script outline (10 min video, with timestamps)
+2. TikTok hook #1 (15 sec, problem/solution format)
+3. TikTok hook #2 (30 sec, story format)
+4. TikTok hook #3 (60 sec, tutorial format)
+5. Instagram main caption (300 words, hook + value + CTA)
+6. Instagram Story 1 (question/poll)
+7. Instagram Story 2 (tip reveal)
+8. Instagram Story 3 (CTA + swipe up)
+9. Twitter thread (7 tweets, numbered)
+10. LinkedIn article (500 words, professional tone)
+11. Threads post 1-3
+12. Email newsletter intro (200 words)
 
-      <div class="queue-strip" id="queueList"></div>
+Brand voice: [YOUR VOICE]. Audience: [YOUR AUDIENCE]. Goal: [FOLLOWS/SALES/AWARENESS].</div>
+      <button class="copy-btn" onclick="copyText('content-cmd',this)">COPY</button>
     </div>
+  </div>
+</div>
 
-    <!-- POSTING CHECKLIST -->
-    <div class="card" style="margin-top:16px">
-      <div class="sec-head">
-        <div class="sec-icon" style="background:rgba(255,214,10,.1)">✅</div>
-        <div>
-          <div class="sec-title">Pre-Post Checklist</div>
-          <div class="sec-sub">GUARDIAN agent review — every post before it goes live</div>
-        </div>
+<!-- WEEKLY CALENDAR -->
+<div class="section">
+  <span class="section-label">CONTENT STRATEGY</span>
+  <h2>Weekly Content Calendar Template</h2>
+  <p>Seven content types. One per day. Your AI team executes all of them. Rotate this blueprint every week for consistent, algorithm-friendly posting that compounds over time.</p>
+  <div class="cal-grid" style="margin-top:28px">
+    <div class="cal-day">
+      <span class="day-name">MON</span>
+      <div class="day-type">📚 Education</div>
+      <div class="day-desc">Teach something valuable. Position yourself as the expert in your niche.</div>
+    </div>
+    <div class="cal-day">
+      <span class="day-name" style="color:var(--tl)">TUE</span>
+      <div class="day-type">🔨 Behind Scenes</div>
+      <div class="day-desc">Build in public. Show the process, the mess, the real work behind the scenes.</div>
+    </div>
+    <div class="cal-day">
+      <span class="day-name" style="color:var(--gr)">WED</span>
+      <div class="day-type">⭐ Testimonial</div>
+      <div class="day-desc">Social proof content. Let real results do the convincing for you.</div>
+    </div>
+    <div class="cal-day">
+      <span class="day-name" style="color:var(--or)">THU</span>
+      <div class="day-type">🔥 Hot Take</div>
+      <div class="day-desc">Controversial opinion = shares. Pick a strong side and defend it loudly.</div>
+    </div>
+    <div class="cal-day">
+      <span class="day-name" style="color:var(--yl)">FRI</span>
+      <div class="day-type">💎 Value Bomb</div>
+      <div class="day-desc">Tool, resource, or system share. Pure value with no pitch attached.</div>
+    </div>
+    <div class="cal-day">
+      <span class="day-name" style="color:var(--pu)">SAT</span>
+      <div class="day-type">💬 Personal Story</div>
+      <div class="day-desc">Connection content. Be human. People follow people, not brands.</div>
+    </div>
+    <div class="cal-day">
+      <span class="day-name" style="color:var(--pk)">SUN</span>
+      <div class="day-type">📊 Recap + Tease</div>
+      <div class="day-desc">Review the week. Tease next week. Build retention and anticipation.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PLATFORM SPECS -->
+<div class="section">
+  <span class="section-label">QUICK REFERENCE</span>
+  <h2>Platform Specs Quick Reference</h2>
+  <p>Your AI team already optimizes for these specs. Keep this handy when reviewing NOVA's output or briefing any platform-specific campaign.</p>
+  <div class="platform-grid" style="margin-top:28px">
+    <div class="platform-card" style="border-top:3px solid var(--pk)">
+      <div class="plat-name">🎵 <span style="color:var(--pk)">TikTok</span></div>
+      <ul class="plat-specs">
+        <li>9:16 vertical video format only</li>
+        <li>15–60 seconds performs best</li>
+        <li>3–5 hashtags (fewer = better)</li>
+        <li>Post 3× per day for max reach</li>
+        <li>Hook must land in first 2 seconds</li>
+      </ul>
+    </div>
+    <div class="platform-card" style="border-top:3px solid var(--or)">
+      <div class="plat-name">📸 <span style="color:var(--or)">Instagram Reels</span></div>
+      <ul class="plat-specs">
+        <li>9:16 vertical video format</li>
+        <li>15–30 seconds performs best</li>
+        <li>5–10 hashtags recommended</li>
+        <li>Post 2× per day</li>
+        <li>Thumbnail frame drives saves</li>
+      </ul>
+    </div>
+    <div class="platform-card" style="border-top:3px solid var(--gr)">
+      <div class="plat-name">📺 <span style="color:var(--gr)">YouTube Shorts</span></div>
+      <ul class="plat-specs">
+        <li>9:16 vertical, under 60 sec</li>
+        <li>Keywords in title for SEO</li>
+        <li>Post 1× per day minimum</li>
+        <li>Loop-able content wins the algorithm</li>
+        <li>Chapter markers boost watch time</li>
+      </ul>
+    </div>
+    <div class="platform-card" style="border-top:3px solid var(--tl)">
+      <div class="plat-name">🐦 <span style="color:var(--tl)">Twitter / X</span></div>
+      <ul class="plat-specs">
+        <li>280 characters per tweet</li>
+        <li>Threads perform 3× better than singles</li>
+        <li>Post 5× per day for growth</li>
+        <li>Reply fast — early engagement signals matter</li>
+        <li>Images boost impressions by 35%</li>
+      </ul>
+    </div>
+    <div class="platform-card" style="border-top:3px solid var(--pu)">
+      <div class="plat-name">💼 <span style="color:var(--pu)">LinkedIn</span></div>
+      <ul class="plat-specs">
+        <li>1,200–1,500 chars is the sweet spot</li>
+        <li>Professional tone always required</li>
+        <li>Post once per day, 8–10am works best</li>
+        <li>Personal story = top performer</li>
+        <li>No external links in post body</li>
+      </ul>
+    </div>
+    <div class="platform-card" style="border-top:3px solid var(--yl)">
+      <div class="plat-name">🧵 <span style="color:var(--yl)">Threads</span></div>
+      <ul class="plat-specs">
+        <li>Conversational, human tone wins</li>
+        <li>500 character limit per post</li>
+        <li>Post 2–3× per day</li>
+        <li>Thread format outperforms singles</li>
+        <li>Hashtags not required here</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- AUTOMATION STACK -->
+<div class="section">
+  <span class="section-label">AUTOMATION</span>
+  <h2>The Full Automation Stack</h2>
+  <p>Wire up your AI agents with the right tools and the machine runs itself. Content flows from idea to published post without you touching it between generation and publish.</p>
+  <div class="glow-card" style="margin-top:28px">
+    <div class="auto-flow" style="gap:8px;flex-wrap:wrap">
+      <div class="auto-step">
+        <div class="agent-name-lbl">NOVA</div>
+        <div class="agent-task-lbl">Generates content</div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:10px" id="checklist">
-        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
-          <input type="checkbox" style="width:auto;margin-top:2px"/>
-          <span style="font-size:13px">Hook lands in first frame — bold text visible without sound</span>
-        </label>
-        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
-          <input type="checkbox" style="width:auto;margin-top:2px"/>
-          <span style="font-size:13px">Contains a reason to SAVE (cheat sheet, formula, or reference)</span>
-        </label>
-        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
-          <input type="checkbox" style="width:auto;margin-top:2px"/>
-          <span style="font-size:13px">CTA appears at peak emotion (15–20s in), not just at the end</span>
-        </label>
-        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
-          <input type="checkbox" style="width:auto;margin-top:2px"/>
-          <span style="font-size:13px">Caption starts with hook (no "I", "So", or filler opening)</span>
-        </label>
-        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
-          <input type="checkbox" style="width:auto;margin-top:2px"/>
-          <span style="font-size:13px">Audio: trending sound or clear voiceover (no dead silence)</span>
-        </label>
-        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
-          <input type="checkbox" style="width:auto;margin-top:2px"/>
-          <span style="font-size:13px">Hashtags: 3–5 niche + 2 broad (not 30 spam tags)</span>
-        </label>
-        <label class="check-item" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
-          <input type="checkbox" style="width:auto;margin-top:2px"/>
-          <span style="font-size:13px">Posted at optimal time: 7–9am or 6–9pm your audience timezone</span>
-        </label>
+      <div class="auto-arrow">→</div>
+      <div class="auto-step">
+        <div class="agent-name-lbl">ARIA</div>
+        <div class="agent-task-lbl">Schedules &amp; queues</div>
+      </div>
+      <div class="auto-arrow">→</div>
+      <div class="auto-step">
+        <div class="agent-name-lbl">BUFFER</div>
+        <div class="agent-task-lbl">Publishes everywhere</div>
+      </div>
+      <div class="auto-arrow">→</div>
+      <div class="auto-step">
+        <div class="agent-name-lbl">GUARDIAN</div>
+        <div class="agent-task-lbl">Tracks &amp; reports</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Required Tools</div>
+    <div class="tools-row">
+      <span class="tool-badge">Buffer — Scheduling</span>
+      <span class="tool-badge">Zapier — Automation</span>
+      <span class="tool-badge">Google Sheets — Tracking</span>
+      <span class="tool-badge">Higgsfield — Video</span>
+      <span class="tool-badge">Make.com — Workflows</span>
+    </div>
+  </div>
+</div>
+
+<!-- 30-DAY BANK -->
+<div class="section">
+  <span class="section-label">RUN ONCE, GET 30 DAYS</span>
+  <h2>30-Day Content Bank Generator</h2>
+  <p>Run this prompt a single time. Walk away with 30 days of ideas, hooks, and angles ready to execute. Your AI team fills the entire calendar — you approve and post.</p>
+  <div class="glow-card" style="margin-top:24px">
+    <div class="code-wrap">
+      <div class="code-box" id="bank-cmd">NOVA, generate a 30-day content bank for my brand.
+
+Brand: [YOUR BRAND NAME]
+Niche: [YOUR NICHE]
+Audience: [WHO THEY ARE]
+Voice: [CASUAL/PROFESSIONAL/EDGY/INSPIRATIONAL]
+Main platforms: [LIST YOUR TOP 3]
+Monthly goal: [FOLLOWERS/REVENUE/AWARENESS]
+
+For each of the 30 days, provide:
+- Day number and content theme
+- Main post hook (first line that stops the scroll)
+- Core message or lesson
+- Platform-specific angle (TikTok vs Instagram vs LinkedIn)
+- Suggested hashtag cluster (5 tags)
+- Best posting time
+
+Group by week:
+WEEK 1: Foundation — establish your authority
+WEEK 2: Growth — shareable and controversial angles
+WEEK 3: Conversion — sales and proof content
+WEEK 4: Community — connection and loyalty content
+
+Format as a table I can paste into Google Sheets.
+Include 3 "wildcard" posts for when something trends in my niche.
+At the end, write a one-paragraph content strategy summary.</div>
+      <button class="copy-btn" onclick="copyText('bank-cmd',this)">COPY</button>
+    </div>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<div class="section">
+  <span class="section-label">NEW TO AI CONTENT?</span>
+  <h2>Your Cheat Sheet — Plain English Glossary</h2>
+  <p>Every term you'll see in this system, explained like you're talking to a person — not a textbook.</p>
+  <div style="margin-top:24px">
+    <button class="glossary-toggle" id="gloss-toggle" onclick="toggleGlossary()" aria-expanded="false">
+      <div class="gt-left">
+        <h3>📖 New To AI? Here's Your Cheat Sheet</h3>
+        <p>15 terms demystified. Click to expand.</p>
+      </div>
+      <span class="gt-arrow" id="gt-arrow">▼</span>
+    </button>
+    <div class="glossary-body" id="glossary-body">
+      <div class="glossary-grid" style="margin-top:16px">
+        <div class="glossary-item">
+          <span class="term">Hook</span>
+          <p class="def">The first 1–3 seconds of content that stops someone from scrolling. If your hook doesn't grab attention instantly, nothing else matters.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">CTA (Call to Action)</span>
+          <p class="def">Telling your audience exactly what to do next — "Follow me", "Click the link", "Comment below". Always end your content with one.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Content Calendar</span>
+          <p class="def">A schedule of what you're posting and when. Your AI team fills this for you — you just approve and hit publish.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Repurposing</span>
+          <p class="def">Taking one piece of content and turning it into many. That's exactly what the 1→12 machine does — one idea becomes 12 posts.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Engagement Rate</span>
+          <p class="def">The percentage of people who interact with your post (likes, comments, shares). Higher engagement = more organic reach from the algorithm.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Algorithm</span>
+          <p class="def">The invisible system each platform uses to decide who sees your content. Your job: give it signals (engagement, watch time, saves) to reward.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Organic</span>
+          <p class="def">Free reach — people finding your content without you paying for ads. Consistency + quality = organic growth over time.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Paid / Boosted</span>
+          <p class="def">Content amplified with advertising spend. REACH agent handles your paid strategy — ad copy, targeting, budgets.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Impressions</span>
+          <p class="def">How many times your content was shown — even to the same person, even without interaction. A leading indicator of reach.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Reach</span>
+          <p class="def">How many unique people saw your content. Unlike impressions, each person counts only once regardless of how many times they viewed it.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">UGC (User Generated Content)</span>
+          <p class="def">Raw, authentic-feeling video content — looks like a real person filmed it on their phone. Performs extremely well in ads and organically.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">B-Roll</span>
+          <p class="def">Background footage that supports your main video — hands typing, products being used, lifestyle shots. Makes your content look polished.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Voiceover</span>
+          <p class="def">Audio recorded separately from video. Common in AI avatar content — your AI persona speaks while the visual plays. Higgsfield handles this.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">A/B Testing</span>
+          <p class="def">Trying two versions of the same content to see which performs better. REACH agent automates this for your ads — different hooks, headlines, CTAs.</p>
+        </div>
+        <div class="glossary-item">
+          <span class="term">Funnel</span>
+          <p class="def">The journey from stranger → follower → buyer. Your content moves people through this funnel. Top of funnel: awareness. Bottom: purchase.</p>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ═══════════════════════════════════════════════
-       TAB: TRACKER
-  ══════════════════════════════════════════════════ -->
-  <div id="tab-tracker" style="display:none">
-    <div class="card-row">
-      <div class="card">
-        <div class="sec-head">
-          <div class="sec-icon" style="background:rgba(255,45,120,.15)">📈</div>
-          <div>
-            <div class="sec-title">90-Day Post Tracker</div>
-            <div class="sec-sub">2 posts/day = 180 total. Every cell = 1 post</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px">
-            <div style="width:12px;height:12px;border-radius:3px;background:rgba(0,255,148,.3);border:1px solid rgba(0,255,148,.5)"></div> Posted
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px">
-            <div style="width:12px;height:12px;border-radius:3px;border:1px solid var(--pink)"></div> Today
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px">
-            <div style="width:12px;height:12px;border-radius:3px;background:var(--surface);border:1px solid var(--border);opacity:.4"></div> Upcoming
-          </div>
-        </div>
-        <div class="tracker-grid" id="trackerGrid"></div>
-      </div>
+<!-- CTA -->
+<div class="cta-strip">
+  <h2>Get The Prompt Packs That Power This Machine</h2>
+  <p style="color:var(--muted);margin-bottom:32px;font-size:1rem">Buy once. Use forever. No subscription. No agency fees.</p>
+  <a href="mk-engage.html" class="btn-cta">Shop Prompt Packs That Do This For You →</a>
+</div>
 
-      <div class="card">
-        <div class="sec-head">
-          <div class="sec-icon" style="background:rgba(0,255,148,.1)">🎯</div>
-          <div>
-            <div class="sec-title">Log Today's Stats</div>
-            <div class="sec-sub">PULSE agent — track every post</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <div>
-            <label>Followers Now</label>
-            <input type="number" id="logFollowers" placeholder="e.g. 334"/>
-          </div>
-          <div>
-            <label>Posts Published Today</label>
-            <input type="number" id="logPosts" placeholder="e.g. 2" min="0" max="10"/>
-          </div>
-          <div>
-            <label>Best Reel Views Today</label>
-            <input type="number" id="logViews" placeholder="e.g. 1516"/>
-          </div>
-          <div>
-            <label>New Follows Today</label>
-            <input type="number" id="logFollows" placeholder="e.g. 36"/>
-          </div>
-          <div>
-            <label>Notes</label>
-            <textarea id="logNotes" rows="2" placeholder="What worked, what flopped, ideas..."></textarea>
-          </div>
-          <button class="btn btn-primary" onclick="logDay()">📊 Log Day</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- DAILY LOG HISTORY -->
-    <div class="card">
-      <div class="sec-head">
-        <div class="sec-icon" style="background:rgba(191,90,242,.15)">📋</div>
-        <div>
-          <div class="sec-title">Daily Log</div>
-          <div class="sec-sub">Every day of the 90-day mission</div>
-        </div>
-      </div>
-      <div id="logHistory" style="display:flex;flex-direction:column;gap:8px">
-        <div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No logs yet — start tracking daily</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════
-       TAB: TEMPLATES
-  ══════════════════════════════════════════════════ -->
-  <div id="tab-templates" style="display:none">
-    <div class="card-row">
-      <div class="card">
-        <div class="sec-head">
-          <div class="sec-icon" style="background:rgba(255,214,10,.1)">⚡</div>
-          <div>
-            <div class="sec-title">Proven Templates</div>
-            <div class="sec-sub">Based on your top performer — the announcement reel</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px" id="templateList"></div>
-      </div>
-
-      <div class="card">
-        <div class="sec-head">
-          <div class="sec-icon" style="background:rgba(0,245,255,.1)">📐</div>
-          <div>
-            <div class="sec-title">Hook Formula Bank</div>
-            <div class="sec-sub">Tap any hook to use in generator</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px" id="hookBank"></div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- /main -->
-
-<div class="toast" id="toast"></div>
+</main>
 
 <script>
-'use strict';
+// Nav hamburger
+const hbg=document.getElementById('hbg');
+const mob=document.getElementById('mob-menu');
+hbg.addEventListener('click',()=>{hbg.classList.toggle('open');mob.classList.toggle('open')});
 
-// ── CONFIG ─────────────────────────────────────────────────────────
-var START = '2026-06-10';
-var GOAL  = 1000000;
-var STORAGE_KEY = 'mk_content_v1';
+// Copy to clipboard
+function toggleErikaChat(){document.getElementById('erika-chat').classList.toggle('open')}
 
-// ── STATE ──────────────────────────────────────────────────────────
-var state = loadState();
-var selectedFormat = 'graphic';
-var lastGenerated  = null;
-
-function loadState(){
-  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState(); }
-  catch(e){ return defaultState(); }
-}
-function defaultState(){
-  return { queue:[], logs:[], trackerPosts:{} };
-}
-function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-
-// ── DAY CALC ───────────────────────────────────────────────────────
-function dayNum(){
-  return Math.min(Math.floor((Date.now()-new Date(START))/86400000)+1,90);
-}
-
-// ── INIT ───────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function(){
-  document.getElementById('dayNum').textContent = dayNum();
-  renderQueue();
-  renderTracker();
-  renderLogs();
-  renderTemplates();
-  renderHookBank();
-  syncStats();
-});
-
-// ── TAB SWITCHING ──────────────────────────────────────────────────
-function switchTab(name, clickedEl){
-  ['generate','queue','tracker','templates'].forEach(function(t){
-    document.getElementById('tab-'+t).style.display = t===name ? '' : 'none';
-  });
-  document.querySelectorAll('.tab').forEach(function(el){
-    el.classList.toggle('active', el === clickedEl);
-  });
-  if(name === 'tracker') renderTracker();
-}
-
-// ── FORMAT SELECTOR ────────────────────────────────────────────────
-function selectFormat(el){
-  document.querySelectorAll('.format-card').forEach(function(c){ c.classList.remove('selected'); });
-  el.classList.add('selected');
-  selectedFormat = el.dataset.format;
-}
-
-// ── QUICK GENERATE ─────────────────────────────────────────────────
-var quickTopics = {
-  announcement: 'I am building a 6-agent AI team to take me from 295 followers to 1 million in 90 days — here is the full plan',
-  update:       'Day ' + dayNum() + ' of 90: here is exactly what happened today with my AI agents and follower count',
-  insight:      'The Harvard Agentic AI concept that changed how I think about automation — most people get this wrong',
-  behind:       'What building an AI social media agency actually looks like at 2am — behind the scenes of day ' + dayNum()
-};
-
-function quickGenerate(type){
-  document.getElementById('topicInput').value = quickTopics[type] || '';
-  generateContent();
-}
-
-// ── GENERATE ──────────────────────────────────────────────────────
-function generateContent(){
-  var topic   = document.getElementById('topicInput').value.trim();
-  var context = document.getElementById('contextInput').value.trim();
-  var tone    = document.getElementById('toneInput').value;
-
-  if(!topic){ showToast('Enter a topic first', 'error'); return; }
-
-  var btn = document.getElementById('generateBtn');
-  btn.disabled = true;
-  btn.classList.add('loading');
-  btn.querySelector('.btn-label').textContent = '⚡ Generating';
-
-  document.getElementById('outputAgent').textContent = 'NOVA scripting + SPARK optimizing...';
-
-  var systemPrompt = buildSystemPrompt(tone, selectedFormat);
-  var userPrompt   = buildUserPrompt(topic, context, tone, selectedFormat);
-
-  callAI(systemPrompt, userPrompt).then(function(text){
-    var parsed = parseAIOutput(text);
-    lastGenerated = { format: selectedFormat, topic: topic, ...parsed, raw: text };
-    renderOutput(parsed);
-    btn.disabled = false;
-    btn.classList.remove('loading');
-    btn.querySelector('.btn-label').textContent = '⚡ Generate Content';
-    document.getElementById('outputAgent').textContent = 'Generated by NOVA + SPARK agents';
-  }).catch(function(err){
-    showToast('Generation failed — check API connection', 'error');
-    console.error(err);
-    btn.disabled = false;
-    btn.classList.remove('loading');
-    btn.querySelector('.btn-label').textContent = '⚡ Generate Content';
+function copyText(id,btn){
+  const text=document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    const o=btn.textContent;
+    btn.textContent='COPIED ✓';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=o;btn.classList.remove('copied')},2000);
   });
 }
 
-function buildSystemPrompt(tone, format){
-  var toneGuide = {
-    raw:    'Write like you are texting a friend at 1am — raw, honest, no corporate speak. Show the real struggle and wins.',
-    expert: 'Write with authority and precision. Reference AI concepts clearly. Position as someone who deeply understands the technology.',
-    hype:   'Write with electric energy. This is actually happening. Make people feel the momentum. Use power words and urgency.',
-    teach:  'Write to educate. Clear, simple, step-by-step. The reader should feel smarter after consuming this.'
-  };
-
-  var formatGuide = {
-    graphic: 'This is a graphic reel — text appears as large overlays. Write short punchy phrases that work as visual text. Each line should standalone as a bold graphic.',
-    results: 'This is a results reveal — structure around before/after or data points. Lead with the number, then explain it.',
-    education: 'This is an education drop — structure as a list, tips, or framework. Make it reference-worthy so people save it.',
-    raw: 'This is a raw update — journal style, Day X of Y. Authentic and personal. Show real emotions.'
-  };
-
-  return `You are NOVA (content strategist) and SPARK (viral optimizer) — two AI agents in the Metakittyz social media system.
-
-Metakittyz is Erika's brand. She is on a 90-day mission to go from 295 to 1,000,000 followers by building a 6-AI-agent social media team.
-Current day: Day ${dayNum()}/90. She documents everything publicly. The audience is 35-44 professionals who want to understand AI.
-
-${toneGuide[tone]}
-
-${formatGuide[format]}
-
-CRITICAL RULES (based on real performance data):
-- The #1 performing reel got 36 follows: graphic format, bold text overlay, audacious claim
-- Talking-head reels average 0 follows — NO talking-head scripts
-- Skip rate is 46-51% — the hook MUST stop the scroll in 3 words or less
-- Save rate is near zero — build in a reason to save on every piece
-- Average watch time is 17s — front-load all value, no slow builds
-
-OUTPUT FORMAT (return exactly this structure, no markdown, no extra headers):
-HOOK: [3-7 word text overlay that stops the scroll]
-SCRIPT: [full visual text/overlay script, line by line]
-CAPTION: [Instagram caption, emoji-first, line breaks, 150-200 chars]
-CTA: [call to action moment]
-HASHTAGS: [8 hashtags, mix of niche and broad, space-separated]`;
+// Glossary toggle
+function toggleGlossary(){
+  const body=document.getElementById('glossary-body');
+  const arrow=document.getElementById('gt-arrow');
+  const btn=document.getElementById('gloss-toggle');
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+  btn.setAttribute('aria-expanded',!isOpen);
 }
 
-function buildUserPrompt(topic, context, tone, format){
-  return `Create a ${format} reel about: ${topic}
-${context ? '\nContext: ' + context : ''}
-Tone: ${tone}
-
-Remember: this must convert viewers to followers. Every element should push toward that goal.`;
+// Content counter
+const COUNTER_KEY='mk_content_count';
+function getCount(){return parseInt(localStorage.getItem(COUNTER_KEY)||'0')}
+function saveCount(n){localStorage.setItem(COUNTER_KEY,n)}
+function renderCount(){
+  const n=getCount();
+  document.getElementById('counter-num').textContent=n;
 }
-
-async function callAI(system, user){
-  // Try Anthropic first
-  try {
-    var r = await fetch('/api/anthropic', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-opus-4-8',
-        max_tokens: 1024,
-        system: system,
-        messages: [{ role: 'user', content: user }]
-      })
-    });
-    var d = await r.json();
-    if(d.content && d.content[0]) return d.content[0].text;
-    throw new Error(d.error?.message || 'No content');
-  } catch(e) {
-    // Fallback: OpenAI
-    var r2 = await fetch('/api/openai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user',   content: user   }
-        ]
-      })
-    });
-    var d2 = await r2.json();
-    if(d2.choices && d2.choices[0]) return d2.choices[0].message.content;
-    throw new Error(d2.error?.message || 'All AI providers failed');
+function incrementCounter(){
+  const n=getCount()+12;
+  saveCount(n);
+  renderCount();
+  const banner=document.getElementById('counter-banner');
+  const msg=document.getElementById('confetti-msg');
+  banner.classList.remove('milestone');
+  void banner.offsetWidth;
+  banner.classList.add('milestone');
+  // Milestone messages
+  const milestones={12:'🎉',60:'🔥 First 5 runs!',120:'⭐ 10 runs!',240:'🏆 20 runs — you\'re a content machine!',600:'🚀 50 runs — LEGEND!'};
+  if(milestones[n]){
+    msg.textContent=milestones[n];
+    msg.style.display='block';
+    setTimeout(()=>{msg.style.display='none'},3000);
   }
+  setTimeout(()=>banner.classList.remove('milestone'),1500);
 }
+function resetCounter(){
+  if(confirm('Reset your content count to 0?')){saveCount(0);renderCount()}}
 
-function parseAIOutput(text){
-  var extract = function(label){
-    var re = new RegExp(label + ':\\s*([\\s\\S]*?)(?=\\n[A-Z]+:|$)', 'i');
-    var m  = text.match(re);
-    return m ? m[1].trim() : '';
-  };
-  return {
-    hook:     extract('HOOK'),
-    script:   extract('SCRIPT'),
-    caption:  extract('CAPTION'),
-    cta:      extract('CTA'),
-    hashtags: extract('HASHTAGS').split(/\s+/).filter(function(h){ return h.startsWith('#'); })
-  };
-}
-
-function renderOutput(p){
-  document.getElementById('outputPlaceholder').style.display = 'none';
-  var content = document.getElementById('outputContent');
-  content.classList.add('visible');
-
-  document.getElementById('outHook').textContent    = p.hook;
-  document.getElementById('outScript').textContent  = p.script;
-  document.getElementById('outCaption').textContent = p.caption;
-  document.getElementById('outCTA').textContent     = '👉 ' + p.cta;
-
-  var hashEl = document.getElementById('outHashtags');
-  hashEl.innerHTML = '';
-  (p.hashtags || []).forEach(function(h){
-    var span = document.createElement('span');
-    span.className = 'hashtag';
-    span.textContent = h;
-    span.onclick = function(){ navigator.clipboard.writeText(h); showToast('Copied '+h, 'success'); };
-    hashEl.appendChild(span);
-  });
-}
-
-// ── QUEUE ─────────────────────────────────────────────────────────
-function addToQueue(){
-  if(!lastGenerated){ showToast('Generate content first', 'error'); return; }
-  var item = Object.assign({ id: Date.now(), status: 'draft', day: dayNum() }, lastGenerated);
-  state.queue.unshift(item);
-  saveState();
-  renderQueue();
-  syncStats();
-  showToast('Added to queue!', 'success');
-  switchTab('queue', document.querySelectorAll('.tab')[1]);
-}
-
-function renderQueue(){
-  var list = document.getElementById('queueList');
-  var empty = document.getElementById('queueEmpty');
-  if(!state.queue.length){
-    list.style.display = 'none';
-    empty.style.display = '';
-    return;
-  }
-  empty.style.display = 'none';
-  list.style.display = '';
-  list.innerHTML = '';
-  state.queue.forEach(function(item, i){
-    var div = document.createElement('div');
-    div.className = 'queue-item';
-    div.innerHTML = '<div class="qi-day">Day '+item.day+'/90</div>'+
-      '<div class="qi-title">'+(item.hook||item.topic||'Untitled').substring(0,60)+'</div>'+
-      '<div style="display:flex;gap:6px;align-items:center">'+
-        '<span class="qi-format">'+item.format+'</span>'+
-        '<button onclick="markPosted('+i+')" style="margin-left:auto;border:none;background:rgba(0,255,148,.1);color:var(--green);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer">✓ Posted</button>'+
-        '<button onclick="removeQueue('+i+')" style="border:none;background:rgba(255,45,120,.1);color:var(--pink);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer">✕</button>'+
-      '</div>'+
-      '<div class="qi-status '+item.status+'"></div>';
-    list.appendChild(div);
-  });
-}
-
-function markPosted(i){
-  state.queue[i].status = 'posted';
-  saveState();
-  renderQueue();
-  showToast('Marked as posted!', 'success');
-}
-
-function removeQueue(i){
-  state.queue.splice(i,1);
-  saveState();
-  renderQueue();
-  syncStats();
-}
-
-// ── TRACKER ───────────────────────────────────────────────────────
-function renderTracker(){
-  var grid  = document.getElementById('trackerGrid');
-  var today = dayNum();
-  grid.innerHTML = '';
-  for(var d=1; d<=90; d++){
-    var div = document.createElement('div');
-    div.className = 'track-day' +
-      (d < today ? ' posted' : '') +
-      (d === today ? ' today' : '') +
-      (d > today ? ' future' : '');
-    div.textContent = d;
-    div.title = 'Day '+d;
-    grid.appendChild(div);
-  }
-}
-
-// ── LOG ───────────────────────────────────────────────────────────
-function logDay(){
-  var entry = {
-    day:       dayNum(),
-    date:      new Date().toLocaleDateString(),
-    followers: parseInt(document.getElementById('logFollowers').value)||0,
-    posts:     parseInt(document.getElementById('logPosts').value)||0,
-    views:     parseInt(document.getElementById('logViews').value)||0,
-    follows:   parseInt(document.getElementById('logFollows').value)||0,
-    notes:     document.getElementById('logNotes').value.trim()
-  };
-  // update or add
-  var existing = state.logs.findIndex(function(l){ return l.day === entry.day; });
-  if(existing >= 0) state.logs[existing] = entry;
-  else state.logs.unshift(entry);
-  saveState();
-  renderLogs();
-  syncStats();
-  showToast('Day '+entry.day+' logged!', 'success');
-}
-
-function renderLogs(){
-  var el = document.getElementById('logHistory');
-  if(!state.logs.length){
-    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No logs yet — start tracking daily</div>';
-    return;
-  }
-  el.innerHTML = state.logs.map(function(l){
-    return '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--surface);border-radius:10px;border:1px solid var(--border)">'+
-      '<div style="min-width:56px;text-align:center">'+
-        '<div style="font-size:18px;font-weight:800;color:var(--pink)">'+l.day+'</div>'+
-        '<div style="font-size:9px;color:var(--muted)">DAY</div>'+
-      '</div>'+
-      '<div style="flex:1">'+
-        '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px">'+
-          '<span style="font-size:12px"><b style="color:var(--green)">+'+l.follows+'</b> follows</span>'+
-          '<span style="font-size:12px"><b>'+l.followers.toLocaleString()+'</b> total</span>'+
-          '<span style="font-size:12px"><b>'+l.posts+'</b> posts</span>'+
-          '<span style="font-size:12px"><b>'+l.views.toLocaleString()+'</b> views</span>'+
-        '</div>'+
-        (l.notes ? '<div style="font-size:12px;color:var(--muted)">'+l.notes+'</div>' : '')+
-      '</div>'+
-      '<div style="font-size:10px;color:var(--muted)">'+l.date+'</div>'+
-    '</div>';
-  }).join('');
-}
-
-// ── TEMPLATES ─────────────────────────────────────────────────────
-var TEMPLATES = [
-  { name:'🚀 Mission Announcement', format:'graphic', topic:'I am building a 6-AI-agent team to grow from [X] to 1,000,000 followers in 90 days — here is the plan', badge:'36 follows on first use' },
-  { name:'📊 Day X Update', format:'raw', topic:'Day [X] of 90: here is what the AI agents built overnight and the real numbers', badge:'High trust format' },
-  { name:'🎓 Harvard Drop', format:'education', topic:'The one Harvard AI concept that changes how you think about agents — most people never learn this', badge:'High save rate' },
-  { name:'🤖 Agent Reveal', format:'graphic', topic:'Meet the 6 AI agents running my Instagram — what each one does and why I built them', badge:'Shareable' },
-  { name:'💥 Failure Post', format:'raw', topic:'I failed on Day [X]: here is exactly what went wrong and how I am fixing it', badge:'Most authentic' },
-  { name:'📈 Results Reveal', format:'results', topic:'[X] followers → [Y] followers in [Z] days: here is exactly what moved the needle', badge:'Viral potential' },
-];
-
-function renderTemplates(){
-  var el = document.getElementById('templateList');
-  el.innerHTML = TEMPLATES.map(function(t,i){
-    return '<div style="border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s" '+
-      'onmouseover="this.style.borderColor=\'var(--pink)\'" onmouseout="this.style.borderColor=\'var(--border)\'" '+
-      'onclick="useTemplate('+i+')">'+
-      '<div style="flex:1">'+
-        '<div style="font-size:13px;font-weight:700;margin-bottom:2px">'+t.name+'</div>'+
-        '<div style="font-size:11px;color:var(--muted)">'+t.topic.substring(0,70)+'</div>'+
-      '</div>'+
-      '<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(0,255,148,.1);color:var(--green);white-space:nowrap">'+t.badge+'</span>'+
-    '</div>';
-  }).join('');
-}
-
-function useTemplate(i){
-  var t = TEMPLATES[i];
-  document.getElementById('topicInput').value = t.topic;
-  // select matching format card
-  var card = document.querySelector('[data-format="'+t.format+'"]');
-  if(card) selectFormat(card);
-  switchTab('generate', document.querySelector('.tab'));
-  showToast('Template loaded — customize and generate!', 'success');
-}
-
-var HOOKS = [
-  'I gave AI $0 and a deadline.',
-  'This is what 295 → 1M looks like.',
-  '6 agents. 90 days. No safety net.',
-  'What Harvard taught me about AI agents.',
-  'Day [X]: I almost quit.',
-  'The algorithm hates me. Here\'s proof.',
-  'I built a team that doesn\'t sleep.',
-  'Most people automate wrong. Here\'s why.',
-  'Real numbers. No filter.',
-  '295 followers yesterday. Watch this.',
-];
-
-function renderHookBank(){
-  var el = document.getElementById('hookBank');
-  el.innerHTML = HOOKS.map(function(h){
-    return '<div style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px;transition:all .2s" '+
-      'onmouseover="this.style.borderColor=\'var(--cyan)\';this.style.color=\'var(--cyan)\'" '+
-      'onmouseout="this.style.borderColor=\'var(--border)\';this.style.color=\'\'" '+
-      'onclick="useHook(\''+h.replace(/'/g,"\\'")+'\')">'+ h +'</div>';
-  }).join('');
-}
-
-function useHook(h){
-  var topic = document.getElementById('topicInput');
-  topic.value = h + ' — ' + (topic.value || 'my AI mission');
-  switchTab('generate', document.querySelector('.tab'));
-  showToast('Hook loaded!', 'success');
-}
-
-// ── COPY / REGENERATE ─────────────────────────────────────────────
-function copyAll(){
-  if(!lastGenerated) return;
-  var text = 'HOOK: '+lastGenerated.hook+'\n\nSCRIPT:\n'+lastGenerated.script+
-    '\n\nCAPTION:\n'+lastGenerated.caption+'\n\nCTA: '+lastGenerated.cta+
-    '\n\nHASHTAGS: '+(lastGenerated.hashtags||[]).join(' ');
-  navigator.clipboard.writeText(text);
-  showToast('Copied to clipboard!', 'success');
-}
-
-function regenerate(){
-  generateContent();
-}
-
-// ── SYNC STATS ────────────────────────────────────────────────────
-function syncStats(){
-  var latestLog = state.logs[0];
-  if(latestLog && latestLog.day === dayNum()){
-    document.getElementById('followCount').textContent  = latestLog.followers.toLocaleString();
-    document.getElementById('postsToday').textContent   = latestLog.posts;
-  }
-  var queueReady = state.queue.filter(function(q){ return q.status==='draft'; }).length;
-  document.getElementById('queueCount').textContent = queueReady;
-}
-
-// ── TOAST ─────────────────────────────────────────────────────────
-function showToast(msg, type){
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className   = 'toast '+(type||'');
-  setTimeout(function(){ t.classList.add('show'); }, 10);
-  setTimeout(function(){ t.classList.remove('show'); }, 2500);
-}
+// Init
+renderCount();
 </script>
 </body>
 </html>
