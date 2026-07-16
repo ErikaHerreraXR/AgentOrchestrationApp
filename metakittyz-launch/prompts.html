@@ -146,6 +146,14 @@ a { color: inherit; text-decoration: none; }
 .pay-note {
   font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 0.8rem; line-height: 1.5;
 }
+.pay-method-opt {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: var(--surf); border: 1px solid var(--dim); border-radius: 10px;
+  padding: 0.6rem 0.75rem; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+  transition: 0.15s;
+}
+.pay-method-opt:has(input:checked) { border-color: var(--tl); background: rgba(0,245,212,0.07); }
+.pay-method-opt input[type="radio"] { accent-color: var(--tl); }
 
 /* ══════════════════════════════════════════
    PAGE HEADER
@@ -746,14 +754,6 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     PAYMENT MODAL
-     TO ACTIVATE PAYMENTS:
-     1. Create products on gumroad.com (free) — handles cards, PayPal, Apple Pay
-     2. Replace YOUR_GUMROAD_USERNAME and each product slug below in the JS
-     3. Update PAYPAL_ME_USERNAME and VENMO_HANDLE in the JS
-     4. Change UNLOCK_CODES in the JS to your own secret codes (include in delivery email)
-══════════════════════════════════════════ -->
 <div id="pay-modal" onclick="closePayOutside(event)">
   <div class="pay-sheet" onclick="event.stopPropagation()">
     <div class="pay-handle"></div>
@@ -761,49 +761,59 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
     <div class="pay-price" id="modal-price">$17</div>
     <div class="pay-divider"></div>
 
-    <!-- Step 1: Choose payment method -->
-    <div id="pay-step-1">
-      <p class="pay-label">Step 1 — Choose how to pay</p>
-      <div class="pay-options">
-        <a class="pay-btn" id="pay-card" href="#" target="_blank" rel="noopener" onclick="trackBuy('card')">
-          <span class="pay-btn-icon">💳</span>
-          <span class="pay-btn-info">
-            <span class="pay-btn-title">Credit / Debit Card</span>
-            <span class="pay-btn-sub">Visa · Mastercard · Amex · Discover</span>
-          </span>
-          <span style="margin-left:auto;font-size:0.7rem;color:var(--muted)">→</span>
-        </a>
-        <a class="pay-btn pay-apple" id="pay-apple" href="#" target="_blank" rel="noopener" onclick="trackBuy('apple')">
-          <span class="pay-btn-icon">🍎</span>
-          <span class="pay-btn-info">
-            <span class="pay-btn-title">Apple Pay</span>
-            <span class="pay-btn-sub">One tap checkout on iPhone · iPad · Safari</span>
-          </span>
-          <span style="margin-left:auto;font-size:0.7rem;color:var(--muted)">→</span>
-        </a>
-        <a class="pay-btn" id="pay-paypal" href="#" target="_blank" rel="noopener" onclick="trackBuy('paypal')">
-          <span class="pay-btn-icon">🅿️</span>
-          <span class="pay-btn-info">
-            <span class="pay-btn-title">PayPal</span>
-            <span class="pay-btn-sub">Pay with PayPal balance, bank, or card</span>
-          </span>
-          <span style="margin-left:auto;font-size:0.7rem;color:var(--muted)">→</span>
-        </a>
-        <a class="pay-btn" id="pay-venmo" href="#" target="_blank" rel="noopener" onclick="trackBuy('venmo')">
-          <span class="pay-btn-icon">💜</span>
-          <span class="pay-btn-info">
-            <span class="pay-btn-title">Venmo</span>
-            <span class="pay-btn-sub">Opens Venmo — include pack name in note</span>
-          </span>
-          <span style="margin-left:auto;font-size:0.7rem;color:var(--muted)">→</span>
-        </a>
-      </div>
-      <p class="pay-note" style="margin-top:0.8rem">After checkout, check your email for your <strong style="color:var(--tl)">unlock code</strong>. Then come back here and enter it below to access your prompts instantly.</p>
+    <!-- Purchase request form -->
+    <div id="pay-form-wrap">
+      <p class="pay-label" style="margin-bottom:0.8rem">Enter your info and choose how to pay — we'll send your payment link within a few hours</p>
+      <form id="purchase-form" name="purchase-request" method="POST" data-netlify="true" onsubmit="handlePurchaseSubmit(event)">
+        <input type="hidden" name="form-name" value="purchase-request">
+        <input type="hidden" name="pack" id="form-pack" value="">
+        <input type="hidden" name="price" id="form-price" value="">
+
+        <input type="text" name="name" id="form-name-input" placeholder="Your first name" required
+          style="width:100%;box-sizing:border-box;background:var(--surf);border:1px solid var(--dim);
+                 border-radius:10px;padding:0.65rem 0.9rem;color:var(--txt);font-size:0.9rem;
+                 outline:none;margin-bottom:0.55rem;font-family:inherit">
+
+        <input type="email" name="email" id="form-email-input" placeholder="Your email address" required
+          style="width:100%;box-sizing:border-box;background:var(--surf);border:1px solid var(--dim);
+                 border-radius:10px;padding:0.65rem 0.9rem;color:var(--txt);font-size:0.9rem;
+                 outline:none;margin-bottom:0.8rem;font-family:inherit">
+
+        <p class="pay-label" style="margin-bottom:0.5rem">How would you like to pay?</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.45rem;margin-bottom:0.9rem">
+          <label class="pay-method-opt">
+            <input type="radio" name="payment_method" value="Card" required> 💳 Card
+          </label>
+          <label class="pay-method-opt">
+            <input type="radio" name="payment_method" value="Apple Pay"> 🍎 Apple Pay
+          </label>
+          <label class="pay-method-opt">
+            <input type="radio" name="payment_method" value="PayPal"> 🅿️ PayPal
+          </label>
+          <label class="pay-method-opt">
+            <input type="radio" name="payment_method" value="Venmo"> 💜 Venmo
+          </label>
+        </div>
+
+        <button type="submit"
+          style="width:100%;padding:0.9rem;background:linear-gradient(90deg,var(--pk),var(--pu));
+                 color:#fff;font-weight:700;font-size:0.95rem;border:none;border-radius:12px;
+                 cursor:pointer;letter-spacing:0.3px">
+          Request Access →
+        </button>
+      </form>
     </div>
 
-    <!-- Step 2: Enter unlock code (after purchase) -->
+    <!-- Confirmation (shown after submit) -->
+    <div id="pay-confirm" style="display:none;text-align:center;padding:0.5rem 0 0.8rem">
+      <div style="font-size:2.2rem;margin-bottom:0.4rem">✅</div>
+      <p style="font-weight:700;color:var(--tl);font-size:1rem;margin-bottom:0.4rem">Request received!</p>
+      <p style="font-size:0.8rem;color:var(--muted);line-height:1.6">Check your inbox — a payment link is on its way. Once you pay, your <strong style="color:var(--txt)">unlock code</strong> arrives in the same email. Enter it below to access your prompts instantly.</p>
+    </div>
+
+    <!-- Unlock code (always visible) -->
     <div class="pay-divider" style="margin:1rem 0"></div>
-    <p class="pay-label">Already purchased? Enter your code</p>
+    <p class="pay-label">Already purchased? Enter your unlock code</p>
     <div style="display:flex;gap:8px;margin-bottom:0.5rem">
       <input id="unlock-input" type="text" placeholder="e.g. MK17UNLOCK"
         style="flex:1;background:var(--surf);border:1px solid var(--dim);border-radius:10px;
@@ -833,8 +843,8 @@ Limited to [X] members to keep the community tight and high-value. Once this coh
 
 <script>
 /* ══════════════════════════════════════════
-   UNLOCK CODES — send these in your purchase confirmation email
-   One code per pack. User enters code → content unlocks instantly.
+   UNLOCK CODES — include in your purchase confirmation email
+   One code per pack. User enters it → content unlocks instantly.
 ══════════════════════════════════════════ */
 const UNLOCK_CODES = {
   starter:  'MK17UNLOCK',
@@ -842,41 +852,6 @@ const UNLOCK_CODES = {
   creator:  'MK97UNLOCK',
   business: 'MK297UNLOCK',
   ceo:      'MK497UNLOCK'
-};
-
-/* ══════════════════════════════════════════
-   PAYMENT LINKS
-   Card/Apple Pay: Gumroad product page (supports all cards + Apple Pay in Safari)
-   PayPal: paypal.me/YOUR_USERNAME/AMOUNT
-   Venmo: venmo.com/YOUR_USERNAME (user enters amount manually)
-   → Replace REPLACE_USERNAME with your actual PayPal/Venmo username
-══════════════════════════════════════════ */
-const PAYMENT_LINKS = {
-  starter: {
-    card:   'https://metakittyz.gumroad.com/l/starter-prompts',
-    paypal: 'https://paypal.me/REPLACE_USERNAME/17',
-    venmo:  'https://venmo.com/REPLACE_USERNAME'
-  },
-  growth: {
-    card:   'https://metakittyz.gumroad.com/l/growth-prompts',
-    paypal: 'https://paypal.me/REPLACE_USERNAME/47',
-    venmo:  'https://venmo.com/REPLACE_USERNAME'
-  },
-  creator: {
-    card:   'https://metakittyz.gumroad.com/l/creator-prompts',
-    paypal: 'https://paypal.me/REPLACE_USERNAME/97',
-    venmo:  'https://venmo.com/REPLACE_USERNAME'
-  },
-  business: {
-    card:   'https://metakittyz.gumroad.com/l/business-prompts',
-    paypal: 'https://paypal.me/REPLACE_USERNAME/297',
-    venmo:  'https://venmo.com/REPLACE_USERNAME'
-  },
-  ceo: {
-    card:   'https://metakittyz.gumroad.com/l/ceo-prompts',
-    paypal: 'https://paypal.me/REPLACE_USERNAME/497',
-    venmo:  'https://venmo.com/REPLACE_USERNAME'
-  }
 };
 
 let currentPack = 'starter';
@@ -935,17 +910,47 @@ function openPay(packName, price, packKey) {
   currentPack = packKey;
   document.getElementById('modal-pack-name').textContent = packName;
   document.getElementById('modal-price').textContent = price;
-  const links = PAYMENT_LINKS[packKey];
-  document.getElementById('pay-card').href   = links.card;
-  document.getElementById('pay-apple').href  = links.card;  // Apple Pay appears automatically in Gumroad/Stripe on Safari
-  document.getElementById('pay-paypal').href = links.paypal;
-  document.getElementById('pay-venmo').href  = links.venmo;
-  // Clear any previous code message
+  // Set hidden form fields
+  document.getElementById('form-pack').value  = packName + ' (' + packKey + ')';
+  document.getElementById('form-price').value = price;
+  // Pre-fill name/email from gate if captured
+  const savedName  = localStorage.getItem('mk_name')  || '';
+  const savedEmail = localStorage.getItem('mk_email') || '';
+  const nameInput  = document.getElementById('form-name-input');
+  const emailInput = document.getElementById('form-email-input');
+  if (savedName  && nameInput)  nameInput.value  = savedName;
+  if (savedEmail && emailInput) emailInput.value = savedEmail;
+  // Reset to form state
+  document.getElementById('pay-form-wrap').style.display = '';
+  document.getElementById('pay-confirm').style.display   = 'none';
   document.getElementById('code-msg').textContent = '';
-  document.getElementById('unlock-input').value = '';
+  document.getElementById('unlock-input').value   = '';
   document.getElementById('pay-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
   trackEvent('view_pack', { pack: packKey, price: price });
+}
+
+/* ── Purchase request form submit ── */
+function handlePurchaseSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  // Submit to Netlify Forms
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(data).toString()
+  }).catch(() => {});
+  // Save email for future pre-fill
+  const email  = data.get('email')  || '';
+  const name   = data.get('name')   || '';
+  const method = data.get('payment_method') || '';
+  if (email) { localStorage.setItem('mk_email', email); localStorage.setItem('mk_email_captured', '1'); }
+  if (name)    localStorage.setItem('mk_name', name);
+  trackEvent('purchase_intent', { method: method, pack: currentPack });
+  // Show confirmation
+  document.getElementById('pay-form-wrap').style.display = 'none';
+  document.getElementById('pay-confirm').style.display   = '';
 }
 
 function closePayModal() {
@@ -999,7 +1004,7 @@ function unlockPack(packKey) {
   }, 900);
 }
 
-/* ── Track payment intent ── */
+/* ── Track payment intent (kept for any inline onclick use) ── */
 function trackBuy(method) {
   trackEvent('purchase_intent', { method: method, pack: currentPack });
 }
