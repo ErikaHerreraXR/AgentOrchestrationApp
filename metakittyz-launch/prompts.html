@@ -4,7 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Prompt Store — Metakittyz</title>
-<meta name="description" content="Buy proven AI prompt packs for content creation, brand building, and marketing. Tested by Metakittyz, ready to use today.">
+<meta name="description" content="Proven AI prompt packs for content creation, brand building, and marketing. Built and tested live on stream by Metakittyz.">
+
+<!-- ── Google Analytics 4 ──
+     SETUP: Replace G-XXXXXXXXXX with your Measurement ID from analytics.google.com
+     Create account → New property → Web → copy Measurement ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+  function trackEvent(action, params) {
+    if (typeof gtag !== 'undefined') gtag('event', action, params || {});
+  }
+</script>
+
 <style>
 :root {
   --bg: #0A0015; --card: #0f0022; --surf: #160030;
@@ -21,11 +36,15 @@ body {
   font-size: 16px; line-height: 1.6; overflow-x: hidden; padding-bottom: 80px;
 }
 a { color: inherit; text-decoration: none; }
+
 @keyframes shimmer { to { background-position: 200% 0; } }
 @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes modal-in { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
+/* ── Rainbow Bar ── */
 .rb-bar { height: 4px; background: var(--rb); background-size: 200%; animation: shimmer 3s linear infinite; }
 
+/* ── Nav ── */
 .topnav {
   position: sticky; top: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
@@ -42,6 +61,95 @@ a { color: inherit; text-decoration: none; }
 .nav-cta { background: var(--pk); color: #fff; font-size: 0.78rem; font-weight: 700; padding: 8px 18px; border-radius: 100px; transition: 0.15s; }
 .nav-cta:hover { opacity: 0.85; }
 
+/* ══════════════════════════════════════════
+   EMAIL GATE OVERLAY
+══════════════════════════════════════════ */
+#email-gate {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(10,0,21,0.94); backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+}
+.gate-box {
+  background: var(--card); border: 1px solid rgba(123,47,255,0.35);
+  border-radius: 20px; padding: 2.2rem; max-width: 420px; width: 100%;
+  animation: modal-in 0.35s ease;
+  box-shadow: 0 0 60px rgba(123,47,255,0.15);
+}
+.gate-box .rb-bar { border-radius: 4px; margin-bottom: 1.6rem; }
+.gate-box h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 0.4rem; letter-spacing: -0.5px; }
+.gate-box h2 span { color: var(--pk); }
+.gate-box p { font-size: 0.88rem; color: var(--muted); margin-bottom: 1.4rem; line-height: 1.6; }
+.gate-perks { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.4rem; }
+.gate-perks li { font-size: 0.83rem; display: flex; align-items: center; gap: 8px; }
+.gate-perks li::before { content: '✓'; color: var(--gr); font-weight: 900; font-size: 0.75rem; }
+.gate-form { display: flex; flex-direction: column; gap: 0.7rem; }
+.gate-input {
+  background: var(--surf); border: 1px solid var(--dim); border-radius: 10px;
+  padding: 0.75rem 1rem; color: var(--txt); font-size: 0.9rem; width: 100%;
+  outline: none; transition: 0.15s;
+}
+.gate-input:focus { border-color: var(--pu); }
+.gate-input::placeholder { color: var(--muted); }
+.gate-submit {
+  background: var(--pk); color: #fff; font-size: 0.95rem; font-weight: 700;
+  padding: 13px; border-radius: 10px; border: none; cursor: pointer;
+  transition: 0.15s; width: 100%;
+}
+.gate-submit:hover { opacity: 0.88; }
+.gate-legal { font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 0.5rem; }
+
+/* ══════════════════════════════════════════
+   PAYMENT MODAL
+══════════════════════════════════════════ */
+#pay-modal {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(10,0,21,0.9); backdrop-filter: blur(10px);
+  display: none; align-items: flex-end; justify-content: center;
+  padding: 0;
+}
+#pay-modal.open { display: flex; }
+.pay-sheet {
+  background: var(--card); border: 1px solid var(--dim);
+  border-radius: 20px 20px 0 0; padding: 1.8rem 1.5rem 2.5rem;
+  width: 100%; max-width: 500px;
+  animation: modal-in 0.3s ease;
+}
+.pay-handle { width: 40px; height: 4px; background: var(--dim); border-radius: 2px; margin: 0 auto 1.4rem; }
+.pay-pack-name { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--tl); margin-bottom: 0.3rem; }
+.pay-price { font-size: 2rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 1.2rem; }
+.pay-divider { height: 1px; background: var(--dim); margin-bottom: 1.2rem; }
+.pay-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.7rem; }
+.pay-options { display: flex; flex-direction: column; gap: 0.6rem; }
+.pay-btn {
+  display: flex; align-items: center; gap: 14px;
+  padding: 1rem 1.2rem; border-radius: 12px; border: 1px solid var(--dim);
+  background: var(--surf); color: var(--txt); font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: 0.15s; text-decoration: none; width: 100%;
+}
+.pay-btn:hover { border-color: var(--pk); background: rgba(255,45,120,0.06); }
+.pay-btn-icon { font-size: 1.4rem; flex-shrink: 0; }
+.pay-btn-info { display: flex; flex-direction: column; }
+.pay-btn-title { font-size: 0.88rem; font-weight: 700; }
+.pay-btn-sub { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
+.pay-apple { background: #000; border-color: #333; color: #fff; }
+.pay-apple:hover { background: #111; border-color: var(--pk); }
+.pay-paypal { }
+.pay-venmo { }
+.pay-close-btn {
+  margin-top: 1rem; width: 100%; padding: 0.7rem;
+  background: transparent; border: 1px solid var(--dim);
+  border-radius: 10px; color: var(--muted); font-size: 0.82rem;
+  cursor: pointer; transition: 0.15s;
+}
+.pay-close-btn:hover { color: var(--txt); border-color: var(--txt); }
+.pay-note {
+  font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 0.8rem; line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════
+   PAGE HEADER
+══════════════════════════════════════════ */
 .page-header {
   max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem 2rem;
   text-align: center; animation: fade-up 0.4s ease;
@@ -51,73 +159,120 @@ a { color: inherit; text-decoration: none; }
 .page-header h1 span { color: var(--pk); }
 .page-header p { font-size: 1rem; color: var(--muted); }
 
-/* ── What these are ── */
-.explainer {
-  max-width: 780px; margin: 0 auto; padding: 0 1.5rem 1rem;
-  background: var(--card); border: 1px solid var(--dim);
-  border-radius: 14px; margin-left: auto; margin-right: auto;
-  padding: 1.2rem 1.5rem; margin-bottom: 1rem;
-}
-.explainer-inner { max-width: 780px; }
-.explainer h3 { font-size: 0.95rem; font-weight: 700; color: var(--tl); margin-bottom: 0.4rem; }
-.explainer p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
-
-/* ── Packs Grid ── */
-.packs { max-width: 780px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+/* ══════════════════════════════════════════
+   PACKS
+══════════════════════════════════════════ */
+.packs-wrap { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 2rem; display: flex; flex-direction: column; gap: 1.4rem; }
 
 .pack {
   background: var(--card); border: 1px solid var(--dim);
-  border-radius: 16px; overflow: hidden; transition: 0.2s;
+  border-radius: 16px; overflow: hidden;
 }
-.pack:hover { border-color: rgba(255,45,120,0.3); transform: translateY(-1px); }
-.pack.featured { border-color: rgba(123,47,255,0.5); position: relative; }
-.pack.featured::before {
-  content: 'MOST POPULAR';
-  position: absolute; top: 12px; right: 12px;
+.pack.popular { border-color: rgba(123,47,255,0.45); position: relative; }
+.popular-badge {
+  position: absolute; top: 14px; right: 14px;
   background: var(--pu); color: #fff;
-  font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
   padding: 3px 10px; border-radius: 100px;
 }
 
+/* Pack Header */
 .pack-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 1.3rem 1.4rem 0.8rem; gap: 12px;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 1.4rem 1.4rem 0; gap: 12px;
 }
-.pack-name { font-size: 1.05rem; font-weight: 800; }
-.pack-price { font-size: 1.5rem; font-weight: 900; letter-spacing: -1px; }
+.pack-title-row h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 3px; }
+.pack-title-row p { font-size: 0.8rem; color: var(--muted); }
+.pack-price { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
 
+.pack-buy {
+  display: flex; align-items: center; gap: 8px;
+  margin: 1rem 1.4rem;
+}
+.btn-buy {
+  flex: 1; padding: 11px; border-radius: 10px; border: none;
+  background: var(--pk); color: #fff; font-size: 0.88rem; font-weight: 700;
+  cursor: pointer; transition: 0.15s;
+}
+.btn-buy:hover { opacity: 0.85; }
+.btn-buy-alt {
+  padding: 11px 14px; border-radius: 10px;
+  border: 1px solid var(--dim); background: transparent;
+  color: var(--muted); font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: 0.15s; white-space: nowrap;
+}
+.btn-buy-alt:hover { color: var(--txt); border-color: var(--txt); }
+
+/* Prompts inside pack */
 .pack-divider { height: 1px; background: var(--dim); margin: 0 1.4rem; }
-
-.pack-body { padding: 0.8rem 1.4rem 1.3rem; }
-.pack-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.8rem; line-height: 1.55; }
-.pack-includes { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
-.pack-includes li { font-size: 0.83rem; display: flex; align-items: flex-start; gap: 8px; }
-.pack-includes li::before { content: '✓'; color: var(--gr); font-weight: 700; font-size: 0.78rem; flex-shrink: 0; margin-top: 2px; }
-
-.pack-btn {
-  display: block; width: 100%; text-align: center;
-  font-size: 0.9rem; font-weight: 700;
-  padding: 13px; border-radius: 10px;
-  border: none; cursor: pointer; transition: 0.15s;
-  text-decoration: none;
+.pack-prompts-label {
+  padding: 0.8rem 1.4rem 0.4rem;
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted);
 }
-.pack-btn-pk { background: var(--pk); color: #fff; }
-.pack-btn-pk:hover { opacity: 0.85; }
-.pack-btn-pu { background: var(--pu); color: #fff; }
-.pack-btn-pu:hover { opacity: 0.85; }
-.pack-btn-outline { background: transparent; color: var(--txt); border: 1px solid var(--dim); }
-.pack-btn-outline:hover { border-color: var(--pk); color: var(--pk); }
+
+.prompt-item {
+  margin: 0 1.4rem 0.7rem;
+  background: var(--surf); border: 1px solid var(--dim);
+  border-radius: 10px; padding: 0.9rem 1rem; transition: 0.2s;
+}
+.prompt-item:hover { border-color: rgba(255,45,120,0.2); }
+.prompt-name {
+  font-size: 0.8rem; font-weight: 700; color: var(--tl);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem;
+}
+.prompt-desc { font-size: 0.83rem; color: var(--muted); margin-bottom: 0.6rem; line-height: 1.5; }
+.prompt-text {
+  background: rgba(10,0,21,0.5); border: 1px solid var(--dim);
+  border-radius: 8px; padding: 0.7rem 0.9rem;
+  font-size: 0.78rem; color: var(--txt); line-height: 1.6;
+  font-family: 'Courier New', monospace;
+  white-space: pre-wrap; word-break: break-word; position: relative;
+}
+.copy-btn {
+  position: absolute; top: 6px; right: 6px;
+  background: var(--dim); color: var(--muted); border: none;
+  font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 5px;
+  cursor: pointer; transition: 0.15s;
+}
+.copy-btn:hover { background: var(--pk); color: #fff; }
+
+/* Locked prompts */
+.locked-wrap { margin: 0 1.4rem 1.2rem; position: relative; }
+.locked-list { display: flex; flex-direction: column; gap: 0.5rem; filter: blur(4px); pointer-events: none; user-select: none; }
+.locked-item {
+  background: var(--surf); border: 1px solid var(--dim);
+  border-radius: 10px; padding: 0.9rem 1rem;
+}
+.locked-item .prompt-name { color: var(--muted); }
+.locked-item .locked-bar { height: 8px; background: var(--dim); border-radius: 4px; margin-top: 0.4rem; }
+.locked-item .locked-bar-sm { height: 8px; width: 60%; background: var(--dim); border-radius: 4px; margin-top: 0.4rem; }
+.locked-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px;
+  background: linear-gradient(to bottom, transparent, rgba(10,0,21,0.85) 40%);
+  border-radius: 10px;
+}
+.locked-overlay p { font-size: 0.8rem; color: var(--muted); }
+.btn-unlock {
+  background: var(--pk); color: #fff; font-size: 0.82rem; font-weight: 700;
+  padding: 9px 20px; border-radius: 100px; border: none; cursor: pointer; transition: 0.15s;
+}
+.btn-unlock:hover { opacity: 0.85; }
+
+/* spacing after last prompt */
+.pack-bottom { height: 0.4rem; }
 
 /* ── Legal ── */
-.legal { max-width: 780px; margin: 1.5rem auto; padding: 1.2rem 1.5rem; }
+.legal-wrap { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 2rem; }
 .legal-box {
-  background: var(--card); border: 1px solid var(--dim);
-  border-left: 3px solid var(--pu); border-radius: 12px;
-  padding: 1rem 1.2rem;
+  background: var(--card); border: 1px solid var(--dim); border-left: 3px solid var(--pu);
+  border-radius: 12px; padding: 1rem 1.2rem;
 }
-.legal-box h4 { font-size: 0.8rem; font-weight: 700; color: var(--pu); margin-bottom: 0.5rem; }
+.legal-box h4 { font-size: 0.8rem; font-weight: 700; color: var(--pu); margin-bottom: 0.4rem; }
 .legal-box p { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
-.legal-box p + p { margin-top: 0.4rem; }
+.legal-box p + p { margin-top: 0.35rem; }
 
 /* ── Bottom Nav ── */
 .bottom-nav {
@@ -136,13 +291,42 @@ a { color: inherit; text-decoration: none; }
 .bnav-item:last-child { color: var(--pu); }
 .bnav-ic { font-size: 1.1rem; }
 
-@media (max-width: 640px) { .nav-links { display: none; } }
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .pack-head { flex-wrap: wrap; }
+}
 </style>
 </head>
 <body>
 
+<!-- ══════════════════════════════════════════
+     EMAIL GATE — Netlify Form
+     Submissions appear at: Netlify Dashboard → Your Site → Forms
+══════════════════════════════════════════ -->
+<div id="email-gate">
+  <div class="gate-box">
+    <div class="rb-bar"></div>
+    <h2>Get <span>Free Access</span><br>to Prompt Previews</h2>
+    <p>Drop your email to unlock sample prompts from every pack — no credit card, no catch.</p>
+    <ul class="gate-perks">
+      <li>2 full prompts from each pack — copy and use today</li>
+      <li>First access to new packs and live stream drops</li>
+      <li>Weekly AI build tips from Metakittyz</li>
+    </ul>
+    <!-- Netlify Form: add data-netlify="true" — submissions show in Netlify dashboard automatically -->
+    <form class="gate-form" name="prompt-access" method="POST" data-netlify="true" onsubmit="handleGateSubmit(event)">
+      <input type="hidden" name="form-name" value="prompt-access">
+      <input class="gate-input" type="text" name="name" placeholder="Your first name" required autocomplete="given-name">
+      <input class="gate-input" type="email" name="email" placeholder="Your best email" required autocomplete="email">
+      <button class="gate-submit" type="submit">Show Me the Prompts →</button>
+    </form>
+    <p class="gate-legal">No spam. Unsubscribe any time. By submitting you agree to receive emails from Metakittyz.</p>
+  </div>
+</div>
+
 <div class="rb-bar"></div>
 
+<!-- ── Nav ── -->
 <nav class="topnav">
   <a class="nav-logo" href="index.html">🐱 <span>METAKITTYZ</span></a>
   <div class="nav-links">
@@ -154,152 +338,475 @@ a { color: inherit; text-decoration: none; }
   <a class="nav-cta" href="guide.html">Start Building →</a>
 </nav>
 
+<!-- ── Page Header ── -->
 <div class="page-header">
   <p class="page-header-tag">✨ Prompt Store</p>
-  <h1>Proven Prompts.<br><span>Ready to Use Today.</span></h1>
-  <p>Every prompt in these packs has been built and tested live on stream. Copy, paste, and get results — no guessing required.</p>
+  <h1>Prompts That<br><span>Actually Work.</span></h1>
+  <p>Every prompt below was built and tested live on stream. Copy it, paste it into Claude, and get results — no guesswork.</p>
 </div>
 
-<div style="max-width:780px;margin:0 auto 1rem;padding:0 1.5rem;">
-  <div class="legal-box" style="border-left-color:var(--tl)">
-    <h4>💡 What are prompt packs?</h4>
-    <p>A prompt pack is a collection of pre-written instructions you paste into Claude AI (or ChatGPT) to get a specific result. Instead of figuring out the right words yourself, you use a prompt that's already been tested and proven to work. Think of it like a recipe — you follow the steps, and you get the dish.</p>
-  </div>
-</div>
+<!-- ══════════════════════════════════════════
+     PACKS
+══════════════════════════════════════════ -->
+<div class="packs-wrap">
 
-<div class="packs">
-
-  <div class="pack">
+  <!-- ── STARTER PACK $17 ── -->
+  <div class="pack" id="pack-starter">
     <div class="pack-head">
-      <div>
-        <div class="pack-name">🐣 Starter Pack</div>
-        <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">Perfect for your first week</div>
+      <div class="pack-title-row">
+        <h3>🐣 Starter Pack</h3>
+        <p>10 prompts · Perfect for your first week</p>
       </div>
-      <div class="pack-price" style="color:var(--tl);">$17</div>
+      <div class="pack-price" style="color:var(--tl)">$17</div>
     </div>
-    <div class="pack-divider"></div>
-    <div class="pack-body">
-      <p class="pack-desc">Everything you need to get your first piece of AI content live. 10 essential prompts to build your Brand Bible, write your bio, and create your first week of posts.</p>
-      <ul class="pack-includes">
-        <li>Brand Voice Builder — define how your AI should sound like you</li>
-        <li>Social Media Bio Generator — 3 versions for any platform</li>
-        <li>Weekly Content Planner — 7-day topic calendar</li>
-        <li>First Post Writer — hook, body, and CTA for any topic</li>
-        <li>Caption Adapter — one post reformatted for IG, TikTok, LinkedIn, X</li>
-        <li>5 bonus prompts for quick content wins</li>
-      </ul>
-      <a class="pack-btn pack-btn-outline" href="https://metakittyz.com" target="_blank">Buy for $17 →</a>
+    <div class="pack-buy">
+      <button class="btn-buy" onclick="openPay('Starter Pack','$17','starter')">Buy Now</button>
+      <button class="btn-buy-alt" onclick="openPay('Starter Pack','$17','starter')">🍎 Apple Pay</button>
     </div>
-  </div>
 
-  <div class="pack featured">
-    <div class="pack-head">
-      <div>
-        <div class="pack-name">🔥 Growth Pack</div>
-        <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">For creators ready to scale</div>
-      </div>
-      <div class="pack-price" style="color:var(--pk);">$47</div>
-    </div>
     <div class="pack-divider"></div>
-    <div class="pack-body">
-      <p class="pack-desc">The full 1→12 Content Machine workflow plus ad copy prompts, email sequences, and growth strategies to start building an audience that follows and buys.</p>
-      <ul class="pack-includes">
-        <li>Everything in the Starter Pack</li>
-        <li>1→12 Content Machine — one topic → 12 posts across 6 platforms</li>
-        <li>Ad Hook Generator — 5 tested formats for scroll-stopping ads</li>
-        <li>Email Welcome Sequence — 3-email series for new subscribers</li>
-        <li>YouTube Script Builder — hook, main points, CTA structure</li>
-        <li>Engagement Reply Templates — respond to comments at scale</li>
-        <li>Audience Growth Strategy brief — 30-day plan for your niche</li>
-      </ul>
-      <a class="pack-btn pack-btn-pk" href="https://metakittyz.com" target="_blank">Buy for $47 →</a>
-    </div>
-  </div>
+    <div class="pack-prompts-label">✦ 2 Free Preview Prompts</div>
 
-  <div class="pack">
-    <div class="pack-head">
-      <div>
-        <div class="pack-name">🚀 Creator Pack</div>
-        <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">Launch your digital product business</div>
+    <!-- Prompt 1 – visible -->
+    <div class="prompt-item">
+      <div class="prompt-name">01 · Brand Voice Builder</div>
+      <div class="prompt-desc">The foundation of your AI team. Creates the Brand Bible your agents will read before writing anything.</div>
+      <div class="prompt-text" id="pt-s1">I'm building a personal brand around [YOUR NICHE]. My name is [YOUR NAME]. My audience is [DESCRIBE YOUR IDEAL FOLLOWER]. My personality is [3 ADJECTIVES - ex: bold, funny, real].
+
+Write my Brand Bible with:
+• My core message (what I stand for in 1 sentence)
+• My communication style (how I talk and what I avoid)
+• 5 phrases I would say naturally
+• 5 phrases I would never say
+• A sample paragraph in my exact voice about [YOUR TOPIC]
+
+Make it specific enough that an AI could read it and write something that sounds like me.
+      <button class="copy-btn" onclick="copyPrompt('pt-s1',this)">Copy</button></div>
+    </div>
+
+    <!-- Prompt 2 – visible -->
+    <div class="prompt-item">
+      <div class="prompt-name">02 · Social Media Bio Generator</div>
+      <div class="prompt-desc">Creates your bio in 3 versions — Instagram, TikTok, and LinkedIn — all in your brand voice.</div>
+      <div class="prompt-text" id="pt-s2">Using this brand voice guide: [PASTE YOUR BRAND BIBLE]
+
+Write 3 versions of my social media bio:
+
+INSTAGRAM (under 150 characters): Uses 2-3 emojis, states what I do, who I help, and ends with a CTA or link mention.
+
+TIKTOK (under 80 characters): Punchy, trend-aware, makes people want to follow.
+
+LINKEDIN (under 200 characters): Professional but personable. States my expertise and who I help. No buzzwords.
+
+Each bio must answer: who I am, what I do, and why someone should follow me.
+      <button class="copy-btn" onclick="copyPrompt('pt-s2',this)">Copy</button></div>
+    </div>
+
+    <!-- Locked prompts (3–10) -->
+    <div class="locked-wrap">
+      <div class="locked-list">
+        <div class="locked-item"><div class="prompt-name">03 · Weekly Content Planner</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">04 · First Post Writer</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">05 · Caption Adapter</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">06 · Engagement Reply Template</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">07 · Story &amp; Reel Hook Generator</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">08 · Hashtag Strategy Generator</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">09 · Content Recycler</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">10 · Quick Win Post Generator</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
       </div>
-      <div class="pack-price" style="color:var(--yl);">$97</div>
+      <div class="locked-overlay">
+        <p>🔒 8 more prompts included</p>
+        <button class="btn-unlock" onclick="openPay('Starter Pack','$17','starter')">Unlock for $17</button>
+      </div>
     </div>
-    <div class="pack-divider"></div>
-    <div class="pack-body">
-      <p class="pack-desc">Everything you need to not just create content, but sell your knowledge. Includes all 6 AI agent system prompts, a product launch sequence, and brand design briefs.</p>
-      <ul class="pack-includes">
-        <li>Everything in the Growth Pack</li>
-        <li>All 6 AI Agent System Prompts (NOVA, PULSE, ARIA, REACH, SPARK, GUARDIAN)</li>
-        <li>Digital Product Launch Sequence — from idea to first sale in 7 days</li>
-        <li>Brand Identity Brief — visual direction for Canva and Midjourney</li>
-        <li>Testimonial & Social Proof Generator — turn feedback into content</li>
-        <li>Community Building Prompts — grow a Discord or group from zero</li>
-      </ul>
-      <a class="pack-btn pack-btn-outline" href="https://metakittyz.com" target="_blank">Buy for $97 →</a>
-    </div>
+    <div class="pack-bottom"></div>
   </div>
 
-  <div class="pack">
+  <!-- ── GROWTH PACK $47 ── -->
+  <div class="pack popular" id="pack-growth">
+    <div class="popular-badge">MOST POPULAR</div>
     <div class="pack-head">
-      <div>
-        <div class="pack-name">👑 Business Pack</div>
-        <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">Full AI business operating system</div>
+      <div class="pack-title-row">
+        <h3>🔥 Growth Pack</h3>
+        <p>18 prompts · Everything in Starter + 8 growth tools</p>
       </div>
-      <div class="pack-price" style="color:var(--pu);">$297</div>
+      <div class="pack-price" style="color:var(--pk)">$47</div>
     </div>
+    <div class="pack-buy">
+      <button class="btn-buy" onclick="openPay('Growth Pack','$47','growth')">Buy Now</button>
+      <button class="btn-buy-alt" onclick="openPay('Growth Pack','$47','growth')">🍎 Apple Pay</button>
+    </div>
+
     <div class="pack-divider"></div>
-    <div class="pack-body">
-      <p class="pack-desc">The complete MATRIX OS prompt library. Everything Metakittyz uses to run a full content business on automation — including the 90-day growth roadmap and compliance checklist.</p>
-      <ul class="pack-includes">
-        <li>Everything in the Creator Pack</li>
-        <li>MATRIX OS Full Prompt Library — 60+ production-ready prompts</li>
-        <li>90-Day Content Roadmap — week-by-week plan to 100K followers</li>
-        <li>Paid Ads Playbook — Meta, TikTok, and YouTube ad frameworks</li>
-        <li>FTC Compliance Checklist — built into every content prompt</li>
-        <li>Influencer Outreach Scripts — AI-written DMs that actually get responses</li>
-        <li>Revenue Funnel Map — from free content to paid product</li>
-        <li>Monthly content audit template</li>
-      </ul>
-      <a class="pack-btn pack-btn-pu" href="https://metakittyz.com" target="_blank">Buy for $297 →</a>
+    <div class="pack-prompts-label">✦ 2 Free Preview Prompts — includes everything in Starter</div>
+
+    <div class="prompt-item">
+      <div class="prompt-name">11 · 1→12 Content Machine</div>
+      <div class="prompt-desc">The core of your entire content strategy. One topic becomes 12 ready-to-post pieces across 6 platforms.</div>
+      <div class="prompt-text" id="pt-g1">My topic for this week: [YOUR TOPIC]
+
+My brand voice: [PASTE YOUR BRAND BIBLE]
+
+Create a complete content suite — 12 pieces from this one topic:
+
+1. YouTube video script (hook + 3 main points + CTA, 5-min spoken length)
+2. Instagram carousel caption #1 (educational, teaches one thing)
+3. Instagram carousel caption #2 (storytelling or before/after)
+4. TikTok script #1 (15-30 seconds, start with "POV:" or a hook)
+5. TikTok script #2 (30-60 seconds, tutorial format)
+6. LinkedIn post #1 (professional insight, no emojis)
+7. LinkedIn post #2 (personal story with lesson)
+8. X/Twitter thread #1 (5 tweets, first tweet is the hook)
+9. X/Twitter thread #2 (5 tweets, contrarian or surprising take)
+10. Email newsletter section #1 (value tip, under 150 words)
+11. Email newsletter section #2 (personal story, under 150 words)
+12. Blog post intro (300 words, SEO-friendly, ends with CTA to read more)
+
+Keep my brand voice consistent across all 12. Each piece must feel native to its platform.
+      <button class="copy-btn" onclick="copyPrompt('pt-g1',this)">Copy</button></div>
     </div>
+
+    <div class="prompt-item">
+      <div class="prompt-name">12 · Ad Hook Generator</div>
+      <div class="prompt-desc">5 scroll-stopping ad hooks in 5 different formats — tested formats that convert on Meta and TikTok.</div>
+      <div class="prompt-text" id="pt-g2">My offer: [DESCRIBE YOUR PRODUCT OR FREEBIE]
+My target audience: [WHO IS THIS FOR]
+My brand voice: [PASTE YOUR BRAND BIBLE]
+
+Write 5 ad hooks using these proven formats (each under 10 words):
+
+Format 1 — Problem Agitate: "Tired of [pain point]?"
+Format 2 — Social Proof: "[Number] people have already [result]"
+Format 3 — Curiosity Gap: "The [adjective] way to [benefit] no one talks about"
+Format 4 — Direct Benefit: "Get [specific result] in [timeframe] — here's how"
+Format 5 — FOMO: "Stop [doing wrong thing] before [bad consequence]"
+
+Then expand my top hook into a full ad: headline (under 40 characters), body text (2-3 sentences), and CTA button text.
+      <button class="copy-btn" onclick="copyPrompt('pt-g2',this)">Copy</button></div>
+    </div>
+
+    <div class="locked-wrap">
+      <div class="locked-list">
+        <div class="locked-item"><div class="prompt-name">13 · Email Welcome Sequence (3 emails)</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">14 · YouTube Script Builder</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">15 · 30-Day Audience Growth Strategy</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">16 · DM Conversation Opener</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">17 · Collaboration Pitch Template</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">18 · Trending Topic Hijacker</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item" style="opacity:0.5"><div class="prompt-name">+ All 10 Starter Pack prompts</div><div class="locked-bar"></div></div>
+      </div>
+      <div class="locked-overlay">
+        <p>🔒 16 more prompts included</p>
+        <button class="btn-unlock" onclick="openPay('Growth Pack','$47','growth')">Unlock for $47</button>
+      </div>
+    </div>
+    <div class="pack-bottom"></div>
   </div>
 
-  <div class="pack">
+  <!-- ── CREATOR PACK $97 ── -->
+  <div class="pack" id="pack-creator">
     <div class="pack-head">
-      <div>
-        <div class="pack-name">💎 CEO Pack</div>
-        <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">Done-with-you AI team setup</div>
+      <div class="pack-title-row">
+        <h3>🚀 Creator Pack</h3>
+        <p>24 prompts · Includes all 6 AI agent system prompts</p>
       </div>
-      <div class="pack-price" style="color:var(--or);">$497</div>
+      <div class="pack-price" style="color:var(--yl)">$97</div>
     </div>
+    <div class="pack-buy">
+      <button class="btn-buy" onclick="openPay('Creator Pack','$97','creator')">Buy Now</button>
+      <button class="btn-buy-alt" onclick="openPay('Creator Pack','$97','creator')">🍎 Apple Pay</button>
+    </div>
+
     <div class="pack-divider"></div>
-    <div class="pack-body">
-      <p class="pack-desc">Everything in the Business Pack plus personalized brand voice prompts built specifically for your niche, avatar, and voice — customized by Metakittyz. Limited spots available.</p>
-      <ul class="pack-includes">
-        <li>Everything in the Business Pack</li>
-        <li>Custom Brand Voice prompt set — built for your specific niche and audience</li>
-        <li>Custom AI Avatar Creation brief — for Midjourney or similar tools</li>
-        <li>Personalized 90-day strategy call with Metakittyz (45 min, recorded)</li>
-        <li>Access to the private CEO Discord channel</li>
-        <li>Lifetime updates to all prompt packs</li>
-      </ul>
-      <a class="pack-btn pack-btn-outline" href="https://metakittyz.com" target="_blank">Apply for $497 →</a>
+    <div class="pack-prompts-label">✦ 2 Free Preview Prompts — includes everything in Growth + Starter</div>
+
+    <div class="prompt-item">
+      <div class="prompt-name">19 · NOVA — Content Creator Agent</div>
+      <div class="prompt-desc">The complete system prompt that turns Claude into your personal content creator. Paste once, use forever.</div>
+      <div class="prompt-text" id="pt-c1">You are NOVA, an expert AI Content Creator for [YOUR NAME/BRAND].
+
+YOUR JOB: Write all content in [YOUR NAME]'s exact brand voice. Every piece you create must sound like them — not like an AI, not like a generic writer. Like THEM.
+
+BRAND VOICE GUIDE: [PASTE YOUR COMPLETE BRAND BIBLE HERE]
+
+WHEN GIVEN A TOPIC, ALWAYS DELIVER:
+• A scroll-stopping hook (first line that stops someone mid-scroll)
+• 3 key points (each 1-3 sentences, packed with value)
+• A strong call-to-action (specific instruction for what to do next)
+• Optional: a personal story or analogy that makes it memorable
+
+RULES YOU NEVER BREAK:
+• Never start a post with "I"
+• Never use corporate buzzwords (synergy, leverage, utilize)
+• Never make claims that can't be backed up
+• Always add FTC disclosure if content promotes a product: "This post contains AI-assisted content"
+• Always write at an 8th grade reading level — simple words, powerful ideas
+
+You are ready. Give me a topic and I will create content that sounds exactly like [YOUR NAME].
+      <button class="copy-btn" onclick="copyPrompt('pt-c1',this)">Copy</button></div>
     </div>
+
+    <div class="prompt-item">
+      <div class="prompt-name">20 · Digital Product Launch Sequence</div>
+      <div class="prompt-desc">7-day launch plan — one post per day from teaser to close, all in your brand voice.</div>
+      <div class="prompt-text" id="pt-c2">I'm launching [PRODUCT NAME] at $[PRICE] on [LAUNCH DATE].
+My audience: [AUDIENCE DESCRIPTION]
+My brand voice: [PASTE YOUR BRAND BIBLE]
+
+Write a 7-day social media launch sequence — one post per day:
+
+Day -3: Teaser post — hint at something coming, build curiosity without revealing the product name.
+Day -2: Behind-the-scenes — show the work, make it real, build trust.
+Day -1: Social proof — share a beta tester result or your own transformation story.
+Day 0 AM: Launch announcement — full reveal, price, what's included, link to buy.
+Day 0 PM: "Why I built this" — personal story, make it emotional and real.
+Day +1: FAQ post — answer the top 3 objections you expect (too expensive, not sure if it's for me, I can do it myself).
+Day +3: Final push — urgency (price going up / last chance), one more result, clear CTA.
+
+For each post: Platform (Instagram/LinkedIn/TikTok/X), Caption (in my brand voice), Hashtags (if applicable).
+      <button class="copy-btn" onclick="copyPrompt('pt-c2',this)">Copy</button></div>
+    </div>
+
+    <div class="locked-wrap">
+      <div class="locked-list">
+        <div class="locked-item"><div class="prompt-name">21 · PULSE — Video Producer Agent</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">22 · ARIA — Social Media Manager Agent</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">23 · REACH — Ads & Growth Agent</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">24 · SPARK — Brand Designer Agent</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">25 · GUARDIAN — QA & Compliance Agent</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">26 · Brand Identity Brief for Canva/Midjourney</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">27 · Testimonial Transformer</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">28 · Community Builder Prompt Pack</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item" style="opacity:0.5"><div class="prompt-name">+ All Growth + Starter prompts</div><div class="locked-bar"></div></div>
+      </div>
+      <div class="locked-overlay">
+        <p>🔒 22 more prompts included</p>
+        <button class="btn-unlock" onclick="openPay('Creator Pack','$97','creator')">Unlock for $97</button>
+      </div>
+    </div>
+    <div class="pack-bottom"></div>
+  </div>
+
+  <!-- ── BUSINESS PACK $297 ── -->
+  <div class="pack" id="pack-business">
+    <div class="pack-head">
+      <div class="pack-title-row">
+        <h3>👑 Business Pack</h3>
+        <p>30 prompts · Full MATRIX OS operating system</p>
+      </div>
+      <div class="pack-price" style="color:var(--pu)">$297</div>
+    </div>
+    <div class="pack-buy">
+      <button class="btn-buy" onclick="openPay('Business Pack','$297','business')">Buy Now</button>
+      <button class="btn-buy-alt" onclick="openPay('Business Pack','$297','business')">🍎 Apple Pay</button>
+    </div>
+
+    <div class="pack-divider"></div>
+    <div class="pack-prompts-label">✦ 2 Free Preview Prompts — includes all Creator + Growth + Starter prompts</div>
+
+    <div class="prompt-item">
+      <div class="prompt-name">29 · MATRIX OS Daily Command</div>
+      <div class="prompt-desc">Your 45-minute daily brief — NOVA creates, ARIA distributes, GUARDIAN reviews. One command to run your whole AI business.</div>
+      <div class="prompt-text" id="pt-b1">Run my MATRIX OS daily content brief.
+
+TODAY'S DATE: [DATE]
+MY WEEKLY CONTENT GOAL: [EX: 12 posts scheduled, 1 email sent, 1 video uploaded]
+ACTIVE PLATFORMS: [LIST YOUR PLATFORMS]
+THIS WEEK'S MAIN TOPIC: [YOUR TOPIC]
+BRAND VOICE: [PASTE YOUR BRAND BIBLE]
+
+Generate my structured daily brief:
+
+☀️ MORNING (15 min) — NOVA CREATE:
+• Today's content piece to write (type + topic)
+• The hook I should use
+• The exact prompt to give NOVA
+
+🌤️ MIDDAY (15 min) — ARIA DISTRIBUTE:
+• Which scheduled posts go out today
+• 3 accounts to engage with in my niche (describe the type)
+• Reply prompt to use for incoming comments
+
+🌙 EVENING (15 min) — GUARDIAN REVIEW:
+• Content to review before tomorrow's publish
+• FTC check reminder (what to look for)
+• One thing to improve based on today's content
+
+Format this as a checklist I can work through in 45 minutes or less.
+      <button class="copy-btn" onclick="copyPrompt('pt-b1',this)">Copy</button></div>
+    </div>
+
+    <div class="prompt-item">
+      <div class="prompt-name">30 · FTC Compliance Checker</div>
+      <div class="prompt-desc">Run every piece of content through GUARDIAN before it goes live. Catches legal issues before they become problems.</div>
+      <div class="prompt-text" id="pt-b2">You are GUARDIAN, my AI Compliance and Quality Assurance Agent.
+
+Review the following content for legal and brand compliance:
+
+[PASTE YOUR CONTENT HERE]
+
+CHECK FOR:
+
+1. FTC DISCLOSURE — Does this content promote a product, service, or affiliate link? If yes, is there a clear disclosure at the BEGINNING? Required language: "Ad:", "#sponsored", "#affiliate", or "This post was created with AI assistance."
+
+2. INCOME / RESULTS CLAIMS — Does the content promise specific earnings, follower counts, or outcomes? If yes, flag it. Required: "Results vary. Not typical." or remove the specific claim.
+
+3. HEALTH / SUPPLEMENT CLAIMS — Does the content make any health claims? Flag all health statements — these require FDA disclaimers.
+
+4. AI-GENERATED CONTENT — Is this content substantially AI-generated? If yes, label it: "AI-assisted content" per FTC 2024 guidance.
+
+5. COPYRIGHT — Does the content use quotes, images, or statistics? Are they properly attributed?
+
+6. BRAND VOICE CHECK — Does this sound like [YOUR NAME]? Flag any phrases that feel generic or off-brand.
+
+FOR EACH ISSUE FOUND: State the problem, cite the rule, provide the corrected version.
+      <button class="copy-btn" onclick="copyPrompt('pt-b2',this)">Copy</button></div>
+    </div>
+
+    <div class="locked-wrap">
+      <div class="locked-list">
+        <div class="locked-item"><div class="prompt-name">31 · 90-Day Roadmap Generator</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">32 · Meta Ads Full Copy Generator</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">33 · TikTok Ads Script Generator</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">34 · Influencer Outreach System</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">35 · Revenue Funnel Architect</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item"><div class="prompt-name">36 · Weekly MATRIX OS Review</div><div class="locked-bar"></div><div class="locked-bar-sm"></div></div>
+        <div class="locked-item" style="opacity:0.5"><div class="prompt-name">+ All Creator + Growth + Starter prompts</div><div class="locked-bar"></div></div>
+      </div>
+      <div class="locked-overlay">
+        <p>🔒 28 more prompts included</p>
+        <button class="btn-unlock" onclick="openPay('Business Pack','$297','business')">Unlock for $297</button>
+      </div>
+    </div>
+    <div class="pack-bottom"></div>
+  </div>
+
+  <!-- ── CEO PACK $497 ── -->
+  <div class="pack" id="pack-ceo">
+    <div class="pack-head">
+      <div class="pack-title-row">
+        <h3>💎 CEO Pack</h3>
+        <p>All 36 prompts + custom build + strategy call</p>
+      </div>
+      <div class="pack-price" style="color:var(--or)">$497</div>
+    </div>
+    <div class="pack-buy">
+      <button class="btn-buy" onclick="openPay('CEO Pack','$497','ceo')">Apply Now</button>
+      <button class="btn-buy-alt" onclick="openPay('CEO Pack','$497','ceo')">🍎 Apple Pay</button>
+    </div>
+
+    <div class="pack-divider"></div>
+    <div class="pack-prompts-label">✦ What's included — everything in Business Pack, plus:</div>
+
+    <div class="prompt-item">
+      <div class="prompt-name">Custom Brand Voice Prompt Set</div>
+      <div class="prompt-desc">I personally build your Brand Bible and all 6 agent system prompts — customized for your specific niche, audience, and voice. You don't fill in any brackets. It's done for you.</div>
+      <div class="prompt-text" id="pt-ceo1">This is a DONE-FOR-YOU service — not a template.
+
+Here's how it works:
+1. You book your strategy call (link sent after purchase)
+2. We spend 45 minutes on Zoom going through your brand, your audience, your voice, and your goals
+3. Within 72 hours, I deliver:
+   • Your complete Brand Bible (custom, not a template)
+   • All 6 AI agent system prompts — fully personalized
+   • Your first 1→12 content suite, already written
+   • A Midjourney prompt for your AI avatar or brand imagery
+4. The call is recorded and sent to you
+
+You leave with a fully-built AI team that sounds like you from day one.
+      <button class="copy-btn" onclick="copyPrompt('pt-ceo1',this)">Copy</button></div>
+    </div>
+
+    <div class="prompt-item">
+      <div class="prompt-name">Private CEO Discord + Lifetime Updates</div>
+      <div class="prompt-desc">Access to the private Metakittyz CEO channel plus lifetime updates every time a new prompt pack drops.</div>
+      <div class="prompt-text" id="pt-ceo2">CEO Pack members get:
+
+• Private Discord channel access (CEO tier) — ask questions, share wins, get real-time help
+• Lifetime updates to ALL prompt packs (you buy once, you get everything we ever add)
+• Early access to new packs before public launch
+• Monthly group Q&A with Metakittyz (live on Discord)
+• Priority DM access — I personally respond to CEO members first
+
+Limited to [X] members to keep the community tight and high-value. Once this cohort fills, the price goes up.
+      <button class="copy-btn" onclick="copyPrompt('pt-ceo2',this)">Copy</button></div>
+    </div>
+    <div class="pack-bottom"></div>
   </div>
 
 </div>
 
 <!-- Legal -->
-<div class="legal">
+<div class="legal-wrap">
   <div class="legal-box">
-    <h4>⚖️ Legal & Disclosure</h4>
-    <p><strong>FTC Disclosure:</strong> Results vary. These prompts are tools — your results depend on how you use them, your niche, your audience, and your consistency. No income is guaranteed.</p>
-    <p><strong>Digital goods policy:</strong> All sales are final. Prompt packs are delivered digitally and cannot be refunded after download. If you have a technical issue, email us and we'll make it right.</p>
-    <p><strong>AI content disclosure:</strong> The prompts in these packs are designed to produce AI-generated content. Always review AI outputs before publishing. Follow FTC guidelines and label AI-generated content appropriately for your platform.</p>
+    <h4>⚖️ Legal & Purchase Info</h4>
+    <p><strong>FTC Disclosure:</strong> Results vary. These prompts are tools — what you get out depends on how you use them, your niche, consistency, and your audience. No income is guaranteed.</p>
+    <p><strong>Digital goods policy:</strong> All sales are final. Prompt packs are delivered digitally via email after purchase. If you have a technical issue, email us and we'll make it right.</p>
+    <p><strong>Payments:</strong> Credit/debit cards and Apple Pay are processed securely by Stripe. PayPal and Venmo payments are processed by PayPal Holdings. Metakittyz does not store your payment details.</p>
   </div>
 </div>
 
-<!-- Bottom Nav -->
+<!-- ══════════════════════════════════════════
+     PAYMENT MODAL
+     SETUP REQUIRED:
+     1. Create a Stripe account at stripe.com
+     2. Go to Payment Links → Create Link → set price
+     3. Replace each STRIPE_LINK_PACK_NAME below with your link URL
+     4. Replace PAYPAL_USERNAME with your PayPal.me username
+     5. Replace VENMO_USERNAME with your Venmo handle
+══════════════════════════════════════════ -->
+<div id="pay-modal" onclick="closePayModal(event)">
+  <div class="pay-sheet" onclick="event.stopPropagation()">
+    <div class="pay-handle"></div>
+    <div class="pay-pack-name" id="modal-pack-name">Starter Pack</div>
+    <div class="pay-price" id="modal-price">$17</div>
+    <div class="pay-divider"></div>
+    <p class="pay-label">Choose how to pay</p>
+    <div class="pay-options">
+
+      <!-- Credit / Debit Card (Stripe) -->
+      <a class="pay-btn" id="pay-stripe" href="#" target="_blank" onclick="trackEvent('purchase_intent',{method:'stripe',pack:currentPack})">
+        <span class="pay-btn-icon">💳</span>
+        <span class="pay-btn-info">
+          <span class="pay-btn-title">Credit / Debit Card</span>
+          <span class="pay-btn-sub">Visa, Mastercard, Amex, Discover — powered by Stripe</span>
+        </span>
+      </a>
+
+      <!-- Apple Pay (same Stripe link — Apple Pay shows automatically in Safari) -->
+      <a class="pay-btn pay-apple" id="pay-apple" href="#" target="_blank" onclick="trackEvent('purchase_intent',{method:'apple_pay',pack:currentPack})">
+        <span class="pay-btn-icon" style="font-size:1.2rem;">🍎</span>
+        <span class="pay-btn-info">
+          <span class="pay-btn-title">Apple Pay</span>
+          <span class="pay-btn-sub">One tap on iPhone/iPad Safari — powered by Stripe</span>
+        </span>
+      </a>
+
+      <!-- PayPal (also covers Venmo on mobile) -->
+      <a class="pay-btn pay-paypal" id="pay-paypal" href="#" target="_blank" onclick="trackEvent('purchase_intent',{method:'paypal',pack:currentPack})">
+        <span class="pay-btn-icon">🅿️</span>
+        <span class="pay-btn-info">
+          <span class="pay-btn-title">PayPal</span>
+          <span class="pay-btn-sub">Pay with your PayPal balance or linked card</span>
+        </span>
+      </a>
+
+      <!-- Venmo -->
+      <a class="pay-btn pay-venmo" id="pay-venmo" href="#" target="_blank" onclick="trackEvent('purchase_intent',{method:'venmo',pack:currentPack})">
+        <span class="pay-btn-icon">💜</span>
+        <span class="pay-btn-info">
+          <span class="pay-btn-title">Venmo</span>
+          <span class="pay-btn-sub">Opens Venmo app — include pack name in your note</span>
+        </span>
+      </a>
+
+    </div>
+    <button class="pay-close-btn" onclick="closePayModal()">Cancel</button>
+    <p class="pay-note">After payment, your prompts are delivered to the email you used at checkout.<br>Questions? DM @metakittyz on Instagram.</p>
+  </div>
+</div>
+
+<!-- ── Bottom Nav ── -->
 <nav class="bottom-nav">
   <a class="bnav-item" href="index.html"><span class="bnav-ic">🏠</span>Home</a>
   <a class="bnav-item" href="guide.html"><span class="bnav-ic">📖</span>Guide</a>
@@ -307,5 +814,112 @@ a { color: inherit; text-decoration: none; }
   <a class="bnav-item" href="live.html"><span class="bnav-ic">📺</span>Live</a>
 </nav>
 
+<script>
+/* ══════════════════════════════════════════
+   PAYMENT LINKS — REPLACE THESE BEFORE GOING LIVE
+   Stripe: stripe.com → Payment Links → Create Link (one per pack)
+   PayPal: paypal.me/YOUR_USERNAME/AMOUNT
+   Venmo: venmo.com/YOUR_USERNAME
+══════════════════════════════════════════ */
+const PAYMENT_LINKS = {
+  starter: {
+    stripe: 'https://buy.stripe.com/REPLACE_STARTER_LINK',
+    paypal: 'https://paypal.me/REPLACE_USERNAME/17',
+    venmo:  'https://venmo.com/REPLACE_USERNAME'
+  },
+  growth: {
+    stripe: 'https://buy.stripe.com/REPLACE_GROWTH_LINK',
+    paypal: 'https://paypal.me/REPLACE_USERNAME/47',
+    venmo:  'https://venmo.com/REPLACE_USERNAME'
+  },
+  creator: {
+    stripe: 'https://buy.stripe.com/REPLACE_CREATOR_LINK',
+    paypal: 'https://paypal.me/REPLACE_USERNAME/97',
+    venmo:  'https://venmo.com/REPLACE_USERNAME'
+  },
+  business: {
+    stripe: 'https://buy.stripe.com/REPLACE_BUSINESS_LINK',
+    paypal: 'https://paypal.me/REPLACE_USERNAME/297',
+    venmo:  'https://venmo.com/REPLACE_USERNAME'
+  },
+  ceo: {
+    stripe: 'https://buy.stripe.com/REPLACE_CEO_LINK',
+    paypal: 'https://paypal.me/REPLACE_USERNAME/497',
+    venmo:  'https://venmo.com/REPLACE_USERNAME'
+  }
+};
+
+let currentPack = 'starter';
+
+/* ── Email Gate ── */
+function handleGateSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  // Submit to Netlify Forms
+  fetch('/', { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(data).toString() })
+    .catch(() => {}); // fail silently — form still submits to Netlify
+  const email = data.get('email') || '';
+  const name  = data.get('name')  || '';
+  localStorage.setItem('mk_email_captured', '1');
+  localStorage.setItem('mk_email', email);
+  localStorage.setItem('mk_name', name);
+  trackEvent('email_capture', { method: 'prompt_gate' });
+  document.getElementById('email-gate').style.display = 'none';
+}
+
+// Skip gate if already captured
+if (localStorage.getItem('mk_email_captured')) {
+  document.getElementById('email-gate').style.display = 'none';
+}
+
+/* ── Payment Modal ── */
+function openPay(packName, price, packKey) {
+  currentPack = packKey;
+  document.getElementById('modal-pack-name').textContent = packName;
+  document.getElementById('modal-price').textContent = price;
+  const links = PAYMENT_LINKS[packKey];
+  document.getElementById('pay-stripe').href = links.stripe;
+  document.getElementById('pay-apple').href  = links.stripe; // Apple Pay shows automatically in Stripe checkout on Safari
+  document.getElementById('pay-paypal').href = links.paypal;
+  document.getElementById('pay-venmo').href  = links.venmo;
+  document.getElementById('pay-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  trackEvent('view_pack', { pack: packKey, price: price });
+}
+
+function closePayModal(e) {
+  if (e && e.target !== document.getElementById('pay-modal')) return;
+  document.getElementById('pay-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Copy Prompt ── */
+function copyPrompt(id, btn) {
+  const el = document.getElementById(id);
+  const text = el.innerText.replace('Copy','').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.style.background = 'var(--gr)';
+    btn.style.color = '#000';
+    setTimeout(() => { btn.textContent = 'Copy'; btn.style.background = ''; btn.style.color = ''; }, 2000);
+    trackEvent('copy_prompt', { prompt_id: id });
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+  });
+}
+
+// Close modal on back button (mobile)
+window.addEventListener('popstate', () => {
+  document.getElementById('pay-modal').classList.remove('open');
+  document.body.style.overflow = '';
+});
+</script>
 </body>
 </html>
