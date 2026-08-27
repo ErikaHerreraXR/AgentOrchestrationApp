@@ -4991,6 +4991,7 @@ function removeQuickReplies() {
 }
 
 function agentSay(text, delay, shouldSpeak) {
+  text = makeWritingFeelHuman(text);
   var revision = conversationRevision;
   return new Promise(function(resolve) {
     var typing = showTyping();
@@ -5042,13 +5043,13 @@ function launchAgentConv(conv, b, templateId, agent) {
 
 // ── Orchestration Agent intro for each template ───────────────────────────────
 var ORCH_INTROS = {
-  consulting:  function(b) { return 'Hey <strong>' + b.client + '</strong>! I\'m your Orchestration Agent — I keep everything running in the right order. You have <strong>' + (state.template ? state.template.agents.length : 8) + ' specialist agents</strong> lined up, one for each part of your project.\n\nYour goal: <em>' + b.goal + '</em>\n\nLet\'s start with your <strong>Discovery Agent</strong>. Their job is to find out what the real challenge is — not just what it looks like on the surface.'; },
-  product:     function(b) { return 'Hi <strong>' + b.client + '</strong>! I\'m your Orchestration Agent — I make sure the right expert shows up at the right time. We\'ll take your idea all the way to something your team can build.\n\nYour goal: <em>' + b.goal + '</em>\n\nFirst up is <strong>User Research</strong>. We always start with the people who will actually use your product.'; },
-  marketing:   function(b) { return 'Hello <strong>' + b.client + '</strong>! I\'m your Orchestration Agent. We\'re building you a complete marketing setup — from brand identity all the way to launch. Each expert asks a quick question and then gets to work.\n\nYour goal: <em>' + b.goal + '</em>\n\nFirst up is <strong>Brand Strategy</strong> — everything else gets built on top of this.'; },
-  compliance:  function(b) { return 'Hi <strong>' + b.client + '</strong>! I\'m your Orchestration Agent. Compliance has to be done in the right order — and I\'ll make sure of that. Rules first, then risks, then policies, then training.\n\nYour goal: <em>' + b.goal + '</em>\n\nFirst up is your <strong>Regulatory Research Agent</strong> — they\'ll map out exactly which rules apply to you.'; },
-  realestate:  function(b) { return 'Hi <strong>' + b.client + '</strong>! I\'m your Orchestration Agent. Real estate is all about doing things in the right order — and I\'ll guide you through each step: market research, numbers, permits, design, construction, leasing, and financing.\n\nYour goal: <em>' + b.goal + '</em>\n\nFirst up is <strong>Market Research</strong> — you need the data before you can make any good decisions.'; },
-  interior:    function(b) { return 'Hi <strong>' + b.client + '</strong>! I\'m your Orchestration Agent. A great interior starts with a plan — not a shopping trip. I\'ll guide you through every step: layout, materials, furniture, lighting, and styling.\n\nYour goal: <em>' + b.goal + '</em>\n\nFirst up is <strong>Client Discovery</strong> — let\'s figure out what you actually want before anything is chosen.'; },
-  airbnb:      function(b) { return 'Hey <strong>' + b.client + '</strong>! I\'m your Orchestration Agent. We\'re going to build you a system that makes your property run smoothly — from pricing all the way to reviews and finances.\n\nYour goal: <em>' + b.goal + '</em>\n\nFirst up is <strong>Revenue Analysis</strong> — let\'s look at the numbers first so we know exactly where you stand.'; },
+  consulting:  function(b) { return 'Welcome, <strong>' + b.client + '</strong>. We will work through your goal one clear step at a time.\n\nYour goal is <em>' + b.goal + '</em>.\n\nDiscovery goes first. We will identify what needs attention before making a plan.'; },
+  product:     function(b) { return 'Welcome, <strong>' + b.client + '</strong>. We will turn your idea into a plan your team can follow.\n\nYour goal is <em>' + b.goal + '</em>.\n\nWe will begin with the people who will use your product.'; },
+  marketing:   function(b) { return 'Welcome, <strong>' + b.client + '</strong>. We will build your marketing plan in a clear order.\n\nYour goal is <em>' + b.goal + '</em>.\n\nWe will start by defining why customers should choose you.'; },
+  compliance:  function(b) { return 'Welcome, <strong>' + b.client + '</strong>. We will make the rules easier to understand and follow.\n\nYour goal is <em>' + b.goal + '</em>.\n\nFirst, we will identify which rules apply to your business.'; },
+  realestate:  function(b) { return 'Welcome, <strong>' + b.client + '</strong>. We will review the property, the numbers, and the next decisions.\n\nYour goal is <em>' + b.goal + '</em>.\n\nWe will start with the market facts that matter most.'; },
+  interior:    function(b) { return 'Welcome, <strong>' + b.client + '</strong>. We will make each design choice easier and more useful.\n\nYour goal is <em>' + b.goal + '</em>.\n\nWe will begin by learning what the space must do for you.'; },
+  airbnb:      function(b) { return 'Welcome, <strong>' + b.client + '</strong>. We will improve how your property earns and operates.\n\nYour goal is <em>' + b.goal + '</em>.\n\nWe will start with the numbers so your next move is clear.'; },
 };
 
 // ── Main conversation render ──────────────────────────────────────────────────
@@ -5175,7 +5176,7 @@ function startAgentConversation(agent, agentIdx, templateId) {
     msgs.appendChild(introDiv);
     agentSay('Hi! I\'ll guide you one simple step at a time. First, is this a new business or an existing business?', 600).then(function(shown) {
       if (!shown || !isCurrentConversation(revision)) return;
-      showQuickReplies(['New business — I am starting','Existing business — I already operate'], function(answer) {
+      showQuickReplies(['New business. I am starting','Existing business. I already operate'], function(answer) {
         state.brief.businessStage = answer.indexOf('New business') === 0 ? 'new' : 'existing';
         if (state.prefillBrief) {
           state.brief.client = state.prefillBrief.client;
@@ -5213,10 +5214,10 @@ function startAgentConversation(agent, agentIdx, templateId) {
       // Use agentSay so the orchestration intro is spoken, then show quick replies
       agentSay(orchText, 600).then(function(shown) {
         if (!shown || !isCurrentConversation(revision)) return;
-        showQuickReplies(['💡 How does this work?', "I'm ready — let's begin →"], function(choice) {
+        showQuickReplies(['💡 How does this work?', "I am ready. Let us begin →"], function(choice) {
           if (choice.indexOf('How does this work') !== -1) {
             stopCurrentSpeech();
-            var pitch = (SYSTEM_PITCHES[templateId] || function(b){ return 'This system sequences specialist AI agents — each an expert — to deliver professional-grade work fast, with Guardian QA on every output.'; })(b);
+            var pitch = (SYSTEM_PITCHES[templateId] || function(b){ return 'Each specialist handles one part of your project. Every result is checked before you receive it.'; })(b);
             var pitchRevision = conversationRevision;
             agentSay(pitch, 400).then(function(pitchShown) {
               if (!pitchShown || !isCurrentConversation(pitchRevision)) return;
@@ -5237,7 +5238,7 @@ function startAgentConversation(agent, agentIdx, templateId) {
       stopCurrentSpeech();
       // Brief transition message from Orchestrator
       var previousAgent = state.template.agents[agentIdx-1];
-      addBubble('system', '✓ ' + previousAgent.name + ' complete — Guardian QA score ' + (state.scores[previousAgent.id] || 'Pending') + '/100');
+      addBubble('system', '✓ ' + previousAgent.name + ' complete. Review score: ' + (state.scores[previousAgent.id] || 'Pending') + '/100');
       agentSay(buildAgentHandoff(previousAgent, agent, b), 500);
       delay = 1300;
     }
@@ -5273,7 +5274,7 @@ function askQuestion(conv, qIdx, templateId, agent) {
         if (!state.pins) state.pins = [];
         state.pins.push({ icon: state.currentAgentIcon, topic: q.id, question: questionText });
         addBubble('user', '📌 Pin for later', '👤');
-        agentSay('📌 Noted — flagged for your final report. Moving forward!', 350).then(function() {
+        agentSay('📌 Saved for your final report. You are making good progress.', 350).then(function() {
           processingToOutput(conv, templateId, agent);
         });
         return;
@@ -5305,6 +5306,7 @@ function makeQuestionDirect(question) {
 
 function makeAnswerEasy(answer) {
   return String(answer || '')
+    .replace(/\s+[—–-]\s+/g,'. ')
     .replace(/IRR/gi,'Target return')
     .replace(/C-suite/gi,'Company leaders')
     .replace(/RACI/gi,'Who owns each task')
@@ -5314,6 +5316,34 @@ function makeAnswerEasy(answer) {
     .replace(/CUP/gi,'special approval')
     .replace(/JV equity partner/gi,'investment partner')
     .replace(/P&L/gi,'income and expense report');
+}
+
+function makeWritingFeelHuman(text) {
+  return String(text || '')
+    .replace(/\s*[—–]\s*/g, '. ')
+    .replace(/^\s*[-*•]\s+/gm, '')
+    .replace(/\b(leverage|leveraging)\b/gi, 'use')
+    .replace(/\boptimi[sz]e\b/gi, 'improve')
+    .replace(/\bstreamline\b/gi, 'simplify')
+    .replace(/\brobust\b/gi, 'reliable')
+    .replace(/\bactionable insights?\b/gi, 'clear next steps')
+    .replace(/\bsynergy\b/gi, 'teamwork')
+    .replace(/\bscalable\b/gi, 'able to grow')
+    .replace(/\bholistic\b/gi, 'complete')
+    .replace(/\bgame[ -]?changer\b/gi, 'meaningful improvement')
+    .replace(/\bcutting[ -]?edge\b/gi, 'modern')
+    .replace(/\bunlock\b/gi, 'build')
+    .replace(/\btransformative\b/gi, 'useful')
+    .replace(/\bmethodology\b/gi, 'approach')
+    .replace(/\bframework\b/gi, 'plan')
+    .replace(/\bcalibrated for\b/gi, 'written for')
+    .replace(/\bcadence\b/gi, 'schedule')
+    .replace(/\bKPI(s)?\b/g, 'success measure$1')
+    .replace(/\bconversion(s)?\b/gi, 'sale$1')
+    .replace(/\btoolchain\b/gi, 'tools')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
 
 function buildSimpleOverview(agent) {
@@ -5351,32 +5381,25 @@ function buildAgentHandoff(previousAgent, nextAgent, brief) {
 
 /* ── Per-agent system prompt builder ──────────────────────────────────────── */
 function buildAgentSystemPrompt(agent, brief, answers) {
-  var answersText = Object.keys(answers).map(function(k){ return '- ' + k + ': ' + answers[k]; }).join('\n');
-  return 'You are the ' + agent.name + ' AI agent. ' + agent.specialty + '\n\n' +
+  var answersText = Object.keys(answers).map(function(k){ return k + ': ' + answers[k]; }).join('\n');
+  return 'You are helping this business as its ' + agent.name + '. ' + agent.specialty + '\n\n' +
     'Client: ' + (brief.client || 'Unknown') + '\n' +
     'Project: ' + (brief.project || brief.client || 'Unknown') + '\n' +
     'Goal: ' + (brief.goal || 'Unknown') + '\n' +
     'Business stage: ' + (brief.businessStage === 'new' ? 'New business' : brief.businessStage === 'existing' ? 'Existing business' : 'Not provided') + '\n' +
     (brief.industry ? 'Industry: ' + brief.industry + '\n' : '') +
     (answersText ? '\nClient answers to your questions:\n' + answersText + '\n' : '') +
-    '\nVOICE AND COACHING RULES:\n' +
-    '- Use everyday words a first-time business owner can understand. If a business term is necessary, explain it in one short sentence.\n' +
-    '- Write for someone with no business, marketing, finance, or technology experience.\n' +
-    '- Replace technical labels with plain descriptions. For example, say "money coming in and going out" before "cash flow."\n' +
-    '- Sound like a warm, patient business coach: friendly, encouraging, honest, and never patronizing.\n' +
-    '- Keep sentences short. Use clear headings, small bullet lists, and concrete examples tied to this business.\n' +
-    '- Break difficult work into simple steps. Make the very next action unmistakable.\n' +
-    '- If you ask a question, ask only what changes the recommendation. Use 15 words or fewer.\n' +
-    '- Start each deliverable with a two-sentence maximum overview anyone can understand.\n' +
-    '- Present the work as a polished business document suitable for owners, lenders, partners, and other stakeholders.\n' +
-    '- Never mention AI, agents, prompts, models, generated content, or the writing process in the deliverable.\n' +
-    '- Do not use generic filler, fake quotations, unsupported statistics, or placeholders. Clearly label any estimate or assumption.\n' +
-    '- Do not include percentage claims unless the client supplied them or a named source verifies them.\n' +
-    '- Use plain-text headings and bullets. Do not use markdown symbols, decorative dividers, stars, or template placeholders.\n' +
-    '- Organize the deliverable as: Executive Summary, Key Findings, Recommended Actions, Owners and Timing, and Decisions Needed.\n' +
-    '- Make every recommendation specific, practical, and connected to the client information provided.\n' +
-    '- Recognize progress briefly, then help the user build on it. End with one encouraging next step that creates momentum.\n' +
-    '- Do not use hype, filler, buzzwords, or unexplained jargon. Do not overwhelm the user with too many options.\n' +
+    '\nWRITING RULES:\n' +
+    'Use everyday words that a new business owner can understand. Explain any necessary business term immediately.\n' +
+    'Sound like a caring, experienced person who wants this business to succeed. Be honest, calm, and encouraging.\n' +
+    'Keep sentences short and specific. Use numbered steps when order matters.\n' +
+    'Do not use dashes as bullets or punctuation. Do not use decorative symbols.\n' +
+    'Avoid buzzwords including leverage, optimize, streamline, robust, synergy, scalable, holistic, transformative, actionable insights, game changer, cutting edge, and unlock.\n' +
+    'Never mention AI, agents, prompts, models, generated content, or the writing process.\n' +
+    'Do not use filler, fake quotations, unsupported statistics, or placeholders. Label estimates clearly.\n' +
+    'Use only facts the client supplied or facts supported by a named source.\n' +
+    'Start with a two sentence overview. Then present Key Findings, Recommended Actions, Owners and Timing, and Decisions Needed.\n' +
+    'Tie every recommendation to this business. End with one realistic and encouraging next step.\n' +
     'Be specific to this client and go straight into useful content.';
 }
 
@@ -5449,6 +5472,7 @@ function processingToOutput(conv, templateId, agent) {
     function renderOutput(output) {
       if (!isCurrentConversation(revision) || state.agentIndex !== agentIdxAtStart) return;
       removeTyping();
+      output = makeWritingFeelHuman(output);
       state.agentOutputs[agent.id] = output;
       state.suggestedScores = state.suggestedScores || {};
       state.suggestedScores[agent.id] = calculateGuardianScore(agent, output, answers);
@@ -5577,7 +5601,7 @@ function showStaticAgentOutput(agent, templateId) {
     // specialty bubble is now visible; enqueue it first so it speaks first
     if (voice.ttsEnabled) enqueueTTS(agent.specialty);
 
-    var output = getDemoContent(templateId, agent.id, b);
+    var output = makeWritingFeelHuman(getDemoContent(templateId, agent.id, b));
     state.agentOutputs[agent.id] = output;
     state.suggestedScores = state.suggestedScores || {};
     state.suggestedScores[agent.id] = calculateGuardianScore(agent, output, state.convAnswers || {});
@@ -5620,7 +5644,7 @@ function showGuardianPanel(agent, templateId) {
     ? state.suggestedScores[agent.id]
     : calculateGuardianScore(agent, output, state.convAnswers || {});
   panel.innerHTML =
-    '<div class="g-title">🛡️ Guardian QA — Review & Score</div>' +
+    '<div class="g-title">🛡️ Quality Review and Score</div>' +
     '<div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.55">' + agent.guardian + '</div>' +
     '<div class="g-row" style="margin-bottom:14px">' +
       '<input type="range" id="guardian-slider" min="50" max="100" value="' + score + '" style="flex:1;accent-color:var(--orange)">' +
@@ -5649,7 +5673,7 @@ function approveAgent(agentId) {
   state.prCount++;
   state.convAnswers = {};
 
-  addBubble('system', '✓ Guardian QA Approved — ' + agentId + ' scored ' + score + '/100', null);
+  addBubble('system', '✓ Review complete. ' + agentId + ' scored ' + score + '/100.', null);
 
   var t      = state.template;
   var agents = t.agents;
@@ -5679,7 +5703,7 @@ function approveAgent(agentId) {
 
 function requestRevision(agentId) {
   var revision = advanceConversation();
-  addBubble('user', 'Please revise — I have some adjustments.', '👤');
+  addBubble('user', 'Please revise this. I have a few changes.', '👤');
   setTimeout(function() {
     if (!isCurrentConversation(revision)) return;
     agentSay('Of course. What would you like adjusted?', 800).then(function(shown) {
