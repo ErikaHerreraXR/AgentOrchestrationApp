@@ -152,6 +152,33 @@ function promptCard(doc, number, title, prompt) {
   doc.y = y + 120;
 }
 
+function sectionLine(agent, heading, fallback) {
+  const lines = orderedDeliverable(agent && agent.deliverable || '').split(/\n+/).map(line => line.trim()).filter(Boolean);
+  const index = lines.findIndex(line => line.replace(/[:\-]\s*$/, '').toUpperCase() === heading);
+  const value = index >= 0 ? lines[index + 1] : fallback;
+  return clean(String(value || 'Confirm this during the next business review.').replace(/^(-|\d+[.)])\s+/, ''), 190);
+}
+
+function selectPlanAgent(agents, names, fallbackIndex) {
+  return agents.find(agent => names.some(name => String(agent.name || '').toLowerCase().includes(name)))
+    || agents[Math.min(fallbackIndex, Math.max(0, agents.length - 1))]
+    || {name:'Business Planning', outputs:[], deliverable:''};
+}
+
+function onePageSection(doc, y, number, title, agent) {
+  const width = doc.page.width - 96;
+  const finding = sectionLine(agent, 'KEY FINDINGS', agent.outputs && agent.outputs[0]);
+  const action = sectionLine(agent, 'RECOMMENDED ACTIONS', agent.outputs && agent.outputs[1]);
+  doc.roundedRect(48, y, width, 116, 10).fill('#F7F8FC');
+  doc.circle(70, y + 24, 13).fill(COLORS.purple);
+  doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.white).text(String(number), 62, y + 18, {width:16, align:'center'});
+  doc.font('Helvetica-Bold').fontSize(15).fillColor(COLORS.ink).text(title, 94, y + 14, {width:width - 62});
+  doc.font('Helvetica-Bold').fontSize(8).fillColor(COLORS.purple).text('MOST IMPORTANT INSIGHT', 66, y + 48, {width:140});
+  doc.font('Helvetica').fontSize(9.2).fillColor(COLORS.body).text(finding, 210, y + 46, {width:width - 178, lineGap:2});
+  doc.font('Helvetica-Bold').fontSize(8).fillColor(COLORS.green).text('NEXT ACTION', 66, y + 80, {width:140});
+  doc.font('Helvetica').fontSize(9.2).fillColor(COLORS.body).text(action, 210, y + 78, {width:width - 178, lineGap:2});
+}
+
 exports.handler = async (event) => {
   const options = preflight(event); if (options) return options;
   if (event.httpMethod !== 'POST') return json(405, {error:'Method not allowed.'});
@@ -167,114 +194,32 @@ exports.handler = async (event) => {
   doc.on('data', chunk => chunks.push(chunk));
   const finished = new Promise((resolve, reject) => { doc.on('end', resolve); doc.on('error', reject); });
 
-  // Cover
-  doc.rect(0, 0, doc.page.width, doc.page.height).fill(COLORS.navy);
-  doc.rect(0, 0, doc.page.width, 9).fill(COLORS.purple);
-  doc.font('Helvetica-Bold').fontSize(10).fillColor('#A5B4FC').text('PRODUCT IMAGINATION', 54, 64, {characterSpacing:1.4});
-  doc.font('Helvetica-Bold').fontSize(31).fillColor(COLORS.white).text(project, 54, 160, {width:doc.page.width - 108, lineGap:4});
-  doc.moveDown(.45).font('Helvetica').fontSize(15).fillColor('#C7C9DB').text('Business Workflow Report', {width:doc.page.width - 108});
-  doc.moveDown(2.2).roundedRect(54, doc.y, doc.page.width - 108, 116, 12).fill('#171A35');
-  const boxY = doc.y + 20;
-  doc.font('Helvetica-Bold').fontSize(9).fillColor('#A5B4FC').text('PREPARED FOR', 74, boxY);
-  doc.font('Helvetica-Bold').fontSize(17).fillColor(COLORS.white).text(company, 74, boxY + 18, {width:doc.page.width - 148});
-  doc.font('Helvetica').fontSize(9.5).fillColor('#AEB1C7').text(`${field(data.template)}  |  ${new Date(data.generatedAt || Date.now()).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}`, 74, boxY + 53);
-  doc.font('Helvetica').fontSize(9).fillColor('#8F93AA').text('Prepared from the company brief, supporting analysis, and approved recommendations.', 74, boxY + 77);
-  doc.font('Helvetica').fontSize(8).fillColor('#777B95').text('Confidential - prepared for your business use', 54, doc.page.height - 78);
+  const agents = data.agents || [];
+  const discovery = selectPlanAgent(agents, ['discovery','research'], 0);
+  const strategy = selectPlanAgent(agents, ['strategy','financial'], 1);
+  const operations = selectPlanAgent(agents, ['operations','implementation','handoff','ops'], 2);
+  const generatedDate = new Date(data.generatedAt || Date.now()).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
 
-  // Executive overview
-  doc.addPage();
-  sectionTitle(doc, 'Executive Overview', 'A simple summary of what this workflow produced and what matters next.');
-  doc.roundedRect(48, doc.y, doc.page.width - 96, 82, 10).fill(COLORS.card);
-  const overviewY = doc.y + 17;
-  doc.font('Helvetica-Bold').fontSize(25).fillColor(COLORS.purple).text(String(data.averageScore || 0), 66, overviewY, {width:70});
-  doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.ink).text(`${clean(data.overallRating,60)} overall quality`, 138, overviewY + 2);
-  doc.font('Helvetica').fontSize(9.5).fillColor(COLORS.body).text(`${data.agents.length} business workstreams were completed for ${company}. This report turns the findings into practical decisions and actions.`, 138, overviewY + 22, {width:doc.page.width - 210, lineGap:3});
-  doc.y = overviewY + 90;
-  sectionTitle(doc, 'Business Snapshot');
-  keyValue(doc, 'Business', company);
-  keyValue(doc, 'Primary goal', brief.goal);
-  keyValue(doc, 'Requested work', brief.deliverable);
-  keyValue(doc, 'Audience', brief.audience);
-  keyValue(doc, 'Timeline', brief.deadline);
-  keyValue(doc, 'Budget', brief.budget);
-  keyValue(doc, 'Voice', brief.tone);
-  sectionTitle(doc, 'How This Report Is Organized', 'The sections always appear in this order.');
-  pathStep(doc, 1, 'Business Snapshot', 'Confirm the business goal, requested work, audience, timeline, and budget.');
-  pathStep(doc, 2, 'Findings and Action Plan', 'Review the detailed findings, actions, owners, timing, and decisions for each workstream.');
-  pathStep(doc, 3, 'Recommended Next Moves', 'Use the final priority list only after reviewing the supporting findings.');
+  doc.font('Helvetica-Bold').fontSize(9).fillColor(COLORS.purple).text('PRODUCT IMAGINATION', 48, 42, {width:doc.page.width - 96, characterSpacing:1.2});
+  doc.font('Helvetica-Bold').fontSize(25).fillColor(COLORS.ink).text('One-Page Business Growth Plan', 48, 62, {width:doc.page.width - 96});
+  doc.font('Helvetica').fontSize(9).fillColor(COLORS.muted).text(`${company}  |  ${generatedDate}`, 48, 96, {width:doc.page.width - 96});
 
-  // Scorecard
-  doc.addPage();
-  sectionTitle(doc, 'Plan Quality Review', 'Review scores for each completed part of the business plan.');
-  data.agents.forEach(agent => {
-    ensureSpace(doc, 38);
-    const y = doc.y;
-    const score = Math.max(0, Math.min(100, Number(agent.score || 0)));
-    doc.font('Helvetica-Bold').fontSize(9.5).fillColor(COLORS.ink).text(roleName(agent.name), 54, y, {width:190});
-    doc.roundedRect(250, y + 2, 190, 7, 3.5).fill('#E7E8F1');
-    doc.roundedRect(250, y + 2, 190 * score / 100, 7, 3.5).fill(score >= 85 ? COLORS.green : COLORS.purple);
-    doc.font('Helvetica-Bold').fontSize(9).fillColor(COLORS.ink).text(String(score), 450, y, {width:28,align:'right'});
-    doc.font('Helvetica').fontSize(8).fillColor(COLORS.muted).text(clean(agent.rating,40), 484, y, {width:64,align:'right'});
-    doc.y = y + 27;
-  });
+  doc.roundedRect(48, 120, doc.page.width - 96, 84, 10).fill('#EEF0FF');
+  doc.font('Helvetica-Bold').fontSize(8).fillColor(COLORS.purple).text('BUSINESS GOAL', 64, 136, {width:110});
+  doc.font('Helvetica-Bold').fontSize(12).fillColor(COLORS.ink).text(field(brief.goal), 178, 133, {width:doc.page.width - 242, lineGap:2});
+  doc.font('Helvetica-Bold').fontSize(8).fillColor(COLORS.purple).text('SUCCESS WINDOW', 64, 171, {width:110});
+  doc.font('Helvetica').fontSize(9.2).fillColor(COLORS.body).text(`${field(brief.deadline)} | Audience: ${field(brief.audience)}`, 178, 169, {width:doc.page.width - 242});
 
-  // Real deliverables
-  data.agents.forEach((agent, index) => {
-    doc.addPage();
-    doc.font('Helvetica-Bold').fontSize(9).fillColor(COLORS.purple).text(`WORKSTREAM ${String(index + 1).padStart(2,'0')}`, 48, doc.y, {width:doc.page.width - 96});
-    doc.moveDown(.35).font('Helvetica-Bold').fontSize(22).fillColor(COLORS.ink).text(roleName(agent.name), 48, doc.y, {width:doc.page.width - 96});
-    doc.moveDown(.3).font('Helvetica').fontSize(9).fillColor(COLORS.muted).text(`Review score: ${Number(agent.score || 0)}/100 - ${clean(agent.rating,50)}`, 48, doc.y, {width:doc.page.width - 96});
-    doc.moveDown(.9);
-    sectionTitle(doc, 'Findings and Action Plan', 'Follow the sections below in order: summary, findings, actions, ownership, and decisions.');
-    actionGuide(doc);
-    if (Array.isArray(agent.outputs) && agent.outputs.length) {
-      ensureSpace(doc, 38);
-      doc.font('Helvetica-Bold').fontSize(11).fillColor(COLORS.ink).text('PLAN OVERVIEW', 54, doc.y, {width:doc.page.width - 108});
-      doc.moveDown(.5);
-      agent.outputs.slice(0,8).forEach(output => {
-        ensureSpace(doc, 32);
-        const y = doc.y;
-        doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.green).text('-', 56, y, {width:18});
-        doc.font('Helvetica').fontSize(9.5).fillColor(COLORS.body).text(polished(output), 80, y, {width:doc.page.width - 134, lineGap:3});
-        doc.moveDown(.55);
-      });
-    }
-    writeDeliverable(doc, agent.deliverable || 'No deliverable text was available for this workstream.');
-  });
+  onePageSection(doc, 220, 1, 'Discovery', discovery);
+  onePageSection(doc, 350, 2, 'Strategy', strategy);
+  onePageSection(doc, 480, 3, 'Operations', operations);
 
-  // Recommendations come after the supporting findings so the document reads in decision order.
-  doc.addPage();
-  sectionTitle(doc, 'Recommended Next Moves', 'Complete these priorities after reviewing the Findings and Action Plan workstreams.');
-  const topAgents = data.agents.slice().sort((a,b) => Number(b.score||0) - Number(a.score||0)).slice(0,5);
-  topAgents.forEach((agent, index) => {
-    ensureSpace(doc, 58);
-    const y = doc.y;
-    doc.circle(68, y + 12, 12).fill(COLORS.purple);
-    doc.font('Helvetica-Bold').fontSize(9.5).fillColor(COLORS.white).text(String(index + 1), 60, y + 6, {width:16, align:'center'});
-    doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.ink).text(roleName(agent.name), 94, y, {width:doc.page.width - 148});
-    doc.font('Helvetica').fontSize(9.5).fillColor(COLORS.body).text(recommendedAction(agent), 94, y + 18, {width:doc.page.width - 148, lineGap:3});
-    doc.y = y + 54;
-  });
-
-  // Beginner-ready prompts
-  doc.addPage();
-  sectionTitle(doc, 'Simple Prompts to Prepare Your Business', 'Use these before your consultation or whenever you want a clearer business overview.');
-  doc.font('Helvetica').fontSize(10).fillColor(COLORS.body)
-    .text('How to use them: replace the words in parentheses with your information. Copy one prompt at a time into ChatGPT or another AI chat. Read the answer, correct anything that is wrong, and save the useful parts in your business folder.', 54, doc.y, {width:doc.page.width - 108, lineGap:4});
-  doc.moveDown(1);
-  promptCard(doc, 1, 'Create a simple business overview', `Help me create a one-page overview for ${company}. We help (type of customer) with (main problem) by offering (product or service). Our main goal is ${field(brief.goal)}. Ask me one simple question at a time, then organize my answers into a clear overview.`);
-  promptCard(doc, 2, 'Check the health of the business', 'Help me review my business in five areas: customers, sales, marketing, daily operations, and money. Ask one basic question at a time. After I answer, show what is working, what needs attention, and the three best next steps. Do not guess numbers or facts.');
-  promptCard(doc, 3, 'Build a fill-in customer and offer template', 'Create a simple worksheet I can fill out for my ideal customer, their main need, my offer, my price, why they should trust me, and the next action I want them to take. Include one short example under each question.');
-  promptCard(doc, 4, 'Prepare for a business consultation', `Help me prepare for a business consultation about ${company}. Ask about my current stage, biggest challenge, main goal, customers, offer, sales, marketing, operations, and budget. Then create a short consultation brief with my priorities, open questions, and decisions I need help making.`);
-
-  // Closing page
-  doc.addPage();
-  sectionTitle(doc, 'Use This Report');
-  doc.font('Helvetica').fontSize(11).fillColor(COLORS.body).text('Use this document as your working business guide. Confirm the goal, review each workstream in order, assign every action to one person, add a due date, and review progress regularly.', 48, doc.y, {width:doc.page.width - 96, lineGap:5});
-  doc.moveDown(1.2).roundedRect(48, doc.y, doc.page.width - 96, 96, 12).fill('#EEF0FF');
-  const nextY = doc.y + 18;
-  doc.font('Helvetica-Bold').fontSize(13).fillColor(COLORS.ink).text('Need help putting the plan into action?', 66, nextY);
-  doc.moveDown(.45).font('Helvetica').fontSize(10).fillColor(COLORS.body).text('Schedule a free consultation with Erika through the completed workflow screen or contact hello@productimagination.com.', 66, doc.y, {width:doc.page.width - 132,lineGap:3});
+  doc.roundedRect(48, 612, doc.page.width - 96, 74, 10).fill('#ECFDF5');
+  doc.font('Helvetica-Bold').fontSize(9).fillColor(COLORS.green).text('FOCUS FOR BUSINESS SUCCESS', 64, 626, {width:doc.page.width - 128});
+  doc.font('Helvetica').fontSize(9.5).fillColor(COLORS.body)
+    .text('Confirm the customer need, choose one clear strategy, and complete the first operations action before adding more work.', 64, 646, {width:doc.page.width - 128, lineGap:3});
+  doc.font('Helvetica').fontSize(8).fillColor(COLORS.muted)
+    .text('Need help? Schedule a free consultation with Erika from your workflow summary.', 64, 671, {width:doc.page.width - 128});
 
   const range = doc.bufferedPageRange();
   for (let i = range.start; i < range.start + range.count; i++) { doc.switchToPage(i); pageDecor(doc, meta, i + 1); }
