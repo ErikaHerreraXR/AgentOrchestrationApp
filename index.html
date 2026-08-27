@@ -5174,7 +5174,7 @@ function startAgentConversation(agent, agentIdx, templateId) {
     introChip.textContent = '🎯 Orchestration Agent';
     introDiv.appendChild(introChip);
     msgs.appendChild(introDiv);
-    agentSay('Hi! I\'ll guide you one simple step at a time. First, is this a new business or an existing business?', 600).then(function(shown) {
+    agentSay('Hi! I\'ll guide you one simple step at a time. The more useful business details you share, the stronger your results and review score can be. First, is this a new business or an existing business?', 600).then(function(shown) {
       if (!shown || !isCurrentConversation(revision)) return;
       showQuickReplies(['New business. I am starting','Existing business. I already operate'], function(answer) {
         state.brief.businessStage = answer.indexOf('New business') === 0 ? 'new' : 'existing';
@@ -5353,19 +5353,26 @@ function buildSimpleOverview(agent) {
 
 function calculateGuardianScore(agent, output, answers) {
   var text = String(output || '');
-  var score = 58;
+  var score = 68;
   var wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
   var sectionCount = (text.match(/(^|\n)\s*(EXECUTIVE SUMMARY|KEY FINDINGS|RECOMMENDED ACTIONS|OWNERS AND TIMING|DECISIONS NEEDED|NEXT STEPS)/gi) || []).length;
   var answerCount = Object.keys(answers || {}).length;
-  if (wordCount >= 120) score += 8;
-  if (wordCount >= 250) score += 6;
-  if (sectionCount >= 3) score += 8;
-  if (sectionCount >= 5) score += 5;
-  if (answerCount) score += Math.min(6, answerCount * 2);
+  var brief = state.brief || {};
+  var usefulBriefFields = ['client','goal','project','industry','audience','deliverable','deadline','budget','tone','constraints','risks'];
+  var briefDetailCount = usefulBriefFields.filter(function(key) {
+    var value = String(brief[key] || '').trim();
+    return value.length >= 3 && !/^(tbd|unknown|none|n\/a)$/i.test(value);
+  }).length;
+  if (wordCount >= 120) score += 5;
+  if (wordCount >= 250) score += 4;
+  if (sectionCount >= 3) score += 5;
+  if (sectionCount >= 5) score += 3;
+  score += Math.min(8, briefDetailCount);
+  if (answerCount) score += Math.min(5, answerCount * 2);
   if (state.brief && state.brief.client && text.toLowerCase().indexOf(String(state.brief.client).toLowerCase()) !== -1) score += 4;
   if (/next step|recommended action|this week|within 30 days/i.test(text)) score += 4;
   if (/\[[^\]]+\]|lorem ipsum|as an ai|ai-generated/i.test(text)) score -= 12;
-  return Math.max(60, Math.min(97, score));
+  return Math.max(72, Math.min(98, score));
 }
 
 function buildAgentHandoff(previousAgent, nextAgent, brief) {
@@ -5646,6 +5653,7 @@ function showGuardianPanel(agent, templateId) {
   panel.innerHTML =
     '<div class="g-title">🛡️ Quality Review and Score</div>' +
     '<div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.55">' + agent.guardian + '</div>' +
+    '<div style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.55;padding:10px 12px;border-radius:10px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.18)"><strong style="color:var(--text-primary)">How your score improves:</strong> Share more useful details about your business, customers, goals, budget, timing, and challenges. Better information helps us produce a stronger plan and a higher review score.</div>' +
     '<div class="g-row" style="margin-bottom:14px">' +
       '<input type="range" id="guardian-slider" min="50" max="100" value="' + score + '" style="flex:1;accent-color:var(--orange)">' +
       '<div class="guardian-score-badge" id="guardian-score">' + score + '</div>' +
