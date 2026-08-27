@@ -2969,7 +2969,7 @@ body.in-workflow #mobile-bottom-nav{display:none;}
           <div class="footer-links">
             <span class="footer-link" style="cursor:default;opacity:0.5">About</span>
             <a href="client-portal.html" class="footer-link">Client Portal</a>
-            <a href="mailto:hello@productimagination.com" class="footer-link">Contact</a>
+            <a href="mailto:productimaginationhere@gmail.com" class="footer-link">Contact</a>
           </div>
         </div>
         <div>
@@ -2983,7 +2983,7 @@ body.in-workflow #mobile-bottom-nav{display:none;}
       <div class="footer-bottom">
         <div class="footer-copy">© 2026 Product Imagination LLC. All rights reserved.</div>
         <div class="footer-legal">
-          <a href="mailto:hello@productimagination.com">hello@productimagination.com</a>
+          <a href="mailto:productimaginationhere@gmail.com">productimaginationhere@gmail.com</a>
         </div>
       </div>
     </div>
@@ -5969,7 +5969,7 @@ function submitConsultation(event) {
   button.disabled = true;
   collectConsultationLead(input.value.trim(), 'workflow_complete')
     .then(function() { status.textContent = 'You’re all set. Erika will follow up by email to schedule your free consultation.'; })
-    .catch(function() { status.textContent = 'We could not save that yet. Please try again or email hello@productimagination.com.'; button.disabled = false; });
+    .catch(function() { status.textContent = 'We could not save that yet. Please try again or email productimaginationhere@gmail.com.'; button.disabled = false; });
 }
 
 async function downloadReport() {
@@ -7240,7 +7240,7 @@ async function purchasePackage(packageId) {
     if (!response.ok || !data.url) throw new Error(data.error || 'Checkout is unavailable.');
     window.location.assign(data.url);
   } catch (error) {
-    alert(error.message + ' Please try again or contact hello@productimagination.com.');
+    alert(error.message + ' Please try again or contact productimaginationhere@gmail.com.');
     if (button) { button.disabled = false; button.textContent = original; }
   }
 }

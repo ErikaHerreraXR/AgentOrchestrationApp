@@ -2,7 +2,43 @@
 
 const { randomUUID } = require('crypto');
 const { getStore } = require('@netlify/blobs');
+const nodemailer = require('nodemailer');
 const { json, parseBody, preflight } = require('./_shared');
+
+const DEFAULT_BUSINESS_EMAIL = 'productimaginationhere@gmail.com';
+
+async function emailConsultationLead(lead) {
+  const to = process.env.EMAIL_TO || DEFAULT_BUSINESS_EMAIL;
+  const user = process.env.EMAIL_USER || DEFAULT_BUSINESS_EMAIL;
+  const pass = process.env.EMAIL_PASS;
+  if (!pass) return { sent:false, reason:'EMAIL_PASS is not configured.' };
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT || '587', 10),
+    secure: String(process.env.EMAIL_PORT || '587') === '465',
+    auth: { user, pass },
+  });
+  await transporter.sendMail({
+    from: `"Product Imagination" <${user}>`,
+    to,
+    replyTo: lead.email,
+    subject: `Free consultation request from ${lead.company || lead.email}`,
+    text: [
+      'New free consultation request',
+      '',
+      `Customer email: ${lead.email}`,
+      `Company: ${lead.company || 'Not provided'}`,
+      `Goal: ${lead.goal || 'Not provided'}`,
+      `Project: ${lead.project || 'Not provided'}`,
+      `Template: ${lead.template || 'Not provided'}`,
+      `Selected package: ${lead.selectedPackage || 'Not provided'}`,
+      `Source: ${lead.source}`,
+      `Submitted: ${lead.submittedAt}`,
+    ].join('\n'),
+  });
+  return { sent:true, to };
+}
 
 exports.handler = async (event) => {
   const options = preflight(event); if (options) return options;
@@ -36,9 +72,17 @@ exports.handler = async (event) => {
         method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(lead),
       }).catch(error => console.warn('[Consultation webhook]', error.message));
     }
-    return json(200, { ok: true, id: lead.id });
+    let emailResult;
+    try {
+      emailResult = await emailConsultationLead(lead);
+    } catch (emailError) {
+      console.error('[Consultation email]', emailError.message);
+      emailResult = { sent:false, reason:'Email delivery failed. The lead remains saved.' };
+    }
+    return json(200, { ok: true, id: lead.id, emailSent:emailResult.sent });
   } catch (error) {
     console.error('[Consultation]', error.message);
     return json(500, { error: 'The consultation request could not be saved.' });
   }
 };
+

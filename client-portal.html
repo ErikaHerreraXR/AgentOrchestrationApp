@@ -906,10 +906,10 @@ button,.login-btn{font-family:var(--fb)}
       <div class="profile-section" style="margin-top:16px">
         <div class="profile-section-label">Support</div>
         <div class="profile-card">
-          <div class="support-row" onclick="window.location.href='mailto:erika@productimagination.com'">
+          <div class="support-row" onclick="window.location.href='mailto:productimaginationhere@gmail.com'">
             <div class="support-ico">📬</div>
             <div class="support-label">Email Erika</div>
-            <div class="support-val">erika@productimagination.com</div>
+            <div class="support-val">productimaginationhere@gmail.com</div>
             <div class="support-arrow">›</div>
           </div>
           <div class="support-row" onclick="window.open('https://productimagination.com','_blank')">
@@ -1227,7 +1227,7 @@ var VALID_USERS = [
   {email:'demo@productimagination.com', pass:'demo',   name:'Client Demo',   initials:'CD'},
   {email:'demo',                         pass:'demo',   name:'Client Demo',   initials:'CD'},
   {email:'client@productimagination.com',pass:'client', name:'Client',        initials:'CL'},
-  {email:'erika@productimagination.com', pass:'admin',  name:'Erika',         initials:'EH'},
+  {email:'productimaginationhere@gmail.com', pass:'admin',  name:'Erika',         initials:'EH'},
 ];
 
 function doLogin(){
@@ -1237,7 +1237,7 @@ function doLogin(){
   if(!email || !pass){ err.textContent='Please enter your email and password.'; err.classList.add('show'); return; }
 
   var match=VALID_USERS.find(function(u){ return u.email===email && u.pass===pass; });
-  if(!match){ err.textContent='Incorrect credentials. Contact erika@productimagination.com for access.'; err.classList.add('show'); return; }
+  if(!match){ err.textContent='Incorrect credentials. Contact productimaginationhere@gmail.com for access.'; err.classList.add('show'); return; }
 
   err.classList.remove('show');
   S.user={name:match.name, email:match.email, initials:match.initials};
@@ -1640,7 +1640,7 @@ async function sendChat(){
   addMsg('agent',fmtMd(reply),agent?agent.icon:'🤖');
   speakPortalText(reply);
   S.agentHist[id].push({role:'assistant',content:reply});
-  // Email the response silently to erika@productimagination.com
+  // Email the response to the Product Imagination business inbox
   var _b=S.brief||{};
   var _subject='PI Agents OS — '+(agent?agent.name:id)+' response for '+(_b.client||'Client');
   var _body='Agent: '+(agent?agent.name:id)+'\nClient: '+(_b.client||'—')+'\nDate: '+new Date().toLocaleString()+'\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nUser asked: '+txt+'\n\nAgent replied:\n'+reply;
@@ -2182,3 +2182,4 @@ function loadPrefs(){
 </script>
 </body>
 </html>
+

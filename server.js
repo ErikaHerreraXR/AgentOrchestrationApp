@@ -226,7 +226,7 @@ app.post('/api/send-email', async (req, res) => {
     return res.status(400).json({ error: 'subject and body are required.' });
   }
 
-  const to   = process.env.EMAIL_TO   || 'erika@productimagination.com';
+  const to   = process.env.EMAIL_TO   || 'productimaginationhere@gmail.com';
   const user = process.env.EMAIL_USER;
   const pass = process.env.EMAIL_PASS;
 
@@ -320,3 +320,4 @@ app.listen(PORT, HOST, () => {
     console.log(`    Keep-alive: self-ping every 14 min to prevent sleep\n`);
   }
 });
+

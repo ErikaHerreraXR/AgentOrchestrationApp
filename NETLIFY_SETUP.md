@@ -9,13 +9,18 @@ In **Netlify → Site configuration → Environment variables**, add:
 - `OPENAI_VOICE` — optional; defaults to `nova`
 - `SITE_URL` — optional override for your full production origin, such as `https://example.com`; checkout automatically detects the deployed Netlify URL when omitted
 - `CONSULTATION_WEBHOOK_URL` — optional; sends each consultation lead to your CRM or automation webhook
+- `EMAIL_USER` — Gmail address used to send app emails; default business address is `productimaginationhere@gmail.com`
+- `EMAIL_PASS` — Gmail App Password for `EMAIL_USER`; required to email consultation requests
+- `EMAIL_TO` — optional consultation recipient override; defaults to `productimaginationhere@gmail.com`
+- `EMAIL_HOST` — optional SMTP host; defaults to `smtp.gmail.com`
+- `EMAIL_PORT` — optional SMTP port; defaults to `587`
 - `STRIPE_SECRET_KEY` — required; your Stripe restricted or secret server key
 - `STRIPE_WEBHOOK_SECRET` — required; signing secret for the Stripe webhook endpoint
 - `CALENDLY_URL` — optional override; the included default is `https://calendly.com/metakittyz/30min`
 
 Trigger a new deploy after changing environment variables. Confirm the connection by opening `/api/status` on the deployed site. It reports only whether each key exists; it never returns secret values.
 
-Consultation requests from “Try It Free” and completed workflows are stored in the Netlify Blobs store named `consultation-leads`. Each record includes the email, company, goal, project, selected template, selected package, source and submission time.
+Consultation requests from “Try It Free” and completed workflows are stored in the Netlify Blobs store named `consultation-leads` and emailed to `productimaginationhere@gmail.com` when `EMAIL_PASS` is configured. Each record includes the email, company, goal, project, selected template, selected package, source and submission time.
 
 The completed workflow’s **Download Report** button calls `/api/report-pdf`. Netlify generates a private, uncached PDF containing the live business brief, quality scorecard, recommended next moves and each agent’s actual deliverable.
 
@@ -36,3 +41,4 @@ Prices and product descriptions are created securely by the server from the pack
 Stripe account owner email: `Metakittyz@gmail.com`. This email does not authenticate the payment integration. Sign in to that Stripe account to obtain `STRIPE_SECRET_KEY` and create the webhook signing secret; never place either secret in HTML or send it through a public form.
 
 Do not place API keys in HTML, JavaScript committed to the repository, or Netlify build logs.
+
