@@ -45,9 +45,35 @@ function pageDecor(doc, meta, pageNumber) {
 
 function sectionTitle(doc, title, subtitle) {
   ensureSpace(doc, 70);
-  doc.moveDown(.4).font('Helvetica-Bold').fontSize(18).fillColor(COLORS.ink).text(title);
-  if (subtitle) doc.moveDown(.2).font('Helvetica').fontSize(9.5).fillColor(COLORS.muted).text(subtitle, {lineGap:2});
+  const left = 48;
+  const width = doc.page.width - 96;
+  doc.moveDown(.4);
+  doc.font('Helvetica-Bold').fontSize(18).fillColor(COLORS.ink).text(title, left, doc.y, {width});
+  if (subtitle) {
+    doc.moveDown(.2);
+    doc.font('Helvetica').fontSize(9.5).fillColor(COLORS.muted).text(subtitle, left, doc.y, {width, lineGap:2});
+  }
   doc.moveDown(.55).strokeColor(COLORS.line).lineWidth(1).moveTo(48, doc.y).lineTo(doc.page.width - 48, doc.y).stroke().moveDown(.7);
+}
+
+function pathStep(doc, number, title, detail) {
+  ensureSpace(doc, 54);
+  const y = doc.y;
+  doc.circle(66, y + 13, 13).fill(COLORS.purple);
+  doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.white).text(String(number), 58, y + 7, {width:16, align:'center'});
+  doc.font('Helvetica-Bold').fontSize(10.5).fillColor(COLORS.ink).text(title, 92, y + 2, {width:doc.page.width - 146});
+  doc.font('Helvetica').fontSize(9.2).fillColor(COLORS.body).text(detail, 92, y + 19, {width:doc.page.width - 146, lineGap:2});
+  doc.y = y + 50;
+}
+
+function actionGuide(doc) {
+  ensureSpace(doc, 78);
+  const y = doc.y;
+  doc.roundedRect(48, y, doc.page.width - 96, 62, 9).fill('#F5F6FF');
+  doc.font('Helvetica-Bold').fontSize(9).fillColor(COLORS.purple).text('FOLLOW THIS ORDER', 64, y + 12, {width:doc.page.width - 128});
+  doc.font('Helvetica').fontSize(9.2).fillColor(COLORS.body)
+    .text('1. Read the finding.   2. Choose the next action.   3. Assign an owner and date.   4. Review progress.', 64, y + 30, {width:doc.page.width - 128, lineGap:3});
+  doc.y = y + 76;
 }
 
 function keyValue(doc, label, value) {
@@ -58,8 +84,31 @@ function keyValue(doc, label, value) {
   doc.y = Math.max(doc.y, y + 24);
 }
 
+function orderedDeliverable(text) {
+  const raw = polished(text);
+  const order = ['EXECUTIVE SUMMARY','KEY FINDINGS','RECOMMENDED ACTIONS','OWNERS AND TIMING','DECISIONS NEEDED','NEXT STEPS'];
+  const sections = {};
+  const opening = [];
+  let current = null;
+  raw.split(/\n+/).map(line => line.trim()).filter(Boolean).forEach(line => {
+    const normalized = line.replace(/[:\-]\s*$/, '').toUpperCase();
+    if (order.includes(normalized)) {
+      current = normalized;
+      if (!sections[current]) sections[current] = [];
+    } else if (current) {
+      sections[current].push(line);
+    } else {
+      opening.push(line);
+    }
+  });
+  if (Object.keys(sections).length < 2) return raw;
+  if (opening.length) sections['EXECUTIVE SUMMARY'] = opening.concat(sections['EXECUTIVE SUMMARY'] || []);
+  return order.filter(title => sections[title] && sections[title].length)
+    .map(title => title + '\n' + sections[title].join('\n')).join('\n');
+}
+
 function writeDeliverable(doc, text) {
-  const paragraphs = polished(text).split(/\n+/).map(s => s.trim()).filter(Boolean).slice(0, 100);
+  const paragraphs = orderedDeliverable(text).split(/\n+/).map(s => s.trim()).filter(Boolean).slice(0, 100);
   paragraphs.forEach(paragraph => {
     const bullet = /^-\s+/.test(paragraph);
     const numbered = /^\d+[.)]\s+/.test(paragraph);
@@ -141,6 +190,11 @@ exports.handler = async (event) => {
   keyValue(doc, 'Timeline', brief.deadline);
   keyValue(doc, 'Budget', brief.budget);
   keyValue(doc, 'Voice', brief.tone);
+  sectionTitle(doc, 'Your Path Forward', 'Use the report in this order so each decision leads to the next action.');
+  pathStep(doc, 1, 'Start with the goal', 'Confirm the Business Snapshot accurately describes where the business is going.');
+  pathStep(doc, 2, 'Review each workstream', 'Read the findings in order and note the decisions that need an owner.');
+  pathStep(doc, 3, 'Choose the first actions', 'Begin with the Recommended Next Moves before taking on lower-priority work.');
+  pathStep(doc, 4, 'Track and update', 'Add an owner and due date to each action, then review progress regularly.');
   sectionTitle(doc, 'Recommended Next Moves', 'Focused actions based on the completed workflow.');
   const topAgents = data.agents.slice().sort((a,b) => Number(b.score||0) - Number(a.score||0)).slice(0,3);
   topAgents.forEach((agent, index) => {
@@ -169,12 +223,16 @@ exports.handler = async (event) => {
   // Real deliverables
   data.agents.forEach((agent, index) => {
     doc.addPage();
-    doc.font('Helvetica-Bold').fontSize(9).fillColor(COLORS.purple).text(`WORKSTREAM ${String(index + 1).padStart(2,'0')}`);
-    doc.moveDown(.35).font('Helvetica-Bold').fontSize(22).fillColor(COLORS.ink).text(roleName(agent.name));
-    doc.moveDown(.3).font('Helvetica').fontSize(9).fillColor(COLORS.muted).text(`Review score: ${Number(agent.score || 0)}/100 - ${clean(agent.rating,50)}`);
+    doc.font('Helvetica-Bold').fontSize(9).fillColor(COLORS.purple).text(`WORKSTREAM ${String(index + 1).padStart(2,'0')}`, 48, doc.y, {width:doc.page.width - 96});
+    doc.moveDown(.35).font('Helvetica-Bold').fontSize(22).fillColor(COLORS.ink).text(roleName(agent.name), 48, doc.y, {width:doc.page.width - 96});
+    doc.moveDown(.3).font('Helvetica').fontSize(9).fillColor(COLORS.muted).text(`Review score: ${Number(agent.score || 0)}/100 - ${clean(agent.rating,50)}`, 48, doc.y, {width:doc.page.width - 96});
     doc.moveDown(.9);
+    sectionTitle(doc, 'Findings and Action Plan', 'Follow the sections below in order: summary, findings, actions, ownership, and decisions.');
+    actionGuide(doc);
     if (Array.isArray(agent.outputs) && agent.outputs.length) {
-      sectionTitle(doc, 'What This Section Covers');
+      ensureSpace(doc, 38);
+      doc.font('Helvetica-Bold').fontSize(11).fillColor(COLORS.ink).text('PLAN OVERVIEW', 54, doc.y, {width:doc.page.width - 108});
+      doc.moveDown(.5);
       agent.outputs.slice(0,8).forEach(output => {
         ensureSpace(doc, 32);
         const y = doc.y;
@@ -183,7 +241,6 @@ exports.handler = async (event) => {
         doc.moveDown(.55);
       });
     }
-    sectionTitle(doc, 'Findings and Action Plan', 'Clear recommendations prepared for business owners and stakeholders.');
     writeDeliverable(doc, agent.deliverable || 'No deliverable text was available for this workstream.');
   });
 
@@ -201,7 +258,7 @@ exports.handler = async (event) => {
   // Closing page
   doc.addPage();
   sectionTitle(doc, 'Use This Report');
-  doc.font('Helvetica').fontSize(11).fillColor(COLORS.body).text('Use this document as your working business guide. Start with the Recommended Next Moves, then use each workstream when you are ready to build that part of the company.', {lineGap:5});
+  doc.font('Helvetica').fontSize(11).fillColor(COLORS.body).text('Use this document as your working business guide. Confirm the goal, review each workstream in order, assign every action to one person, add a due date, and review progress regularly.', 48, doc.y, {width:doc.page.width - 96, lineGap:5});
   doc.moveDown(1.2).roundedRect(48, doc.y, doc.page.width - 96, 96, 12).fill('#EEF0FF');
   const nextY = doc.y + 18;
   doc.font('Helvetica-Bold').fontSize(13).fillColor(COLORS.ink).text('Need help putting the plan into action?', 66, nextY);
