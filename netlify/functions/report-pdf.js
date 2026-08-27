@@ -201,7 +201,7 @@ exports.handler = async (event) => {
   const generatedDate = new Date(data.generatedAt || Date.now()).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
 
   doc.font('Helvetica-Bold').fontSize(9).fillColor(COLORS.purple).text('PRODUCT IMAGINATION', 48, 42, {width:doc.page.width - 96, characterSpacing:1.2});
-  doc.font('Helvetica-Bold').fontSize(25).fillColor(COLORS.ink).text('One-Page Business Growth Plan', 48, 62, {width:doc.page.width - 96});
+  doc.font('Helvetica-Bold').fontSize(25).fillColor(COLORS.ink).text('Business Growth Plan', 48, 62, {width:doc.page.width - 96});
   doc.font('Helvetica').fontSize(9).fillColor(COLORS.muted).text(`${company}  |  ${generatedDate}`, 48, 96, {width:doc.page.width - 96});
 
   doc.roundedRect(48, 120, doc.page.width - 96, 84, 10).fill('#EEF0FF');
@@ -221,6 +221,30 @@ exports.handler = async (event) => {
   doc.font('Helvetica').fontSize(8).fillColor(COLORS.muted)
     .text('Need help? Schedule a free consultation with Erika from your workflow summary.', 64, 671, {width:doc.page.width - 128});
 
+  doc.addPage();
+  doc.font('Helvetica-Bold').fontSize(9).fillColor(COLORS.purple).text('BUSINESS BUILDER SUPPORT', 48, 42, {width:doc.page.width - 96, characterSpacing:1.2});
+  doc.font('Helvetica-Bold').fontSize(23).fillColor(COLORS.ink).text('Prompts to Help You Get Started', 48, 62, {width:doc.page.width - 96});
+  doc.font('Helvetica').fontSize(9.5).fillColor(COLORS.muted)
+    .text('Copy one prompt into ChatGPT or another trusted assistant. Replace any missing detail, then answer one question at a time.', 48, 94, {width:doc.page.width - 96, lineGap:2});
+  doc.y = 126;
+
+  promptCard(doc, 1, 'Create a simple starting plan',
+    `I am building ${company}. My main goal is ${field(brief.goal)}. My customer is ${field(brief.audience)}. Create a simple one-page plan covering my offer, customer, price, and first three actions. Ask me one easy question at a time when information is missing.`);
+  promptCard(doc, 2, 'Learn what customers truly need',
+    `My business is ${company}. I want to help ${field(brief.audience)}. Give me five short questions to ask potential customers. Explain what each answer will help me understand. Do not assume facts about my customers.`);
+  promptCard(doc, 3, 'Build a practical 30-day action plan',
+    `Create a realistic 30-day plan for ${company} to work toward this goal: ${field(brief.goal)}. Consider my budget of ${field(brief.budget)} and timeline of ${field(brief.deadline)}. Give me three priorities for each week and one clear result to check.`);
+  promptCard(doc, 4, 'Prepare for your consultation',
+    `Help me prepare for a business consultation about ${company}. My goal is ${field(brief.goal)}. Summarize my current situation, the decisions I need to make, my biggest questions, my budget, and my timeline. Keep it to one page and identify any information I should bring to the meeting.`);
+
+  const prepY = doc.y;
+  doc.roundedRect(48, prepY, doc.page.width - 96, 91, 10).fill('#ECFDF5');
+  doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.green).text('BRING THESE FIVE THINGS TO YOUR CONSULTATION', 64, prepY + 13, {width:doc.page.width - 128});
+  doc.font('Helvetica').fontSize(9).fillColor(COLORS.body)
+    .text('1. Your main goal   2. Who you want to help   3. Your offer or idea   4. Your budget and timeline   5. Your top three questions', 64, prepY + 33, {width:doc.page.width - 128, lineGap:3});
+  doc.font('Helvetica-Bold').fontSize(8.7).fillColor(COLORS.green)
+    .text('You do not need perfect answers. Bring what you know, and our team will help you find the next step.', 64, prepY + 66, {width:doc.page.width - 128, lineGap:2});
+
   const range = doc.bufferedPageRange();
   for (let i = range.start; i < range.start + range.count; i++) { doc.switchToPage(i); pageDecor(doc, meta, i + 1); }
   doc.end();
@@ -228,3 +252,4 @@ exports.handler = async (event) => {
   const pdf = Buffer.concat(chunks);
   return {statusCode:200,isBase64Encoded:true,headers:{'Content-Type':'application/pdf','Content-Disposition':`attachment; filename="${project.replace(/[^A-Za-z0-9]+/g,'-')}-Business-Report.pdf"`,'Cache-Control':'no-store'},body:pdf.toString('base64')};
 };
+
