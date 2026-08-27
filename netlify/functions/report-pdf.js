@@ -134,6 +134,14 @@ function writeDeliverable(doc, text) {
   });
 }
 
+function recommendedAction(agent) {
+  const lines = orderedDeliverable(agent.deliverable || '').split(/\n+/).map(line => line.trim()).filter(Boolean);
+  const start = lines.findIndex(line => line.replace(/[:\-]\s*$/, '').toUpperCase() === 'RECOMMENDED ACTIONS');
+  if (start >= 0 && lines[start + 1]) return clean(lines[start + 1].replace(/^(-|\d+[.)])\s+/, ''), 180);
+  if (Array.isArray(agent.outputs) && agent.outputs[0]) return `Review and complete ${clean(agent.outputs[0], 150).toLowerCase()}.`;
+  return `Review the ${roleName(agent.name).toLowerCase()} findings and choose the first action.`;
+}
+
 function promptCard(doc, number, title, prompt) {
   ensureSpace(doc, 126);
   const y = doc.y;
@@ -190,20 +198,10 @@ exports.handler = async (event) => {
   keyValue(doc, 'Timeline', brief.deadline);
   keyValue(doc, 'Budget', brief.budget);
   keyValue(doc, 'Voice', brief.tone);
-  sectionTitle(doc, 'Your Path Forward', 'Use the report in this order so each decision leads to the next action.');
-  pathStep(doc, 1, 'Start with the goal', 'Confirm the Business Snapshot accurately describes where the business is going.');
-  pathStep(doc, 2, 'Review each workstream', 'Read the findings in order and note the decisions that need an owner.');
-  pathStep(doc, 3, 'Choose the first actions', 'Begin with the Recommended Next Moves before taking on lower-priority work.');
-  pathStep(doc, 4, 'Track and update', 'Add an owner and due date to each action, then review progress regularly.');
-  sectionTitle(doc, 'Recommended Next Moves', 'Focused actions based on the completed workflow.');
-  const topAgents = data.agents.slice().sort((a,b) => Number(b.score||0) - Number(a.score||0)).slice(0,3);
-  topAgents.forEach((agent, index) => {
-    ensureSpace(doc, 38);
-    const action = Array.isArray(agent.outputs) && agent.outputs[0] ? agent.outputs[0] : `Review the ${roleName(agent.name)} plan`;
-    doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.purple).text(`${index + 1}.`, 54, doc.y, {continued:true});
-    doc.fillColor(COLORS.body).text(`  Put ${clean(action,160).toLowerCase()} into action.`, {lineGap:3});
-    doc.moveDown(.35);
-  });
+  sectionTitle(doc, 'How This Report Is Organized', 'The sections always appear in this order.');
+  pathStep(doc, 1, 'Business Snapshot', 'Confirm the business goal, requested work, audience, timeline, and budget.');
+  pathStep(doc, 2, 'Findings and Action Plan', 'Review the detailed findings, actions, owners, timing, and decisions for each workstream.');
+  pathStep(doc, 3, 'Recommended Next Moves', 'Use the final priority list only after reviewing the supporting findings.');
 
   // Scorecard
   doc.addPage();
@@ -242,6 +240,20 @@ exports.handler = async (event) => {
       });
     }
     writeDeliverable(doc, agent.deliverable || 'No deliverable text was available for this workstream.');
+  });
+
+  // Recommendations come after the supporting findings so the document reads in decision order.
+  doc.addPage();
+  sectionTitle(doc, 'Recommended Next Moves', 'Complete these priorities after reviewing the Findings and Action Plan workstreams.');
+  const topAgents = data.agents.slice().sort((a,b) => Number(b.score||0) - Number(a.score||0)).slice(0,5);
+  topAgents.forEach((agent, index) => {
+    ensureSpace(doc, 58);
+    const y = doc.y;
+    doc.circle(68, y + 12, 12).fill(COLORS.purple);
+    doc.font('Helvetica-Bold').fontSize(9.5).fillColor(COLORS.white).text(String(index + 1), 60, y + 6, {width:16, align:'center'});
+    doc.font('Helvetica-Bold').fontSize(10).fillColor(COLORS.ink).text(roleName(agent.name), 94, y, {width:doc.page.width - 148});
+    doc.font('Helvetica').fontSize(9.5).fillColor(COLORS.body).text(recommendedAction(agent), 94, y + 18, {width:doc.page.width - 148, lineGap:3});
+    doc.y = y + 54;
   });
 
   // Beginner-ready prompts
