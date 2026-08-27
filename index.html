@@ -3284,12 +3284,22 @@ body.in-workflow #mobile-bottom-nav{display:none;}
 <div id="report-download-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="report-download-title" style="display:none">
   <div class="modal-box">
     <h3 id="report-download-title">Your business report is ready</h3>
-    <p>Download the stakeholder-ready PDF, then return to your workflow summary.</p>
+    <p>View the report here or download a copy. You can return to your workflow summary at any time.</p>
     <div class="modal-actions" style="flex-wrap:wrap">
-      <a id="report-download-link" class="btn btn-primary" href="#" download>↓ Download PDF</a>
+      <button class="btn btn-primary" type="button" onclick="openReportViewer()">View PDF →</button>
+      <a id="report-download-link" class="btn btn-outline-green" href="#" download>↓ Download PDF</a>
       <button class="btn btn-outline-green" type="button" onclick="closeReportDownload()">Exit — Return to Summary</button>
     </div>
   </div>
+</div>
+
+<div id="report-viewer" role="dialog" aria-modal="true" aria-label="Business report PDF viewer" style="display:none;position:fixed;inset:0;z-index:10000;background:#F7F8FC;flex-direction:column">
+  <div style="min-height:64px;padding:10px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#FFFFFF;border-bottom:1px solid var(--border);box-shadow:0 4px 18px rgba(15,23,42,.08)">
+    <button class="btn btn-primary" type="button" onclick="closeReportViewer()">← Back to Workflow Summary</button>
+    <strong style="color:var(--text-primary);font-size:.9rem">Business Growth Plan</strong>
+    <a id="report-viewer-download" class="btn btn-outline-green" href="#" download style="margin-left:auto">↓ Download PDF</a>
+  </div>
+  <iframe id="report-viewer-frame" title="Business Growth Plan PDF" style="width:100%;flex:1;border:0;background:#E5E7EB"></iframe>
 </div>
 
 <script>
@@ -6116,6 +6126,9 @@ async function downloadReport() {
     const link = document.getElementById('report-download-link');
     link.href = url;
     link.download = `${String(state.brief.project || state.brief.client || 'Business').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-|-$/g,'')}-Business-Report.pdf`;
+    const viewerLink = document.getElementById('report-viewer-download');
+    viewerLink.href = url;
+    viewerLink.download = link.download;
     window.currentReportUrl = url;
     document.getElementById('report-download-modal').style.display = 'flex';
   } catch (error) {
@@ -6123,6 +6136,31 @@ async function downloadReport() {
   } finally {
     if (button) { button.disabled = false; button.textContent = originalLabel; }
   }
+}
+
+function openReportViewer() {
+  if (!window.currentReportUrl) return;
+  var modal = document.getElementById('report-download-modal');
+  var viewer = document.getElementById('report-viewer');
+  var frame = document.getElementById('report-viewer-frame');
+  if (modal) modal.style.display = 'none';
+  if (frame) frame.src = window.currentReportUrl + '#view=FitH';
+  if (viewer) viewer.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeReportViewer() {
+  var viewer = document.getElementById('report-viewer');
+  var frame = document.getElementById('report-viewer-frame');
+  if (viewer) viewer.style.display = 'none';
+  if (frame) frame.src = 'about:blank';
+  document.body.style.overflow = '';
+  if (window.currentReportUrl) {
+    URL.revokeObjectURL(window.currentReportUrl);
+    window.currentReportUrl = '';
+  }
+  showScreen('complete');
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 function closeReportDownload() {
@@ -6135,6 +6173,11 @@ function closeReportDownload() {
   showScreen('complete');
   window.scrollTo({top:0, behavior:'smooth'});
 }
+
+document.addEventListener('keydown', function(event) {
+  var viewer = document.getElementById('report-viewer');
+  if (event.key === 'Escape' && viewer && viewer.style.display === 'flex') closeReportViewer();
+});
 
 // ══════════════════════════════════════════════════════════════════════════════
 
