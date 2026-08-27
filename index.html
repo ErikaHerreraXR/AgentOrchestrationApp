@@ -2774,8 +2774,8 @@ body.in-workflow #mobile-bottom-nav{display:none;}
     <div class="container">
       <div class="section-header">
         <div class="tag">Pricing</div>
-        <h2>Choose what fits<br><em style="font-style:normal;color:var(--accent)">where you are today.</em></h2>
-        <p>Starting something new or growing an existing business? Pick your path and see only the packages built for you.</p>
+        <h2>Three clear ways<br><em style="font-style:normal;color:var(--accent)">to build your business.</em></h2>
+        <p>Choose the level of support that fits your next goal.</p>
         <div class="pricing-audience" role="tablist" aria-label="Choose your business stage">
           <button class="active" id="pricing-tab-new" role="tab" aria-selected="true" aria-controls="pricing-new" onclick="setPricingAudience('new')">I'm starting a business</button>
           <button id="pricing-tab-existing" role="tab" aria-selected="false" aria-controls="pricing-existing" onclick="setPricingAudience('existing')">I already have a business</button>
@@ -2793,113 +2793,64 @@ body.in-workflow #mobile-bottom-nav{display:none;}
       </div>
       <div class="pricing-view" id="pricing-new" role="tabpanel" aria-labelledby="pricing-tab-new">
       <div class="pricing-grid">
-        <!-- Free -->
-        <div class="pricing-card">
-          <div class="pricing-tier">Start Smart Prompt Pack</div>
-          <div class="pricing-price"><sup>$</sup>100<sub> one time</sub></div>
-          <div class="pricing-desc">Turn your idea into a clear starting plan.</div>
-          <div class="pricing-divider"></div>
-          <div class="pricing-template-box"><div class="pricing-template-label">Templates for your business</div><div class="pricing-template-list" data-template-tier="new_basic"></div></div>
-          <div class="pricing-features">
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>One-page business plan template</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Ideal customer worksheet</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Offer, pricing and launch tools</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Ready-to-use prompt pack</div>
-          </div>
-          <button class="pricing-cta" onclick="purchasePackage('new_basic')">Buy Start Smart — $100 →</button>
-        </div>
-        <!-- Pro (Featured) -->
-        <div class="pricing-card featured">
-          <div class="pricing-badge">Best to launch</div>
-          <div class="pricing-tier">Launch Ready Prompt Pack</div>
-          <div class="pricing-price"><sup>$</sup>250<sub> one time</sub></div>
-          <div class="pricing-desc">Build your brand and prepare to launch.</div>
-          <div class="pricing-divider"></div>
-          <div class="pricing-template-box"><div class="pricing-template-label">Templates for your business</div><div class="pricing-template-list" data-template-tier="new_launch"></div></div>
-          <div class="pricing-features">
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Start Smart</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Brand and website copy kit</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Social launch calendar</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Sales scripts and AI setup prompts</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Business-builder workbook</div>
-          </div>
-          <button class="pricing-cta" onclick="purchasePackage('new_launch')">Buy Launch Ready — $250 →</button>
-        </div>
-        <!-- Studio -->
-        <div class="pricing-card">
-          <div class="pricing-tier">Full Business Builder</div>
-          <div class="pricing-price"><sup>$</sup>500<sub> one time</sub></div>
-          <div class="pricing-desc">Build the full business from idea to launch.</div>
-          <div class="pricing-divider"></div>
-          <div class="pricing-template-box"><div class="pricing-template-label">Templates for your business</div><div class="pricing-template-list" data-template-tier="new_complete"></div></div>
-          <div class="pricing-features">
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Launch Ready</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Money, operations and onboarding tools</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Full Agents OS run with QA review</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Sales and marketing prompt packs</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Free consultation with Erika</div>
-          </div>
-          <button class="pricing-cta" onclick="purchasePackage('new_complete')">Buy &amp; Book Consultation — $500 →</button>
-        </div>
-        <div class="pricing-card featured">
-          <div class="pricing-badge">Done-with-you premium build</div>
-          <div class="pricing-tier">Elite Business Builder</div>
-          <div class="pricing-price"><sup>$</sup>2,000<sub> one time</sub></div>
-          <div class="pricing-desc">Launch your business, website and app design with our team.</div>
-          <div class="pricing-divider"></div>
-          <div class="pricing-template-box"><div class="pricing-template-label">Included build tools</div><div class="pricing-template-list">Business setup roadmap · Website launch brief · App design plan · Operations system</div></div>
-          <div class="pricing-features">
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Full Business Builder</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Same-day site after completed intake</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>App design and business setup</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Brand, sales and operations systems</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Private consultation and launch review</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Hosting, maintenance and team support</div>
-          </div>
-          <button class="pricing-cta" onclick="purchasePackage('elite_builder')">Build My Business — $2,000 →</button>
-        </div>
         <div class="pricing-card custom-hub-card">
-          <div class="pricing-badge">Signature custom build</div>
+          <div class="pricing-badge">Most flexible</div>
           <div class="pricing-tier">Custom Platform Hub</div>
           <div class="pricing-price">Custom<sub> consultation required</sub></div>
-          <div class="pricing-desc">One custom hub for your brand, customers and business tools.</div>
+          <div class="pricing-desc">Your business, customers, and tools in one branded hub.</div>
           <div class="pricing-divider"></div>
-          <div class="pricing-template-box"><div class="pricing-template-label">Built around your vision</div><div class="pricing-template-list">Custom platform strategy · Branded hub design · Connected business tools · Personalized launch plan</div></div>
           <div class="pricing-features">
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Private consultation with Erika</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom branded platform hub</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom branded platform</div>
             <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Connected customer and team tools</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom scope, timeline and investment</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>24/7 support and priority onboarding</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Exclusive Brand Growth pre-launch access</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>24/7 support and priority launch</div>
           </div>
-          <button class="pricing-cta" onclick="bookCustomHubConsultation()">Book My Custom Platform Consultation →</button>
+          <button class="pricing-cta" onclick="bookCustomHubConsultation()">Plan My Custom Platform →</button>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-tier">Start Smart</div>
+          <div class="pricing-price"><sup>$</sup>100<sub> one time</sub></div>
+          <div class="pricing-desc">Turn your idea into a clear business plan.</div>
+          <div class="pricing-divider"></div>
+          <div class="pricing-features">
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Business and customer plan</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Offer, pricing, and launch tools</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Ready to use prompt pack</div>
+          </div>
+          <button class="pricing-cta" onclick="purchasePackage('new_basic')">Start My Business — $100 →</button>
+        </div>
+        <div class="pricing-card featured">
+          <div class="pricing-badge">Best value</div>
+          <div class="pricing-tier">Elite Business Builder</div>
+          <div class="pricing-price"><sup>$</sup>2,000<sub> one time</sub></div>
+          <div class="pricing-desc">Launch with a working site and complete business setup.</div>
+          <div class="pricing-divider"></div>
+          <div class="pricing-features">
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Same day working website</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>App design and business systems</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Hosting, maintenance, and team support</div>
+          </div>
+          <button class="pricing-cta" onclick="purchasePackage('elite_builder')">Build My Business — $2,000 →</button>
         </div>
       </div>
       <div class="pricing-note">Guest checkout · Credit/debit cards and eligible wallets · No Stripe account required</div>
       </div>
       <div class="pricing-view" id="pricing-existing" role="tabpanel" aria-labelledby="pricing-tab-existing" hidden>
         <div class="pricing-grid">
-          <div class="pricing-card"><div class="pricing-tier">Business Essentials</div><div class="pricing-price"><sup>$</sup>150<sub> one time</sub></div><div class="pricing-desc">Organize and strengthen your business.</div><div class="pricing-divider"></div><div class="pricing-template-box"><div class="pricing-template-label">Templates included</div><div class="pricing-template-list" data-template-tier="existing_basic"></div></div><div class="pricing-features"><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>10 monthly project runs</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Sales, marketing and operations tools</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Export-ready, quality-checked results</div></div><button class="pricing-cta" onclick="purchasePackage('existing_basic')">Buy Essentials — $150 →</button></div>
-          <div class="pricing-card featured"><div class="pricing-badge">Most popular</div><div class="pricing-tier">Business Growth</div><div class="pricing-price"><sup>$</sup>350<sub> one time</sub></div><div class="pricing-desc">Grow revenue and streamline operations.</div><div class="pricing-divider"></div><div class="pricing-template-box"><div class="pricing-template-label">Templates included</div><div class="pricing-template-list" data-template-tier="existing_growth"></div></div><div class="pricing-features"><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Unlimited projects and templates</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Client portal and email delivery</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Priority support and exports</div></div><button class="pricing-cta" onclick="purchasePackage('existing_growth')">Buy Business Growth — $350 →</button></div>
-          <div class="pricing-card"><div class="pricing-tier">Elite Business Builder</div><div class="pricing-price"><sup>$</sup>2,000<sub> one time</sub></div><div class="pricing-desc">Upgrade your brand, website and business systems.</div><div class="pricing-divider"></div><div class="pricing-template-box"><div class="pricing-template-label">Build tools included</div><div class="pricing-template-list">Growth roadmap · Website brief · App design · Operations plan</div></div><div class="pricing-features"><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Business Growth</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Same-day website with completed intake</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>App design and business systems</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Hosting, maintenance and team support</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Private launch consultation</div></div><button class="pricing-cta" onclick="purchasePackage('elite_builder')">Upgrade My Business — $2,000 →</button></div>
         <div class="pricing-card custom-hub-card">
-          <div class="pricing-badge">Signature custom build</div>
+          <div class="pricing-badge">Most flexible</div>
           <div class="pricing-tier">Custom Platform Hub</div>
           <div class="pricing-price">Custom<sub> consultation required</sub></div>
-          <div class="pricing-desc">One custom hub for your brand, customers and tools.</div>
+          <div class="pricing-desc">Your business, customers, and tools in one branded hub.</div>
           <div class="pricing-divider"></div>
-          <div class="pricing-template-box"><div class="pricing-template-label">Custom build includes</div><div class="pricing-template-list">Platform strategy · Branded hub · Connected tools · Launch plan</div></div>
           <div class="pricing-features">
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Private planning consultation with Erika</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom branded platform hub</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Connected business and customer tools</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom scope, timeline and investment</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>24/7 support and priority onboarding</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Early Brand Growth Builder access</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom branded platform</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Connected customer and team tools</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>24/7 support and priority launch</div>
           </div>
-          <button class="pricing-cta" onclick="bookCustomHubConsultation()">Book My Custom Platform Consultation →</button>
+          <button class="pricing-cta" onclick="bookCustomHubConsultation()">Plan My Custom Platform →</button>
         </div>
+          <div class="pricing-card"><div class="pricing-tier">Business Essentials</div><div class="pricing-price"><sup>$</sup>150<sub> one time</sub></div><div class="pricing-desc">Create a clear plan to improve your business.</div><div class="pricing-divider"></div><div class="pricing-features"><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Sales and marketing tools</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Operations improvement plan</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Quality checked business report</div></div><button class="pricing-cta" onclick="purchasePackage('existing_basic')">Strengthen My Business — $150 →</button></div>
+          <div class="pricing-card featured"><div class="pricing-badge">Best value</div><div class="pricing-tier">Elite Business Builder</div><div class="pricing-price"><sup>$</sup>2,000<sub> one time</sub></div><div class="pricing-desc">Upgrade your website, brand, and business systems.</div><div class="pricing-divider"></div><div class="pricing-features"><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Same day working website</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>App design and growth systems</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Hosting, maintenance, and team support</div></div><button class="pricing-cta" onclick="purchasePackage('elite_builder')">Upgrade My Business — $2,000 →</button></div>
         </div>
         <div class="pricing-note">Guest Stripe checkout · Card, Apple Pay and eligible PayPal payments · No Stripe account required</div>
       </div>
