@@ -1,0 +1,67 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/api/status"
+  to = "/.netlify/functions/status"
+  status = 200
+
+[[redirects]]
+  from = "/api/version"
+  to = "/.netlify/functions/status"
+  status = 200
+
+[[redirects]]
+  from = "/api/openai"
+  to = "/.netlify/functions/openai"
+  status = 200
+
+[[redirects]]
+  from = "/api/openai/speech"
+  to = "/.netlify/functions/openai-speech"
+  status = 200
+
+[[redirects]]
+  from = "/api/openai/transcribe"
+  to = "/.netlify/functions/openai-transcribe"
+  status = 200
+
+[[redirects]]
+  from = "/api/anthropic"
+  to = "/.netlify/functions/anthropic"
+  status = 200
+
+[[redirects]]
+  from = "/api/consultation"
+  to = "/.netlify/functions/consultation"
+  status = 200
+
+[[redirects]]
+  from = "/api/report-pdf"
+  to = "/.netlify/functions/report-pdf"
+  status = 200
+
+[[redirects]]
+  from = "/api/create-checkout"
+  to = "/.netlify/functions/create-checkout"
+  status = 200
+
+[[redirects]]
+  from = "/api/stripe-webhook"
+  to = "/.netlify/functions/stripe-webhook"
+  status = 200
+
+[[redirects]]
+  from = "/api/package-download"
+  to = "/.netlify/functions/package-download"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

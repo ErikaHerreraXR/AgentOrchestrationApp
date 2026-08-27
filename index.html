@@ -7,9 +7,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <!-- ── PWA Core ── -->
-<title>Product Imagination Agents OS</title>
+<title>Your Entire Project Team — Product Imagination Agents OS</title>
 <meta name="application-name" content="Agents OS">
-<meta name="description" content="AI agent orchestration for any industry. Built by Product Imagination.">
+<meta name="description" content="Your entire project team. Built and delivered in minutes. Build strategy, brand, marketing, operations and more with an orchestrated team of AI specialists.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Product Imagination Agents OS">
+<meta property="og:title" content="Your entire project team. Built and delivered in minutes.">
+<meta property="og:description" content="Turn one brief into strategy, brand, marketing, operations and polished deliverables with an orchestrated team of AI specialists.">
+<meta property="og:image" content="hero.jpg">
+<meta property="og:image:alt" content="Product Imagination Agents OS — your AI project team">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Your entire project team. Built and delivered in minutes.">
+<meta name="twitter:description" content="Turn one brief into strategy, brand, marketing, operations and polished deliverables with an orchestrated AI team.">
+<meta name="twitter:image" content="hero.jpg">
 <link rel="manifest" href="manifest.json">
 
 <!-- ── iOS PWA ── -->
@@ -54,6 +64,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Mono:wght@400;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 html{scroll-behavior:smooth}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -295,10 +306,10 @@ nav{
 
 .hero{
   text-align:center;
-  padding:100px 24px 72px;
+  padding:48px 24px 44px;
   position:relative;overflow:hidden;
-  min-height:520px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
 }
 @media(max-width:860px){.hero{padding-top:32px;padding-bottom:36px;}}
 /* Hero — light mode: uses the site background image */
@@ -333,7 +344,7 @@ nav{
   background-clip:text;
 }
 .hero p{
-  max-width:520px;margin:0 auto 40px;
+  max-width:520px;margin:0 auto 28px;
   font-size:1.05rem;line-height:1.72;
   color:#4A5568;
   text-shadow:none;
@@ -343,7 +354,7 @@ nav{
 /* Pipeline nodes */
 .hero-pipeline{
   display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;margin:56px 0 0;gap:0;
+  flex-wrap:wrap;margin:32px 0 0;gap:0;
 }
 .pipeline-node{
   display:flex;flex-direction:column;align-items:center;gap:7px;
@@ -1502,6 +1513,19 @@ select option{background:#FFFFFF;color:#0F172A}
 .asr-bar{height:4px;border-radius:2px;transition:width 1s ease}
 .asr-score{font-family:var(--fm);font-size:0.82rem;font-weight:800;width:32px;text-align:right;color:var(--text-primary)}
 .asr-rating{font-family:var(--fm);font-size:0.62rem;color:var(--text-muted);width:78px;text-align:right}
+.consultation-card{
+  max-width:760px;margin:0 auto 40px;padding:30px;
+  background:linear-gradient(145deg,rgba(79,70,229,.13),rgba(124,58,237,.08),rgba(14,165,233,.07));
+  border:1px solid rgba(99,102,241,.3);border-radius:20px;text-align:left;
+}
+.consultation-card h2{font-size:clamp(1.35rem,3vw,1.9rem);color:var(--text-primary);margin-bottom:8px}
+.consultation-card p{color:var(--text-secondary);font-size:.88rem;line-height:1.65;margin-bottom:18px}
+.consultation-form{display:flex;gap:10px;align-items:stretch}
+.consultation-form input{flex:1;min-width:0;padding:13px 15px;border-radius:11px;border:1px solid var(--border-active);background:var(--bg-surface);color:var(--text-primary);font:inherit;outline:none}
+.consultation-form input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.16)}
+.consultation-note{font-size:.67rem!important;color:var(--text-muted)!important;margin:10px 0 0!important}
+.consultation-status{font-size:.78rem;margin-top:12px;min-height:1.2em;color:var(--emerald)}
+@media(max-width:600px){.consultation-form{flex-direction:column}.consultation-card{padding:22px 18px}}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    MOBILE
@@ -1590,14 +1614,14 @@ select option{background:#FFFFFF;color:#0F172A}
   .info-row{grid-template-columns:1fr}
   .workflow-nav{flex-wrap:wrap;gap:10px}
   .workflow-nav > div{flex:1}
-  .hero{padding:68px 14px 52px;min-height:420px}
+  .hero{padding:40px 14px 40px;min-height:0}
   /* Brief collection: hide agent strip so chat fills the screen */
   #screen-workflow.brief-mode .workflow-sidebar{display:none}
   #screen-workflow.brief-mode .workflow-main{height:calc(100dvh - 60px - var(--sat,0px))}
 }
 @media(max-width:600px){
   nav{padding:0 14px}
-  .hero{padding:56px 12px 44px;min-height:360px}
+  .hero{padding:32px 12px 36px;min-height:0}
   .hero-pipeline{display:none}
   .container{padding:0 14px}
   .brief-grid{grid-template-columns:1fr}
@@ -1808,7 +1832,7 @@ nav{padding-top:var(--sat);height:calc(60px + var(--sat))}
 .nav-inner{height:60px}
 .workflow-sidebar{top:calc(60px + var(--sat));max-height:calc(100vh - 60px - var(--sat));max-height:calc(100dvh - 60px - var(--sat))}
 .workflow-main{max-height:calc(100vh - 60px - var(--sat));max-height:calc(100dvh - 60px - var(--sat))}
-.hero{padding-top:calc(100px + var(--sat))}
+.hero{padding-top:calc(48px + var(--sat))}
 button,.btn,.template-card,.step-item,.agent-item{touch-action:manipulation}
 .workflow-sidebar,.workflow-main,#screen-home,#screen-brief,#screen-complete{-webkit-overflow-scrolling:touch}
 img,.hero::before,.logo-icon{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
@@ -2331,6 +2355,24 @@ body.in-workflow #mobile-bottom-nav{display:none;}
    PRICING
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .pricing-section{padding:88px 0;border-bottom:1px solid var(--border)}
+.pricing-audience{
+  display:flex;gap:6px;width:max-content;max-width:100%;margin:30px auto 0;padding:5px;
+  border:1px solid var(--border-active);border-radius:14px;background:var(--bg-surface);
+}
+.pricing-audience button{
+  padding:11px 18px;border:0;border-radius:10px;background:transparent;color:var(--text-secondary);
+  font-size:.82rem;font-weight:700;cursor:pointer;transition:.18s ease;
+}
+.pricing-audience button.active{background:var(--brand-g);color:#fff;box-shadow:0 4px 16px rgba(99,102,241,.28)}
+.pricing-type-wrap{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:16px auto 0}
+.pricing-type-wrap label{font-size:.76rem;font-weight:700;color:var(--text-secondary)}
+.pricing-type-wrap select{min-width:230px;padding:11px 36px 11px 13px;border:1px solid var(--border-active);border-radius:10px;background:var(--bg-card);color:var(--text-primary);font:inherit;font-size:.8rem;outline:none;cursor:pointer}
+.pricing-type-wrap select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.14)}
+.pricing-template-box{padding:13px 14px;margin:0 0 20px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.16);border-radius:10px}
+.pricing-template-label{font-family:var(--fm);font-size:.52rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-l);margin-bottom:7px}
+.pricing-template-list{font-size:.74rem;color:var(--text-body);line-height:1.55}
+.pricing-view[hidden]{display:none}
+.pricing-kicker{font-size:.78rem;color:var(--accent-l);font-weight:700;margin:-10px 0 16px}
 .pricing-grid{
   display:grid;grid-template-columns:repeat(3,1fr);
   gap:18px;margin-top:48px;align-items:start;
@@ -2392,6 +2434,24 @@ body.in-workflow #mobile-bottom-nav{display:none;}
   box-shadow:0 4px 18px rgba(99,102,241,0.38);
 }
 .pricing-card.featured .pricing-cta:hover{opacity:0.88;transform:translateY(-1px)}
+.pricing-card.custom-hub-card{
+  grid-column:1/-1;border:1px solid rgba(245,196,0,.62);
+  background:radial-gradient(circle at 85% 10%,rgba(245,196,0,.18),transparent 32%),linear-gradient(135deg,rgba(79,70,229,.18),rgba(124,58,237,.12),rgba(11,13,30,.9));
+  box-shadow:0 0 0 1px rgba(245,196,0,.18),0 24px 70px rgba(79,70,229,.28);
+}
+.pricing-card.custom-hub-card::before{height:5px;background:linear-gradient(90deg,#F5C400,#FF9A00,#A855F7,#6366F1)}
+.pricing-card.custom-hub-card .pricing-tier{color:#F8D95B}
+.pricing-card.custom-hub-card .pricing-price{font-size:2.15rem}
+.pricing-card.custom-hub-card .pricing-price,
+.pricing-card.custom-hub-card .pricing-feat{color:#FFFFFF}
+.pricing-card.custom-hub-card .pricing-price sub,
+.pricing-card.custom-hub-card .pricing-desc,
+.pricing-card.custom-hub-card .pricing-template-list{color:rgba(255,255,255,.78)}
+.pricing-card.custom-hub-card .pricing-template-box{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16)}
+.pricing-card.custom-hub-card .pricing-divider{background:rgba(255,255,255,.14)}
+.pricing-card.custom-hub-card .pricing-cta{background:linear-gradient(135deg,#F5C400,#FF9A00);color:#281B00;border:none;box-shadow:0 8px 28px rgba(245,196,0,.28)}
+.pricing-card.custom-hub-card .pricing-cta:hover{color:#281B00;transform:translateY(-2px);box-shadow:0 12px 34px rgba(245,196,0,.36)}
+@media(min-width:861px){.pricing-card.custom-hub-card .pricing-features{display:grid;grid-template-columns:1fr 1fr}}
 .pricing-note{
   text-align:center;margin-top:20px;
   font-size:0.74rem;color:var(--text-muted);
@@ -2538,8 +2598,7 @@ body.in-workflow #mobile-bottom-nav{display:none;}
 <div id="screen-home" class="screen active">
 
   <div class="hero">
-    <div class="hero-tag">✦ Built by Product Imagination</div>
-    <h1>Your entire project team.<br><span>Briefed once. Delivered in minutes.</span></h1>
+    <h1>Your entire project team.<br><span>Built and delivered in minutes.</span></h1>
     <p>Tell PI Agent OS your goal. A coordinated team of specialist AI agents executes every step — researched, written, QA-reviewed, and ready to ship.</p>
 
     <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;">
@@ -2639,76 +2698,28 @@ body.in-workflow #mobile-bottom-nav{display:none;}
         </div>
       </div>
 
-      <!-- Live client workflow: Shoreline Properties -->
-      <div class="how-pipeline-wrap" style="position:relative">
-        <div class="how-pipeline-label" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center">
-          <span style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.28);color:#34D399;border-radius:100px;padding:2px 10px;font-size:0.58rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;font-family:var(--fm)">● Live Client</span>
-          <span>Shoreline Properties — Airbnb &amp; Property Management</span>
+      <!-- Client AI team examples -->
+      <div class="how-pipeline-wrap" style="position:relative;padding:24px 18px">
+        <div class="how-pipeline-label" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:16px">
+          <span style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.24);color:var(--accent);border-radius:100px;padding:3px 10px;font-size:0.58rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;font-family:var(--fm)">Client AI Teams</span>
+          <span>Specialists built around each business</span>
         </div>
-
-        <!-- Brief summary row -->
-        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 auto 18px;max-width:780px">
-          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:0.72rem;color:var(--text-secondary);display:flex;align-items:center;gap:7px">
-            <span style="font-size:1rem">🏡</span> <strong style="color:var(--text-primary)">Template:</strong> Airbnb &amp; Short-Term Rental
-          </div>
-          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:0.72rem;color:var(--text-secondary);display:flex;align-items:center;gap:7px">
-            <span style="font-size:1rem">⚡</span> <strong style="color:var(--text-primary)">Brief time:</strong> 4 questions · 60 seconds
-          </div>
-          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:0.72rem;color:var(--text-secondary);display:flex;align-items:center;gap:7px">
-            <span style="font-size:1rem">🛠️</span> <strong style="color:var(--text-primary)">Covers:</strong> Listings · Pricing · Guest Ops · Brand
-          </div>
+        <div style="overflow-x:auto;border:1px solid var(--border);border-radius:14px;background:var(--bg-card)">
+          <table aria-label="Client industries and AI teams" style="width:100%;min-width:720px;border-collapse:collapse;text-align:left">
+            <thead>
+              <tr style="background:rgba(99,102,241,0.06);font-family:var(--fm);font-size:0.57rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--text-secondary)">
+                <th style="padding:11px 14px">Client</th><th style="padding:11px 14px">Industry</th><th style="padding:11px 14px">AI Team</th><th style="padding:11px 14px">Working Now</th>
+              </tr>
+            </thead>
+            <tbody style="font-size:0.73rem;color:var(--text-secondary)">
+              <tr style="border-top:1px solid var(--border)"><td style="padding:12px 14px;font-weight:800;color:var(--text-primary)">Shoreline Properties</td><td style="padding:12px 14px">Property Management</td><td style="padding:12px 14px">🏡 Listings · 💰 Pricing · 💬 Guest Care</td><td style="padding:12px 14px"><span style="color:#10B981">●</span> Pricing agent updating seasonal rates</td></tr>
+              <tr style="border-top:1px solid var(--border)"><td style="padding:12px 14px;font-weight:800;color:var(--text-primary)">Glow Wellness</td><td style="padding:12px 14px">Health &amp; Wellness</td><td style="padding:12px 14px">🎯 Growth · ✍️ Content · 📅 Client Care</td><td style="padding:12px 14px"><span style="color:#10B981">●</span> Content agent preparing next campaign</td></tr>
+              <tr style="border-top:1px solid var(--border)"><td style="padding:12px 14px;font-weight:800;color:var(--text-primary)">Northstar Consulting</td><td style="padding:12px 14px">Professional Services</td><td style="padding:12px 14px">🔎 Research · 📊 Strategy · 🤝 Sales</td><td style="padding:12px 14px"><span style="color:#10B981">●</span> Research agent reviewing market needs</td></tr>
+              <tr style="border-top:1px solid var(--border)"><td style="padding:12px 14px;font-weight:800;color:var(--text-primary)">Launch House</td><td style="padding:12px 14px">E-commerce</td><td style="padding:12px 14px">🛍️ Product · 📣 Marketing · ⚙️ Operations</td><td style="padding:12px 14px"><span style="color:#10B981">●</span> Product agent improving store listings</td></tr>
+            </tbody>
+          </table>
         </div>
-
-        <!-- Agent pipeline -->
-        <div class="how-pipeline">
-          <div class="how-agent"><div class="how-agent-ico">🏡</div><div class="how-agent-lbl">Property Audit</div></div>
-          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
-          <div class="how-agent"><div class="how-agent-ico">✍️</div><div class="how-agent-lbl">Listing Copy</div></div>
-          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
-          <div class="how-agent"><div class="how-agent-ico">💬</div><div class="how-agent-lbl">Guest Comms</div></div>
-          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
-          <div class="how-agent"><div class="how-agent-ico">💰</div><div class="how-agent-lbl">Pricing</div></div>
-          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
-          <div class="how-agent"><div class="how-agent-ico">⚙️</div><div class="how-agent-lbl">Operations</div></div>
-          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
-          <div class="how-agent"><div class="how-agent-ico">🎨</div><div class="how-agent-lbl">Brand Identity</div></div>
-          <div class="how-qa-gate"><div class="how-qa-arrow">→</div><div class="how-guardian-ico">🛡️</div><div class="how-qa-badge">QA ✓</div><div class="how-qa-arrow">→</div></div>
-          <div class="how-final"><div class="how-final-ico">✅</div><div class="how-final-lbl">Delivered</div></div>
-        </div>
-
-        <!-- Shoreline deliverables + links -->
-        <div class="shoreline-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px auto 0;max-width:780px">
-
-          <!-- Deliverables -->
-          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px 20px">
-            <div style="font-family:var(--fm);font-size:0.58rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px">What Was Built</div>
-            <ul style="list-style:none;display:flex;flex-direction:column;gap:7px">
-              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:#34D399;font-size:0.7rem">✓</span> 5-property Airbnb listing suite</li>
-              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:#34D399;font-size:0.7rem">✓</span> Guest welcome guide &amp; house rules</li>
-              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:#34D399;font-size:0.7rem">✓</span> Dynamic pricing &amp; revenue strategy</li>
-              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:#34D399;font-size:0.7rem">✓</span> Operations SOP + vendor checklist</li>
-              <li style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--text-secondary)"><span style="color:var(--accent);font-size:0.7rem">⬡</span> Brand identity kit <span style="font-size:0.65rem;color:var(--accent);font-weight:700">in progress</span></li>
-            </ul>
-          </div>
-
-          <!-- Links + sneak peek -->
-          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
-            <div style="font-family:var(--fm);font-size:0.58rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0">Client Links</div>
-            <a href="https://shorelineproperties.com" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.18);border-radius:9px;padding:9px 12px;font-size:0.76rem;font-weight:700;color:var(--text-primary);text-decoration:none;transition:0.18s ease" onmouseover="this.style.borderColor='rgba(99,102,241,0.4)'" onmouseout="this.style.borderColor='rgba(99,102,241,0.18)'">
-              <span>🌐</span> shorelineproperties.com <span style="margin-left:auto;font-size:0.62rem;color:var(--accent);font-family:var(--fm)">IN DEV →</span>
-            </a>
-            <a href="#" onclick="return false" style="display:flex;align-items:center;gap:8px;background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.18);border-radius:9px;padding:9px 12px;font-size:0.76rem;font-weight:700;color:var(--text-primary);text-decoration:none;transition:0.18s ease" onmouseover="this.style.borderColor='rgba(99,102,241,0.4)'" onmouseout="this.style.borderColor='rgba(99,102,241,0.18)'">
-              <span>🏠</span> View Property Portfolio <span style="margin-left:auto;font-size:0.62rem;color:var(--accent);font-family:var(--fm)">SOON →</span>
-            </a>
-            <!-- Sneak peek -->
-            <div style="margin-top:4px;background:linear-gradient(135deg,rgba(99,102,241,0.07),rgba(124,58,237,0.07));border:1px solid rgba(99,102,241,0.16);border-radius:9px;padding:10px 12px">
-              <div style="font-family:var(--fm);font-size:0.54rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:5px">⬡ AI Team Sneak Peek</div>
-              <div style="font-size:0.7rem;color:var(--text-secondary);line-height:1.5">Shoreline's dedicated agents: <span style="color:var(--text-primary);font-weight:600">Listing Specialist · Guest Experience · Revenue Optimizer · Brand Agent</span> — briefed once, always on.</div>
-            </div>
-          </div>
-        </div>
-
-
+        <p style="margin:10px 0 0;text-align:center;font-size:0.64rem;color:var(--text-muted)">Example workspace activity shown for demonstration.</p>
       </div>
     </div>
   </div>
@@ -2849,61 +2860,148 @@ body.in-workflow #mobile-bottom-nav{display:none;}
     <div class="container">
       <div class="section-header">
         <div class="tag">Pricing</div>
-        <h2>Start free.<br><em style="font-style:normal;color:var(--accent)">Scale when you're ready.</em></h2>
-        <p>No credit card. No lock-in. Try the full system before you commit to anything.</p>
-        <div style="margin-top:14px"><span class="star-badge">✦ Starter plan — free forever</span></div>
+        <h2>Choose what fits<br><em style="font-style:normal;color:var(--accent)">where you are today.</em></h2>
+        <p>Starting something new or growing an existing business? Pick your path and see only the packages built for you.</p>
+        <div class="pricing-audience" role="tablist" aria-label="Choose your business stage">
+          <button class="active" id="pricing-tab-new" role="tab" aria-selected="true" aria-controls="pricing-new" onclick="setPricingAudience('new')">I'm starting a business</button>
+          <button id="pricing-tab-existing" role="tab" aria-selected="false" aria-controls="pricing-existing" onclick="setPricingAudience('existing')">I already have a business</button>
+        </div>
+        <div class="pricing-type-wrap">
+          <label for="pricing-business-type">What kind of business?</label>
+          <select id="pricing-business-type" onchange="setPricingBusinessType(this.value)">
+            <option value="service">Service or consulting</option>
+            <option value="ecommerce">Products or ecommerce</option>
+            <option value="property">Property or short-term rental</option>
+            <option value="creator">Creator or personal brand</option>
+            <option value="local">Local business</option>
+          </select>
+        </div>
       </div>
+      <div class="pricing-view" id="pricing-new" role="tabpanel" aria-labelledby="pricing-tab-new">
       <div class="pricing-grid">
         <!-- Free -->
         <div class="pricing-card">
-          <div class="pricing-tier">Starter</div>
-          <div class="pricing-price">Free<sub> forever</sub></div>
-          <div class="pricing-desc">Try the full system — no time limit.</div>
+          <div class="pricing-tier">Start Smart Prompt Pack</div>
+          <div class="pricing-price"><sup>$</sup>100<sub> one time</sub></div>
+          <div class="pricing-desc">Essential prompts and business-builder tools that turn an idea into a clear plan.</div>
           <div class="pricing-divider"></div>
+          <div class="pricing-template-box"><div class="pricing-template-label">Templates for your business</div><div class="pricing-template-list" data-template-tier="new_basic"></div></div>
           <div class="pricing-features">
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>3 project runs per month</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>All industry templates</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Full 28-step agent pipeline</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Guardian QA on every output</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Brand image &amp; logo generator</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>One-page business plan template</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Ideal customer worksheet</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Offer and pricing calculator</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>30-day launch checklist</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Ready-to-use AI prompt pack</div>
           </div>
-          <button class="pricing-cta" onclick="quickStartDemo()">Start Free →</button>
+          <button class="pricing-cta" onclick="purchasePackage('new_basic')">Buy Start Smart — $100 →</button>
         </div>
         <!-- Pro (Featured) -->
         <div class="pricing-card featured">
-          <div class="pricing-badge">Most Popular</div>
-          <div class="pricing-tier">Pro</div>
-          <div class="pricing-price"><sup>$</sup>49<sub>/mo</sub></div>
-          <div class="pricing-desc">Unlimited projects. Priority output.</div>
+          <div class="pricing-badge">Best to launch</div>
+          <div class="pricing-tier">Launch Ready Prompt Pack</div>
+          <div class="pricing-price"><sup>$</sup>250<sub> one time</sub></div>
+          <div class="pricing-desc">A complete prompt, brand and launch toolkit for first-time founders.</div>
           <div class="pricing-divider"></div>
+          <div class="pricing-template-box"><div class="pricing-template-label">Templates for your business</div><div class="pricing-template-list" data-template-tier="new_launch"></div></div>
           <div class="pricing-features">
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Unlimited project runs</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>All templates + early access to new ones</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Export to PDF, Markdown &amp; Docs</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Client portal access</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Email delivery of outputs</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Priority support</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Start Smart</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Brand voice and visual direction templates</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Website copy starter kit</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Social launch calendar</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Sales and outreach scripts</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>AI setup prompts</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Full business-builder workbook</div>
           </div>
-          <button class="pricing-cta" onclick="quickStartDemo()">Get Pro — $49/mo →</button>
+          <button class="pricing-cta" onclick="purchasePackage('new_launch')">Buy Launch Ready — $250 →</button>
         </div>
         <!-- Studio -->
         <div class="pricing-card">
-          <div class="pricing-tier">Studio</div>
-          <div class="pricing-price" style="font-size:1.8rem">Custom</div>
-          <div class="pricing-desc">White-label, API access &amp; team seats.</div>
+          <div class="pricing-tier">Full Business Builder</div>
+          <div class="pricing-price"><sup>$</sup>500<sub> one time</sub></div>
+          <div class="pricing-desc">The complete prompt-pack library and business-builder tools from idea to launch.</div>
           <div class="pricing-divider"></div>
+          <div class="pricing-template-box"><div class="pricing-template-label">Templates for your business</div><div class="pricing-template-list" data-template-tier="new_complete"></div></div>
           <div class="pricing-features">
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Pro</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>White-label for your clients</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>API access + custom agents</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Team seats &amp; admin dashboard</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Dedicated onboarding</div>
-            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>SLA &amp; custom contracts</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Launch Ready</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Budget and cash-flow templates</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Operations and client onboarding kit</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Full Agents OS project run</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Guardian QA review</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Finance, sales, marketing and operations prompt packs</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Free consultation with Erika</div>
           </div>
-          <a href="mailto:hello@productimagination.com" class="pricing-cta">Talk to Us →</a>
+          <button class="pricing-cta" onclick="purchasePackage('new_complete')">Buy &amp; Book Consultation — $500 →</button>
+        </div>
+        <div class="pricing-card featured">
+          <div class="pricing-badge">Done-with-you premium build</div>
+          <div class="pricing-tier">Elite Business Builder</div>
+          <div class="pricing-price"><sup>$</sup>2,000<sub> one time</sub></div>
+          <div class="pricing-desc">Launch the business foundation, a working website and a focused app experience with hands-on build support.</div>
+          <div class="pricing-divider"></div>
+          <div class="pricing-template-box"><div class="pricing-template-label">Included build tools</div><div class="pricing-template-list">Business setup roadmap · Website launch brief · App design plan · Operations system</div></div>
+          <div class="pricing-features">
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Full Business Builder</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Same-day working website after completed intake and required assets</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Focused app design, user flow and screen concepts</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Business offer, pricing and customer setup</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Brand, marketing, sales and launch materials</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Operations, onboarding and finance starter systems</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Private launch consultation with Erika</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Hosting setup and website maintenance support</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>On-demand business support with our team</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Final launch review and handoff</div>
+          </div>
+          <button class="pricing-cta" onclick="purchasePackage('elite_builder')">Build My Business — $2,000 →</button>
+        </div>
++        <div class="pricing-card custom-hub-card">
+          <div class="pricing-badge">Signature custom build</div>
+          <div class="pricing-tier">Custom Platform Hub</div>
+          <div class="pricing-price">Custom<sub> consultation required</sub></div>
+          <div class="pricing-desc">A fully custom platform that brings your business tools, customer experience and branded app features together in one connected hub.</div>
+          <div class="pricing-divider"></div>
+          <div class="pricing-template-box"><div class="pricing-template-label">Built around your vision</div><div class="pricing-template-list">Custom platform strategy · Branded hub design · Connected business tools · Personalized launch plan</div></div>
+          <div class="pricing-features">
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Private platform-planning consultation with Erika</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom platform and branded app-hub experience</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Business, customer and team tools connected in one place</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom scope, timeline and investment plan</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>24/7 support access with our team</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Exclusive pre-launch access to our Brand Growth and Social Media Builder</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Priority onboarding, launch guidance and ongoing growth support</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Designed specifically for your brand, audience and goals</div>
+          </div>
+          <button class="pricing-cta" onclick="bookCustomHubConsultation()">Book My Custom Platform Consultation →</button>
         </div>
       </div>
-      <div class="pricing-note">All plans include Guardian QA · No credit card required to start · Cancel anytime</div>
+      <div class="pricing-note">Guest checkout · Credit/debit cards and eligible wallets · No Stripe account required</div>
+      </div>
+      <div class="pricing-view" id="pricing-existing" role="tabpanel" aria-labelledby="pricing-tab-existing" hidden>
+        <div class="pricing-grid">
+          <div class="pricing-card"><div class="pricing-tier">Business Essentials</div><div class="pricing-price"><sup>$</sup>150<sub> one time</sub></div><div class="pricing-desc">Organize and strengthen the business you already run.</div><div class="pricing-divider"></div><div class="pricing-template-box"><div class="pricing-template-label">Templates for your business</div><div class="pricing-template-list" data-template-tier="existing_basic"></div></div><div class="pricing-features"><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>10 project runs per month</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Marketing, operations and sales templates</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Export-ready deliverables</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Guardian QA on every output</div></div><button class="pricing-cta" onclick="purchasePackage('existing_basic')">Buy Business Essentials — $150 →</button></div>
+          <div class="pricing-card featured"><div class="pricing-badge">Most popular</div><div class="pricing-tier">Business Growth</div><div class="pricing-price"><sup>$</sup>350<sub> one time</sub></div><div class="pricing-desc">Grow revenue, improve operations and make better decisions with your AI team.</div><div class="pricing-divider"></div><div class="pricing-template-box"><div class="pricing-template-label">Templates for your business</div><div class="pricing-template-list" data-template-tier="existing_growth"></div></div><div class="pricing-features"><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Unlimited project runs</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>All industry templates</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Client portal and email delivery</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Priority generation and support</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>PDF, Markdown and Docs exports</div></div><button class="pricing-cta" onclick="purchasePackage('existing_growth')">Buy Business Growth — $350 →</button></div>
+          <div class="pricing-card"><div class="pricing-tier">Elite Business Builder</div><div class="pricing-price"><sup>$</sup>2,000<sub> one time</sub></div><div class="pricing-desc">Upgrade your company with a working website, focused app design and complete growth systems.</div><div class="pricing-divider"></div><div class="pricing-template-box"><div class="pricing-template-label">Included build tools</div><div class="pricing-template-list">Growth roadmap · Website rebuild brief · App design plan · Operations system</div></div><div class="pricing-features"><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Everything in Business Growth</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Same-day working website after completed intake and required assets</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Focused app design, user flow and screen concepts</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Sales, marketing and operations setup</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Hosting setup and website maintenance support</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>On-demand business support with our team</div><div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Private launch consultation and handoff</div></div><button class="pricing-cta" onclick="purchasePackage('elite_builder')">Upgrade My Business — $2,000 →</button></div>
++        <div class="pricing-card custom-hub-card">
+          <div class="pricing-badge">Signature custom build</div>
+          <div class="pricing-tier">Custom Platform Hub</div>
+          <div class="pricing-price">Custom<sub> consultation required</sub></div>
+          <div class="pricing-desc">A fully custom platform that brings your business tools, customer experience and branded app features together in one connected hub.</div>
+          <div class="pricing-divider"></div>
+          <div class="pricing-template-box"><div class="pricing-template-label">Built around your vision</div><div class="pricing-template-list">Custom platform strategy · Branded hub design · Connected business tools · Personalized launch plan</div></div>
+          <div class="pricing-features">
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Private platform-planning consultation with Erika</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom platform and branded app-hub experience</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Business, customer and team tools connected in one place</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Custom scope, timeline and investment plan</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>24/7 support access with our team</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Exclusive pre-launch access to our Brand Growth and Social Media Builder</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Priority onboarding, launch guidance and ongoing growth support</div>
+            <div class="pricing-feat"><span class="pricing-feat-icon">✦</span>Designed specifically for your brand, audience and goals</div>
+          </div>
+          <button class="pricing-cta" onclick="bookCustomHubConsultation()">Book My Custom Platform Consultation →</button>
+        </div>
+        </div>
+        <div class="pricing-note">Guest Stripe checkout · Card, Apple Pay and eligible PayPal payments · No Stripe account required</div>
+      </div>
     </div>
   </div>
 
@@ -3037,27 +3135,27 @@ body.in-workflow #mobile-bottom-nav{display:none;}
 </div>
 
 <!-- ════════════════════════════════════════════════ TRY ME WIDGET -->
-<div id="try-me-widget" aria-label="Chat with AI Erika">
+<div id="try-me-widget" aria-label="Chat with Erika">
   <div id="try-me-bubble">
     <div id="try-me-chat-header">
       <div id="try-me-chat-av-wrap">
-        <img src="/erika.webp" id="try-me-chat-av" alt="AI Erika"/>
+        <img src="/erika.webp" id="try-me-chat-av" alt="Erika"/>
         <span id="try-me-chat-online-dot"></span>
       </div>
       <div>
-        <div id="try-me-chat-name">AI Erika</div>
+        <div id="try-me-chat-name">Erika</div>
         <div id="try-me-chat-status">● Online · Brand Agent</div>
       </div>
       <div id="try-me-chat-time">now</div>
     </div>
     <div id="try-me-chat-msg-row">
       <img src="/erika.webp" id="try-me-chat-msg-av" alt=""/>
-      <div id="try-me-chat-msg">Hi, AI Erika here! Watch this — drop your company name &amp; goal and I'll build your brand image in seconds!</div>
+      <div id="try-me-chat-msg">Hi, Erika here! Watch this. Drop your company name &amp; goal and I'll build your brand image in seconds!</div>
     </div>
     <button id="try-me-bubble-cta" onclick="quickStartDemo()">✨ Try Me Free — See It Live →</button>
   </div>
-  <button id="try-me-btn" onclick="toggleTryMeBubble()" title="Chat with AI Erika" aria-label="Chat with AI Erika">
-    <img src="/erika.webp" id="try-me-erika-photo" alt="AI Erika"/>
+  <button id="try-me-btn" onclick="toggleTryMeBubble()" title="Chat with Erika" aria-label="Chat with Erika">
+    <img src="/erika.webp" id="try-me-erika-photo" alt="Erika"/>
     <span id="try-me-dot"></span>
   </button>
 </div>
@@ -3067,10 +3165,10 @@ body.in-workflow #mobile-bottom-nav{display:none;}
   <div id="try-demo-card">
     <div id="try-demo-header">
       <div id="try-demo-header-inner">
-        <div id="try-agent-avatar"><img src="/erika.webp" alt="AI Erika" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;display:block;"/></div>
+        <div id="try-agent-avatar"><img src="/erika.webp" alt="Erika" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;display:block;"/></div>
         <div>
           <h3>✨ See What I Build For You — In Seconds</h3>
-          <div id="try-agent-sub">Hi! I'm AI Erika, your Brand Agent &middot; No sign-up &middot; Watch the magic 👀</div>
+          <div id="try-agent-sub">Hi! I'm Erika, your Brand Agent &middot; No sign-up &middot; Watch the magic 👀</div>
         </div>
       </div>
       <button id="try-demo-close" onclick="closeTryDemo()" aria-label="Close">✕</button>
@@ -3097,7 +3195,7 @@ body.in-workflow #mobile-bottom-nav{display:none;}
       </div>
       <!-- Right: 2-field form -->
       <div class="try-demo-section">
-        <div class="try-demo-col-label">Your Turn — 2 Fields Only</div>
+          <div class="try-demo-col-label">Your Turn — Keep It Simple</div>
         <div class="try-field">
           <label for="try-company">Company Name</label>
           <input id="try-company" type="text" placeholder="e.g. NovaSkin Cosmetics" maxlength="40" autocomplete="off"/>
@@ -3105,6 +3203,11 @@ body.in-workflow #mobile-bottom-nav{display:none;}
         <div class="try-field">
           <label for="try-goal">Your Main Goal</label>
           <input id="try-goal" type="text" placeholder="e.g. Launch a clean beauty brand" maxlength="80" autocomplete="off"/>
+        </div>
+        <div class="try-field">
+          <label for="try-email">Email for a Free Consultation <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+          <input id="try-email" type="email" placeholder="you@company.com" maxlength="120" autocomplete="email"/>
+          <div style="font-size:.66rem;color:var(--text-muted);line-height:1.45;margin-top:5px">Enter your email only if you want Erika to follow up about a free consultation.</div>
         </div>
         <button id="try-generate-btn" onclick="generateBrandDemo()">✨ Generate My Brand Image + Logo →</button>
         <button id="try-full-btn" onclick="launchFullDemo()">🚀 Start Full AI Workflow →</button>
@@ -3150,11 +3253,41 @@ body.in-workflow #mobile-bottom-nav{display:none;}
 
     <div style="max-width: 900px; margin: 0 auto;">
       <div class="report-grid" id="complete-stats"></div>
+      <div class="consultation-card" id="plain-plan-summary" style="text-align:left">
+        <div class="tag" style="margin-bottom:10px">Your Plan in Plain English</div>
+        <h2 id="plain-summary-title">What this report means for your business</h2>
+        <p id="plain-summary-text"></p>
+        <div id="plain-summary-actions" style="display:grid;gap:8px;margin-top:16px"></div>
+      </div>
+      <div class="consultation-card" id="consultation-card">
+        <div class="tag" style="margin-bottom:10px">Your Next Step</div>
+        <h2>Want help turning this plan into your business?</h2>
+        <p>Schedule a free consultation with Erika. Enter your email and she’ll follow up to discuss your plan, priorities and best next step.</p>
+        <form class="consultation-form" onsubmit="submitConsultation(event)">
+          <label for="consultation-email" class="sr-only">Email address</label>
+          <input id="consultation-email" type="email" required maxlength="120" autocomplete="email" placeholder="Enter your email address">
+          <button class="btn btn-primary" type="submit">Schedule My Free Consultation →</button>
+        </form>
+        <div style="margin-top:12px"><a href="https://calendly.com/metakittyz/30min" target="_blank" rel="noopener" class="btn btn-outline-green">Book a Time on Calendly Now →</a></div>
+        <p class="consultation-note">By submitting, you agree that Erika may email you about this consultation. No spam.</p>
+        <div class="consultation-status" id="consultation-status" role="status" aria-live="polite"></div>
+      </div>
       <div class="section-header" style="text-align:left; margin-bottom:20px;">
         <div class="tag">Agent Scorecards</div>
         <h2>Performance Summary</h2>
       </div>
       <div class="agent-scores" id="complete-scores"></div>
+    </div>
+  </div>
+</div>
+
+<div id="report-download-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="report-download-title" style="display:none">
+  <div class="modal-box">
+    <h3 id="report-download-title">Your business report is ready</h3>
+    <p>Download the stakeholder-ready PDF, then return to your workflow summary.</p>
+    <div class="modal-actions" style="flex-wrap:wrap">
+      <a id="report-download-link" class="btn btn-primary" href="#" download>↓ Download PDF</a>
+      <button class="btn btn-outline-green" type="button" onclick="closeReportDownload()">Exit — Return to Summary</button>
     </div>
   </div>
 </div>
@@ -4240,6 +4373,7 @@ let state = {
   agentIndex: 0,
   stepChecked: {},   // { agentId: Set of checked step indices }
   scores: {},        // { agentId: score }
+  agentOutputs: {},  // { agentId: generated deliverable text }
   prCount: 1,
   brief: {}
 };
@@ -4371,6 +4505,7 @@ function selectTemplate(id) {
   state.agentIndex = 0;
   state.stepChecked = {};
   state.scores = {};
+  state.agentOutputs = {};
   state.prCount = 1;
   state.convAnswers = {};
   state.convPhase = 'brief_collect';
@@ -4433,6 +4568,7 @@ function startWorkflow() {
   state.convPhase   = 'orch_intro';
   state.questionIdx = 0;
   state.scores      = {};
+  state.agentOutputs = {};
   state.agentIndex  = 0;
   state.pins        = [];
 
@@ -4469,7 +4605,7 @@ const AGENT_Q = {
   'consulting.strategy': {
     intro: b => 'Hi! I\'m your Strategy Agent. I\'ll show you 3 real paths forward — each one genuinely different.',
     questions: [
-      { id:'driver', text:"What's driving this initiative right now?", opts:['Growth opportunity','Competitive threat','Internal inefficiency','📌 Pin for later'] },
+      { id:'driver', text:'What do you need help with most right now?', opts:['Starting something new','Growing and expanding','Getting organized','Improving sales','📌 Pin for later'] },
     ],
     closing: (a,b) => `Clear. A <strong>${a.driver||'strategic'}</strong>-driven initiative needs a different set of options than a defensive one. Building 3 distinct paths with a clear recommendation now. ⚡`,
   },
@@ -5095,7 +5231,7 @@ function startAgentConversation(agent, agentIdx, templateId) {
   if (!msgs) return;
   msgs.innerHTML = '';
 
-  // Brief collection phase — gather company + goal conversationally before workflow
+  // Brief collection phase — identify business stage, then gather company + goal
   if (state.convPhase === 'brief_collect') {
     var t = state.template;
     var introDiv = document.createElement('div');
@@ -5105,7 +5241,20 @@ function startAgentConversation(agent, agentIdx, templateId) {
     introChip.textContent = '🎯 Orchestration Agent';
     introDiv.appendChild(introChip);
     msgs.appendChild(introDiv);
-    agentSay('Hi! I\'m your Orchestration Agent for the <strong>' + t.title + '</strong> workflow. I\'ll guide you through everything — let\'s keep it simple. What\'s your company name?', 600);
+    agentSay('Hi! I\'ll guide you one simple step at a time. First, is this a new business or an existing business?', 600).then(function() {
+      showQuickReplies(['New business — I am starting','Existing business — I already operate'], function(answer) {
+        state.brief.businessStage = answer.indexOf('New business') === 0 ? 'new' : 'existing';
+        if (state.prefillBrief) {
+          state.brief.client = state.prefillBrief.client;
+          state.brief.goal = state.prefillBrief.goal;
+          state.prefillBrief = null;
+          agentSay('Perfect. I have your business name and goal. Let\'s build your plan.', 350).then(completeBriefCollection);
+          return;
+        }
+        state.briefStep = 1;
+        agentSay(state.brief.businessStage === 'new' ? 'Great. What name are you planning to use for your business?' : 'Great. What is your business name?', 350);
+      });
+    });
     return;
   }
 
@@ -5150,9 +5299,9 @@ function startAgentConversation(agent, agentIdx, templateId) {
       // Clear previous agent's queued speech before starting the next one
       stopCurrentSpeech();
       // Brief transition message from Orchestrator
-      addBubble('system', '✓ ' + state.template.agents[agentIdx-1].name + ' complete — Guardian QA score ' + (state.scores[state.template.agents[agentIdx-1].id] || 88) + '/100');
-      var nextMsg = 'Great! Next up is your <strong>' + agent.name + '</strong>. ' + (conv ? conv.intro(b) : 'They\'ll take care of ' + agent.specialty.split('.')[0] + '.');
-      agentSay(nextMsg, 500);
+      var previousAgent = state.template.agents[agentIdx-1];
+      addBubble('system', '✓ ' + previousAgent.name + ' complete — Guardian QA score ' + (state.scores[previousAgent.id] || 'Pending') + '/100');
+      agentSay(buildAgentHandoff(previousAgent, agent, b), 500);
       delay = 1300;
     }
 
@@ -5164,9 +5313,7 @@ function startAgentConversation(agent, agentIdx, templateId) {
         showStaticAgentOutput(agent, templateId);
         return;
       }
-      agentSay(conv.intro(b), 1000).then(function() {
-        askQuestion(conv, 0, templateId, agent);
-      });
+      askQuestion(conv, 0, templateId, agent);
     }, delay + (agentIdx === 0 ? 800 : 1400));
   }, 400);
 }
@@ -5177,11 +5324,12 @@ function askQuestion(conv, qIdx, templateId, agent) {
     return;
   }
   var q = conv.questions[qIdx];
-  agentSay(q.text, 500, true).then(function() {
-    showQuickReplies(q.opts, function(answer) {
+  var questionText = makeQuestionDirect(q.text);
+  agentSay(questionText, 500, true).then(function() {
+    showQuickReplies(q.opts.map(makeAnswerEasy), function(answer) {
       if (answer === '📌 Pin for later') {
         if (!state.pins) state.pins = [];
-        state.pins.push({ icon: state.currentAgentIcon, topic: q.id, question: q.text });
+        state.pins.push({ icon: state.currentAgentIcon, topic: q.id, question: questionText });
         addBubble('user', '📌 Pin for later', '👤');
         agentSay('📌 Noted — flagged for your final report. Moving forward!', 350).then(function() {
           processingToOutput(conv, templateId, agent);
@@ -5196,6 +5344,68 @@ function askQuestion(conv, qIdx, templateId, agent) {
   });
 }
 
+function makeQuestionDirect(question) {
+  var clean = String(question || '').replace(/\s+/g, ' ').trim()
+    .replace(/competitive landscape/gi,'competitors')
+    .replace(/adoption risk/gi,'challenge getting people on board')
+    .replace(/conversion goal/gi,'main result you want')
+    .replace(/north star metric/gi,'most important number to improve')
+    .replace(/compliance exposure/gi,'area most likely to cause a legal or rule problem')
+    .replace(/GC relationship/gi,'general contractor')
+    .replace(/equity position/gi,'money available for the project')
+    .replace(/unit mix decisions/gi,'choice of unit types')
+    .replace(/primary policy audience/gi,'people who will use this policy');
+  var words = clean.split(' ');
+  if (words.length <= 15) return clean;
+  return words.slice(0, 15).join(' ').replace(/[.,;:!]+$/, '') + '?';
+}
+
+function makeAnswerEasy(answer) {
+  return String(answer || '')
+    .replace(/IRR/gi,'Target return')
+    .replace(/C-suite/gi,'Company leaders')
+    .replace(/RACI/gi,'Who owns each task')
+    .replace(/KPI/gi,'Success measure')
+    .replace(/B2B professionals/gi,'People at other businesses')
+    .replace(/B2C consumers/gi,'Everyday customers')
+    .replace(/CUP/gi,'special approval')
+    .replace(/JV equity partner/gi,'investment partner')
+    .replace(/P&L/gi,'income and expense report');
+}
+
+function buildSimpleOverview(agent) {
+  var firstOutput = agent.outputs && agent.outputs[0] ? agent.outputs[0].toLowerCase() : 'a practical plan';
+  return '<strong>Quick overview:</strong> This step creates ' + firstOutput + ' and shows you what to do next.';
+}
+
+function calculateGuardianScore(agent, output, answers) {
+  var text = String(output || '');
+  var score = 58;
+  var wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+  var sectionCount = (text.match(/(^|\n)\s*(EXECUTIVE SUMMARY|KEY FINDINGS|RECOMMENDED ACTIONS|OWNERS AND TIMING|DECISIONS NEEDED|NEXT STEPS)/gi) || []).length;
+  var answerCount = Object.keys(answers || {}).length;
+  if (wordCount >= 120) score += 8;
+  if (wordCount >= 250) score += 6;
+  if (sectionCount >= 3) score += 8;
+  if (sectionCount >= 5) score += 5;
+  if (answerCount) score += Math.min(6, answerCount * 2);
+  if (state.brief && state.brief.client && text.toLowerCase().indexOf(String(state.brief.client).toLowerCase()) !== -1) score += 4;
+  if (/next step|recommended action|this week|within 30 days/i.test(text)) score += 4;
+  if (/\[[^\]]+\]|lorem ipsum|as an ai|ai-generated/i.test(text)) score -= 12;
+  return Math.max(60, Math.min(97, score));
+}
+
+function buildAgentHandoff(previousAgent, nextAgent, brief) {
+  var completed = previousAgent && previousAgent.outputs && previousAgent.outputs[0]
+    ? previousAgent.outputs[0].toLowerCase()
+    : 'the last part of your plan';
+  var nextWork = nextAgent && nextAgent.outputs && nextAgent.outputs[0]
+    ? nextAgent.outputs[0].toLowerCase()
+    : 'the next part of your plan';
+  return 'We finished <strong>' + completed + '</strong>. Next, <strong>' + nextAgent.name.replace(/ Agent$/,'') +
+    '</strong> will use that work to create ' + nextWork + ' for ' + brief.client + '. I’ll explain what matters in simple terms as we go.';
+}
+
 /* ── Per-agent system prompt builder ──────────────────────────────────────── */
 function buildAgentSystemPrompt(agent, brief, answers) {
   var answersText = Object.keys(answers).map(function(k){ return '- ' + k + ': ' + answers[k]; }).join('\n');
@@ -5203,9 +5413,28 @@ function buildAgentSystemPrompt(agent, brief, answers) {
     'Client: ' + (brief.client || 'Unknown') + '\n' +
     'Project: ' + (brief.project || brief.client || 'Unknown') + '\n' +
     'Goal: ' + (brief.goal || 'Unknown') + '\n' +
+    'Business stage: ' + (brief.businessStage === 'new' ? 'New business' : brief.businessStage === 'existing' ? 'Existing business' : 'Not provided') + '\n' +
     (brief.industry ? 'Industry: ' + brief.industry + '\n' : '') +
     (answersText ? '\nClient answers to your questions:\n' + answersText + '\n' : '') +
-    '\nWrite your output in plain, simple language that anyone can understand — no jargon, no buzzwords. Use short sentences, clear sections, and simple bullet points. Be specific to this client. Skip the intro — go straight into the content.';
+    '\nVOICE AND COACHING RULES:\n' +
+    '- Use everyday words a first-time business owner can understand. If a business term is necessary, explain it in one short sentence.\n' +
+    '- Write for someone with no business, marketing, finance, or technology experience.\n' +
+    '- Replace technical labels with plain descriptions. For example, say "money coming in and going out" before "cash flow."\n' +
+    '- Sound like a warm, patient business coach: friendly, encouraging, honest, and never patronizing.\n' +
+    '- Keep sentences short. Use clear headings, small bullet lists, and concrete examples tied to this business.\n' +
+    '- Break difficult work into simple steps. Make the very next action unmistakable.\n' +
+    '- If you ask a question, ask only what changes the recommendation. Use 15 words or fewer.\n' +
+    '- Start each deliverable with a two-sentence maximum overview anyone can understand.\n' +
+    '- Present the work as a polished business document suitable for owners, lenders, partners, and other stakeholders.\n' +
+    '- Never mention AI, agents, prompts, models, generated content, or the writing process in the deliverable.\n' +
+    '- Do not use generic filler, fake quotations, unsupported statistics, or placeholders. Clearly label any estimate or assumption.\n' +
+    '- Do not include percentage claims unless the client supplied them or a named source verifies them.\n' +
+    '- Use plain-text headings and bullets. Do not use markdown symbols, decorative dividers, stars, or template placeholders.\n' +
+    '- Organize the deliverable as: Executive Summary, Key Findings, Recommended Actions, Owners and Timing, and Decisions Needed.\n' +
+    '- Make every recommendation specific, practical, and connected to the client information provided.\n' +
+    '- Recognize progress briefly, then help the user build on it. End with one encouraging next step that creates momentum.\n' +
+    '- Do not use hype, filler, buzzwords, or unexplained jargon. Do not overwhelm the user with too many options.\n' +
+    'Be specific to this client and go straight into useful content.';
 }
 
 /* ── AI call ──────────────────────────────────────────────────────────────── */
@@ -5273,6 +5502,10 @@ function processingToOutput(conv, templateId, agent) {
 
     function renderOutput(output) {
       removeTyping();
+      state.agentOutputs[agent.id] = output;
+      state.suggestedScores = state.suggestedScores || {};
+      state.suggestedScores[agent.id] = calculateGuardianScore(agent, output, answers);
+      addBubble('agent', buildSimpleOverview(agent), agent.icon);
       var headerText = 'Here is your ' + agent.name + ' deliverable for ' + b.client + '.';
       addBubble('agent', '<strong>' + headerText + '</strong>', agent.icon);
       if (voice.ttsEnabled) enqueueTTS(headerText);
@@ -5395,6 +5628,9 @@ function showStaticAgentOutput(agent, templateId) {
     if (voice.ttsEnabled) enqueueTTS(agent.specialty);
 
     var output = getDemoContent(templateId, agent.id, b);
+    state.agentOutputs[agent.id] = output;
+    state.suggestedScores = state.suggestedScores || {};
+    state.suggestedScores[agent.id] = calculateGuardianScore(agent, output, state.convAnswers || {});
     var msgs = document.getElementById('chat-messages');
     var headerText = 'Here is your ' + agent.name + ' deliverable for ' + b.client + '.';
     addBubble('agent', '<strong>' + headerText + '</strong>', agent.icon);
@@ -5429,13 +5665,16 @@ function showGuardianPanel(agent, templateId) {
 
   var panel = document.createElement('div');
   panel.className = 'guardian-inline';
-  var score = 88;
+  var output = state.agentOutputs[agent.id] || '';
+  var score = state.suggestedScores && state.suggestedScores[agent.id]
+    ? state.suggestedScores[agent.id]
+    : calculateGuardianScore(agent, output, state.convAnswers || {});
   panel.innerHTML =
     '<div class="g-title">🛡️ Guardian QA — Review & Score</div>' +
     '<div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.55">' + agent.guardian + '</div>' +
     '<div class="g-row" style="margin-bottom:14px">' +
-      '<input type="range" id="guardian-slider" min="50" max="100" value="88" style="flex:1;accent-color:var(--orange)">' +
-      '<div class="guardian-score-badge" id="guardian-score">88</div>' +
+      '<input type="range" id="guardian-slider" min="50" max="100" value="' + score + '" style="flex:1;accent-color:var(--orange)">' +
+      '<div class="guardian-score-badge" id="guardian-score">' + score + '</div>' +
     '</div>' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
       '<button class="approve-btn" onclick="approveAgent(\'' + agent.id + '\')" id="approve-btn">✓ Approve & Continue →</button>' +
@@ -5451,7 +5690,7 @@ function showGuardianPanel(agent, templateId) {
 
 function approveAgent(agentId) {
   var slider = document.getElementById('guardian-slider');
-  var score  = slider ? parseInt(slider.value) : 88;
+  var score  = slider ? parseInt(slider.value) : calculateGuardianScore({id:agentId}, state.agentOutputs[agentId], state.convAnswers || {});
   state.scores[agentId] = score;
   state.prCount++;
   state.convAnswers = {};
@@ -5506,6 +5745,28 @@ function requestRevision(agentId) {
   }, 500);
 }
 
+function completeBriefCollection() {
+  state.brief = Object.assign(state.brief, {
+    project:     '',
+    deliverable: '',
+    deadline:    'TBD',
+    audience:    'TBD',
+    budget:      'TBD',
+    tone:        'TBD',
+    constraints: 'None specified',
+    risks:       'None specified',
+    template:    state.template ? state.template.id : 'consulting',
+  });
+  try { localStorage.setItem('pi-client-brief', JSON.stringify(state.brief)); } catch(e) {}
+  sendBriefByEmail();
+  var workflowScreen = document.getElementById('screen-workflow');
+  if (workflowScreen) workflowScreen.classList.remove('brief-mode');
+  state.convPhase = 'orch_intro';
+  state.questionIdx = 0;
+  state.convAnswers = {};
+  startAgentConversation(state.template.agents[0], 0, state.template.id);
+}
+
 function handleChatSend() {
   var input = document.getElementById('chat-input');
   if (!input) return;
@@ -5518,42 +5779,26 @@ function handleChatSend() {
   // Brief collection — runs before any agent workflow starts
   if (state.convPhase === 'brief_collect') {
     if (state.briefStep === 0) {
+      agentSay('Please choose whether this is a new or existing business above.', 300);
+      return;
+    } else if (state.briefStep === 1) {
       state.brief.client = val;
-      state.briefStep = 1;
-      agentSay('Great to have you, <strong>' + val + '</strong>! What\'s the main goal you want to achieve with this project?', 400);
+      state.briefStep = 2;
+      agentSay('Thanks! What is the one main result you want for this business?', 400);
     } else {
       state.brief.goal = val;
-      state.brief = Object.assign(state.brief, {
-        project:     '',
-        deliverable: '',
-        deadline:    'TBD',
-        audience:    'TBD',
-        budget:      'TBD',
-        tone:        'TBD',
-        constraints: 'None specified',
-        risks:       'None specified',
-        template:    state.template ? state.template.id : 'consulting',
-      });
-      try { localStorage.setItem('pi-client-brief', JSON.stringify(state.brief)); } catch(e) {}
-      sendBriefByEmail();
-      // Restore sidebar now that brief collection is done
-      var _wsEl = document.getElementById('screen-workflow');
-      if (_wsEl) _wsEl.classList.remove('brief-mode');
-      state.convPhase  = 'orch_intro';
-      state.questionIdx = 0;
-      state.convAnswers = {};
-      startAgentConversation(state.template.agents[0], 0, state.template.id);
+      completeBriefCollection();
     }
     return;
   }
 
   var b = state.brief;
   var agent = state.template ? state.template.agents[state.agentIndex] : null;
-  var agentName = agent ? agent.name : 'AI Agent';
+  var agentName = agent ? agent.name : 'Business helper';
   var sysPrompt = 'You are ' + agentName + ' — a friendly AI agent helping someone through their project. ' +
-    'Client: ' + (b && b.client || 'Client') + '. Goal: ' + (b && b.goal || 'grow') + '. ' +
+    'Client: ' + (b && b.client || 'Client') + '. Goal: ' + (b && b.goal || 'grow') + '. Business stage: ' + (b && b.businessStage || 'unknown') + '. ' +
     'They just said: "' + val + '". ' +
-    'Reply in 1-2 short, simple sentences. Use plain everyday words — no jargon. Be warm and helpful. End by asking if they\'re ready to continue.';
+    'Reply in 1-2 short, simple sentences. Write for a complete beginner. Use plain everyday words and explain any necessary business term. Be warm and helpful. End with one easy question.';
 
   var typing = showTyping();
   callAgentAPI(sysPrompt, val,
@@ -5611,8 +5856,8 @@ function prevAgent() {}
 
 function nextAgent() {
   const slider = document.getElementById('score-slider');
-  const score = slider ? parseInt(slider.value) : 88;
   const agent = state.template.agents[state.agentIndex];
+  const score = slider ? parseInt(slider.value) : calculateGuardianScore(agent, state.agentOutputs[agent.id], state.convAnswers || {});
   state.scores[agent.id] = score;
   state.prCount++;
   if (state.agentIndex < state.template.agents.length - 1) {
@@ -5655,8 +5900,8 @@ function jumpToAgent(idx) {
 
 function completeWorkflow() {
   const slider = document.getElementById('score-slider');
-  const score = slider ? parseInt(slider.value) : 88;
   const agent = state.template.agents[state.agentIndex];
+  const score = slider ? parseInt(slider.value) : calculateGuardianScore(agent, state.agentOutputs[agent.id], state.convAnswers || {});
   state.scores[agent.id] = score;
   renderComplete();
   showScreen('complete');
@@ -5691,6 +5936,20 @@ function renderComplete() {
       <div class="stat-label">${s.label}</div>
     </div>`).join('');
 
+  var stageLabel = state.brief.businessStage === 'new' ? 'new business' : 'existing business';
+  var summaryText = document.getElementById('plain-summary-text');
+  if (summaryText) summaryText.textContent = 'This plan gives your ' + stageLabel + ' a clear path toward ' + (state.brief.goal || 'your main goal') + '. Start with the actions below, then use each report section when you are ready to work on that part of the business.';
+  var actionWrap = document.getElementById('plain-summary-actions');
+  if (actionWrap) {
+    actionWrap.innerHTML = '';
+    t.agents.slice(0,3).forEach(function(a, index) {
+      var item = document.createElement('div');
+      item.style.cssText = 'padding:10px 12px;border:1px solid var(--border);border-radius:10px;color:var(--text-body);font-size:.84rem;line-height:1.5';
+      item.textContent = (index + 1) + '. Review ' + ((a.outputs && a.outputs[0]) || a.name) + ' and choose one action to complete.';
+      actionWrap.appendChild(item);
+    });
+  }
+
   document.getElementById('complete-scores').innerHTML = t.agents.map(a => {
     const s = state.scores[a.id] || 0;
     return `
@@ -5705,63 +5964,110 @@ function renderComplete() {
       </div>`;
   }).join('');
 
+  var savedEmail = '';
+  try { savedEmail = localStorage.getItem('pi-consultation-email') || ''; } catch (_) {}
+  var emailInput = document.getElementById('consultation-email');
+  if (emailInput && savedEmail) emailInput.value = savedEmail;
+
   // Animate bars
   setTimeout(() => {
     document.querySelectorAll('.asr-bar').forEach(b => { b.style.width = b.style.width; });
   }, 100);
 }
 
-function downloadReport() {
+function collectConsultationLead(email, source) {
+  var brief = state.brief || {};
+  var tryCompany = document.getElementById('try-company');
+  var tryGoal = document.getElementById('try-goal');
+  var selectedPackage = '';
+  try { selectedPackage = localStorage.getItem('pi-selected-package') || ''; } catch (_) {}
+  return fetch('/api/consultation', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      email: email,
+      source: source,
+      company: brief.client || (tryCompany && tryCompany.value) || '',
+      goal: brief.goal || (tryGoal && tryGoal.value) || '',
+      project: brief.project || '',
+      template: state.template ? state.template.title : '',
+      selectedPackage: selectedPackage,
+      consent: true
+    })
+  }).then(function(response) {
+    if (!response.ok) throw new Error('Unable to save consultation request.');
+    try { localStorage.setItem('pi-consultation-email', email); } catch (_) {}
+    return response.json();
+  });
+}
+
+function submitConsultation(event) {
+  event.preventDefault();
+  var input = document.getElementById('consultation-email');
+  var status = document.getElementById('consultation-status');
+  var button = event.currentTarget.querySelector('button[type="submit"]');
+  if (!input || !input.checkValidity()) { if (input) input.reportValidity(); return; }
+  status.textContent = 'Saving your consultation request…';
+  button.disabled = true;
+  collectConsultationLead(input.value.trim(), 'workflow_complete')
+    .then(function() { status.textContent = 'You’re all set. Erika will follow up by email to schedule your free consultation.'; })
+    .catch(function() { status.textContent = 'We could not save that yet. Please try again or email hello@productimagination.com.'; button.disabled = false; });
+}
+
+async function downloadReport() {
   const t = state.template;
   const scores = Object.values(state.scores);
   const avgScore = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
-  const date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  const button = document.querySelector('button[onclick="downloadReport()"]');
+  const originalLabel = button ? button.textContent : '';
+  if (button) { button.disabled = true; button.textContent = 'Building your PDF…'; }
+  const agents = t.agents.map(function(agent) {
+    return {
+      name: agent.name,
+      score: state.scores[agent.id] || 0,
+      rating: scoreRating(state.scores[agent.id] || 0),
+      outputs: agent.outputs || [],
+      deliverable: state.agentOutputs[agent.id] || getDemoContent(t.id, agent.id, state.brief)
+    };
+  });
+  try {
+    const response = await fetch('/api/report-pdf', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        brief: state.brief,
+        template: t.title,
+        generatedAt: new Date().toISOString(),
+        session: `PR-001 through PR-${String(state.prCount).padStart(3,'0')}`,
+        averageScore: avgScore,
+        overallRating: scoreRating(avgScore),
+        agents: agents
+      })
+    });
+    if (!response.ok) throw new Error('PDF service unavailable');
+    const blob = await response.blob();
+    if (blob.type !== 'application/pdf') throw new Error('Invalid PDF response');
+    const url = URL.createObjectURL(blob);
+    const link = document.getElementById('report-download-link');
+    link.href = url;
+    link.download = `${String(state.brief.project || state.brief.client || 'Business').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-|-$/g,'')}-Business-Report.pdf`;
+    window.currentReportUrl = url;
+    document.getElementById('report-download-modal').style.display = 'flex';
+  } catch (error) {
+    alert('Your PDF could not be created yet. Please try again in a moment.');
+  } finally {
+    if (button) { button.disabled = false; button.textContent = originalLabel; }
+  }
+}
 
-  const lines = [
-    `# ${state.brief.project} — Agent Workflow Report`,
-    `**Client:** ${state.brief.client}  `,
-    `**Template:** ${t.title}  `,
-    `**Generated:** ${date}  `,
-    `**Session PRs:** PR-001 through PR-${String(state.prCount).padStart(3,'0')}`,
-    ``,
-    `## Project Brief`,
-    `- **Deliverable:** ${state.brief.deliverable}`,
-    `- **Goal:** ${state.brief.goal}`,
-    `- **Audience:** ${state.brief.audience}`,
-    `- **Deadline:** ${state.brief.deadline}`,
-    `- **Budget:** ${state.brief.budget}`,
-    `- **Tone:** ${state.brief.tone}`,
-    ``,
-    `## Agent Performance Summary`,
-    ``,
-    `| Agent | Score | Rating |`,
-    `|-------|-------|--------|`,
-    ...t.agents.map(a => `| ${a.name} | ${state.scores[a.id] || '—'} | ${scoreRating(state.scores[a.id] || 0)} |`),
-    ``,
-    `**Overall Average Score:** ${avgScore} — ${scoreRating(avgScore)}`,
-    ``,
-    `## Agent Deliverables`,
-    ``,
-    ...t.agents.flatMap(a => [
-      `### ${a.icon} ${a.name}`,
-      `**Score:** ${state.scores[a.id] || '—'}  `,
-      `**Specialty:** ${a.specialty}`,
-      ``,
-      `**Outputs Produced:**`,
-      ...a.outputs.map(o => `- ${o}`),
-      ``,
-    ]),
-    `---`,
-    `*Generated by AgentOS v1.0 — Product Imagination LLC*`,
-  ];
-
-  const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${state.brief.project.replace(/\s+/g,'-')}_AgentReport.md`;
-  a.click();
-  URL.revokeObjectURL(url);
+function closeReportDownload() {
+  var modal = document.getElementById('report-download-modal');
+  if (modal) modal.style.display = 'none';
+  if (window.currentReportUrl) {
+    URL.revokeObjectURL(window.currentReportUrl);
+    window.currentReportUrl = '';
+  }
+  showScreen('complete');
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -6822,7 +7128,126 @@ function sendDeliverableByEmail(agentName, output) {
 
 renderTemplates();
 
-// ── Server health check — pre-warm TTS status and show banner if static-site ──
+function setPricingAudience(audience) {
+  var isNew = audience === 'new';
+  document.getElementById('pricing-new').hidden = !isNew;
+  document.getElementById('pricing-existing').hidden = isNew;
+  ['new','existing'].forEach(function(name) {
+    var tab = document.getElementById('pricing-tab-' + name);
+    var selected = name === audience;
+    tab.classList.toggle('active', selected);
+    tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+  });
+  try { localStorage.setItem('pi-pricing-audience', audience); } catch (_) {}
+}
+
+var PRICING_TEMPLATES = {
+  service: {
+    new_basic:'Business plan · Ideal client · Service and pricing prompts',
+    new_launch:'Brand voice · Website copy · Proposal · Client onboarding',
+    new_complete:'Sales pipeline · Content plan · Finance tracker · Operations playbook',
+    existing_basic:'Client review · Offer improvement · Pricing audit · Weekly planning',
+    existing_growth:'Lead generation · Sales follow-up · Referral system · Growth campaigns',
+    existing_team:'Team roles · SOP builder · Client portal · White-label delivery'
+  },
+  ecommerce: {
+    new_basic:'Product idea · Customer profile · Cost and pricing calculator',
+    new_launch:'Product descriptions · Store copy · Launch emails · Social campaign',
+    new_complete:'Inventory plan · Supplier checklist · Customer service · Profit tracker',
+    existing_basic:'Product audit · Store conversion · Email flows · Customer support',
+    existing_growth:'Campaign calendar · Retention · Upsells · Product expansion',
+    existing_team:'Inventory operations · Team SOPs · Multi-channel reporting · Custom agents'
+  },
+  property: {
+    new_basic:'Property business plan · Guest profile · Setup budget · Pricing basics',
+    new_launch:'Listing copy · Photo brief · Welcome guide · House rules',
+    new_complete:'Turnover system · Guest messages · Revenue tracker · Vendor checklist',
+    existing_basic:'Listing audit · Pricing review · Guest experience · Expense tracker',
+    existing_growth:'Revenue optimization · Review system · Direct booking · Portfolio growth',
+    existing_team:'Multi-property operations · Staff SOPs · Owner reports · Custom agents'
+  },
+  creator: {
+    new_basic:'Audience profile · Brand position · Offer idea · Content pillars',
+    new_launch:'Bio and website · Content calendar · Launch emails · Media kit',
+    new_complete:'Course or service builder · Sales funnel · Sponsorship · Income tracker',
+    existing_basic:'Content audit · Offer review · Audience engagement · Weekly system',
+    existing_growth:'Email growth · Product launch · Partnerships · Revenue plan',
+    existing_team:'Content operations · Editorial workflow · Brand approvals · Custom agents'
+  },
+  local: {
+    new_basic:'Local business plan · Customer profile · Service menu · Startup budget',
+    new_launch:'Local website · Google profile · Opening campaign · Review requests',
+    new_complete:'Daily operations · Staff checklist · Local marketing · Cash-flow tracker',
+    existing_basic:'Customer experience · Local visibility · Pricing review · Operations audit',
+    existing_growth:'Repeat customers · Referral campaign · Promotions · Expansion plan',
+    existing_team:'Location SOPs · Staff training · Management reports · Custom agents'
+  }
+};
+
+function setPricingBusinessType(type) {
+  var selected = PRICING_TEMPLATES[type] ? type : 'service';
+  document.querySelectorAll('[data-template-tier]').forEach(function(element) {
+    element.textContent = PRICING_TEMPLATES[selected][element.getAttribute('data-template-tier')] || '';
+  });
+  var select = document.getElementById('pricing-business-type');
+  if (select && select.value !== selected) select.value = selected;
+  try { localStorage.setItem('pi-pricing-business-type', selected); } catch (_) {}
+}
+
+function selectPackage(name, price) {
+  var businessType = (document.getElementById('pricing-business-type') || {}).value || 'service';
+  var audience = document.getElementById('pricing-new').hidden ? 'existing' : 'new';
+  try {
+    localStorage.setItem('pi-selected-package', JSON.stringify({name:name, price:price, businessType:businessType, audience:audience}));
+  } catch (_) {}
+  quickStartDemo();
+}
+
+function bookCustomHubConsultation() {
+  var businessType = (document.getElementById('pricing-business-type') || {}).value || 'service';
+  try {
+    localStorage.setItem('pi-selected-package', JSON.stringify({
+      packageId:'custom_platform_hub',
+      name:'Custom Platform Hub',
+      businessType:businessType,
+      consultationRequired:true
+    }));
+  } catch (_) {}
+  window.open('https://calendly.com/metakittyz/30min', '_blank', 'noopener');
+}
+
+async function purchasePackage(packageId) {
+  var businessType = (document.getElementById('pricing-business-type') || {}).value || 'service';
+  var button = document.querySelector('[onclick="purchasePackage(\'' + packageId + '\')"]');
+  var original = button ? button.textContent : '';
+  if (button) { button.disabled = true; button.textContent = 'Opening secure checkout…'; }
+  try {
+    localStorage.setItem('pi-selected-package', JSON.stringify({packageId:packageId,businessType:businessType}));
+    var response = await fetch('/api/create-checkout', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({packageId:packageId,businessType:businessType})
+    });
+    var data = await response.json();
+    if (!response.ok || !data.url) throw new Error(data.error || 'Checkout is unavailable.');
+    window.location.assign(data.url);
+  } catch (error) {
+    alert(error.message + ' Please try again or contact hello@productimagination.com.');
+    if (button) { button.disabled = false; button.textContent = original; }
+  }
+}
+
+try {
+  setPricingAudience(localStorage.getItem('pi-pricing-audience') || 'new');
+  setPricingBusinessType(localStorage.getItem('pi-pricing-business-type') || 'service');
+} catch (_) { setPricingAudience('new'); setPricingBusinessType('service'); }
+
+// Keep the premium custom platform consultation first in both pricing paths.
+document.querySelectorAll('.pricing-view .custom-hub-card').forEach(function(card) {
+  if (card.parentElement) card.parentElement.prepend(card);
+});
+
+// ── API health check — works through Node locally or Netlify redirects ──
 (function checkServer() {
   fetch('/api/status', { signal: AbortSignal.timeout(4000) })
     .then(function(r) { return r.json(); })
@@ -6841,36 +7266,7 @@ renderTemplates();
         }).catch(function(){});
       }
     })
-    .catch(function() {
-      // Static-file fallback: show a one-time banner
-      if (localStorage.getItem('pi-server-banner-dismissed') === '1') return;
-      var banner = document.createElement('div');
-      banner.style.cssText = [
-        'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);',
-        'background:#1A0C04;border:1px solid rgba(255,112,48,.45);',
-        'border-radius:12px;padding:12px 18px;',
-        'font-family:Space Mono,monospace;font-size:11px;letter-spacing:.04em;',
-        'color:rgba(255,220,185,.85);z-index:9999;',
-        'display:flex;align-items:center;gap:12px;max-width:440px;',
-        'box-shadow:0 8px 32px rgba(0,0,0,.5);',
-      ].join('');
-      banner.innerHTML = [
-        '<span style="font-size:18px;flex-shrink:0">⚠️</span>',
-        '<span>Running as static site — AI agents need the <strong style="color:#FF9A60">Node.js Web Service</strong> on Render. See console for setup guide.</span>',
-        '<button onclick="localStorage.setItem(\'pi-server-banner-dismissed\',\'1\');this.parentElement.remove()" style="background:none;border:none;color:rgba(255,154,96,.6);font-size:18px;cursor:pointer;flex-shrink:0;padding:0">×</button>',
-      ].join('');
-      document.body.appendChild(banner);
-      console.warn(
-        '%c[PI Agents OS] Running as static site — proxy not available.\n' +
-        'To enable AI agents:\n' +
-        '  1. In Render dashboard, delete the Static Site\n' +
-        '  2. Create a NEW Web Service from the same GitHub repo\n' +
-        '  3. Build command:  npm install\n' +
-        '  4. Start command:  node server.js\n' +
-        '  5. Add OPENAI_API_KEY and ANTHROPIC_API_KEY in Environment tab',
-        'color:orange;font-size:13px'
-      );
-    });
+    .catch(function() { console.info('[PI Agents OS] API status is unavailable in this preview.'); });
 })();
 
 // ── Try Me Widget + Quick Brand Demo ─────────────────────────────────────────
@@ -6937,11 +7333,17 @@ renderTemplates();
   window.generateBrandDemo = function() {
     var company = (document.getElementById('try-company').value || '').trim();
     var goal    = (document.getElementById('try-goal').value    || '').trim();
+    var email   = (document.getElementById('try-email').value   || '').trim();
     if (!company && !goal) {
       document.getElementById('try-company').focus(); return;
     }
     var name = company || 'Your Brand';
     var g    = goal    || 'Build your brand';
+    if (email) {
+      var emailField = document.getElementById('try-email');
+      if (!emailField.checkValidity()) { emailField.reportValidity(); return; }
+      collectConsultationLead(email, 'try_it_free').catch(function(){ console.info('[Consultation] Lead capture will retry after workflow.'); });
+    }
     var palette = [
       ['#0A84FF','#BF5AF2'],['#EC4899','#FF9F0A'],['#30D158','#0A84FF'],
       ['#BF5AF2','#EC4899'],['#FF9F0A','#FF453A'],['#06B6D4','#30D158'],
@@ -6982,8 +7384,8 @@ renderTemplates();
       inspireEl.innerHTML =
         '<div class="try-inspire-inner">' +
           '<div class="try-inspire-who">' +
-            '<div class="try-inspire-avatar"><img src="/erika.webp" alt="AI Erika" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;display:block;"/></div>' +
-            '<div class="try-inspire-name">AI Erika</div>' +
+            '<div class="try-inspire-avatar"><img src="/erika.webp" alt="Erika" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;display:block;"/></div>' +
+            '<div class="try-inspire-name">Erika</div>' +
           '</div>' +
           '<div class="try-inspire-text"><div class="try-inspire-dots"><span></span><span></span><span></span></div></div>' +
         '</div>';
@@ -7005,8 +7407,8 @@ renderTemplates();
       inspireEl.innerHTML =
         '<div class="try-inspire-inner">' +
           '<div class="try-inspire-who">' +
-            '<div class="try-inspire-avatar"><img src="/erika.webp" alt="AI Erika" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;display:block;"/></div>' +
-            '<div class="try-inspire-name">AI Erika</div>' +
+            '<div class="try-inspire-avatar"><img src="/erika.webp" alt="Erika" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;display:block;"/></div>' +
+            '<div class="try-inspire-name">Erika</div>' +
           '</div>' +
           '<div class="try-inspire-text">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
         '</div>';
@@ -7056,7 +7458,7 @@ renderTemplates();
   };
 
   // Enter key triggers generate
-  ['try-company','try-goal'].forEach(function(id) {
+  ['try-company','try-goal','try-email'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') generateBrandDemo();
@@ -7075,22 +7477,9 @@ renderTemplates();
       window.scrollTo({top:0,behavior:'smooth'});
       setTimeout(function(){
         selectTemplate(first.id);
-        // If brand form was filled, skip brief collection and pre-fill
+        // Keep the business-stage question first, but reuse details already entered.
         if (tryCompany && tryGoal) {
-          state.brief.client = tryCompany;
-          state.brief.goal   = tryGoal;
-          state.brief = Object.assign(state.brief, {
-            project:'',deliverable:'',deadline:'TBD',audience:'TBD',
-            budget:'TBD',tone:'TBD',constraints:'None specified',risks:'None specified',
-            template: first.id,
-          });
-          try { localStorage.setItem('pi-client-brief', JSON.stringify(state.brief)); } catch(e) {}
-          var _wsEl = document.getElementById('screen-workflow');
-          if (_wsEl) _wsEl.classList.remove('brief-mode');
-          state.convPhase  = 'orch_intro';
-          state.briefStep  = 0;
-          state.convAnswers = {};
-          startAgentConversation(state.template.agents[0], 0, state.template.id);
+          state.prefillBrief = { client: tryCompany, goal: tryGoal };
         }
       }, 250);
     } else scrollToTemplates();

@@ -1,7 +1,7 @@
 // Product Imagination Agents OS — Service Worker
 // Caches all app assets for offline use on iOS
 
-const CACHE = 'pi-agents-os-v1';
+const CACHE = 'pi-agents-os-v5-growth-report';
 const ASSETS = [
   './',
   './index.html',
@@ -47,6 +47,22 @@ self.addEventListener('activate', e => {
 // Fetch — cache-first for assets, network-first for API
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  const requestUrl = new URL(e.request.url);
+  const isHtml = e.request.mode === 'navigate' || requestUrl.pathname.endsWith('.html') || requestUrl.pathname === '/';
+  if (isHtml) {
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then(cache => cache.put(e.request, clone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(e.request).then(cached => cached || caches.match('./index.html')))
+    );
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
