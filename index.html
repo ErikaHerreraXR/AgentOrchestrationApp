@@ -3164,7 +3164,7 @@ body.in-workflow #mobile-bottom-nav{display:none;}
         <div class="tag" style="margin-bottom:10px">Your Next Step</div>
         <h2>Want help turning this plan into your business?</h2>
         <p>Choose a time that works for you. Erika will discuss your plan, priorities, and best next step.</p>
-        <div style="margin-top:12px"><a href="https://calendly.com/metakittyz/30min" target="_blank" rel="noopener" class="btn btn-outline-green">Book My Free Consultation Now →</a></div>
+        <div style="margin-top:12px"><button type="button" class="btn btn-outline-green" onclick="openCalendlyBooking()">Book My Free Consultation Now →</button></div>
       </div>
       <div class="section-header" style="text-align:left; margin-bottom:20px;">
         <div class="tag">Agent Scorecards</div>
@@ -7255,6 +7255,17 @@ function bookCustomHubConsultation() {
     }));
   } catch (_) {}
   window.open('https://calendly.com/metakittyz/30min', '_blank', 'noopener');
+}
+
+function openCalendlyBooking() {
+  var calendlyUrl = 'https://calendly.com/metakittyz/30min';
+  var bookingWindow = window.open(calendlyUrl, '_blank');
+  if (bookingWindow) {
+    bookingWindow.opener = null;
+    bookingWindow.focus();
+  } else {
+    window.location.assign(calendlyUrl);
+  }
 }
 
 async function purchasePackage(packageId) {
